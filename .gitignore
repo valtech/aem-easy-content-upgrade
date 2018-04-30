@@ -74,3 +74,5 @@ buildNumber.properties
 ### IntelliJ ###
 .idea/
 *.iml
+
+.DS_Store
