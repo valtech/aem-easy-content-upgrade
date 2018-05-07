@@ -14,44 +14,40 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.service;
+package de.valtech.aecu.core.serviceuser;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.osgi.framework.FrameworkUtil;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-
 /**
- * AECU service.
+ * Provides the service resource resolver.
  * 
  * @author Roland Gruber
  */
-@Component(service=AecuService.class)
-public class AecuServiceImpl implements AecuService {
+@Component(service=ServiceResourceResolverService.class)
+public class ServiceResourceResolverService {
+    
+    private static final String SUBSERVICE_AECU = "aecu";
     
     @Reference
-    ServiceResourceResolverService resolverService;
-
-    @Override
-    public String getVersion() {
-        return FrameworkUtil.getBundle(AecuServiceImpl.class).getVersion().toString();
-    }
-
-    @Override
-    public List<String> getFiles(String path) throws AecuException {
-        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            return null;
-        }
-        catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
-        }
+    ResourceResolverFactory resolverFactory;
+    
+    /**
+     * Returns a resource resolver of the AECU service user. 
+     * 
+     * @return service resource resolver
+     * @throws LoginException error opening resource resolver
+     */
+    public ResourceResolver getServiceResourceResolver() throws LoginException {
+        final Map<String, Object> authenticationInfo = new HashMap<>();
+        authenticationInfo.put(ResourceResolverFactory.SUBSERVICE, SUBSERVICE_AECU);
+        return resolverFactory.getServiceResourceResolver(authenticationInfo);
     }
 
 }

@@ -16,29 +16,32 @@
  */
 package de.valtech.aecu.service;
 
-import java.util.List;
-
 /**
- * Service interface for AECU.
+ * Thrown when the AECU service faces an error.
  * 
  * @author Roland Gruber
  */
-public interface AecuService {
-    
-    /**
-     * Returns the AECU version.
-     * 
-     * @return version
-     */
-    String getVersion();
-    
-    /**
-     * Returns a list of files that can be executed in the given path.
-     * 
-     * @param path file or folder
-     * @return list of files that are executable
-     * @throws AecuException error finding files (e.g. invalid path)
-     */
-    List<String> getFiles(String path) throws AecuException;
+public class AecuException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Constructor
+     * 
+     * @param message error message
+     * @param e original exception
+     */
+    public AecuException(String message, Throwable e) {
+        super(message, e);
+    }
+    
+    /**
+     * Constructor
+     * 
+     * @param message error message
+     */
+    public AecuException(String message) {
+        super(message);
+    }
+    
 }

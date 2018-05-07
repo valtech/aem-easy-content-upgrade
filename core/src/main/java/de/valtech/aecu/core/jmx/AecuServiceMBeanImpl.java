@@ -16,6 +16,8 @@
  */
 package de.valtech.aecu.core.jmx;
 
+import java.util.List;
+
 import javax.management.NotCompliantMBeanException;
 
 import org.osgi.service.component.annotations.Component;
@@ -23,6 +25,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.adobe.granite.jmx.annotation.AnnotatedStandardMBean;
 
+import de.valtech.aecu.service.AecuException;
 import de.valtech.aecu.service.AecuService;
 
 @Component(service = {AecuServiceMBean.class}, immediate = true, property = {
@@ -46,6 +49,11 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
     @Override
     public String getVersion() {
         return aecuService.getVersion();
+    }
+
+    @Override
+    public List<String> getFiles(String path) throws AecuException {
+        return aecuService.getFiles(path);
     }
 
 }

@@ -14,44 +14,46 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.service;
-
-import java.util.List;
+package de.valtech.aecu.core.healthcheck;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.osgi.framework.FrameworkUtil;
+import org.apache.sling.hc.api.HealthCheck;
+import org.apache.sling.hc.api.Result;
+import org.apache.sling.hc.util.FormattingResultLog;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
 
 /**
- * AECU service.
+ * Checks if the internal service user is ok.
  * 
  * @author Roland Gruber
  */
-@Component(service=AecuService.class)
-public class AecuServiceImpl implements AecuService {
+@Component(
+    immediate = true,
+    service = HealthCheck.class,
+    property = {
+        HealthCheck.TAGS + "=aecu",
+        HealthCheck.NAME + "=AECU Service User",
+        HealthCheck.MBEAN_NAME + "=aecuServiceUserHCmBean"
+    }
+)
+public class ServiceUserHealthCheck implements HealthCheck {
     
     @Reference
-    ServiceResourceResolverService resolverService;
+    private ServiceResourceResolverService resolverService;
 
     @Override
-    public String getVersion() {
-        return FrameworkUtil.getBundle(AecuServiceImpl.class).getVersion().toString();
-    }
-
-    @Override
-    public List<String> getFiles(String path) throws AecuException {
+    public Result execute() {
+        final FormattingResultLog resultLog = new FormattingResultLog();
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            return null;
+            resultLog.info("Ok");
+        } catch (LoginException e) {
+            resultLog.critical("Unable to open service resource resolver {}", e.getMessage());
         }
-        catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
-        }
+        return new Result(resultLog);
     }
 
 }

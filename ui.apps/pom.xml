@@ -51,6 +51,9 @@
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
                     <group>Valtech</group>
+                    <properties>
+                        <acHandling>merge_preserve</acHandling>
+                    </properties>
                     <embeddeds>
                         <embedded>
                             <groupId>de.valtech.aecu</groupId>
