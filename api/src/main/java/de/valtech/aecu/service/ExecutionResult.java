@@ -16,38 +16,50 @@
  */
 package de.valtech.aecu.service;
 
-import java.util.List;
-
 /**
- * Service interface for AECU.
+ * Result of a script execution.
  * 
  * @author Roland Gruber
  */
-public interface AecuService {
+public class ExecutionResult {
+
+    private boolean success;
+    
+    private String output;
     
     /**
-     * Returns the AECU version.
+     * Constructor
      * 
-     * @return version
+     * @param success execution was successful
+     * @param output script output
      */
-    String getVersion();
+    public ExecutionResult(boolean success, String output) {
+        this.success = success;
+        this.output = output;
+    }
     
     /**
-     * Returns a list of files that can be executed in the given path.
+     * Returns if execution was successful.
      * 
-     * @param path file or folder
-     * @return list of files that are executable
-     * @throws AecuException error finding files (e.g. invalid path)
+     * @return successful
      */
-    List<String> getFiles(String path) throws AecuException;
-    
+    public boolean isSuccess() {
+        return success;
+    }
+
     /**
-     * Executes the script at the given position.
+     * Returns the script output.
      * 
-     * @param path path of script
-     * @return execution result
-     * @throws AecuException error during execution
+     * @return output
      */
-    ExecutionResult execute(String path) throws AecuException;
+    public String getOutput() {
+        return output;
+    }
+    
+    @Override
+    public String toString() {
+        return "Successful: " + Boolean.toString(success) + "\n"
+            + "Output: " + output;
+    }
 
 }

@@ -56,4 +56,9 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
         return aecuService.getFiles(path);
     }
 
+    @Override
+    public String execute(String path) throws AecuException {
+        return aecuService.execute(path).toString();
+    }
+
 }

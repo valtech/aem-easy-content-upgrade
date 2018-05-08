@@ -18,7 +18,6 @@ package de.valtech.aecu.core.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -35,6 +34,7 @@ import org.osgi.service.component.annotations.Reference;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.service.AecuException;
 import de.valtech.aecu.service.AecuService;
+import de.valtech.aecu.service.ExecutionResult;
 
 /**
  * AECU service.
@@ -83,7 +83,6 @@ public class AecuServiceImpl implements AecuService {
         }
         List<String> candidates = new ArrayList<>();
         if (isFolder(resource) && matchesRunmodes(resource.getName())) {
-            Iterator<Resource> childIterator = resource.listChildren();
             for (Resource child : resource.getChildren()) {
                 candidates.addAll(findCandidates(resolver, child.getPath()));
             }
@@ -143,6 +142,35 @@ public class AecuServiceImpl implements AecuService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public ExecutionResult execute(String path) throws AecuException {
+        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+            Resource resource = resolver.getResource(path);
+            if (resource == null) {
+                throw new AecuException("Path is invalid");
+            }
+            if (!isValidScriptName(resource.getName())) {
+                throw new AecuException("Invalid script name");
+            }
+            ExecutionResult result = executeScript(path);
+            return result;
+        }
+        catch (LoginException e) {
+            throw new AecuException("Unable to get service resource resolver", e);
+        }
+    }
+
+    /**
+     * Executes the script.
+     * 
+     * @param path path
+     * @return result
+     */
+    private ExecutionResult executeScript(String path) {
+        // TODO
+        return new ExecutionResult(true, "");
     }
 
 }

@@ -28,6 +28,7 @@ import de.valtech.aecu.service.AecuException;
  * 
  * @author Roland Gruber
  */
+@Description("AEM Easy Content Upgrade")
 public interface AecuServiceMBean {
 
     /**
@@ -47,5 +48,14 @@ public interface AecuServiceMBean {
      */
     @Description("Returns a list of files that can be executed in the given path")
     List<String> getFiles(@Name("Path") @Description("File or folder") String path) throws AecuException;
+
+    /**
+     * Executes the script at the given position.
+     * 
+     * @param path path of script
+     * @return execution result
+     * @throws AecuException error during execution
+     */
+    String execute(@Name("Path") @Description("Path to file that should be executed") String path) throws AecuException;
 
 }
