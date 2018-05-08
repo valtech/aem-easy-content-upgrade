@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
@@ -30,6 +31,9 @@ import org.apache.sling.settings.SlingSettingsService;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import com.icfolson.aem.groovy.console.GroovyConsoleService;
+import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.service.AecuException;
@@ -49,6 +53,9 @@ public class AecuServiceImpl implements AecuService {
     
     @Reference
     private SlingSettingsService slingSettings;
+    
+    @Reference
+    private GroovyConsoleService groovyConsoleService;
 
     @Override
     public String getVersion() {
@@ -154,7 +161,7 @@ public class AecuServiceImpl implements AecuService {
             if (!isValidScriptName(resource.getName())) {
                 throw new AecuException("Invalid script name");
             }
-            ExecutionResult result = executeScript(path);
+            ExecutionResult result = executeScript(resolver, path);
             return result;
         }
         catch (LoginException e) {
@@ -165,12 +172,15 @@ public class AecuServiceImpl implements AecuService {
     /**
      * Executes the script.
      * 
+     * @param resolver resource resolver
      * @param path path
      * @return result
      */
-    private ExecutionResult executeScript(String path) {
-        // TODO
-        return new ExecutionResult(true, "");
+    private ExecutionResult executeScript(ResourceResolver resolver, String path) {
+        GroovyConsoleRequest request = new GroovyConsoleRequest(resolver);
+        RunScriptResponse response = groovyConsoleService.runScript(request, path);
+        boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
+        return new ExecutionResult(success, response.getRunningTime(), response.getOutput() + response.getExceptionStackTrace());
     }
 
 }

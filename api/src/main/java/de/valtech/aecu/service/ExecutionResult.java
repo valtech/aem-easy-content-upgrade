@@ -24,18 +24,20 @@ package de.valtech.aecu.service;
 public class ExecutionResult {
 
     private boolean success;
-    
     private String output;
+    private String time;
     
     /**
      * Constructor
      * 
      * @param success execution was successful
+     * @param time execution time
      * @param output script output
      */
-    public ExecutionResult(boolean success, String output) {
+    public ExecutionResult(boolean success, String time, String output) {
         this.success = success;
         this.output = output;
+        this.time = time;
     }
     
     /**
@@ -56,10 +58,20 @@ public class ExecutionResult {
         return output;
     }
     
+    /**
+     * Returns the execution time.
+     * 
+     * @return time
+     */
+    public String getTime() {
+        return time;
+    }
+
     @Override
     public String toString() {
-        return "Successful: " + Boolean.toString(success) + "\n"
-            + "Output: " + output;
+        return "Successful: " + Boolean.toString(success)
+            + "\n" + "Execution time: " + time
+            + "\n" + "Output: " + output;
     }
 
 }

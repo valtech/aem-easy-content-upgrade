@@ -41,6 +41,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.icfolson.aem.groovy.console</groupId>
+            <artifactId>aem-groovy-console</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
         </dependency>
@@ -73,6 +81,10 @@
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.models.api</artifactId>
         </dependency>
+		    <dependency>
+			      <groupId>org.apache.commons</groupId>
+			      <artifactId>commons-lang3</artifactId>
+		    </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

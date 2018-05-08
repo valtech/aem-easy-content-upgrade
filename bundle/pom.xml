@@ -71,7 +71,6 @@
         <dependency>
 					  <groupId>com.icfolson.aem.groovy.console</groupId>
 					  <artifactId>aem-groovy-console</artifactId>
-					  <version>11.3.0</version>
 					  <type>zip</type>
         </dependency>
     </dependencies>
