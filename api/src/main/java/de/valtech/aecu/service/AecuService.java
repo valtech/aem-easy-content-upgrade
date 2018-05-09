@@ -18,11 +18,14 @@ package de.valtech.aecu.service;
 
 import java.util.List;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 /**
  * Service interface for AECU.
  * 
  * @author Roland Gruber
  */
+@ProviderType
 public interface AecuService {
     
     /**
