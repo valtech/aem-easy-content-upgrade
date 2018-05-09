@@ -16,6 +16,8 @@
  */
 package de.valtech.aecu.service;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Result of a script execution.
  * 
@@ -26,18 +28,21 @@ public class ExecutionResult {
     private boolean success;
     private String output;
     private String time;
+    private String result;
     
     /**
      * Constructor
      * 
      * @param success execution was successful
      * @param time execution time
+     * @param result result 
      * @param output script output
      */
-    public ExecutionResult(boolean success, String time, String output) {
+    public ExecutionResult(boolean success, String time, String result, String output) {
         this.success = success;
         this.output = output;
         this.time = time;
+        this.result = result;
     }
     
     /**
@@ -49,6 +54,15 @@ public class ExecutionResult {
         return success;
     }
 
+    /**
+     * Returns the script result.
+     * 
+     * @return output
+     */
+    public String getResult() {
+        return result;
+    }
+    
     /**
      * Returns the script output.
      * 
@@ -69,9 +83,15 @@ public class ExecutionResult {
 
     @Override
     public String toString() {
-        return "Successful: " + Boolean.toString(success)
-            + "\n" + "Execution time: " + time
-            + "\n" + "Output: " + output;
+        StringBuilder stringVal = new StringBuilder("Successful: " + Boolean.toString(success));
+        if (StringUtils.isNotBlank(time)) {
+            stringVal.append("\n" + "Execution time: " + time);
+        }
+        if (StringUtils.isNotBlank(result)) {
+            stringVal.append("\n" + "Result: " + result);
+        }
+        stringVal.append("\n" + "Output: " + output);
+        return stringVal.toString();
     }
 
 }

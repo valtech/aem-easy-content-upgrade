@@ -180,7 +180,8 @@ public class AecuServiceImpl implements AecuService {
         GroovyConsoleRequest request = new GroovyConsoleRequest(resolver);
         RunScriptResponse response = groovyConsoleService.runScript(request, path);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
-        return new ExecutionResult(success, response.getRunningTime(), response.getOutput() + response.getExceptionStackTrace());
+        String result = response.getResult();
+        return new ExecutionResult(success, response.getRunningTime(), result, response.getOutput() + response.getExceptionStackTrace());
     }
 
 }
