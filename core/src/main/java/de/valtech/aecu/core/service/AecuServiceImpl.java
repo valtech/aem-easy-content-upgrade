@@ -181,7 +181,32 @@ public class AecuServiceImpl implements AecuService {
         RunScriptResponse response = groovyConsoleService.runScript(request, path);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         String result = response.getResult();
-        return new ExecutionResult(success, response.getRunningTime(), result, response.getOutput() + response.getExceptionStackTrace());
+        ExecutionResult fallbackResult = null;
+        if (!success && (getFallbackScript(resolver, path) != null)) {
+            fallbackResult = executeScript(resolver, getFallbackScript(resolver, path));
+        }
+        return new ExecutionResult(success, response.getRunningTime(), result, response.getOutput() + response.getExceptionStackTrace(), fallbackResult);
+    }
+    
+    /**
+     * Returns the fallback script name if any exists.
+     * 
+     * @param resolver resource resolver
+     * @param path original script path
+     * @return fallback script path
+     */
+    protected String getFallbackScript(ResourceResolver resolver, String path) {
+        String name = path.substring(path.lastIndexOf("/") + 1);
+        if (name.contains(".fallback.")) {
+            // skip if script is a fallback script itself
+            return null;
+        }
+        String baseName = name.substring(0, name.indexOf("."));
+        String fallbackPath = path.substring(0, path.lastIndexOf("/") + 1) + baseName + ".fallback.groovy";
+        if (resolver.getResource(fallbackPath) != null) {
+            return fallbackPath;
+        }
+        return null;
     }
 
 }

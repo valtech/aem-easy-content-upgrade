@@ -29,6 +29,7 @@ public class ExecutionResult {
     private String output;
     private String time;
     private String result;
+    private ExecutionResult fallbackResult;
     
     /**
      * Constructor
@@ -37,12 +38,14 @@ public class ExecutionResult {
      * @param time execution time
      * @param result result 
      * @param output script output
+     * @param fallbackResult fallback script result
      */
-    public ExecutionResult(boolean success, String time, String result, String output) {
+    public ExecutionResult(boolean success, String time, String result, String output, ExecutionResult fallbackResult) {
         this.success = success;
         this.output = output;
         this.time = time;
         this.result = result;
+        this.fallbackResult = fallbackResult;
     }
     
     /**
@@ -81,6 +84,15 @@ public class ExecutionResult {
         return time;
     }
 
+    /**
+     * Returns the fallback script result if any.
+     * 
+     * @return result
+     */
+    public ExecutionResult getFallbackResult() {
+        return fallbackResult;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringVal = new StringBuilder("Successful: " + Boolean.toString(success));
@@ -91,6 +103,9 @@ public class ExecutionResult {
             stringVal.append("\n" + "Result: " + result);
         }
         stringVal.append("\n" + "Output: " + output);
+        if (fallbackResult != null) {
+            stringVal.append("Fallback script executed:\n" + fallbackResult.toString());
+        }
         return stringVal.toString();
     }
 

@@ -16,13 +16,20 @@
  */
 package de.valtech.aecu.core.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.settings.SlingSettingsService;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +51,9 @@ public class AecuServiceImplTest {
     
     @Mock
     private SlingSettingsService settingsService;
+    
+    @Mock
+    private ResourceResolver resolver;
     
     @Before
     public void setup() {
@@ -98,6 +108,27 @@ public class AecuServiceImplTest {
     @Test
     public void isValidScriptName_fallback() {
         assertFalse(service.isValidScriptName("test.fallback.groovy"));
+    }
+    
+    @Test
+    public void getFallbackScript_Exists() {
+        when(resolver.getResource("/path/to/script.fallback.groovy")).thenReturn(mock(Resource.class));
+        
+        assertEquals("/path/to/script.fallback.groovy", service.getFallbackScript(resolver, "/path/to/script.always.groovy"));
+        assertEquals("/path/to/script.fallback.groovy", service.getFallbackScript(resolver, "/path/to/script.groovy"));
+    }
+
+    @Test
+    public void getFallbackScript_NotExists() {
+        assertNull(service.getFallbackScript(resolver, "/path/to/script.always.groovy"));
+        assertNull(service.getFallbackScript(resolver, "/path/to/script.groovy"));
+    }
+
+    @Test
+    public void getFallbackScript_Fallback() {
+        verify(resolver, never()).getResource("/path/to/script.fallback.groovy");
+        
+        assertNull(service.getFallbackScript(resolver, "/path/to/script.fallback.groovy"));
     }
 
 }
