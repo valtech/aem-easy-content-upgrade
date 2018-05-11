@@ -16,48 +16,68 @@
  */
 package de.valtech.aecu.service;
 
+import java.util.Date;
 import java.util.List;
 
-import org.osgi.annotation.versioning.ProviderType;
-
 /**
- * Service interface for AECU.
+ * History entry for an execution run.
  * 
  * @author Roland Gruber
+ *
  */
-@ProviderType
-public interface AecuService {
+public interface HistoryEntry {
     
     /**
-     * Returns the AECU version.
-     * 
-     * @return version
+     * Execution state (e.g. running)
      */
-    String getVersion();
+    public enum STATE {
+        STARTED,
+        RUNNING,
+        FINISHED
+    };
     
     /**
-     * Returns a list of files that can be executed in the given path.
-     * 
-     * @param path file or folder
-     * @return list of files that are executable
-     * @throws AecuException error finding files (e.g. invalid path)
+     * Execution result (e.g. successful)
      */
-    List<String> getFiles(String path) throws AecuException;
+    public enum RESULT {
+        SUCCESS,
+        FAILURE,
+        UNKNOWN
+    };
     
     /**
-     * Executes the script at the given position.
+     * Returns the start time of the execution.
      * 
-     * @param path path of script
-     * @return execution result
-     * @throws AecuException error during execution
+     * @return start
      */
-    ExecutionResult execute(String path) throws AecuException;
+    Date getStart();
     
     /**
-     * Starts a new history entry.
+     * Returns the end time of the execution.
      * 
-     * @return history entry
+     * @return end
      */
-    HistoryEntry createHistoryEntry();
-
+    Date getEnd();
+    
+    /**
+     * Returns the single script runs.
+     * 
+     * @return single results
+     */
+    List<ExecutionResult> getSingleResults();
+    
+    /**
+     * Returns the current state of the run.
+     * 
+     * @return state
+     */
+    STATE getState();
+    
+    /**
+     * Returns the global result of the run.
+     * 
+     * @return result
+     */
+    RESULT getResult();
+    
 }

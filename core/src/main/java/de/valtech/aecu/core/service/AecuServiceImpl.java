@@ -39,6 +39,7 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.service.AecuException;
 import de.valtech.aecu.service.AecuService;
 import de.valtech.aecu.service.ExecutionResult;
+import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * AECU service.
@@ -206,6 +207,12 @@ public class AecuServiceImpl implements AecuService {
         if (resolver.getResource(fallbackPath) != null) {
             return fallbackPath;
         }
+        return null;
+    }
+
+    @Override
+    public HistoryEntry createHistoryEntry() {
+        // TODO Auto-generated method stub
         return null;
     }
 
