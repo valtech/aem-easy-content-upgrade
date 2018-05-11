@@ -16,6 +16,7 @@
  */
 package de.valtech.aecu.core.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class HistoryEntryImpl implements HistoryEntry {
     private String path;
     private Date start;
     private Date end;
-    private List<ExecutionResult> singleResults;
+    private List<ExecutionResult> singleResults = new ArrayList<>();
 
     @Override
     public Date getStart() {

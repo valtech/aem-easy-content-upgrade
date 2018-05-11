@@ -67,6 +67,7 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
             result.append(aecuService.execute(file).toString());
             result.append("\n\n");
         }
+        aecuService.finishHistoryEntry(history);
         return result.toString();
     }
 

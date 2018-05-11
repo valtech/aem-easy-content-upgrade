@@ -60,5 +60,14 @@ public interface AecuService {
      * @throws AecuException error setting up entry
      */
     HistoryEntry createHistoryEntry() throws AecuException;
+    
+    /**
+     * Finishes the history entry.
+     * 
+     * @param history open history entry
+     * @return history entry
+     * @throws AecuException error saving state
+     */
+    HistoryEntry finishHistoryEntry(HistoryEntry history) throws AecuException;
 
 }

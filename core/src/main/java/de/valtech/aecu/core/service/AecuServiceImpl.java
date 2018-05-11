@@ -64,6 +64,8 @@ public class AecuServiceImpl implements AecuService {
 
     private static final String ATTR_START = "start";
 
+    private static final String ATTR_END = "end";
+
     private static final String HISTORY_BASE = "/var/aecu";
 
     @Reference
@@ -242,10 +244,12 @@ public class AecuServiceImpl implements AecuService {
             values.put(ATTR_START, start);
             values.put(ATTR_STATE, STATE.RUNNING.name());
             values.put(ATTR_RESULT, RESULT.UNKNOWN.name());
+            history.setStart(start.getTime());
+            history.setPath(nodePath);
             try {
                 resolver.commit();
             } catch (PersistenceException e) {
-                throw new AecuException("Unable to create " + nodePath, e);
+                throw new AecuException("Unable to create history " + nodePath, e);
             }
             return history;
         }
@@ -288,6 +292,34 @@ public class AecuServiceImpl implements AecuService {
     private String generateHistoryNodeName() {
         Random random = new Random();
         return System.currentTimeMillis() + "" + random.nextInt(100000);
+    }
+
+    @Override
+    public HistoryEntry finishHistoryEntry(HistoryEntry history) throws AecuException {
+        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+            try {
+                Resource resource = resolver.getResource(history.getRepositoryPath());
+                ModifiableValueMap values = resource.adaptTo(ModifiableValueMap.class);
+                Calendar end = new GregorianCalendar();
+                values.put(ATTR_END, end);
+                values.put(ATTR_STATE, STATE.FINISHED.name());
+                RESULT result = RESULT.SUCCESS;
+                for (ExecutionResult singleResult : history.getSingleResults()) {
+                    if (!singleResult.isSuccess()) {
+                        result = RESULT.FAILURE;
+                        break;
+                    }
+                }
+                values.put(ATTR_RESULT, result.name());
+                resolver.commit();
+            } catch (PersistenceException e) {
+                throw new AecuException("Unable to finish history " + history.getRepositoryPath(), e);
+            }
+            return history;
+        }
+        catch (LoginException e) {
+            throw new AecuException("Unable to get service resource resolver", e);
+        }
     }
 
 }
