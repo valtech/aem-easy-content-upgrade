@@ -80,4 +80,11 @@ public interface HistoryEntry {
      */
     RESULT getResult();
     
+    /**
+     * Returns the path in repository where the history is stored.
+     * 
+     * @return path
+     */
+    String getRepositoryPath();
+    
 }

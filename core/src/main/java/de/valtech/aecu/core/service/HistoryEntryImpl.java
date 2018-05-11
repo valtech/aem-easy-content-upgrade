@@ -56,5 +56,10 @@ public class HistoryEntryImpl implements HistoryEntry {
         // TODO Auto-generated method stub
         return RESULT.UNKNOWN;
     }
+    @Override
+    public String getRepositoryPath() {
+        // TODO Auto-generated method stub
+        return path;
+    }
 
 }
