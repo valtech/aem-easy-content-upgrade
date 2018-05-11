@@ -61,5 +61,32 @@ public class HistoryEntryImpl implements HistoryEntry {
         // TODO Auto-generated method stub
         return path;
     }
+    
+    /**
+     * Sets the start date.
+     * 
+     * @param start start date
+     */
+    protected void setStart(Date start) {
+        this.start = start;
+    }
+
+    /**
+     * Sets the end date.
+     * 
+     * @param end end date
+     */
+    protected void setEnd(Date end) {
+        this.end = end;
+    }
+
+    /**
+     * Sets the node path.
+     * 
+     * @param path node path
+     */
+    protected void setPath(String path) {
+        this.path = path;
+    }
 
 }

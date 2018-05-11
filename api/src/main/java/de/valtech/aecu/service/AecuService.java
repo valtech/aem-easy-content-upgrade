@@ -57,7 +57,8 @@ public interface AecuService {
      * Starts a new history entry.
      * 
      * @return history entry
+     * @throws AecuException error setting up entry
      */
-    HistoryEntry createHistoryEntry();
+    HistoryEntry createHistoryEntry() throws AecuException;
 
 }

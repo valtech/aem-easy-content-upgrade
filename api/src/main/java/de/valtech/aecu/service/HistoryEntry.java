@@ -31,7 +31,6 @@ public interface HistoryEntry {
      * Execution state (e.g. running)
      */
     public enum STATE {
-        STARTED,
         RUNNING,
         FINISHED
     };
