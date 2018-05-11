@@ -39,27 +39,40 @@ public class HistoryEntryImpl implements HistoryEntry {
     public Date getStart() {
         return start;
     }
+    
     @Override
     public Date getEnd() {
         return end;
     }
+    
     @Override
     public List<ExecutionResult> getSingleResults() {
         return singleResults;
     }
+    
     @Override
     public STATE getState() {
         // TODO Auto-generated method stub
         return STATE.RUNNING;
     }
+    
     @Override
     public RESULT getResult() {
-        // TODO Auto-generated method stub
-        return RESULT.UNKNOWN;
+        if (singleResults.isEmpty()) {
+            return RESULT.UNKNOWN;
+        }
+        RESULT result = RESULT.SUCCESS;
+        for (ExecutionResult singleResult : singleResults) {
+            if (!singleResult.isSuccess()) {
+                result = RESULT.FAILURE;
+                break;
+            }
+        }
+        return result;
     }
+    
     @Override
     public String getRepositoryPath() {
-        // TODO Auto-generated method stub
         return path;
     }
     

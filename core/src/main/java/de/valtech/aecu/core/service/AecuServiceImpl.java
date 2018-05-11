@@ -303,14 +303,7 @@ public class AecuServiceImpl implements AecuService {
                 Calendar end = new GregorianCalendar();
                 values.put(ATTR_END, end);
                 values.put(ATTR_STATE, STATE.FINISHED.name());
-                RESULT result = RESULT.SUCCESS;
-                for (ExecutionResult singleResult : history.getSingleResults()) {
-                    if (!singleResult.isSuccess()) {
-                        result = RESULT.FAILURE;
-                        break;
-                    }
-                }
-                values.put(ATTR_RESULT, result.name());
+                values.put(ATTR_RESULT, history.getResult().name());
                 resolver.commit();
             } catch (PersistenceException e) {
                 throw new AecuException("Unable to finish history " + history.getRepositoryPath(), e);
