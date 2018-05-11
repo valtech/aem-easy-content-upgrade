@@ -33,6 +33,10 @@
                     <exclude>**/pom.xml</exclude>
                 </excludes>
             </resource>
+            <resource>
+                <directory>src/main/content/META-INF/vault/definition</directory>
+                <targetPath>../vault-work/META-INF/vault/definition</targetPath>
+            </resource>
         </resources>
         <plugins>
             <plugin>
