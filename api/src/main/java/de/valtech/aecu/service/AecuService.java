@@ -62,6 +62,16 @@ public interface AecuService {
     HistoryEntry createHistoryEntry() throws AecuException;
     
     /**
+     * Stores an execution run in existing history.
+     * 
+     * @param history history entry
+     * @param result script execution result
+     * @return updated history
+     * @throws AecuException error inserting history entry
+     */
+    HistoryEntry storeExecutionInHistory(HistoryEntry history, ExecutionResult result) throws AecuException;
+    
+    /**
      * Finishes the history entry.
      * 
      * @param history open history entry

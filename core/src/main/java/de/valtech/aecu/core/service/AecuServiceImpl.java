@@ -58,6 +58,14 @@ import de.valtech.aecu.service.HistoryEntry.STATE;
 @Component(service=AecuService.class)
 public class AecuServiceImpl implements AecuService {
     
+    private static final String ATTR_RUN_OUTPUT = "runOutput";
+
+    private static final String ATTR_RUN_SUCCESS = "runSuccess";
+
+    private static final String ATTR_RUN_RESULT = "runResult";
+
+    private static final String ATTR_RUN_TIME = "runTime";
+
     private static final String ATTR_RESULT = "result";
 
     private static final String ATTR_STATE = "state";
@@ -297,21 +305,60 @@ public class AecuServiceImpl implements AecuService {
     @Override
     public HistoryEntry finishHistoryEntry(HistoryEntry history) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            try {
-                Resource resource = resolver.getResource(history.getRepositoryPath());
-                ModifiableValueMap values = resource.adaptTo(ModifiableValueMap.class);
-                Calendar end = new GregorianCalendar();
-                values.put(ATTR_END, end);
-                values.put(ATTR_STATE, STATE.FINISHED.name());
-                values.put(ATTR_RESULT, history.getResult().name());
-                resolver.commit();
-            } catch (PersistenceException e) {
-                throw new AecuException("Unable to finish history " + history.getRepositoryPath(), e);
-            }
+            Resource resource = resolver.getResource(history.getRepositoryPath());
+            ModifiableValueMap values = resource.adaptTo(ModifiableValueMap.class);
+            Calendar end = new GregorianCalendar();
+            values.put(ATTR_END, end);
+            values.put(ATTR_STATE, STATE.FINISHED.name());
+            values.put(ATTR_RESULT, history.getResult().name());
+            resolver.commit();
             return history;
         }
         catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
+        }
+        catch (PersistenceException e) {
+            throw new AecuException("Unable to finish history " + history.getRepositoryPath(), e);
+        }
+    }
+
+    @Override
+    public HistoryEntry storeExecutionInHistory(HistoryEntry history, ExecutionResult result) throws AecuException {
+        if ((history == null) || !STATE.RUNNING.equals(history.getState())) {
+            throw new AecuException("Invalid history entry.");
+        }
+        history.getSingleResults().add(result);
+        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+            String path = history.getRepositoryPath() + "/" + history.getSingleResults().size();
+            saveExecutionResultInHistory(result, path, resolver);
+            resolver.commit();
+            return history;
+        }
+        catch (LoginException e) {
+            throw new AecuException("Unable to get service resource resolver", e);
+        }
+        catch (PersistenceException e) {
+            throw new AecuException("Unable to add history entry " + history.getRepositoryPath(), e);
+        }
+    }
+    
+    private void saveExecutionResultInHistory(ExecutionResult result, String path, ResourceResolver resolver) throws AecuException {
+        createPath(path, resolver, "nt:unstructured");
+        Resource entry = resolver.getResource(path);
+        ModifiableValueMap values = entry.adaptTo(ModifiableValueMap.class);
+        values.put(ATTR_RUN_SUCCESS, result.isSuccess());
+        if (StringUtils.isNotBlank(result.getOutput())) {
+            values.put(ATTR_RUN_OUTPUT, result.getOutput());
+        }
+        if (StringUtils.isNotBlank(result.getResult())) {
+            values.put(ATTR_RUN_RESULT, result.getResult());
+        }
+        if (StringUtils.isNotBlank(result.getTime())) {
+            values.put(ATTR_RUN_TIME, result.getTime());
+        }
+        if (result.getFallbackResult() != null) {
+            String fallbackPath = path + "/fallback";
+            saveExecutionResultInHistory(result.getFallbackResult(), fallbackPath, resolver);
         }
     }
 

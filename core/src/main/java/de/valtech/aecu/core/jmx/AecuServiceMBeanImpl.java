@@ -27,6 +27,7 @@ import com.adobe.granite.jmx.annotation.AnnotatedStandardMBean;
 
 import de.valtech.aecu.service.AecuException;
 import de.valtech.aecu.service.AecuService;
+import de.valtech.aecu.service.ExecutionResult;
 import de.valtech.aecu.service.HistoryEntry;
 
 @Component(service = {AecuServiceMBean.class}, immediate = true, property = {
@@ -64,7 +65,9 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
         StringBuilder result = new StringBuilder("Found " + files.size() + " files to execute\n\n");
         for (String file : files) {
             result.append(file + "\n");
-            result.append(aecuService.execute(file).toString());
+            ExecutionResult singleResult = aecuService.execute(file);
+            aecuService.storeExecutionInHistory(history, singleResult);
+            result.append(singleResult.toString());
             result.append("\n\n");
         }
         aecuService.finishHistoryEntry(history);
