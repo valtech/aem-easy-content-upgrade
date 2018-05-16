@@ -27,6 +27,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
+import org.apache.jackrabbit.oak.spi.security.authorization.accesscontrol.AccessControlConstants;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -81,7 +82,7 @@ public class HistoryUtil {
         String basePath = HISTORY_BASE + "/" + start.get(Calendar.YEAR) + "/" + (start.get(Calendar.MONTH) + 1) + "/" + start.get(Calendar.DAY_OF_MONTH);
         String nodeName = generateHistoryNodeName();
         String nodePath = basePath + "/" + nodeName;
-        createPath(basePath, resolver, JcrResourceConstants.NT_SLING_FOLDER);
+        createPath(basePath, resolver, JcrResourceConstants.NT_SLING_ORDERED_FOLDER);
         createPath(nodePath, resolver, JcrConstants.NT_UNSTRUCTURED);
         Resource resource = resolver.getResource(nodePath);
         ModifiableValueMap values = resource.adaptTo(ModifiableValueMap.class);
@@ -128,20 +129,109 @@ public class HistoryUtil {
     /**
      * Returns the last history entries. The search starts at the newest entry.
      * 
-     * @param startIndex start reading at this index
+     * @param startIndex start reading at this index (first is 0)
      * @param count number of entries to read
      * @param resolver resource resolver
      * @return history entries (newest first)
      */
     public List<HistoryEntry> getHistory(int startIndex, int count, ResourceResolver resolver) {
         List<HistoryEntry> entries = new ArrayList<>();
+        if (count == 0) {
+            return entries;
+        }
         Resource base = resolver.getResource(HISTORY_BASE);
-
-        // TODO start, count
-        Resource latest = getLatestHistoryEntry(base);
-        entries.add(readHistoryEntry(latest));
-
+        Resource current = getLatestHistoryEntry(base);
+        if (current == null) {
+            return entries;
+        }
+        // skip up to start index
+        for (int i = 0; i < startIndex; i++) {
+            current = getPreviousHistoryEntry(current);
+        }
+        for (int i = 0; i < count; i++) {
+            if (current == null) {
+                break;
+            }
+            entries.add(readHistoryEntry(current));
+            current = getPreviousHistoryEntry(current);
+        }
         return entries;
+    }
+
+    /**
+     * Returns the run before the given one.
+     * 
+     * @param current current run 
+     * @return previous run
+     */
+    private Resource getPreviousHistoryEntry(Resource current) {
+        // check if the parent has a sibling before the current node
+        Resource previous = getPreviousSibling(current);
+        if (previous != null) {
+            return previous;
+        }
+        // go down till we find an earlier sibling
+        Resource base = descendToPreviousSiblingInHistory(current.getParent());
+        // go back up the folders
+        return ascendToLastRun(base);
+    }
+    
+    /**
+     * Gos up the folders to last run.
+     * 
+     * @param resource current node
+     * @return last run
+     */
+    private Resource ascendToLastRun(Resource resource) {
+        if (resource == null) {
+            return null;
+        }
+        Resource last = getLastChild(resource);
+        ValueMap values = last.adaptTo(ValueMap.class);
+        if (JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(values.get(JcrConstants.JCR_PRIMARYTYPE, String.class))) {
+            return ascendToLastRun(last);
+        }
+        return last;
+    }
+
+    /**
+     * Descends in history till a previous sibling is found.
+     * Descending stops at history base level
+     * 
+     * @param current current resource
+     * @return previous sibling
+     */
+    private Resource descendToPreviousSiblingInHistory(Resource current) {
+        if ((current == null) || HISTORY_BASE.equals(current.getPath())) {
+            return null;
+        }
+        Resource previous = getPreviousSibling(current);
+        if (previous != null) {
+            return previous;
+        }
+        previous = descendToPreviousSiblingInHistory(current.getParent());
+        return previous;
+    }
+
+    /**
+     * Returns the previous sibling of the given node.
+     * 
+     * @param resource current node
+     * @return last sibling or null
+     */
+    private Resource getPreviousSibling(Resource resource) {
+        Iterator<Resource> siblings = resource.getParent().listChildren();
+        Resource previous = null;
+        while (siblings.hasNext()) {
+            Resource sibling = siblings.next();
+            if (sibling.getName().equals(resource.getName())) {
+                break;
+            }
+            if (!sibling.getName().equals(AccessControlConstants.REP_POLICY)) {
+                previous = sibling;
+            }
+        }
+        return previous;
     }
 
     /**
@@ -154,11 +244,7 @@ public class HistoryUtil {
         if (base == null) {
             return null;
         }
-        Resource lastYear = getLastChild(base);
-        Resource lastMonth = getLastChild(lastYear);
-        Resource lastDay = getLastChild(lastMonth);
-        Resource lastRun = getLastChild(lastDay);
-        return lastRun;
+        return ascendToLastRun(base);
     }
     
     /**
@@ -189,7 +275,9 @@ public class HistoryUtil {
         HistoryEntryImpl entry = new HistoryEntryImpl();
         entry.setRepositoryPath(resource.getPath());
         ValueMap values = resource.adaptTo(ValueMap.class);
-        entry.setState(STATE.valueOf(values.get(ATTR_STATE, String.class)));
+        if (values.containsKey(ATTR_STATE)) {
+            entry.setState(STATE.valueOf(values.get(ATTR_STATE, String.class)));
+        }
         if (values.containsKey(ATTR_START)) {
             entry.setStart(values.get(ATTR_START, Calendar.class).getTime());
         }

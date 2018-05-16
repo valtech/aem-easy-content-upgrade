@@ -83,7 +83,7 @@ public interface AecuService {
     /**
      * Returns the last history entries. The search starts at the newest entry.
      * 
-     * @param startIndex start reading at this index
+     * @param startIndex start reading at this index (first is 0)
      * @param count number of entries to read
      * @return history entries (newest first)
      * @throws AecuException error reading history
