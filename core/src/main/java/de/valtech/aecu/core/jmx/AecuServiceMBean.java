@@ -58,4 +58,14 @@ public interface AecuServiceMBean {
      */
     String execute(@Name("Path") @Description("Path to file that should be executed") String path) throws AecuException;
 
+    /**
+     * Returns history entries.
+     * 
+     * @param start start index (0 is last run)
+     * @param count number of entries to return
+     * @return history entries
+     * @throws AecuException
+     */
+    String getHistory(@Name("Start index") int start, @Name("Count") int count) throws AecuException;
+    
 }

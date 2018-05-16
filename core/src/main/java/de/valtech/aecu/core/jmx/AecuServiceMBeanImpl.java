@@ -74,4 +74,14 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
         return result.toString();
     }
 
+    @Override
+    public String getHistory(int start, int count) throws AecuException {
+        List<HistoryEntry> entries = aecuService.getHistory(start, count);
+        StringBuilder output = new StringBuilder();
+        for (HistoryEntry entry : entries) {
+            output.append(entry.toString() + "\n\n");
+        }
+        return output.toString();
+    }
+
 }

@@ -79,5 +79,15 @@ public interface AecuService {
      * @throws AecuException error saving state
      */
     HistoryEntry finishHistoryEntry(HistoryEntry history) throws AecuException;
+    
+    /**
+     * Returns the last history entries. The search starts at the newest entry.
+     * 
+     * @param startIndex start reading at this index
+     * @param count number of entries to read
+     * @return history entries (newest first)
+     * @throws AecuException error reading history
+     */
+    List<HistoryEntry> getHistory(int startIndex, int count) throws AecuException;
 
 }

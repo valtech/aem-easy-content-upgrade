@@ -30,6 +30,7 @@ import de.valtech.aecu.service.HistoryEntry;
  */
 public class HistoryEntryImpl implements HistoryEntry {
 
+    private STATE state;
     private String path;
     private Date start;
     private Date end;
@@ -52,8 +53,7 @@ public class HistoryEntryImpl implements HistoryEntry {
     
     @Override
     public STATE getState() {
-        // TODO Auto-generated method stub
-        return STATE.RUNNING;
+        return state;
     }
     
     @Override
@@ -81,7 +81,7 @@ public class HistoryEntryImpl implements HistoryEntry {
      * 
      * @param start start date
      */
-    protected void setStart(Date start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
@@ -90,7 +90,7 @@ public class HistoryEntryImpl implements HistoryEntry {
      * 
      * @param end end date
      */
-    protected void setEnd(Date end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 
@@ -99,8 +99,26 @@ public class HistoryEntryImpl implements HistoryEntry {
      * 
      * @param path node path
      */
-    protected void setPath(String path) {
+    public void setRepositoryPath(String path) {
         this.path = path;
+    }
+    
+    public void setState(STATE state) {
+        this.state = state;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder output = new StringBuilder();
+        output.append("Path: " + getRepositoryPath() + "\n");
+        output.append("Start: " + getStart() + "\n");
+        output.append("End: " + getEnd() + "\n");
+        output.append("State: " + getState() + "\n");
+        output.append("Result: " + getResult() + "\n\n");
+        for (ExecutionResult singleResult : singleResults) {
+            output.append(singleResult.toString() + "\n");
+        }
+        return output.toString();
     }
 
 }

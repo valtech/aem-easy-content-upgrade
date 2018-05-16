@@ -18,18 +18,12 @@ package de.valtech.aecu.core.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -42,12 +36,12 @@ import org.osgi.service.component.annotations.Reference;
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 
+import de.valtech.aecu.core.history.HistoryUtil;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.service.AecuException;
 import de.valtech.aecu.service.AecuService;
 import de.valtech.aecu.service.ExecutionResult;
 import de.valtech.aecu.service.HistoryEntry;
-import de.valtech.aecu.service.HistoryEntry.RESULT;
 import de.valtech.aecu.service.HistoryEntry.STATE;
 
 /**
@@ -57,24 +51,6 @@ import de.valtech.aecu.service.HistoryEntry.STATE;
  */
 @Component(service=AecuService.class)
 public class AecuServiceImpl implements AecuService {
-    
-    private static final String ATTR_RUN_OUTPUT = "runOutput";
-
-    private static final String ATTR_RUN_SUCCESS = "runSuccess";
-
-    private static final String ATTR_RUN_RESULT = "runResult";
-
-    private static final String ATTR_RUN_TIME = "runTime";
-
-    private static final String ATTR_RESULT = "result";
-
-    private static final String ATTR_STATE = "state";
-
-    private static final String ATTR_START = "start";
-
-    private static final String ATTR_END = "end";
-
-    private static final String HISTORY_BASE = "/var/aecu";
 
     @Reference
     private ServiceResourceResolverService resolverService;
@@ -240,77 +216,23 @@ public class AecuServiceImpl implements AecuService {
     @Override
     public HistoryEntry createHistoryEntry() throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryEntryImpl history = new HistoryEntryImpl();
-            Calendar start = new GregorianCalendar();
-            String basePath = HISTORY_BASE + "/" + start.get(Calendar.YEAR) + "/" + (start.get(Calendar.MONTH) + 1) + "/" + start.get(Calendar.DAY_OF_MONTH);
-            String nodeName = generateHistoryNodeName();
-            String nodePath = basePath + "/" + nodeName;
-            createPath(basePath, resolver, JcrResourceConstants.NT_SLING_FOLDER);
-            createPath(nodePath, resolver, JcrConstants.NT_UNSTRUCTURED);
-            Resource resource = resolver.getResource(nodePath);
-            ModifiableValueMap values = resource.adaptTo(ModifiableValueMap.class);
-            values.put(ATTR_START, start);
-            values.put(ATTR_STATE, STATE.RUNNING.name());
-            values.put(ATTR_RESULT, RESULT.UNKNOWN.name());
-            history.setStart(start.getTime());
-            history.setPath(nodePath);
-            try {
-                resolver.commit();
-            } catch (PersistenceException e) {
-                throw new AecuException("Unable to create history " + nodePath, e);
-            }
-            return history;
+            HistoryUtil historyUtil = new HistoryUtil();
+            HistoryEntry entry = historyUtil.createHistoryEntry(resolver);
+            resolver.commit();
+            return entry;
+        } catch (PersistenceException e) {
+            throw new AecuException("Unable to create history", e);
         }
         catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
         }
     }
 
-    /**
-     * Creates the folder at the given path if not yet existing.
-     * 
-     * @param path path
-     * @param resolver resource resolver
-     * @param primaryType primary type
-     * @throws AecuException error creating folder
-     */
-    protected void createPath(String path, ResourceResolver resolver, String primaryType) throws AecuException {
-        Resource folder = resolver.getResource(path);
-        if (folder == null) {
-            String parent = path.substring(0, path.lastIndexOf("/"));
-            String name = path.substring(path.lastIndexOf("/") + 1);
-            if (resolver.getResource(parent) == null) {
-                createPath(parent, resolver, primaryType);
-            }
-            Map<String, Object> properties = new HashMap<>();
-            properties.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
-            try {
-                resolver.create(resolver.getResource(parent), name, properties);
-            } catch (PersistenceException e) {
-                throw new AecuException("Unable to create " + path, e);
-            }
-        }
-    }
-
-    /**
-     * Generates the node name for a history entry.
-     * 
-     * @return name
-     */
-    private String generateHistoryNodeName() {
-        Random random = new Random();
-        return System.currentTimeMillis() + "" + random.nextInt(100000);
-    }
-
     @Override
     public HistoryEntry finishHistoryEntry(HistoryEntry history) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            Resource resource = resolver.getResource(history.getRepositoryPath());
-            ModifiableValueMap values = resource.adaptTo(ModifiableValueMap.class);
-            Calendar end = new GregorianCalendar();
-            values.put(ATTR_END, end);
-            values.put(ATTR_STATE, STATE.FINISHED.name());
-            values.put(ATTR_RESULT, history.getResult().name());
+            HistoryUtil historyUtil = new HistoryUtil();
+            historyUtil.finishHistoryEntry(history, resolver);
             resolver.commit();
             return history;
         }
@@ -329,8 +251,8 @@ public class AecuServiceImpl implements AecuService {
         }
         history.getSingleResults().add(result);
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            String path = history.getRepositoryPath() + "/" + history.getSingleResults().size();
-            saveExecutionResultInHistory(result, path, resolver);
+            HistoryUtil historyUtil = new HistoryUtil();
+            historyUtil.storeExecutionInHistory(history, result, resolver);
             resolver.commit();
             return history;
         }
@@ -342,24 +264,15 @@ public class AecuServiceImpl implements AecuService {
         }
     }
     
-    private void saveExecutionResultInHistory(ExecutionResult result, String path, ResourceResolver resolver) throws AecuException {
-        createPath(path, resolver, "nt:unstructured");
-        Resource entry = resolver.getResource(path);
-        ModifiableValueMap values = entry.adaptTo(ModifiableValueMap.class);
-        values.put(ATTR_RUN_SUCCESS, result.isSuccess());
-        if (StringUtils.isNotBlank(result.getOutput())) {
-            values.put(ATTR_RUN_OUTPUT, result.getOutput());
+    @Override
+    public List<HistoryEntry> getHistory(int startIndex, int count) throws AecuException {
+        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+            HistoryUtil historyUtil = new HistoryUtil();
+            return historyUtil.getHistory(startIndex, count, resolver);
         }
-        if (StringUtils.isNotBlank(result.getResult())) {
-            values.put(ATTR_RUN_RESULT, result.getResult());
-        }
-        if (StringUtils.isNotBlank(result.getTime())) {
-            values.put(ATTR_RUN_TIME, result.getTime());
-        }
-        if (result.getFallbackResult() != null) {
-            String fallbackPath = path + "/fallback";
-            saveExecutionResultInHistory(result.getFallbackResult(), fallbackPath, resolver);
+        catch (LoginException e) {
+            throw new AecuException("Unable to get service resource resolver", e);
         }
     }
-
+    
 }
