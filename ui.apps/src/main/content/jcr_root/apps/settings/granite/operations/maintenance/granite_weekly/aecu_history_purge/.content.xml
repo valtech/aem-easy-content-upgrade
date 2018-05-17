@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
+    jcr:primaryType="nt:unstructured"
+    name="/libs/granite/operations/content/maintenanceWindow.html/apps/settings/granite/operations/maintenance/granite_weekly"
+    sling:resourceType="granite/operations/components/maintenance/task"
+    granite.maintenance.name="AECUPurgeHistory"
+/>
