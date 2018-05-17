@@ -20,8 +20,13 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.AttributeType;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
+/**
+ * Configuration for purge task.
+ * 
+ * @author Roland Gruber
+ */
 @ObjectClassDefinition(name = "AECU Purge history configuration")
-public interface PurgeHistoryConfiguration {
+public @interface PurgeHistoryConfiguration {
 
     @AttributeDefinition(
         type = AttributeType.INTEGER,

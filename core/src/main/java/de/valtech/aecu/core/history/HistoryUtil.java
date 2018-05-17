@@ -32,8 +32,12 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.api.resource.ResourceUtil.BatchResourceRemover;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.core.service.HistoryEntryImpl;
 import de.valtech.aecu.service.AecuException;
@@ -48,6 +52,8 @@ import de.valtech.aecu.service.HistoryEntry.STATE;
  * @author Roland Gruber
  */
 public class HistoryUtil {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(HistoryUtil.class);
 
     private static final String HISTORY_BASE = "/var/aecu";
 
@@ -366,6 +372,54 @@ public class HistoryUtil {
     private String generateHistoryNodeName() {
         Random random = new Random();
         return System.currentTimeMillis() + "" + random.nextInt(100000);
+    }
+
+    /**
+     * Purges the history by keeping only entries within the set number of days.
+     * 
+     * @param resolver resource resolver
+     * @param daysToKeep number of days to keep
+     * @throws PersistenceException error deleting node
+     */
+    public void purgeHistory(ResourceResolver resolver, int daysToKeep) throws PersistenceException {
+        Resource base = resolver.getResource(HISTORY_BASE);
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
+        LOG.debug("Starting purge with limit " + calendar.getTime().toString());
+        deleteYears(base.listChildren(), calendar);
+    }
+
+    /**
+     * Deletes the year resources that are too old.
+     * 
+     * @param resources resources
+     * @param calendar time limit
+     * @throws PersistenceException error deleting node
+     */
+    private void deleteYears(Iterator<Resource> resources, Calendar calendar) throws PersistenceException {
+        while (resources.hasNext()) {
+            Resource resource = resources.next();
+            String name = resource.getName();
+            // skip extra nodes such as ACLs
+            if (!StringUtils.isNumeric(name)) {
+                LOG.debug("Skipping purge of other node: " + resource.getPath());
+                continue;
+            }
+            int year = Integer.parseInt(name);
+            int yearLimit = calendar.get(Calendar.YEAR);
+            if (year > yearLimit) {
+                LOG.debug("Skipping purge of too young node: " + resource.getPath());
+            }
+            else if (year == yearLimit) {
+                LOG.debug("Skipping purge of too young node: " + resource.getPath());
+                // TODO
+            }
+            else {
+                LOG.debug("Purging node: " + resource.getPath());
+                BatchResourceRemover remover = ResourceUtil.getBatchResourceRemover(1000);
+                remover.delete(resource);
+            }
+        }
     }
 
 }
