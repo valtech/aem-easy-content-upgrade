@@ -386,7 +386,7 @@ public class HistoryUtil {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
         LOG.debug("Starting purge with limit " + calendar.getTime().toString());
-        deleteYears(base.listChildren(), calendar);
+        deleteRecursive(base.listChildren(), calendar, new int[] {Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH});
     }
 
     /**
@@ -394,9 +394,11 @@ public class HistoryUtil {
      * 
      * @param resources resources
      * @param calendar time limit
+     * @param fields calendar fields
      * @throws PersistenceException error deleting node
      */
-    private void deleteYears(Iterator<Resource> resources, Calendar calendar) throws PersistenceException {
+    private void deleteRecursive(Iterator<Resource> resources, Calendar calendar, int[] fields) throws PersistenceException {
+        int currentField = fields[0];
         while (resources.hasNext()) {
             Resource resource = resources.next();
             String name = resource.getName();
@@ -405,14 +407,24 @@ public class HistoryUtil {
                 LOG.debug("Skipping purge of other node: " + resource.getPath());
                 continue;
             }
-            int year = Integer.parseInt(name);
-            int yearLimit = calendar.get(Calendar.YEAR);
-            if (year > yearLimit) {
+            int nodeValue = Integer.parseInt(name);
+            int limit = calendar.get(currentField);
+            if (currentField == Calendar.MONTH) {
+                // months start with 0 but are stored beginning with 1 in CRX
+                limit++;
+            }
+            if (nodeValue > limit) {
                 LOG.debug("Skipping purge of too young node: " + resource.getPath());
             }
-            else if (year == yearLimit) {
+            else if (nodeValue == limit) {
                 LOG.debug("Skipping purge of too young node: " + resource.getPath());
-                // TODO
+                // check next level
+                if (fields.length == 1) {
+                    return;
+                }
+                int[] fieldsNew = new int[fields.length - 1];
+                System.arraycopy(fields, 1, fieldsNew, 0, fieldsNew.length);
+                deleteRecursive(resource.listChildren(), calendar, fieldsNew);
             }
             else {
                 LOG.debug("Purging node: " + resource.getPath());
