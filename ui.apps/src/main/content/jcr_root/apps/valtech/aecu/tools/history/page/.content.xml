@@ -4,10 +4,12 @@
   xmlns:rep="internal"
   xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
   xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
-    jcr:primaryType="nt:unstructured"
-    consoleId="aecu-history"
-    jcr:title="AEM Easy Content Upgrade - History"
-    sling:resourceType="granite/ui/components/shell/collectionpage"
+  jcr:primaryType="cq:Page">
+    <jcr:content
+       jcr:primaryType="nt:unstructured"
+       jcr:title="AEM Easy Content Upgrade - History"
+       consoleId="aecu-history"
+       sling:resourceType="granite/ui/components/shell/collectionpage"
     >
     <head jcr:primaryType="nt:unstructured">
       <clientlibs
@@ -26,7 +28,11 @@
           jcr:primaryType="nt:unstructured"
           layoutId="list"
           selectionMode="row"
+          selectionCount="single"
           sling:resourceType="granite/ui/components/coral/foundation/table"
+          limit="50"
+          src="/apps/valtech/aecu/tools/history/page/jcr:content/views/list{.offset,limit}.html"
+          path="${requestPathInfo.suffix}"
       >
         <columns jcr:primaryType="nt:unstructured">
           <select
@@ -42,6 +48,15 @@
             jcr:title="Status"
           />
         </columns>
+        <datasource
+          jcr:primaryType="nt:unstructured"
+          offset="${requestPathInfo.selectors[0]}"
+          path="${requestPathInfo.suffix}"
+          limit="${empty requestPathInfo.selectors[1] ? &quot;51&quot; : requestPathInfo.selectors[1] + 1}"
+          sling:resourceType="valtech/aecu/tools/history/datasource"
+          itemResourceType="valtech/aecu/tools/history/dataitem"
+        />
       </list>
     </views>
+    </jcr:content>
 </jcr:root>

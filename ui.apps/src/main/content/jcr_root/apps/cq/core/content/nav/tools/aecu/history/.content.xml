@@ -3,6 +3,6 @@
     jcr:primaryType="nt:unstructured"
     jcr:title="History"
     jcr:description="Show history of last runs"
-    href="/apps/valtech/aecu/tools/history.html"
+    href="/apps/valtech/aecu/tools/history/page.html"
     icon="history"
 />
