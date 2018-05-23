@@ -10,6 +10,8 @@
        jcr:title="AEM Easy Content Upgrade - History"
        consoleId="aecu-history"
        sling:resourceType="granite/ui/components/shell/collectionpage"
+       targetCollection=".aecu-history-entries"
+       modeGroup="aecu-history-entries"
     >
     <head jcr:primaryType="nt:unstructured">
       <clientlibs
@@ -36,11 +38,14 @@
           path="${requestPathInfo.suffix}"
           sortMode="remote"
           stateId="shell.collectionpage"
+          modeGroup="aecu-history-entries"
+          granite:rel="aecu-history-entries"
       >
         <columns jcr:primaryType="nt:unstructured">
-          <select
+          <empty
              jcr:primaryType="nt:unstructured"
-             select="{Boolean}true"
+             fixedWidth="{Boolean}true"
+             alignment="center"
           />
           <date
             jcr:primaryType="nt:unstructured"
@@ -59,5 +64,23 @@
         />
       </list>
     </views>
+    <actions jcr:primaryType="nt:unstructured">
+      <selection jcr:primaryType="nt:unstructured">
+        <open
+          jcr:primaryType="nt:unstructured"
+          action="foundation.dialog"
+          variant="actionBar"
+          title="Show details"
+          text="Show details"
+          icon="history"
+          sling:resourceType="granite/ui/components/coral/foundation/collection/action"
+        >
+          <data
+            jcr:primaryType="nt:unstructured"
+            src.uritemplate="/apps/valtech/aecu/tools/history/details.html"
+          />
+        </open>
+      </selection>
+    </actions>
     </jcr:content>
 </jcr:root>
