@@ -31,8 +31,11 @@
           selectionCount="single"
           sling:resourceType="granite/ui/components/coral/foundation/table"
           limit="50"
-          src="/apps/valtech/aecu/tools/history/page/jcr:content/views/list{.offset,limit}.html"
+          size="${empty requestPathInfo.selectors[1] ? &quot;50&quot; : requestPathInfo.selectors[1]}"
+          src="/apps/valtech/aecu/tools/history/page/jcr:content/views/list{.offset,limit}.html?wcmmode=disabled"
           path="${requestPathInfo.suffix}"
+          sortMode="remote"
+          stateId="shell.collectionpage"
       >
         <columns jcr:primaryType="nt:unstructured">
           <select
@@ -50,9 +53,7 @@
         </columns>
         <datasource
           jcr:primaryType="nt:unstructured"
-          offset="${requestPathInfo.selectors[0]}"
           path="${requestPathInfo.suffix}"
-          limit="${empty requestPathInfo.selectors[1] ? &quot;51&quot; : requestPathInfo.selectors[1] + 1}"
           sling:resourceType="valtech/aecu/tools/history/datasource"
           itemResourceType="valtech/aecu/tools/history/dataitem"
         />
