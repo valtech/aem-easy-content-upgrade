@@ -39,9 +39,9 @@ public class HistoryDataItem {
     private final DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
     
     @SlingObject
-    Resource resource;
+    private Resource resource;
     
-    HistoryEntry history = null;
+    private HistoryEntry history = null;
     
     @PostConstruct
     public void setup() {
@@ -64,6 +64,15 @@ public class HistoryDataItem {
      */
     public String getStatus() {
         return history.getResult().name();
+    }
+
+    /**
+     * Returns the path of the run.
+     * 
+     * @return path
+     */
+    public String getPath() {
+        return history.getRepositoryPath();
     }
 
 }

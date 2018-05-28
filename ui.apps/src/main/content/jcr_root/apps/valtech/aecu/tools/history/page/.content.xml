@@ -29,8 +29,6 @@
       <list
           jcr:primaryType="nt:unstructured"
           layoutId="list"
-          selectionMode="row"
-          selectionCount="single"
           sling:resourceType="granite/ui/components/coral/foundation/table"
           limit="50"
           size="${empty requestPathInfo.selectors[1] ? &quot;50&quot; : requestPathInfo.selectors[1]}"
@@ -42,11 +40,6 @@
           granite:rel="aecu-history-entries"
       >
         <columns jcr:primaryType="nt:unstructured">
-          <empty
-             jcr:primaryType="nt:unstructured"
-             fixedWidth="{Boolean}true"
-             alignment="center"
-          />
           <date
             jcr:primaryType="nt:unstructured"
             jcr:title="Date"
@@ -64,23 +57,5 @@
         />
       </list>
     </views>
-    <actions jcr:primaryType="nt:unstructured">
-      <selection jcr:primaryType="nt:unstructured">
-        <open
-          jcr:primaryType="nt:unstructured"
-          action="foundation.dialog"
-          variant="actionBar"
-          title="Show details"
-          text="Show details"
-          icon="history"
-          sling:resourceType="granite/ui/components/coral/foundation/collection/action"
-        >
-          <data
-            jcr:primaryType="nt:unstructured"
-            src.uritemplate="/apps/valtech/aecu/tools/history/details.html"
-          />
-        </open>
-      </selection>
-    </actions>
     </jcr:content>
 </jcr:root>
