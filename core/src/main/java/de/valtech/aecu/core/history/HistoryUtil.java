@@ -277,7 +277,7 @@ public class HistoryUtil {
      * @param resource history resource
      * @return history entry
      */
-    private HistoryEntry readHistoryEntry(Resource resource) {
+    public HistoryEntry readHistoryEntry(Resource resource) {
         HistoryEntryImpl entry = new HistoryEntryImpl();
         entry.setRepositoryPath(resource.getPath());
         ValueMap values = resource.adaptTo(ValueMap.class);

@@ -23,7 +23,16 @@
       text="AEM Easy Content Upgrade - History details"
       sling:resourceType="granite/ui/components/coral/foundation/text"
     />
-    <content jcr:primaryType="granite/ui/components/coral/foundation/container">
+    <content
+      jcr:primaryType="nt:unstructured"
+      sling:resourceType="granite/ui/components/coral/foundation/container"
+    >
+      <items jcr:primaryType="nt:unstructured">
+        <overview
+          jcr:primaryType="nt:unstructured"
+          sling:resourceType="valtech/aecu/components/content/history/overview"
+        />
+      </items>
     </content>
     </jcr:content>
 </jcr:root>
