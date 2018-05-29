@@ -1,4 +1,4 @@
-<template data-sly-template.details="${ @ result}">
+<template data-sly-template.details="${ @ result, isFallback=false}">
 	<table class="aecu-history-detail" width="100%">
 	  <tr>
 	    <td>Execution time: ${result.time}</td>
@@ -6,16 +6,18 @@
 	  </tr>
 	</table>
 	<sly data-sly-test="${result.result}">
-  <h3>Result</h3>
+  <h3 data-sly-test="${!isFallback}">Result</h3>
+  <h4 data-sly-test="${isFallback}">Result</h4>
 	${result.result}
 	</sly>
   <sly data-sly-test="${result.output}">
-  <h3>Output</h3>
+  <h3 data-sly-test="${!isFallback}">Output</h3>
+  <h4 data-sly-test="${isFallback}">Output</h4>
   ${result.output}
   </sly>
   
   <sly data-sly-test="${result.fallbackResult}">
-    <h2>Fallback script result</h2>
-    <sly data-sly-call="${details @ result = result.fallbackResult}" />
+    <h3>Fallback script result</h3>
+    <sly data-sly-call="${details @ result = result.fallbackResult, isFallback = true}" />
   </sly>
 </template>
