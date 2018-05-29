@@ -1,8 +1,11 @@
 <template data-sly-template.details="${ @ result, isFallback=false}">
 	<table class="aecu-history-detail" width="100%">
 	  <tr>
-	    <td>Execution time: ${result.time}</td>
-	    <td>${result.success}</td>
+      <td>Path: ${result.path}</td>
+	    <td rowspan="2">${result.success}</td>
+    </tr>
+    <tr>
+      <td>Execution time: ${result.time}</td>
 	  </tr>
 	</table>
 	<sly data-sly-test="${result.result}">
