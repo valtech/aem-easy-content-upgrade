@@ -1,0 +1,21 @@
+<template data-sly-template.details="${ @ result}">
+	<table class="aecu-history-detail" width="100%">
+	  <tr>
+	    <td>Execution time: ${result.time}</td>
+	    <td>${result.success}</td>
+	  </tr>
+	</table>
+	<sly data-sly-test="${result.result}">
+  <h3>Result</h3>
+	${result.result}
+	</sly>
+  <sly data-sly-test="${result.output}">
+  <h3>Output</h3>
+  ${result.output}
+  </sly>
+  
+  <sly data-sly-test="${result.fallbackResult}">
+    <h2>Fallback script result</h2>
+    <sly data-sly-call="${details @ result = result.fallbackResult}" />
+  </sly>
+</template>

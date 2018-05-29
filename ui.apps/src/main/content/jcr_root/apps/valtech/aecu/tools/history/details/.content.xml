@@ -26,11 +26,16 @@
     <content
       jcr:primaryType="nt:unstructured"
       sling:resourceType="granite/ui/components/coral/foundation/container"
+      granite:class="base-container"
     >
       <items jcr:primaryType="nt:unstructured">
         <overview
           jcr:primaryType="nt:unstructured"
           sling:resourceType="valtech/aecu/components/content/history/overview"
+        />
+        <details
+          jcr:primaryType="nt:unstructured"
+          sling:resourceType="valtech/aecu/components/content/history/executionResults"
         />
       </items>
     </content>

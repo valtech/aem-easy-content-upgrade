@@ -1,0 +1,17 @@
+<sly data-sly-use.cmp="de.valtech.aecu.core.model.history.HistoryOverview" />
+
+<sly data-sly-test.empty="${cmp.history.singleResults.empty}">
+  <h2>No scripts executed</h2>
+</sly>
+<sly data-sly-test="${!empty}">
+  <sly data-sly-use.details="templates/executionResult.html" />
+  <sly data-sly-test="${cmp.history.singleResults.size == 1}">
+    <h2>Execution details</h2>
+    <sly data-sly-list="${cmp.history.singleResults}">
+      <sly data-sly-call="${details.details @ result = item}" />
+    </sly>
+  </sly>
+  <sly data-sly-test="${cmp.history.singleResults.size > 1}">
+    <h2>Execution details for ${cmp.history.singleResults.size} scripts</h2>
+  </sly>
+</sly>
