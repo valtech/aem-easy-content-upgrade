@@ -187,6 +187,10 @@ public class HistoryUtil {
             return null;
         }
         Resource last = getLastChild(resource);
+        if (last == null) {
+            // stop if there is no child at all
+            return null;
+        }
         ValueMap values = last.adaptTo(ValueMap.class);
         if (JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(values.get(JcrConstants.JCR_PRIMARYTYPE, String.class))) {
             return ascendToLastRun(last);
