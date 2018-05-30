@@ -8,7 +8,8 @@ table.aecu-history-overview td {
 }
 
 table.aecu-history-detail td {
-  padding: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .icon-color-ok {
