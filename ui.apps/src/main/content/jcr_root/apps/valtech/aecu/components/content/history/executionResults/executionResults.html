@@ -16,7 +16,11 @@
     <coral-accordion>
 	    <sly data-sly-list="${cmp.history.singleResults}">
 	      <coral-accordion-item>
-	       <coral-accordion-item-label>${item.path}</coral-accordion-item-label>
+	       <coral-accordion-item-label>
+	         <coral-icon icon="${item.success ? 'checkCircle' : 'closeCircle'}" class="icon-color-${item.success ? 'ok' : 'fail'}" >
+	         </coral-icon>
+	         ${item.path}
+	       </coral-accordion-item-label>
 	       <coral-accordion-item-content>
 	         <sly data-sly-call="${details.details @ result = item}" />
 	       </coral-accordion-item-content>

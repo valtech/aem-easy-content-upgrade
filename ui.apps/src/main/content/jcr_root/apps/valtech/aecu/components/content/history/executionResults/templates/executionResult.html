@@ -2,7 +2,10 @@
 	<table class="aecu-history-detail" width="100%">
 	  <tr>
       <td>Path: ${result.path}</td>
-	    <td rowspan="2">${result.success}</td>
+	    <td rowspan="2">
+	     <coral-icon icon="${result.success ? 'checkCircle' : 'closeCircle'}" size="L" class="icon-color-${result.success ? 'ok' : 'fail'}" >
+	     </coral-icon>
+	    </td>
     </tr>
     <tr>
       <td>Execution time: ${result.time}</td>
