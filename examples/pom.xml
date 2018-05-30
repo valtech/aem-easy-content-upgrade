@@ -55,6 +55,9 @@
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
                     <group>Valtech</group>
+                    <properties>
+                        <installhook.aecu.class>de.valtech.aecu.core.installhook.AecuInstallHook</installhook.aecu.class>
+                    </properties>
                 </configuration>
             </plugin>
 
