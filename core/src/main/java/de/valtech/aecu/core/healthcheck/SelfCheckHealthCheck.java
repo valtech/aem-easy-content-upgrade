@@ -36,11 +36,11 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
     service = HealthCheck.class,
     property = {
         HealthCheck.TAGS + "=aecu",
-        HealthCheck.NAME + "=AECU Service User",
-        HealthCheck.MBEAN_NAME + "=aecuServiceUserHCmBean"
+        HealthCheck.NAME + "=AECU Self Check",
+        HealthCheck.MBEAN_NAME + "=aecuSelfCheckHCmBean"
     }
 )
-public class ServiceUserHealthCheck implements HealthCheck {
+public class SelfCheckHealthCheck implements HealthCheck {
     
     @Reference
     private ServiceResourceResolverService resolverService;
