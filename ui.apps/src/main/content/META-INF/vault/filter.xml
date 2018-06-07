@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
     <filter root="/apps/valtech/aecu"/>
+    <filter root="/apps/cq/core/content/nav/tools/aecu"/>
     <filter root="/home/users/system/aecu"/>
     <filter root="/etc/groovyconsole/scripts/aecu" mode="merge"/>
     <filter root="/apps/settings/granite/operations/hc/aecu"/>

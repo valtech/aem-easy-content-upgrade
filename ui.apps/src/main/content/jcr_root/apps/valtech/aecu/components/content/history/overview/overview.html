@@ -1,0 +1,14 @@
+<sly data-sly-use.cmp="de.valtech.aecu.core.model.history.HistoryOverview" />
+<h1>Run details</h1>
+<table class="aecu-history-overview" width="100%">
+  <tr>
+    <td>State: ${cmp.history.state.name}</td>
+    <td rowspan="3">${cmp.history.result.name}</td>
+  </tr>
+  <tr>
+    <td>Start: ${cmp.start}</td>
+  </tr>
+  <tr>
+    <td>End: ${cmp.end}</td>
+  </tr>
+</table>

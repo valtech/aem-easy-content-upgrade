@@ -189,7 +189,7 @@ public class AecuServiceImpl implements AecuService {
         if (!success && (getFallbackScript(resolver, path) != null)) {
             fallbackResult = executeScript(resolver, getFallbackScript(resolver, path));
         }
-        return new ExecutionResult(success, response.getRunningTime(), result, response.getOutput() + response.getExceptionStackTrace(), fallbackResult);
+        return new ExecutionResult(success, response.getRunningTime(), result, response.getOutput() + response.getExceptionStackTrace(), fallbackResult, path);
     }
     
     /**

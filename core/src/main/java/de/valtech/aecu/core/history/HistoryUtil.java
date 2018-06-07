@@ -32,8 +32,12 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.api.resource.ResourceUtil.BatchResourceRemover;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.core.service.HistoryEntryImpl;
 import de.valtech.aecu.service.AecuException;
@@ -48,25 +52,21 @@ import de.valtech.aecu.service.HistoryEntry.STATE;
  * @author Roland Gruber
  */
 public class HistoryUtil {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(HistoryUtil.class);
 
     private static final String HISTORY_BASE = "/var/aecu";
 
     private static final String NODE_FALLBACK = "fallback";
 
+    private static final String ATTR_PATH = "path";
     private static final String ATTR_RUN_OUTPUT = "runOutput";
-
     private static final String ATTR_RUN_SUCCESS = "runSuccess";
-
     private static final String ATTR_RUN_RESULT = "runResult";
-
     private static final String ATTR_RUN_TIME = "runTime";
-
     private static final String ATTR_RESULT = "result";
-
     private static final String ATTR_STATE = "state";
-
     private static final String ATTR_START = "start";
-
     private static final String ATTR_END = "end";
 
     /**
@@ -187,6 +187,10 @@ public class HistoryUtil {
             return null;
         }
         Resource last = getLastChild(resource);
+        if (last == null) {
+            // stop if there is no child at all
+            return null;
+        }
         ValueMap values = last.adaptTo(ValueMap.class);
         if (JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(values.get(JcrConstants.JCR_PRIMARYTYPE, String.class))) {
             return ascendToLastRun(last);
@@ -271,7 +275,7 @@ public class HistoryUtil {
      * @param resource history resource
      * @return history entry
      */
-    private HistoryEntry readHistoryEntry(Resource resource) {
+    public HistoryEntry readHistoryEntry(Resource resource) {
         HistoryEntryImpl entry = new HistoryEntryImpl();
         entry.setRepositoryPath(resource.getPath());
         ValueMap values = resource.adaptTo(ValueMap.class);
@@ -308,7 +312,8 @@ public class HistoryUtil {
         String time = values.get(ATTR_RUN_TIME, "");
         Boolean success = values.get(ATTR_RUN_SUCCESS, Boolean.FALSE);
         String runResult = values.get(ATTR_RUN_RESULT, "");
-        ExecutionResult result = new ExecutionResult(success, time, runResult, output, fallback);
+        String path = values.get(ATTR_PATH, "");
+        ExecutionResult result = new ExecutionResult(success, time, runResult, output, fallback, path);
         return result;
     }
 
@@ -317,6 +322,7 @@ public class HistoryUtil {
         Resource entry = resolver.getResource(path);
         ModifiableValueMap values = entry.adaptTo(ModifiableValueMap.class);
         values.put(ATTR_RUN_SUCCESS, result.isSuccess());
+        values.put(ATTR_PATH, result.getPath());
         if (StringUtils.isNotBlank(result.getOutput())) {
             values.put(ATTR_RUN_OUTPUT, result.getOutput());
         }
@@ -366,6 +372,66 @@ public class HistoryUtil {
     private String generateHistoryNodeName() {
         Random random = new Random();
         return System.currentTimeMillis() + "" + random.nextInt(100000);
+    }
+
+    /**
+     * Purges the history by keeping only entries within the set number of days.
+     * 
+     * @param resolver resource resolver
+     * @param daysToKeep number of days to keep
+     * @throws PersistenceException error deleting node
+     */
+    public void purgeHistory(ResourceResolver resolver, int daysToKeep) throws PersistenceException {
+        Resource base = resolver.getResource(HISTORY_BASE);
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
+        LOG.debug("Starting purge with limit " + calendar.getTime().toString());
+        deleteRecursive(base.listChildren(), calendar, new int[] {Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH});
+    }
+
+    /**
+     * Deletes the year resources that are too old.
+     * 
+     * @param resources resources
+     * @param calendar time limit
+     * @param fields calendar fields
+     * @throws PersistenceException error deleting node
+     */
+    private void deleteRecursive(Iterator<Resource> resources, Calendar calendar, int[] fields) throws PersistenceException {
+        int currentField = fields[0];
+        while (resources.hasNext()) {
+            Resource resource = resources.next();
+            String name = resource.getName();
+            // skip extra nodes such as ACLs
+            if (!StringUtils.isNumeric(name)) {
+                LOG.debug("Skipping purge of other node: " + resource.getPath());
+                continue;
+            }
+            int nodeValue = Integer.parseInt(name);
+            int limit = calendar.get(currentField);
+            if (currentField == Calendar.MONTH) {
+                // months start with 0 but are stored beginning with 1 in CRX
+                limit++;
+            }
+            if (nodeValue > limit) {
+                LOG.debug("Skipping purge of too young node: " + resource.getPath());
+            }
+            else if (nodeValue == limit) {
+                LOG.debug("Skipping purge of too young node: " + resource.getPath());
+                // check next level
+                if (fields.length == 1) {
+                    return;
+                }
+                int[] fieldsNew = new int[fields.length - 1];
+                System.arraycopy(fields, 1, fieldsNew, 0, fieldsNew.length);
+                deleteRecursive(resource.listChildren(), calendar, fieldsNew);
+            }
+            else {
+                LOG.debug("Purging node: " + resource.getPath());
+                BatchResourceRemover remover = ResourceUtil.getBatchResourceRemover(1000);
+                remover.delete(resource);
+            }
+        }
     }
 
 }
