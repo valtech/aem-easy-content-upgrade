@@ -19,8 +19,6 @@ package de.valtech.aecu.core.groovy.console.bindings.hello;
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
 import groovy.lang.Binding;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -40,11 +38,6 @@ public class AECUBindingExtensionProvider implements BindingExtensionProvider {
     @Reference
     private BindingExtensionProvider defaultBindingExtensionProvider;
 
-
-    @Activate
-    public void activate(BundleContext bundleContext) {
-        LOG.debug("defaultBindingExtensionProvider is " + defaultBindingExtensionProvider);
-    }
 
     @Override
     public Binding getBinding(SlingHttpServletRequest request) {

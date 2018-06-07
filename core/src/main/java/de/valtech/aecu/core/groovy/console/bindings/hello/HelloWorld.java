@@ -16,17 +16,14 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.hello;
 
-import org.osgi.service.component.annotations.Component;
-
 /**
  * Groovy Console Bindings first test class
  * @author Roxana Muresan
  */
-@Component(immediate = true)
 public class HelloWorld {
 
     public String sayHello() {
-        return "Hello world! >^.^<";
+        return "Hello y'all! >^.^<";
     }
 
 }
