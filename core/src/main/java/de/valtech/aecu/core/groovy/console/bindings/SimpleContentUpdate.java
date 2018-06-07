@@ -123,7 +123,7 @@ public class SimpleContentUpdate {
         }
     }
 
-    public void setProperty(String name, Object value) {
+    public SimpleContentUpdate setProperty(String name, Object value) {
         if (name != null) {
             try {
                 for (Resource current : resourceList) {
@@ -136,9 +136,10 @@ public class SimpleContentUpdate {
                 LOG.error("Failed to commit changes.", e);
             }
         }
+        return this;
     }
 
-    public void removeProperty(String name) {
+    public SimpleContentUpdate removeProperty(String name) {
         if (name != null) {
             try {
                 for (Resource current : resourceList) {
@@ -151,9 +152,10 @@ public class SimpleContentUpdate {
                 LOG.error("Failed to commit changes.", e);
             }
         }
+        return this;
     }
 
-    public void renameProperty(String oldName, String newName) {
+    public SimpleContentUpdate renameProperty(String oldName, String newName) {
         if (oldName != null && newName != null) {
             try {
                 for (Resource current : resourceList) {
@@ -167,6 +169,7 @@ public class SimpleContentUpdate {
                 LOG.error("Failed to commit changes.", e);
             }
         }
+        return this;
     }
 
 }
