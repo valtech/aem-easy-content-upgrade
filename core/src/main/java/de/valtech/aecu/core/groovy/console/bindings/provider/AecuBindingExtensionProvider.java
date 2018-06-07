@@ -14,9 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.hello;
+package de.valtech.aecu.core.groovy.console.bindings.provider;
 
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
+import de.valtech.aecu.core.groovy.console.bindings.hello.HelloWorld;
 import groovy.lang.Binding;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.osgi.service.component.annotations.Component;
@@ -31,9 +32,9 @@ import java.util.Map;
  * @author Roxana Muresan
  */
 @Component(immediate = true)
-public class AECUBindingExtensionProvider implements BindingExtensionProvider {
+public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AECUBindingExtensionProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AecuBindingExtensionProvider.class);
 
     @Reference
     private BindingExtensionProvider defaultBindingExtensionProvider;
