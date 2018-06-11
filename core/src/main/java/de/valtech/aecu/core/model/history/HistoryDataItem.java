@@ -27,6 +27,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import de.valtech.aecu.service.HistoryEntry;
+import de.valtech.aecu.service.HistoryEntry.RESULT;
 
 /**
  * Model class for a single history item.
@@ -58,12 +59,33 @@ public class HistoryDataItem {
     }
     
     /**
-     * Returns the result of the run.
+     * Returns the status icon of the run.
      * 
-     * @return result
+     * @return icon
      */
-    public String getStatus() {
-        return history.getResult().name();
+    public String getStatusIcon() {
+        if (RESULT.FAILURE.equals(history.getResult())) {
+            return "closeCircle";
+        }
+        if (RESULT.SUCCESS.equals(history.getResult())) {
+            return "checkCircle";
+        }
+        return "clock";
+    }
+
+    /**
+     * Returns the status color of the run.
+     * 
+     * @return icon
+     */
+    public String getStatusColor() {
+        if (RESULT.FAILURE.equals(history.getResult())) {
+            return "fail";
+        }
+        if (RESULT.SUCCESS.equals(history.getResult())) {
+            return "ok";
+        }
+        return "inprogress";
     }
 
     /**

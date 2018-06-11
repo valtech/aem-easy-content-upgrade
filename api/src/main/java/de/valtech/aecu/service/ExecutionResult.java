@@ -30,6 +30,7 @@ public class ExecutionResult {
     private String time;
     private String result;
     private ExecutionResult fallbackResult;
+    private String path;
     
     /**
      * Constructor
@@ -39,13 +40,15 @@ public class ExecutionResult {
      * @param result result 
      * @param output script output
      * @param fallbackResult fallback script result
+     * @param path script path
      */
-    public ExecutionResult(boolean success, String time, String result, String output, ExecutionResult fallbackResult) {
+    public ExecutionResult(boolean success, String time, String result, String output, ExecutionResult fallbackResult, String path) {
         this.success = success;
         this.output = output;
         this.time = time;
         this.result = result;
         this.fallbackResult = fallbackResult;
+        this.path = path;
     }
     
     /**
@@ -92,10 +95,22 @@ public class ExecutionResult {
     public ExecutionResult getFallbackResult() {
         return fallbackResult;
     }
+    
+    /**
+     * Returns the script path.
+     * 
+     * @return path
+     */
+    public String getPath() {
+        return path;
+    }
 
     @Override
     public String toString() {
-        StringBuilder stringVal = new StringBuilder("Successful: " + Boolean.toString(success));
+        StringBuilder stringVal = new StringBuilder(
+            "Successful: " + Boolean.toString(success) +
+            "Path: " + path
+        );
         if (StringUtils.isNotBlank(time)) {
             stringVal.append("\n" + "Execution time: " + time);
         }

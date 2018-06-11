@@ -59,20 +59,14 @@ public class HistoryUtil {
 
     private static final String NODE_FALLBACK = "fallback";
 
+    private static final String ATTR_PATH = "path";
     private static final String ATTR_RUN_OUTPUT = "runOutput";
-
     private static final String ATTR_RUN_SUCCESS = "runSuccess";
-
     private static final String ATTR_RUN_RESULT = "runResult";
-
     private static final String ATTR_RUN_TIME = "runTime";
-
     private static final String ATTR_RESULT = "result";
-
     private static final String ATTR_STATE = "state";
-
     private static final String ATTR_START = "start";
-
     private static final String ATTR_END = "end";
 
     /**
@@ -193,6 +187,10 @@ public class HistoryUtil {
             return null;
         }
         Resource last = getLastChild(resource);
+        if (last == null) {
+            // stop if there is no child at all
+            return null;
+        }
         ValueMap values = last.adaptTo(ValueMap.class);
         if (JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(values.get(JcrConstants.JCR_PRIMARYTYPE, String.class))) {
             return ascendToLastRun(last);
@@ -314,7 +312,8 @@ public class HistoryUtil {
         String time = values.get(ATTR_RUN_TIME, "");
         Boolean success = values.get(ATTR_RUN_SUCCESS, Boolean.FALSE);
         String runResult = values.get(ATTR_RUN_RESULT, "");
-        ExecutionResult result = new ExecutionResult(success, time, runResult, output, fallback);
+        String path = values.get(ATTR_PATH, "");
+        ExecutionResult result = new ExecutionResult(success, time, runResult, output, fallback, path);
         return result;
     }
 
@@ -323,6 +322,7 @@ public class HistoryUtil {
         Resource entry = resolver.getResource(path);
         ModifiableValueMap values = entry.adaptTo(ModifiableValueMap.class);
         values.put(ATTR_RUN_SUCCESS, result.isSuccess());
+        values.put(ATTR_PATH, result.getPath());
         if (StringUtils.isNotBlank(result.getOutput())) {
             values.put(ATTR_RUN_OUTPUT, result.getOutput());
         }

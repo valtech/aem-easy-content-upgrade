@@ -6,3 +6,20 @@
 table.aecu-history-overview td {
   padding: 0.5rem;
 }
+
+table.aecu-history-detail td {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.icon-color-ok {
+	color: green;
+}
+
+.icon-color-fail {
+	color: red;
+}
+
+.icon-color-inprogress {
+  color: blue;
+}

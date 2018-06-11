@@ -13,5 +13,19 @@
   </sly>
   <sly data-sly-test="${cmp.history.singleResults.size > 1}">
     <h2>Execution details for ${cmp.history.singleResults.size} scripts</h2>
+    <coral-accordion>
+	    <sly data-sly-list="${cmp.history.singleResults}">
+	      <coral-accordion-item>
+	       <coral-accordion-item-label>
+	         <coral-icon icon="${item.success ? 'checkCircle' : 'closeCircle'}" class="icon-color-${item.success ? 'ok' : 'fail'}" >
+	         </coral-icon>
+	         ${item.path}
+	       </coral-accordion-item-label>
+	       <coral-accordion-item-content>
+	         <sly data-sly-call="${details.details @ result = item}" />
+	       </coral-accordion-item-content>
+	      </coral-accordion-item>
+	    </sly>
+    </coral-accordion>
   </sly>
 </sly>
