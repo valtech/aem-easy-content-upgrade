@@ -17,20 +17,29 @@
 package de.valtech.aecu.core.service;
 
 
-import org.apache.felix.scr.annotations.sling.SlingServlet;
+import java.io.IOException;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
 
-
-@SlingServlet(label = "Valtech AECU :: Execute", methods = { "GET" }, paths = { "/bin/public/valtech/aecu/execute"}, metatype = false)
+@Component(immediate = true,
+service = {Servlet.class},
+property = {
+        "sling.servlet.paths=/bin/public/valtech/aecu/execute",
+        "sling.servlet.extensions=json",
+        "sling.servlet.methods=GET"
+})
 public class ExecutionServlet extends SlingAllMethodsServlet {
 
+    private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(ExecutionServlet.class);
 
 
