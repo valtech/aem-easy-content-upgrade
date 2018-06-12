@@ -264,7 +264,10 @@ public class HistoryUtil {
         Resource last = null;
         Iterator<Resource> lastIterator = resource.listChildren();
         while (lastIterator.hasNext()) {
-            last = lastIterator.next();
+            Resource candidate = lastIterator.next();
+            if (!AccessControlConstants.REP_POLICY.equals(candidate.getName())) {
+                last = candidate;
+            }
         }
         return last;
     }
