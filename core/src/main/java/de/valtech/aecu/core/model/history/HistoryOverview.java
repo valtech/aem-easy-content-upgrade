@@ -16,12 +16,15 @@
  */
 package de.valtech.aecu.core.model.history;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.request.RequestParameter;
 import org.apache.sling.api.resource.Resource;
@@ -30,6 +33,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.service.ExecutionResult;
 import de.valtech.aecu.service.HistoryEntry;
 
 /**
@@ -99,6 +103,31 @@ public class HistoryOverview {
             return StringUtils.EMPTY;
         }
         return format.format(historyEntry.getEnd());
+    }
+    
+    /**
+     * Returns the percentages of successful and failed scripts. 
+     * 
+     * @return percentages (successful, failed)
+     */
+    public Pair<String, String> getPercentages() {
+        int countAll = historyEntry.getSingleResults().size();
+        if (countAll == 0) {
+            return Pair.of("0", "0");
+        }
+        double countOk = 0;
+        double countFailed = 0;
+        for (ExecutionResult result : historyEntry.getSingleResults()) {
+            if (result.isSuccess()) {
+                countOk++;
+            }
+            else {
+                countFailed++;
+            }
+        }
+        BigDecimal percentageOk = new BigDecimal((countOk / countAll) * 100);
+        BigDecimal percentageFailed = new BigDecimal((countFailed / countAll) * 100);
+        return Pair.of(percentageOk.round(new MathContext(2)).toString(), percentageFailed.round(new MathContext(2)).toString());
     }
     
 }

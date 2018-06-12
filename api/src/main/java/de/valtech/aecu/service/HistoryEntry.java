@@ -31,17 +31,37 @@ public interface HistoryEntry {
      * Execution state (e.g. running)
      */
     public enum STATE {
-        RUNNING,
-        FINISHED
+        RUNNING("Running"),
+        FINISHED("Finished");
+        
+        private String label;
+
+        private STATE(String label) {
+            this.label = label;
+        }
+        
+        public String getLabel() {
+            return label;
+        }
     };
     
     /**
      * Execution result (e.g. successful)
      */
     public enum RESULT {
-        SUCCESS,
-        FAILURE,
-        UNKNOWN
+        SUCCESS("Success"),
+        FAILURE("Failed"),
+        UNKNOWN("Unknown");
+
+        private String label;
+
+        private RESULT(String label) {
+            this.label = label;
+        }
+        
+        public String getLabel() {
+            return label;
+        }
     };
     
     /**
