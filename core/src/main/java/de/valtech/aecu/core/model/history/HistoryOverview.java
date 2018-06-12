@@ -127,7 +127,9 @@ public class HistoryOverview {
         }
         BigDecimal percentageOk = new BigDecimal((countOk / countAll) * 100);
         BigDecimal percentageFailed = new BigDecimal((countFailed / countAll) * 100);
-        return Pair.of(percentageOk.round(new MathContext(2)).toString(), percentageFailed.round(new MathContext(2)).toString());
+        String valueOk = percentageOk.round(new MathContext(2)).toPlainString();
+        String valueFailed = percentageFailed.round(new MathContext(2)).toPlainString();
+        return Pair.of(valueOk, valueFailed);
     }
     
 }
