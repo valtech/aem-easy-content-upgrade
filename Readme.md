@@ -14,11 +14,18 @@ Features:
 
 # Requirements
 
-AECU requires Java 8 and AEM 6.3 or above.
+AECU requires Java 8 and AEM 6.3 or above. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
-#Installation
+# Installation
 
 TODO
+
+## <a name="bundleInstall">Bundle Installation</a>
+
+To simplify installation we provide a bundle package that already includes the Groovy Console. This makes sure there are no compatibility issues.
+
+TODO
+
 
 # Execution of Migration Scripts
 
@@ -34,7 +41,32 @@ TODO
 
 # JMX Interface
 
-TODO
+<img src="docs/images/jmx.png">
+
+AECU provides JMX methods for executing scripts and reading the history. You can also check the version here.
+
+## Execute
+
+This will execute the given script or folder. If a folder is specified then all files (incl. any subfolders) are executed. AECU will respect runmodes during execution.
+
+Parameters:
+ * Path: file or folder to execute
+
+## GetHistory
+
+Prints the history of the specified last runs. 
+
+Parameters:
+ * Start index: starts with 0 (= latest history entry)
+ * Count: number of entries to print
+
+## GetFiles
+
+This will print all files that are executable for a given path. You can use this to check which scripts of a given folder would be executed.
+
+Parameters:
+* Path: file or folder to check
+
 
 # Health Checks
 
