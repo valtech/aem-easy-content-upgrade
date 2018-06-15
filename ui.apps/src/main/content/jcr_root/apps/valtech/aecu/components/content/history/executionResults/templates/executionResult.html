@@ -14,12 +14,12 @@
 	<sly data-sly-test="${result.result}">
   <h3 data-sly-test="${!isFallback}">Result</h3>
   <h4 data-sly-test="${isFallback}">Result</h4>
-	${result.result}
+	<pre>${result.result}</pre>
 	</sly>
   <sly data-sly-test="${result.output}">
   <h3 data-sly-test="${!isFallback}">Output</h3>
   <h4 data-sly-test="${isFallback}">Output</h4>
-  ${result.output}
+  <pre>${result.output}</pre>
   </sly>
   
   <sly data-sly-test="${result.fallbackResult}">
