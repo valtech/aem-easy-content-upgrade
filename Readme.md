@@ -55,7 +55,7 @@ Parameters:
 
 ## GetHistory
 
-Prints the history of the specified last runs. 
+Prints the history of the specified last runs. The entries are sorted by date and start with the last run.
 
 Parameters:
  * Start index: starts with 0 (= latest history entry)
