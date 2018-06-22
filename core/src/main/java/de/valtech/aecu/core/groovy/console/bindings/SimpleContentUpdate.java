@@ -96,14 +96,14 @@ public class SimpleContentUpdate {
         return this;
     }
 
-    public String apply() throws PersistenceException {
+    public StringBuffer apply() throws PersistenceException {
         StringBuffer stringBuffer = new StringBuffer("SimpleContentUpdate.apply()\n");
         for (Map.Entry<TraversData, FilterBy> traversWithFilter : traversalsWithFilter.entrySet()) {
             for (Action action : actions) {
                 traversWithFilter.getKey().traverse(resourceResolver, traversWithFilter.getValue(), action, stringBuffer);
             }
         }
-        return stringBuffer.toString();
+        return stringBuffer;
     }
 
 }
