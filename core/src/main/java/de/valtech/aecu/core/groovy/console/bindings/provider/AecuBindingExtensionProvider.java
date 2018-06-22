@@ -18,13 +18,10 @@ package de.valtech.aecu.core.groovy.console.bindings.provider;
 
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
 import de.valtech.aecu.core.groovy.console.bindings.SimpleContentUpdate;
-import de.valtech.aecu.core.groovy.console.bindings.hello.HelloWorld;
 import groovy.lang.Binding;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides additional AECU Bindings for the Groovy Console
@@ -33,8 +30,6 @@ import org.slf4j.LoggerFactory;
 @Component(immediate = true)
 public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AecuBindingExtensionProvider.class);
-
     @Reference
     private BindingExtensionProvider defaultBindingExtensionProvider;
 
@@ -42,8 +37,7 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
     @Override
     public Binding getBinding(SlingHttpServletRequest request) {
         Binding binding = defaultBindingExtensionProvider.getBinding(request);
-        binding.setVariable("helloWorld", new HelloWorld());
-        binding.setVariable("simpleContentUpdate", new SimpleContentUpdate(request.getResourceResolver()));
+        binding.setVariable("aecu", new SimpleContentUpdate(request.getResourceResolver()));
 
         return binding;
     }

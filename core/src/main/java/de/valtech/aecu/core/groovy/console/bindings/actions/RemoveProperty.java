@@ -14,16 +14,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.hello;
+package de.valtech.aecu.core.groovy.console.bindings.actions;
 
-/**
- * Groovy Console Bindings first test class
- * @author Roxana Muresan
- */
-public class HelloWorld {
+import com.drew.lang.annotations.NotNull;
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.Resource;
 
-    public String sayHello() {
-        return "Hello y'all! >^.^<";
+public class RemoveProperty implements Action {
+
+    private String name;
+
+    public RemoveProperty(@NotNull String name) {
+        this.name = name;
     }
 
+    @Override
+    public String doAction(Resource resource) {
+        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        properties.remove(name);
+        return "Removing property " + name + " for resource " + resource.getPath();
+    }
 }

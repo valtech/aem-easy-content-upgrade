@@ -1,23 +1,24 @@
-println "simpleContentUpdate is $simpleContentUpdate"
+println "simpleContentUpdate is $aecu"
 
-def conditionMap = [:]
-//conditionMap['sling:resourceType'] = "weretail/components/content/heroimage"
-//conditionMap['jcr:primaryType'] = "cq:Page"
-//conditionMap['fileReference'] = "/content/dam/we-retail/en/experiences/arctic-surfing-in-lofoten/surfer-wave-01.jpg"
+def conditionMapHero = [:]
+conditionMapHero['sling:resourceType'] = "weretail/components/content/heroimage"
+conditionMapHero['fileReference'] = "/content/dam/we-retail/en/activities/running/fitness-woman.jpg"
 
-simpleContentUpdate
+def conditionMapPage = [:]
+conditionMapPage['jcr:primaryType'] = "cq:PageContent"
+
+
+aecu
 // test filter methods
-//    .forResources((String[])["/content/we-retail/ca/en/jcr:content","/invalid/path", "/content/we-retail/ca/en/experience/jcr:content"])
-//    .forChildResourcesOf("/content/we-retail/ca/en/experience")
-//    .forDescendantResourcesOf("/content/we-retail/ca/en/experience")
-        .forChildResourcesOfWithProperties("/content/we-retail/ca/en/experience", conditionMap)
-//    .forDescendantResourcesOfWithProperties("/content/we-retail/ca/en", conditionMap)
-
-// print filter results in log file
-        .printFoundResources()
+        .forResources((String[])["/content/we-retail/ca/en/jcr:content","/invalid/path", "/content/we-retail/ca/en/experience/jcr:content"])
+        .forChildResourcesOf("/content/we-retail/ca/en/women")
+        .forDescendantResourcesOf("/content/we-retail/ca/en/men")
+        .forChildResourcesOfWithProperties("/content/we-retail/ca/en/products", conditionMapPage)
+        .forDescendantResourcesOfWithProperties("/content/we-retail/ca/en/equipment", conditionMapHero)
+        .forDescendantResourcesOfWithProperties("/content/we-retail/ca/en/women", conditionMapHero)
 
 // test editor methods
-//    .setProperty("newProperty", "added by aecu")
-//    .renameProperty("newProperty", "delete_me_later")
+        .doSetProperty("newProperty", "added by aecu")
+        .doRenameProperty("newProperty", "delete_me_later")
 //    .removeProperty("delete_me_later")
-//    .remove()
+        .apply()

@@ -16,16 +16,23 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.sling.api.resource.ModifiableValueMap;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.RemoveProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.RenameProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.SetProperty;
+import de.valtech.aecu.core.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.filters.FilterByProperties;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.query.Query;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,139 +44,65 @@ public class SimpleContentUpdate {
 
     private static final Logger LOG = LoggerFactory.getLogger(SimpleContentUpdate.class);
 
-    private ResourceResolver resourceResolver;// TODO check if a system user resource resolver is needed here!
+    private ResourceResolver resourceResolver;// TODO system user resolver!!
 
-    private List<Resource> resourceList = new ArrayList<>();// TODO with stream?
+    private Map<TraversData, FilterBy> traversalsWithFilter = new HashMap<>();
+    private List<Action> actions = new ArrayList<>();
 
 
     public SimpleContentUpdate(ResourceResolver resourceResolver) {
         this.resourceResolver = resourceResolver;
-
     }
 
     /** content filter methods **/
     public SimpleContentUpdate forResources(String[] paths) {
-        if (paths != null && paths.length > 0) {
-            List<Resource> resources = new ArrayList<>();
-            for (String path : paths) {
-                if (path != null) {
-                    CollectionUtils.addIgnoreNull(resources, resourceResolver.getResource(path));
-                }
-            }
-            CollectionUtils.addAll(this.resourceList, resources.iterator());
-        }
+        traversalsWithFilter.put(new ForResources(paths), null);
         return this;
     }
 
     public SimpleContentUpdate forChildResourcesOf(String path) {
-        if (path != null) {
-            String queryString = "SELECT * FROM [nt:base] AS s WHERE ISCHILDNODE(s,'" + path + "')";
-            LOG.debug("Running query: " + queryString);
-            CollectionUtils.addAll(this.resourceList, resourceResolver.findResources(queryString, Query.JCR_SQL2));
-        }
+        traversalsWithFilter.put(new ForChildResourcesOf(path), null);
+        return this;
+    }
+
+    public SimpleContentUpdate forChildResourcesOfWithProperties(String path, Map<String, String> conditionProperties) {
+        traversalsWithFilter.put(new ForChildResourcesOf(path), new FilterByProperties(conditionProperties));
         return this;
     }
 
     public SimpleContentUpdate forDescendantResourcesOf(String path) {
-        if (path != null) {
-            String queryString = "SELECT * FROM [nt:base] AS s WHERE ISDESCENDANTNODE(s,'" + path + "')";
-            LOG.debug("Running query: " + queryString);
-            CollectionUtils.addAll(this.resourceList, resourceResolver.findResources(queryString, Query.JCR_SQL2));
-        }
+        traversalsWithFilter.put(new ForDescendantResourcesOf(path), null);
         return this;
     }
 
-    public SimpleContentUpdate forChildResourcesOfWithProperties(String path, Map<String, Object> conditionProperties) {
-        if (path != null && conditionProperties != null) {
-            String queryString = "SELECT * FROM [nt:base] AS s WHERE ISCHILDNODE(s,'" + path + "')" + getQueryStringForProperties(conditionProperties);
-            LOG.debug("Running query: " + queryString);
-            CollectionUtils.addAll(this.resourceList, resourceResolver.findResources(queryString, Query.JCR_SQL2));
-        }
+    public SimpleContentUpdate forDescendantResourcesOfWithProperties(String path, Map<String, String> conditionProperties) {
+        traversalsWithFilter.put(new ForDescendantResourcesOf(path), new FilterByProperties(conditionProperties));
         return this;
     }
 
-    public SimpleContentUpdate forDescendantResourcesOfWithProperties(String path, Map<String, Object> conditionProperties) {
-        if (path != null && conditionProperties != null) {
-            String queryString = "SELECT * FROM [nt:base] AS s WHERE ISDESCENDANTNODE(s,'" + path + "')" + getQueryStringForProperties(conditionProperties);
-            LOG.debug("Running query: " + queryString);
-            CollectionUtils.addAll(this.resourceList, resourceResolver.findResources(queryString, Query.JCR_SQL2));
-        }
+    /** properties edit methods **/
+    public SimpleContentUpdate doSetProperty(String name, String value) {
+        actions.add(new SetProperty(name, value));
         return this;
     }
 
-    public SimpleContentUpdate printFoundResources() {
-        resourceList.forEach(s -> LOG.info("Found " + s.getPath()));
+    public SimpleContentUpdate doRemoveProperty(String name) {
+        actions.add(new RemoveProperty(name));
         return this;
     }
 
-    private String getQueryStringForProperties(Map<String, Object> properties) {
-        String queryString = "";
-        for (String key: properties.keySet()) {
-            queryString += " AND s.[" + key + "] = '" + properties.get(key).toString() + "'";
-        }
-        return queryString;
+    public SimpleContentUpdate doRenameProperty(String oldName, String newName) {
+        actions.add(new RenameProperty(oldName, newName));
+        return this;
     }
 
-    /** content edit methods **/
-    public void remove() {
-        try {
-            for (Resource current : resourceList) {
-                LOG.debug("Removing resource " + current.getPath());
-                resourceResolver.delete(current);
-            }
-            resourceResolver.commit();
-        } catch (PersistenceException e) {
-            LOG.error("Failed to commit changes.", e);
-        }
-    }
-
-    public SimpleContentUpdate setProperty(String name, Object value) {
-        if (name != null) {
-            try {
-                for (Resource current : resourceList) {
-                    LOG.debug("Setting property " + name + "=" + value + " for resource " + current.getPath());
-                    ModifiableValueMap properties = current.adaptTo(ModifiableValueMap.class);
-                    properties.put(name, value);
-                }
-                resourceResolver.commit();
-            } catch (PersistenceException e) {
-                LOG.error("Failed to commit changes.", e);
+    public String apply() throws PersistenceException {
+        for (Map.Entry<TraversData, FilterBy> traversWithFilter : traversalsWithFilter.entrySet()) {
+            for (Action action : actions) {
+                traversWithFilter.getKey().traverse(resourceResolver, traversWithFilter.getValue(), action);
             }
         }
-        return this;
-    }
-
-    public SimpleContentUpdate removeProperty(String name) {
-        if (name != null) {
-            try {
-                for (Resource current : resourceList) {
-                    LOG.debug("Removing property " + name + " for resource " + current.getPath());
-                    ModifiableValueMap properties = current.adaptTo(ModifiableValueMap.class);
-                    properties.remove(name);
-                }
-                resourceResolver.commit();
-            } catch (PersistenceException e) {
-                LOG.error("Failed to commit changes.", e);
-            }
-        }
-        return this;
-    }
-
-    public SimpleContentUpdate renameProperty(String oldName, String newName) {
-        if (oldName != null && newName != null) {
-            try {
-                for (Resource current : resourceList) {
-                    LOG.debug("Renaming property " + oldName + " to " + newName + " for resource " + current.getPath());
-                    ModifiableValueMap properties = current.adaptTo(ModifiableValueMap.class);
-                    Object value = properties.remove(oldName);
-                    properties.put(newName, value);
-                }
-                resourceResolver.commit();
-            } catch (PersistenceException e) {
-                LOG.error("Failed to commit changes.", e);
-            }
-        }
-        return this;
+        return "Testing Groovy Console Output :)! And this is how it works \\^^/";
     }
 
 }
