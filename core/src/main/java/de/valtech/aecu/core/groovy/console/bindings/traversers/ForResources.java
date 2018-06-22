@@ -22,6 +22,8 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Roxana Muresan
  */
@@ -29,24 +31,20 @@ public class ForResources implements TraversData {
 
     private String[] paths;
 
-    public ForResources(String[] paths) {
+    public ForResources(@Nonnull String[] paths) {
         this.paths = paths;
     }
 
     @Override
-    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
-        if (paths != null && paths.length > 0) {
-            for (String path : paths) {
-                if (path != null) {
-                    Resource resource = resourceResolver.getResource(path);
-                    if (filter == null || filter.filter(resource)) {
-                        if (action != null) {
-                            stringBuffer.append(action.doAction(resource) + "\n");
-                        }
-                    }
+    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer) throws PersistenceException {
+        for (String path : paths) {
+            if (path != null) {
+                Resource resource = resourceResolver.getResource(path);
+                if (filter == null || filter.filter(resource)) {
+                    stringBuffer.append(action.doAction(resource) + "\n");
                 }
             }
-            resourceResolver.commit();
         }
+        resourceResolver.commit();
     }
 }

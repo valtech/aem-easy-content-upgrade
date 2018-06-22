@@ -22,6 +22,7 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 
 /**
@@ -31,27 +32,23 @@ public class ForChildResourcesOf implements TraversData {
 
     private String path;
 
-    public ForChildResourcesOf(String path) {
+    public ForChildResourcesOf(@Nonnull String path) {
         this.path = path;
     }
 
 
     @Override
-    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
-        if (path != null) {
-            Resource parentResource = resourceResolver.getResource(path);
-            if (parentResource != null) {
-                Iterator<Resource> resourceIterator = resourceResolver.listChildren(parentResource);
-                while (resourceIterator.hasNext()) {
-                    Resource resource = resourceIterator.next();
-                    if (filter == null || filter.filter(resource)) {
-                        if (action != null) {
-                            stringBuffer.append(action.doAction(resource) + "\n");
-                        }
-                    }
+    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer) throws PersistenceException {
+        Resource parentResource = resourceResolver.getResource(path);
+        if (parentResource != null) {
+            Iterator<Resource> resourceIterator = resourceResolver.listChildren(parentResource);
+            while (resourceIterator.hasNext()) {
+                Resource resource = resourceIterator.next();
+                if (filter == null || filter.filter(resource)) {
+                    stringBuffer.append(action.doAction(resource) + "\n");
                 }
-                resourceResolver.commit();
             }
+            resourceResolver.commit();
         }
     }
 }

@@ -22,6 +22,7 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 
 /**
@@ -31,18 +32,16 @@ public class ForDescendantResourcesOf implements TraversData {
 
     private String path;
 
-    public ForDescendantResourcesOf(String path) {
+    public ForDescendantResourcesOf(@Nonnull String path) {
         this.path = path;
     }
 
 
     @Override
-    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
-        if (path != null) {
-            Resource parentResource = resourceResolver.getResource(path);
-            if (parentResource != null) {
-                traverseChildResourcesRecursive(resourceResolver, parentResource, filter, action, stringBuffer);
-            }
+    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer) throws PersistenceException {
+        Resource parentResource = resourceResolver.getResource(path);
+        if (parentResource != null) {
+            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, action, stringBuffer);
         }
     }
 
@@ -52,13 +51,12 @@ public class ForDescendantResourcesOf implements TraversData {
             while (childResources.hasNext()) {
                 Resource child = childResources.next();
                 if (filter == null || filter.filter(child)) {
-                    if (action != null) {
-                        stringBuffer.append(action.doAction(child) + "\n");
-                    }
+                    stringBuffer.append(action.doAction(child) + "\n");
                 }
                 traverseChildResourcesRecursive(resourceResolver, child, filter, action, stringBuffer);
             }
             resourceResolver.commit(); // TOD: maybe commit will be called to often this way: TODO: think about it for later!!
         }
     }
+
 }

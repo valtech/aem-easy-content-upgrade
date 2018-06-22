@@ -16,10 +16,10 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
-import com.drew.lang.annotations.NotNull;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,21 +30,19 @@ public class FilterByProperties implements FilterBy {
 
     private Map<String, String> conditionProperties = new HashMap<>();
 
-    public FilterByProperties(@NotNull Map<String, String> conditionProperties) {
+    public FilterByProperties(@Nonnull Map<String, String> conditionProperties) {
         this.conditionProperties.putAll(conditionProperties);
     }
 
     @Override
-    public boolean filter(Resource resource) {
-        if (resource != null) {
-            ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-            for (String key : conditionProperties.keySet()) {
-                String conditionValue = conditionProperties.get(key);
-                String propertiesValue = properties.get(key, String.class);
+    public boolean filter(@Nonnull Resource resource) {
+        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        for (String key : conditionProperties.keySet()) {
+            String conditionValue = conditionProperties.get(key);
+            String propertiesValue = properties.get(key, String.class);
 
-                if ((conditionValue == null && propertiesValue != null) || (conditionValue != null && !conditionValue.equals(propertiesValue))) {
-                    return false;
-                }
+            if ((conditionValue == null && propertiesValue != null) || (conditionValue != null && !conditionValue.equals(propertiesValue))) {
+                return false;
             }
         }
         return true;

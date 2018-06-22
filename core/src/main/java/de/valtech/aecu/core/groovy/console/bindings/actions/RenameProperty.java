@@ -16,9 +16,10 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions;
 
-import com.drew.lang.annotations.NotNull;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
@@ -28,13 +29,13 @@ public class RenameProperty implements Action {
     private String oldName;
     private String newName;
 
-    public RenameProperty(@NotNull String oldName, @NotNull String newName) {
+    public RenameProperty(@Nonnull String oldName, @Nonnull String newName) {
         this.oldName = oldName;
         this.newName = newName;
     }
 
     @Override
-    public String doAction(Resource resource) {
+    public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         Object value = properties.remove(oldName);
         properties.put(newName, value);

@@ -16,14 +16,15 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions;
 
-import com.drew.lang.annotations.NotNull;
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
  */
 public interface Action {
 
-    String doAction(@NotNull Resource resource);
+    String doAction(@Nonnull Resource resource);
 
 }

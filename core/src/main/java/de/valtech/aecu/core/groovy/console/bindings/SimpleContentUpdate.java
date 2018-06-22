@@ -31,6 +31,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,43 +56,43 @@ public class SimpleContentUpdate {
     }
 
     /** content filter methods **/
-    public SimpleContentUpdate forResources(String[] paths) {
+    public SimpleContentUpdate forResources(@Nonnull String[] paths) {
         traversalsWithFilter.put(new ForResources(paths), null);
         return this;
     }
 
-    public SimpleContentUpdate forChildResourcesOf(String path) {
+    public SimpleContentUpdate forChildResourcesOf(@Nonnull String path) {
         traversalsWithFilter.put(new ForChildResourcesOf(path), null);
         return this;
     }
 
-    public SimpleContentUpdate forChildResourcesOfWithProperties(String path, Map<String, String> conditionProperties) {
+    public SimpleContentUpdate forChildResourcesOfWithProperties(@Nonnull String path, @Nonnull Map<String, String> conditionProperties) {
         traversalsWithFilter.put(new ForChildResourcesOf(path), new FilterByProperties(conditionProperties));
         return this;
     }
 
-    public SimpleContentUpdate forDescendantResourcesOf(String path) {
+    public SimpleContentUpdate forDescendantResourcesOf(@Nonnull String path) {
         traversalsWithFilter.put(new ForDescendantResourcesOf(path), null);
         return this;
     }
 
-    public SimpleContentUpdate forDescendantResourcesOfWithProperties(String path, Map<String, String> conditionProperties) {
+    public SimpleContentUpdate forDescendantResourcesOfWithProperties(@Nonnull String path, @Nonnull Map<String, String> conditionProperties) {
         traversalsWithFilter.put(new ForDescendantResourcesOf(path), new FilterByProperties(conditionProperties));
         return this;
     }
 
     /** properties edit methods **/
-    public SimpleContentUpdate doSetProperty(String name, String value) {
+    public SimpleContentUpdate doSetProperty(@Nonnull String name, String value) {
         actions.add(new SetProperty(name, value));
         return this;
     }
 
-    public SimpleContentUpdate doRemoveProperty(String name) {
+    public SimpleContentUpdate doRemoveProperty(@Nonnull String name) {
         actions.add(new RemoveProperty(name));
         return this;
     }
 
-    public SimpleContentUpdate doRenameProperty(String oldName, String newName) {
+    public SimpleContentUpdate doRenameProperty(@Nonnull String oldName, @Nonnull String newName) {
         actions.add(new RenameProperty(oldName, newName));
         return this;
     }

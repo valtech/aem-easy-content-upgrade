@@ -18,11 +18,13 @@ package de.valtech.aecu.core.groovy.console.bindings.filters;
 
 import org.apache.sling.api.resource.Resource;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Roxana Muresan
  */
 public interface FilterBy {
 
-    boolean filter(Resource resource);
+    boolean filter(@Nonnull Resource resource);
 
 }

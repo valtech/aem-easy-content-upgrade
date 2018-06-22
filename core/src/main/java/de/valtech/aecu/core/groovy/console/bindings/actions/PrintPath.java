@@ -18,13 +18,15 @@ package de.valtech.aecu.core.groovy.console.bindings.actions;
 
 import org.apache.sling.api.resource.Resource;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Roxana Muresan
  */
 public class PrintPath implements Action {
 
     @Override
-    public String doAction(Resource resource) {
+    public String doAction(@Nonnull Resource resource) {
         return resource.getPath();
     }
 }

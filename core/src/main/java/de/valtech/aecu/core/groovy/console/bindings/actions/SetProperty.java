@@ -16,9 +16,10 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions;
 
-import com.drew.lang.annotations.NotNull;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
@@ -28,14 +29,14 @@ public class SetProperty implements Action {
     private String name;
     private Object value;
 
-    public SetProperty(@NotNull String name, Object value) {
+    public SetProperty(@Nonnull String name, Object value) {
         this.name = name;
         this.value = value;
     }
 
 
     @Override
-    public String doAction(Resource resource) {
+    public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         properties.put(name, value);
         return "Setting property " + name + "=" + value + " for resource " + resource.getPath();
