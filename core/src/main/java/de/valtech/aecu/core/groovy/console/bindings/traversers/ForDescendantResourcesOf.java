@@ -34,26 +34,26 @@ public class ForDescendantResourcesOf implements TraversData {
 
 
     @Override
-    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action) throws PersistenceException {
+    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
         if (path != null) {
             Resource parentResource = resourceResolver.getResource(path);
             if (parentResource != null) {
-                traverseChildResourcesRecursive(resourceResolver, parentResource, filter, action);
+                traverseChildResourcesRecursive(resourceResolver, parentResource, filter, action, stringBuffer);
             }
         }
     }
 
-    private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter, Action action) throws PersistenceException {
+    private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
         if (resource != null && resource.hasChildren()) {
             Iterator<Resource> childResources = resource.listChildren();
             while (childResources.hasNext()) {
                 Resource child = childResources.next();
                 if (filter == null || filter.filter(child)) {
                     if (action != null) {
-                        action.doAction(child);
+                        stringBuffer.append(action.doAction(child) + "\n");
                     }
                 }
-                traverseChildResourcesRecursive(resourceResolver, child, filter, action);
+                traverseChildResourcesRecursive(resourceResolver, child, filter, action, stringBuffer);
             }
             resourceResolver.commit(); // TOD: maybe commit will be called to often this way: TODO: think about it for later!!
         }

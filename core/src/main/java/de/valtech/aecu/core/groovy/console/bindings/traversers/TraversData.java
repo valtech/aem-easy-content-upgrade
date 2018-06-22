@@ -23,6 +23,6 @@ import org.apache.sling.api.resource.ResourceResolver;
 
 public interface TraversData {
 
-    void traverse(ResourceResolver resourceResolve, FilterBy filter, Action action) throws PersistenceException;
+    void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException;
 
 }

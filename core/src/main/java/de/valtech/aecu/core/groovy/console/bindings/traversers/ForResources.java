@@ -31,14 +31,14 @@ public class ForResources implements TraversData {
     }
 
     @Override
-    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action) throws PersistenceException {
+    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
         if (paths != null && paths.length > 0) {
             for (String path : paths) {
                 if (path != null) {
                     Resource resource = resourceResolver.getResource(path);
                     if (filter == null || filter.filter(resource)) {
                         if (action != null) {
-                            action.doAction(resource);
+                            stringBuffer.append(action.doAction(resource) + "\n");
                         }
                     }
                 }

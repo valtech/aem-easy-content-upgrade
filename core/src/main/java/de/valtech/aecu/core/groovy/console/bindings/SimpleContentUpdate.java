@@ -97,12 +97,13 @@ public class SimpleContentUpdate {
     }
 
     public String apply() throws PersistenceException {
+        StringBuffer stringBuffer = new StringBuffer("SimpleContentUpdate.apply()\n");
         for (Map.Entry<TraversData, FilterBy> traversWithFilter : traversalsWithFilter.entrySet()) {
             for (Action action : actions) {
-                traversWithFilter.getKey().traverse(resourceResolver, traversWithFilter.getValue(), action);
+                traversWithFilter.getKey().traverse(resourceResolver, traversWithFilter.getValue(), action, stringBuffer);
             }
         }
-        return "Testing Groovy Console Output :)! And this is how it works \\^^/";
+        return stringBuffer.toString();
     }
 
 }

@@ -34,7 +34,7 @@ public class ForChildResourcesOf implements TraversData {
 
 
     @Override
-    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action) throws PersistenceException {
+    public void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
         if (path != null) {
             Resource parentResource = resourceResolver.getResource(path);
             if (parentResource != null) {
@@ -43,7 +43,7 @@ public class ForChildResourcesOf implements TraversData {
                     Resource resource = resourceIterator.next();
                     if (filter == null || filter.filter(resource)) {
                         if (action != null) {
-                            action.doAction(resource);
+                            stringBuffer.append(action.doAction(resource) + "\n");
                         }
                     }
                 }
