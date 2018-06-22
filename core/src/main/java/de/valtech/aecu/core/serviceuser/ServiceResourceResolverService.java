@@ -16,14 +16,14 @@
  */
 package de.valtech.aecu.core.serviceuser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Provides the service resource resolver.
@@ -34,6 +34,7 @@ import org.osgi.service.component.annotations.Reference;
 public class ServiceResourceResolverService {
     
     private static final String SUBSERVICE_AECU = "aecu";
+    private static final String SUBSERVICE_AECU_CONTENT_MIGRATION = "aecu-content-migrator";
     
     @Reference
     ResourceResolverFactory resolverFactory;
@@ -47,6 +48,18 @@ public class ServiceResourceResolverService {
     public ResourceResolver getServiceResourceResolver() throws LoginException {
         final Map<String, Object> authenticationInfo = new HashMap<>();
         authenticationInfo.put(ResourceResolverFactory.SUBSERVICE, SUBSERVICE_AECU);
+        return resolverFactory.getServiceResourceResolver(authenticationInfo);
+    }
+
+    /**
+     * Returns a resource resolver of the AECU content migrator user.
+     *
+     * @return service resource resolver
+     * @throws LoginException error opening resource resolver
+     */
+    public ResourceResolver getContentMigratorResourceResolver() throws LoginException {
+        final Map<String, Object> authenticationInfo = new HashMap<>();
+        authenticationInfo.put(ResourceResolverFactory.SUBSERVICE, SUBSERVICE_AECU_CONTENT_MIGRATION);
         return resolverFactory.getServiceResourceResolver(authenticationInfo);
     }
 
