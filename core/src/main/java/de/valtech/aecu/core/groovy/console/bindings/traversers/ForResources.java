@@ -22,6 +22,9 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+/**
+ * @author Roxana Muresan
+ */
 public class ForResources implements TraversData {
 
     private String[] paths;

@@ -24,6 +24,9 @@ import org.apache.sling.api.resource.ResourceResolver;
 
 import java.util.Iterator;
 
+/**
+ * @author Roxana Muresan
+ */
 public class ForChildResourcesOf implements TraversData {
 
     private String path;

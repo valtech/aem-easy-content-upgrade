@@ -20,6 +20,9 @@ import com.drew.lang.annotations.NotNull;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
+/**
+ * @author Roxana Muresan
+ */
 public class SetProperty implements Action {
 
     private String name;

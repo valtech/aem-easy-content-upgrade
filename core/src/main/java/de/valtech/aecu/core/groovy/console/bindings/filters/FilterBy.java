@@ -18,6 +18,11 @@ package de.valtech.aecu.core.groovy.console.bindings.filters;
 
 import org.apache.sling.api.resource.Resource;
 
+/**
+ * @author Roxana Muresan
+ */
 public interface FilterBy {
+
     boolean filter(Resource resource);
+
 }

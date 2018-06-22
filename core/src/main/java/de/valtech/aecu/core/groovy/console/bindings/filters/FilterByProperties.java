@@ -23,6 +23,9 @@ import org.apache.sling.api.resource.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Roxana Muresan
+ */
 public class FilterByProperties implements FilterBy {
 
     private Map<String, String> conditionProperties = new HashMap<>();

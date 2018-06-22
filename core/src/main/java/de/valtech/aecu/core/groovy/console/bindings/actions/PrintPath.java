@@ -18,6 +18,9 @@ package de.valtech.aecu.core.groovy.console.bindings.actions;
 
 import org.apache.sling.api.resource.Resource;
 
+/**
+ * @author Roxana Muresan
+ */
 public class PrintPath implements Action {
 
     @Override

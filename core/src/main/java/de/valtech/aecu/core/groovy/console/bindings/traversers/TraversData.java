@@ -21,6 +21,9 @@ import de.valtech.aecu.core.groovy.console.bindings.filters.FilterBy;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
 
+/**
+ * @author Roxana Muresan
+ */
 public interface TraversData {
 
     void traverse(ResourceResolver resourceResolver, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException;
