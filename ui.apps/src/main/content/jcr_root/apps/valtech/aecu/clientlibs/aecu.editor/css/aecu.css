@@ -23,3 +23,18 @@ table.aecu-history-detail td {
 .icon-color-inprogress {
   color: blue;
 }
+
+.aecu-color-ok {
+  color: green;
+}
+
+.aecu-color-fail {
+  color: red;
+}
+
+.aecu-chart-text {
+  line-height: 1;
+  text-anchor: middle;
+  font-size: 0.5em;
+  transform: translateY(0.35em);
+}

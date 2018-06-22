@@ -56,7 +56,8 @@ public interface AecuServiceMBean {
      * @return execution result
      * @throws AecuException error during execution
      */
-    String execute(@Name("Path") @Description("Path to file that should be executed") String path) throws AecuException;
+    @Description("Executes a single file or all files of a folder structure")
+    String execute(@Name("Path") @Description("Path to file/folder that should be executed") String path) throws AecuException;
 
     /**
      * Returns history entries.
@@ -66,6 +67,7 @@ public interface AecuServiceMBean {
      * @return history entries
      * @throws AecuException
      */
+    @Description("Returns the last history entries")
     String getHistory(@Name("Start index") int start, @Name("Count") int count) throws AecuException;
     
 }
