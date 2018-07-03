@@ -46,9 +46,20 @@ TODO
 
 <a name="execution"></a>
 
-# Execution of Migration Scripts
+# Manual Execution of Migration Scripts
 
-TODO
+Manual script execution is useful in case you want to manually rerun a script (e.g. because it failed before). You can find the execute feature in AECU's tools menu.
+
+<img src="docs/images/tools.png">
+
+Execution is done in two simple steps:
+
+1. Select the base path and run the search. This will show a list of runnable scripts.
+2. Run all scripts in batch or just single ones. If you run all you can change the order before (drag and drop with marker at the right).
+
+Once execution is done you will see if the script(s) succeeded. Click on the history link to see the details.
+
+<img src="docs/images/run.png">
 
 <a name="history"></a>
 
