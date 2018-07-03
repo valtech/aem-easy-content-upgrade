@@ -16,6 +16,8 @@ Table of contents
 1. [Requirements](#requirements)
 2. [Installation](#installation)
 3. [Execution of Migration Scripts](#execution)
+    1. [Install Hook](#installHook)
+    2. [Manual Execution](#manualExecution)
 4. [History of Past Runs](#history)
 5. [Extension to Groovy Console](#groovy)
 6. [JMX Interface](#jmx)
@@ -46,7 +48,36 @@ TODO
 
 <a name="execution"></a>
 
-# Manual Execution of Migration Scripts
+# Execution of Migration Scripts
+
+<a name="installHook"></a>
+
+## Install Hook
+
+This is the preferred method to execute your scripts. It allows to run them without any user interaction. Just package them with a content package and do a regular deployment.
+
+You can add the install hook by adding de.valtech.aecu.core.installhook.AecuInstallHook as a hook to your package properties. The AECU package and Groovy Console need to be installed beforehand.
+
+```xml
+<plugin>
+    <groupId>com.day.jcr.vault</groupId>
+    <artifactId>content-package-maven-plugin</artifactId>
+    <extensions>true</extensions>
+    <configuration>
+        <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
+        <verbose>true</verbose>
+        <failOnError>true</failOnError>
+        <group>Valtech</group>
+        <properties>
+            <installhook.aecu.class>de.valtech.aecu.core.installhook.AecuInstallHook</installhook.aecu.class>
+        </properties>
+    </configuration>
+</plugin>
+```
+
+<a name="manualExecution"></a>
+
+## Manual Execution
 
 Manual script execution is useful in case you want to manually rerun a script (e.g. because it failed before). You can find the execute feature in AECU's tools menu.
 
