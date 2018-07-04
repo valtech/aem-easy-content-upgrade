@@ -23,11 +23,6 @@ import java.io.IOException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
-import de.valtech.aecu.core.history.HistoryUtil;
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -37,6 +32,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
+
+import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.service.AecuException;
+import de.valtech.aecu.service.AecuService;
+import de.valtech.aecu.service.ExecutionResult;
+import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * @author Bryan Chavez
@@ -68,7 +69,7 @@ public class ExecutionServlet extends BaseServlet {
         String historyEntryAction = request.getParameter("historyEntryAction");
         String aecuScriptPath = request.getParameter("aecuScriptPath");
         if(!this.validateParameter(aecuScriptPath) || !this.validateParameter(historyEntryAction)){
-            this.writeResult(response, ERROR_MESSAGE_MANDATORY);
+            writeResult(response, ERROR_MESSAGE_MANDATORY);
             return;
         }
 
@@ -77,7 +78,7 @@ public class ExecutionServlet extends BaseServlet {
             ExecutionResult executionResult = aecuService.execute(aecuScriptPath);
             aecuService.storeExecutionInHistory(historyEntry, executionResult);
             this.finishHistoryEntry(historyEntry,historyEntryAction);
-            response.getWriter().write(this.prepareJson(executionResult.isSuccess(),historyEntry.getRepositoryPath()));
+            writeResult(response, this.prepareJson(executionResult.isSuccess(),historyEntry.getRepositoryPath()));
 
         }catch (AecuException e){
             this.sendInternalServerError(response);
@@ -96,7 +97,7 @@ public class ExecutionServlet extends BaseServlet {
                 //Used for "use" and "close"
                 String historyEntryPath = request.getParameter("historyEntryPath");
                 if(!this.validateParameter(historyEntryPath)){
-                    this.writeResult(response, ERROR_MESSAGE_MANDATORY);
+                    writeResult(response, ERROR_MESSAGE_MANDATORY);
                     return null;
                 }
 

@@ -18,17 +18,17 @@
 AECU.Constants = {};
 
 AECU.Constants.Executor = {
-    servletPath : "/bin/public/valtech/aecu/execute?aecuScriptPath={0}&historyEntryAction={1}&historyEntryPath={2}",
+    servletPath : "/bin/public/valtech/aecu/execute.json?aecuScriptPath={0}&historyEntryAction={1}&historyEntryPath={2}",
     historyPath : "/apps/valtech/aecu/tools/history/details.html?entry={0}&aecuScriptPath={1}"
 }
 
 AECU.Constants.Executor.Status = {
-    ready : "Ready",
-    inProgress : "In progress",
-    fail : "Failed",
-    pending : "Pending...",
-    executed: "Successful",
-    internalError: "Internal Server Error"
+    ready : {icon: "helpCircle", className: ""},
+    inProgress : {icon: "playCircle", className: "icon-color-inprogress"},
+    fail : {icon: "closeCircle", className: "icon-color-fail"},
+    pending : {icon: "pending", className: "icon-color-inprogress"},
+    executed: {icon: "checkCircle", className: "icon-color-ok"},
+    internalError: {icon: "sentimentNegative", className: "icon-color-fail"}
 }
 
 AECU.Constants.Executor.HistoryEntryActions = {

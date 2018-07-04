@@ -54,21 +54,20 @@ AECU.Executor.execute = function(row,historyEntryAction,historyEntryPath) {
     this.doGET({
         url : AECU.Constants.Executor.servletPath.format(row.dataset.aecuExecuteScript,historyEntryAction,historyEntryPath),
         beforeSend: function(){
-            AECU.Executor.changeStatus(row,AECU.Constants.Executor.Status.inProgress);
+            AECU.Executor.changeRowStatus(row,AECU.Constants.Executor.Status.inProgress);
             AECU.Executor.disableButton(row);
         },
-        success: function( data ) {
-            var json = JSON.parse(data);
+        success: function( json ) {
             AECU.Executor.historyEntryPath = json.historyEntryPath;
             AECU.Executor.addHistoryLink(row,json.historyEntryPath);
             if(json.success){
-                AECU.Executor.changeStatus(row,AECU.Constants.Executor.Status.executed);
+                AECU.Executor.changeRowStatus(row,AECU.Constants.Executor.Status.executed);
             }else{
-                AECU.Executor.changeStatus(row,AECU.Constants.Executor.Status.fail);
+                AECU.Executor.changeRowStatus(row,AECU.Constants.Executor.Status.fail);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            AECU.Executor.changeStatus(row,AECU.Constants.Executor.Status.internalError);
+            AECU.Executor.changeRowStatus(row,AECU.Constants.Executor.Status.internalError);
         }
     });
 }
@@ -79,15 +78,25 @@ AECU.Executor.addHistoryLink = function(row, historyEntryPath){
     historyLink.text = "Go to history";
 }
 
-AECU.Executor.changeStatus = function(row, value){
-    $(row).find("[data-aecu-execute-script-status]").text(value);
+AECU.Executor.changeRowStatus = function(row, value){
+	AECU.Executor.changeStatus($(row).find("[data-aecu-execute-script-status]"), value);
 }
 
 
 AECU.Executor.changeAllStatus = function(value){
-    $("[data-aecu-execute-script-status]").text(value);
+	AECU.Executor.changeStatus($("[data-aecu-execute-script-status]"), value);
 }
 
+AECU.Executor.changeStatus = function(items, value){
+	var icon = value.icon;
+	var className = value.className;
+	var iconTags = items.children("coral-icon");
+	iconTags.each(function() {
+		this.set('icon', icon)
+	});
+	iconTags.removeClass('icon-color-inprogress');
+	iconTags.addClass(className);
+}
 
 AECU.Executor.disableButton = function(row){
     if(row != undefined){
