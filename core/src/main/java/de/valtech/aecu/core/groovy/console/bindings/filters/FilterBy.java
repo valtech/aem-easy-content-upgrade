@@ -14,16 +14,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.hello;
+package de.valtech.aecu.core.groovy.console.bindings.filters;
+
+import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
- * Groovy Console Bindings first test class
  * @author Roxana Muresan
  */
-public class HelloWorld {
+public interface FilterBy {
 
-    public String sayHello() {
-        return "Hello y'all! >^.^<";
-    }
+    boolean filter(@Nonnull Resource resource);
 
 }

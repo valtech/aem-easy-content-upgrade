@@ -17,15 +17,15 @@
 package de.valtech.aecu.core.groovy.console.bindings.provider;
 
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
-import de.valtech.aecu.core.groovy.console.bindings.hello.HelloWorld;
+import de.valtech.aecu.core.groovy.console.bindings.SimpleContentUpdate;
+import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import groovy.lang.Binding;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.resource.LoginException;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * Provides additional AECU Bindings for the Groovy Console
@@ -38,15 +38,19 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
     @Reference
     private BindingExtensionProvider defaultBindingExtensionProvider;
+    @Reference
+    private ServiceResourceResolverService resourceResolverService;
 
 
     @Override
     public Binding getBinding(SlingHttpServletRequest request) {
         Binding binding = defaultBindingExtensionProvider.getBinding(request);
-        Map<String, Object> inheritedBindings =  binding.getVariables();
-        inheritedBindings.put("helloWorld", new HelloWorld());
-
-        return new Binding(inheritedBindings);
+        try {
+            binding.setVariable("aecu", new SimpleContentUpdate(resourceResolverService.getContentMigratorResourceResolver()));
+        } catch (LoginException e) {
+            LOG.error("Failed to get resource resolver for aecu-content-migrator, make sure you all the configurations needed for this system user are deployed.");
+        }
+        return binding;
     }
 
 }
