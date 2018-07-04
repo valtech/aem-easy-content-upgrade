@@ -7,7 +7,7 @@ def conditionMap_Page = [:]
 conditionMap_Page['jcr:primaryType'] = "cq:PageContent"
 
 
-def return1 = aecu.getNewMigration()
+println aecu.getNewMigration()// TODO contentUpgradeBuilder().
 // traversers
         .forResources((String[])["/content/we-retail/ca/en/jcr:content", "/content/we-retail/ca/en/experience/jcr:content"]) //,"/invalid/path"
         .forChildResourcesOf("/content/we-retail/ca/en/men")
@@ -19,10 +19,11 @@ def return1 = aecu.getNewMigration()
         .doRenameProperty("newProperty", "delete_me_later")
 //    .removeProperty("delete_me_later")
         .apply()
-println "$return1"
 
 
-def complexFilter = new ORFilter(
+
+
+def complexFilter =  new ORFilter(
         [ new FilterByProperties(conditionMap_Page),
           new ANDFilter( [
                   new FilterByProperties(conditionMap_Hero1),
@@ -30,7 +31,7 @@ def complexFilter = new ORFilter(
           ] )
         ])
 
-def return2 = aecu.getNewMigration()
+println aecu.getNewMigration()
 // traversers
         .forResources((String[])["/content/we-retail/ca/en/jcr:content", "/content/we-retail/ca/en/experience/jcr:content"]) //,"/invalid/path"
         .forChildResourcesOf("/content/we-retail/ca/en/men")
@@ -42,6 +43,3 @@ def return2 = aecu.getNewMigration()
         .doRenameProperty("newProperty", "delete_me_later")
 //    .removeProperty("delete_me_later")
         .apply()
-println "$return2"
-
-return return1 + return2
