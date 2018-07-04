@@ -92,7 +92,8 @@ AECU.Executor.changeStatus = function(items, value){
 	var className = value.className;
 	var iconTags = items.children("coral-icon");
 	iconTags.each(function() {
-		this.set('icon', icon)
+		this.set('icon', icon);
+		this._syncDOM();
 	});
 	iconTags.removeClass('icon-color-inprogress');
 	iconTags.addClass(className);
