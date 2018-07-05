@@ -3,6 +3,11 @@
 	margin: 2rem;
 }
 
+.aecu-searchfield {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 table.aecu-history-overview td {
   padding: 0.5rem;
 }
