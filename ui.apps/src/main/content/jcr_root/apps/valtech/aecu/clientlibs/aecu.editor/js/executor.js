@@ -45,7 +45,7 @@ AECU.Executor.executeAll = function(tableRows) {
         }
         AECU.Executor.execute(tableRows[i],historyEntryAction,AECU.Executor.historyEntryPath);
     }
-
+    AECU.Executor.disableButton();
     AECU.Executor.historyEntryPath = undefined;
 }
 
@@ -80,23 +80,33 @@ AECU.Executor.addHistoryLink = function(row, historyEntryPath){
 
 AECU.Executor.changeRowStatus = function(row, value){
 	AECU.Executor.changeStatus($(row).find("[data-aecu-execute-script-status]"), value);
+	AECU.Executor.changeScriptColor($(row).find("[data-aecu-execute-script-path]"), value);
 }
 
 
 AECU.Executor.changeAllStatus = function(value){
 	AECU.Executor.changeStatus($("[data-aecu-execute-script-status]"), value);
+	AECU.Executor.changeScriptColor($("[data-aecu-execute-script-path]"), value);
 }
 
-AECU.Executor.changeStatus = function(items, value){
+AECU.Executor.changeStatus = function(items, value) {
 	var icon = value.icon;
+	var title = value.text;
 	var className = value.className;
 	var iconTags = items.children("coral-icon");
 	iconTags.each(function() {
 		this.set('icon', icon);
+		this.set('title', title);
 		this._syncDOM();
 	});
 	iconTags.removeClass('icon-color-inprogress');
 	iconTags.addClass(className);
+}
+
+AECU.Executor.changeScriptColor = function(items, value) {
+	var className = value.className;
+	items.removeClass('icon-color-inprogress');
+	items.addClass(className);	
 }
 
 AECU.Executor.disableButton = function(row){
@@ -127,6 +137,7 @@ $(document).ready(function(){
 
     /* Event for each row (script) displayed in screen. */
     $('[data-aecu-execute-script-button]').on('click', function(event) {
+        AECU.Executor.disableButton();
         AECU.Executor.execute(
             this.closest('[data-aecu-execute-script]'),
             AECU.Constants.Executor.HistoryEntryActions.single,null);

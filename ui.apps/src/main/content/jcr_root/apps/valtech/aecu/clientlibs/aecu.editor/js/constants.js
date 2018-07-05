@@ -23,12 +23,36 @@ AECU.Constants.Executor = {
 }
 
 AECU.Constants.Executor.Status = {
-    ready : {icon: "helpCircle", className: ""},
-    inProgress : {icon: "playCircle", className: "icon-color-inprogress"},
-    fail : {icon: "closeCircle", className: "icon-color-fail"},
-    pending : {icon: "pending", className: "icon-color-inprogress"},
-    executed: {icon: "checkCircle", className: "icon-color-ok"},
-    internalError: {icon: "sentimentNegative", className: "icon-color-fail"}
+    ready : {
+    	icon: "helpCircle",
+    	className: "",
+    	text: "Ready to run"
+    },
+    inProgress : {
+    	icon: "playCircle",
+    	className: "icon-color-inprogress",
+    	text: "In progress"
+    },
+    fail : {
+    	icon: "closeCircle",
+    	className: "icon-color-fail",
+    	text: "Failed"
+    },
+    pending : {
+    	icon: "pending",
+    	className: "icon-color-inprogress",
+    	text: "Pending"
+    },
+    executed: {
+    	icon: "checkCircle",
+    	className: "icon-color-ok",
+    	text: "Ok"
+    },
+    internalError: {
+    	icon: "sentimentNegative",
+    	className: "icon-color-fail",
+    	text: "Internal error"
+    }
 }
 
 AECU.Constants.Executor.HistoryEntryActions = {
