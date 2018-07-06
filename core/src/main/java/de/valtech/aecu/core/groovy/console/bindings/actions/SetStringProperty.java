@@ -24,16 +24,17 @@ import javax.annotation.Nonnull;
 /**
  * @author Roxana Muresan
  */
-public class SetProperty implements Action {
+public class SetStringProperty implements Action {
 
-    private String name;
-    private Object value;
+    protected String name;
+    protected Object value;
 
-    public SetProperty(@Nonnull String name, Object value) {
+    protected SetStringProperty() {}
+
+    public SetStringProperty(@Nonnull String name, String value) {
         this.name = name;
         this.value = value;
     }
-
 
     @Override
     public String doAction(@Nonnull Resource resource) {

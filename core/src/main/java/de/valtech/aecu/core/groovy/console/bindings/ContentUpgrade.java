@@ -1,9 +1,6 @@
 package de.valtech.aecu.core.groovy.console.bindings;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.actions.RemoveProperty;
-import de.valtech.aecu.core.groovy.console.bindings.actions.RenameProperty;
-import de.valtech.aecu.core.groovy.console.bindings.actions.SetProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.*;
 import de.valtech.aecu.core.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.core.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
@@ -21,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Migration {
+public class ContentUpgrade {
 
-    private static Logger LOG = LoggerFactory.getLogger(Migration.class);
+    private static Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
 
     private ResourceResolver resourceResolver = null;
 
@@ -32,64 +29,76 @@ public class Migration {
     private List<Action> actions = new ArrayList<>();
 
 
-    public Migration(@Nonnull ResourceResolver resourceResolver) {
+    public ContentUpgrade(@Nonnull ResourceResolver resourceResolver) {
         this.resourceResolver = resourceResolver;
     }
 
     /** content filter methods **/
-    public Migration forResources(@Nonnull String[] paths) {
+    public ContentUpgrade forResources(@Nonnull String[] paths) {
         LOG.debug("forResources: {}", paths.toString());
         traversals.add(new ForResources(paths));
         return this;
     }
 
-    public Migration forChildResourcesOf(@Nonnull String path) {
+    public ContentUpgrade forChildResourcesOf(@Nonnull String path) {
         LOG.debug("forChildResourcesOf: {}", path);
         traversals.add(new ForChildResourcesOf(path));
         return this;
     }
 
-    public Migration forDescendantResourcesOf(@Nonnull String path) {
+    public ContentUpgrade forDescendantResourcesOf(@Nonnull String path) {
         LOG.debug("forDescendantResourcesOf: {}", path);
         traversals.add(new ForDescendantResourcesOf(path));
         return this;
     }
 
     /** filters **/
-    public Migration filterByProperties(@Nonnull Map<String, String> conditionProperties) {
+    public ContentUpgrade filterByProperties(@Nonnull Map<String, String> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
         filter = new FilterByProperties(conditionProperties);
         return this;
     }
 
-    public Migration filterWith(@Nonnull FilterBy filter) {
+    public ContentUpgrade filterWith(@Nonnull FilterBy filter) {
         LOG.debug("filterWith: {}", filter);
         this.filter = filter;
         return this;
     }
 
     /** properties edit methods **/
-    public Migration doSetProperty(@Nonnull String name, String value) {
-        LOG.debug("doSetProperty: {} = {}", name, value);
-        actions.add(new SetProperty(name, value));
+    public ContentUpgrade doSetStringProperty(@Nonnull String name, String value) {
+        LOG.debug("doSetStringProperty: {} = {}", name, value);
+        actions.add(new SetStringProperty(name, value));
         return this;
     }
 
-    public Migration doRemoveProperty(@Nonnull String name) {
+    public ContentUpgrade doSetBooleanProperty(@Nonnull String name, Boolean value) {
+        LOG.debug("doSetBooleanProperty: {} = {}", name, value);
+        actions.add(new SetBooleanProperty(name, value));
+        return this;
+    }
+
+    public ContentUpgrade doSetIntegerProperty(@Nonnull String name, int value) {
+        LOG.debug("doSetIntegerProperty: {} = {}", name, value);
+        actions.add(new SetIntegerProperty(name, value));
+        return this;
+    }
+
+    public ContentUpgrade doRemoveProperty(@Nonnull String name) {
         LOG.debug("doRemoveProperty: {}", name);
         actions.add(new RemoveProperty(name));
         return this;
     }
 
-    public Migration doRenameProperty(@Nonnull String oldName, @Nonnull String newName) {
+    public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName) {
         LOG.debug("doRenameProperty: {} to {}", oldName, newName);
         actions.add(new RenameProperty(oldName, newName));
         return this;
     }
 
     public StringBuffer apply() throws PersistenceException {
-        LOG.debug("apply migration");
-        StringBuffer stringBuffer = new StringBuffer("Running migration...\n");
+        LOG.debug("apply content upgrade");
+        StringBuffer stringBuffer = new StringBuffer("Running content upgrade...\n");
         for (TraversData traversal : traversals) {
             for (Action action : actions) {
                 traversal.traverse(resourceResolver, filter, action, stringBuffer);

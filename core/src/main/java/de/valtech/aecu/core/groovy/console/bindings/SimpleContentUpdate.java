@@ -24,15 +24,15 @@ import org.apache.sling.api.resource.ResourceResolver;
  */
 public class SimpleContentUpdate {
 
-    private ResourceResolver resourceResolver;// TODO system user resolver!!
+    private ResourceResolver resourceResolver;
 
 
     public SimpleContentUpdate(ResourceResolver resourceResolver) {
         this.resourceResolver = resourceResolver;
     }
 
-    public Migration getNewMigration() {
-        return new Migration(resourceResolver);
+    public ContentUpgrade contentUpgradeBuilder() {
+        return new ContentUpgrade(resourceResolver);
     }
 
 }
