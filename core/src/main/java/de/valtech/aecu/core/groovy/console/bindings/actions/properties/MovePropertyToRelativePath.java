@@ -48,10 +48,11 @@ public class MovePropertyToRelativePath implements Action {
         ModifiableValueMap targetProperties = targetResource.adaptTo(ModifiableValueMap.class);
 
         Object propValue = sourceProperties.get(name);
-        targetProperties.put((newName != null) ? newName : name, propValue);
+        String key = (newName != null) ? newName : name;
+        targetProperties.put(key, propValue);
         sourceProperties.remove(name);
 
-        return "Moving property " + name + " from " + resource.getPath() + " to resource " + targetResource.getPath();
+        return "Moving property " + name + " from " + resource.getPath() + " to resource " + targetResource.getPath() + " as " + key;
     }
 
 }

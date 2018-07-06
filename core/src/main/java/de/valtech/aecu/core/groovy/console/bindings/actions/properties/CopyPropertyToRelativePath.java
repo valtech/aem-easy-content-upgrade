@@ -49,9 +49,10 @@ public class CopyPropertyToRelativePath implements Action {
         ModifiableValueMap destinationProperties = destinationResource.adaptTo(ModifiableValueMap.class);
 
         Object propValue = sourceProperties.get(name);
-        destinationProperties.put((newName != null) ? newName : name, propValue);
+        String key = (newName != null) ? newName : name;
+        destinationProperties.put(key, propValue);
 
-        return "Coping property " + name + " from " + resource.getPath() + " to resource " + destinationResource.getPath();
+        return "Coping property " + name + " from " + resource.getPath() + " to resource " + destinationResource.getPath() + " as " + key;
     }
 
 }
