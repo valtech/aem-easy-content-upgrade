@@ -98,10 +98,19 @@ public class ContentUpgrade {
 
     public StringBuffer apply() throws PersistenceException {
         LOG.debug("apply content upgrade");
-        StringBuffer stringBuffer = new StringBuffer("Running content upgrade...\n");
+        return apply(false);
+    }
+
+    public StringBuffer applyDry() throws PersistenceException {
+        LOG.debug("apply content upgrade dry");
+        return apply(true);
+    }
+
+    private StringBuffer apply(boolean dryRun) throws PersistenceException {
+        StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
             for (Action action : actions) {
-                traversal.traverse(resourceResolver, filter, action, stringBuffer);
+                traversal.traverse(resourceResolver, filter, action, stringBuffer, dryRun);
             }
         }
         return stringBuffer;

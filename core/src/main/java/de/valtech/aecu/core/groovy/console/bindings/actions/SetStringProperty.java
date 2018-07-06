@@ -40,6 +40,6 @@ public class SetStringProperty implements Action {
     public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         properties.put(name, value);
-        return "Setting property " + name + "=" + value + " for resource " + resource.getPath();
+        return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource " + resource.getPath();
     }
 }

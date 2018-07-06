@@ -36,7 +36,7 @@ public class ForResources implements TraversData {
     }
 
     @Override
-    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer) throws PersistenceException {
+    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         for (String path : paths) {
             if (path != null) {
                 Resource resource = resourceResolver.getResource(path);
@@ -45,6 +45,8 @@ public class ForResources implements TraversData {
                 }
             }
         }
-        resourceResolver.commit();
+        if (!dryRun) {
+            resourceResolver.commit();
+        }
     }
 }

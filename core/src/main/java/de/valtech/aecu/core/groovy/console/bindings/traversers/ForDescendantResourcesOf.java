@@ -38,14 +38,14 @@ public class ForDescendantResourcesOf implements TraversData {
 
 
     @Override
-    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer) throws PersistenceException {
+    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         Resource parentResource = resourceResolver.getResource(path);
         if (parentResource != null) {
-            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, action, stringBuffer);
+            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, action, stringBuffer, dryRun);
         }
     }
 
-    private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter, Action action, StringBuffer stringBuffer) throws PersistenceException {
+    private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter, Action action, StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         if (resource != null && resource.hasChildren()) {
             Iterator<Resource> childResources = resource.listChildren();
             while (childResources.hasNext()) {
@@ -53,9 +53,11 @@ public class ForDescendantResourcesOf implements TraversData {
                 if (filter == null || filter.filter(child)) {
                     stringBuffer.append(action.doAction(child) + "\n");
                 }
-                traverseChildResourcesRecursive(resourceResolver, child, filter, action, stringBuffer);
+                traverseChildResourcesRecursive(resourceResolver, child, filter, action, stringBuffer, dryRun);
             }
-            resourceResolver.commit(); // TOD: maybe commit will be called to often this way: TODO: think about it for later!!
+            if (!dryRun) {
+                resourceResolver.commit();
+            }
         }
     }
 

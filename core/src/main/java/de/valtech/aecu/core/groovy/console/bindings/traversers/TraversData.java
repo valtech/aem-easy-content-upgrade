@@ -28,6 +28,6 @@ import javax.annotation.Nonnull;
  */
 public interface TraversData {
 
-    void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer) throws PersistenceException;
+    void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action, @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException;
 
 }
