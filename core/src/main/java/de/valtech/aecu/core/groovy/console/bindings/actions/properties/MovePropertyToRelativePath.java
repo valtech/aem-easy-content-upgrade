@@ -30,10 +30,12 @@ public class MovePropertyToRelativePath implements Action {
 
     private String relativeResourcePath;
     private String name;
+    private String newName;
     private ResourceResolver resourceResolver;
 
-    public MovePropertyToRelativePath(@Nonnull String name, @Nonnull ResourceResolver resourceResolver, @Nonnull String relativeResourcePath) {
+    public MovePropertyToRelativePath(@Nonnull String name, String newName, @Nonnull ResourceResolver resourceResolver, @Nonnull String relativeResourcePath) {
         this.name = name;
+        this.newName = newName;
         this.resourceResolver = resourceResolver;
         this.relativeResourcePath = relativeResourcePath;
     }
@@ -46,7 +48,7 @@ public class MovePropertyToRelativePath implements Action {
         ModifiableValueMap targetProperties = targetResource.adaptTo(ModifiableValueMap.class);
 
         Object propValue = sourceProperties.get(name);
-        targetProperties.put(name, propValue);
+        targetProperties.put((newName != null) ? newName : name, propValue);
         sourceProperties.remove(name);
 
         return "Moving property " + name + " from " + resource.getPath() + " to resource " + targetResource.getPath();

@@ -31,10 +31,12 @@ public class CopyPropertyToRelativePath implements Action {
 
     private String relativeResourcePath;
     private String name;
+    private String newName;
     private ResourceResolver resourceResolver;
 
-    public CopyPropertyToRelativePath(@Nonnull String name, @Nonnull ResourceResolver resourceResolver, @Nonnull String relativeResourcePath) {
+    public CopyPropertyToRelativePath(@Nonnull String name, String newName, @Nonnull ResourceResolver resourceResolver, @Nonnull String relativeResourcePath) {
         this.name = name;
+        this.newName = newName;
         this.resourceResolver = resourceResolver;
         this.relativeResourcePath = relativeResourcePath;
     }
@@ -47,7 +49,7 @@ public class CopyPropertyToRelativePath implements Action {
         ModifiableValueMap destinationProperties = destinationResource.adaptTo(ModifiableValueMap.class);
 
         Object propValue = sourceProperties.get(name);
-        destinationProperties.put(name, propValue);
+        destinationProperties.put((newName != null) ? newName : name, propValue);
 
         return "Coping property " + name + " from " + resource.getPath() + " to resource " + destinationResource.getPath();
     }
