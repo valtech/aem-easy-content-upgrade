@@ -21,14 +21,11 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
-<<<<<<< HEAD:core/src/main/java/de/valtech/aecu/core/groovy/console/bindings/actions/properties/SetStringProperty.java
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-=======
-import javax.annotation.Nonnull;
-
->>>>>>> 8a3edfd7f429d77f0ea258e43b5fdfb4b1b49a2e:core/src/main/java/de/valtech/aecu/core/groovy/console/bindings/actions/SetProperty.java
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
