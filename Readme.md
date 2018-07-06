@@ -159,4 +159,4 @@ For the status of older runs use AECU's history page.
 
 # License
 
-The AC Tool is licensed under the [GNU GENERAL PUBLIC LICENSE - v 3](LICENSE).
+The AC Tool is licensed under the [MIT LICENSE](LICENSE).
