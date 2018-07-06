@@ -142,5 +142,13 @@ $(document).ready(function(){
             this.closest('[data-aecu-execute-script]'),
             AECU.Constants.Executor.HistoryEntryActions.single,null);
     });
+    
+    /* open rail tab */
+    var button =  $('coral-cyclebutton');
+    if (button) {
+    	Coral.commons.ready(button[0], function() {
+    		button.find('button').click();
+		});
+    }
 
 });
