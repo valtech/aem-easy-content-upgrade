@@ -14,31 +14,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.actions;
-
-import org.apache.sling.api.resource.ModifiableValueMap;
-import org.apache.sling.api.resource.Resource;
+package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
  */
-public class RenameProperty implements Action {
+public class SetIntegerProperty extends SetStringProperty {
 
-    private String oldName;
-    private String newName;
-
-    public RenameProperty(@Nonnull String oldName, @Nonnull String newName) {
-        this.oldName = oldName;
-        this.newName = newName;
-    }
-
-    @Override
-    public String doAction(@Nonnull Resource resource) {
-        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-        Object value = properties.remove(oldName);
-        properties.put(newName, value);
-        return "Renaming property " + oldName + " to " + newName + " for resource " + resource.getPath();
+    public SetIntegerProperty(@Nonnull String name, Integer value) {
+        this.name = name;
+        this.value = value;
     }
 }

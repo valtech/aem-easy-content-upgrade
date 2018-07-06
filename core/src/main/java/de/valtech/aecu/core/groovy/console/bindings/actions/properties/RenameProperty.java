@@ -14,9 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.actions;
+package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
-import org.apache.sling.api.resource.PersistenceException;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
 import javax.annotation.Nonnull;
@@ -24,8 +25,21 @@ import javax.annotation.Nonnull;
 /**
  * @author Roxana Muresan
  */
-public interface Action {
+public class RenameProperty implements Action {
 
-    String doAction(@Nonnull Resource resource) throws PersistenceException;
+    private String oldName;
+    private String newName;
 
+    public RenameProperty(@Nonnull String oldName, @Nonnull String newName) {
+        this.oldName = oldName;
+        this.newName = newName;
+    }
+
+    @Override
+    public String doAction(@Nonnull Resource resource) {
+        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        Object value = properties.remove(oldName);
+        properties.put(newName, value);
+        return "Renaming property " + oldName + " to " + newName + " for resource " + resource.getPath();
+    }
 }

@@ -14,18 +14,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.actions;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
+package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
  */
-public interface Action {
+public class SetBooleanProperty extends SetStringProperty {
 
-    String doAction(@Nonnull Resource resource) throws PersistenceException;
-
+    public SetBooleanProperty(@Nonnull String name, Boolean value) {
+        this.name = name;
+        this.value = value;
+    }
 }

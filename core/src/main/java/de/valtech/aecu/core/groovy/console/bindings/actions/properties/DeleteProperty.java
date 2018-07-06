@@ -14,8 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.actions;
+package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
@@ -24,11 +25,11 @@ import javax.annotation.Nonnull;
 /**
  * @author Roxana Muresan
  */
-public class RemoveProperty implements Action {
+public class DeleteProperty implements Action {
 
     private String name;
 
-    public RemoveProperty(@Nonnull String name) {
+    public DeleteProperty(@Nonnull String name) {
         this.name = name;
     }
 
@@ -36,6 +37,6 @@ public class RemoveProperty implements Action {
     public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         properties.remove(name);
-        return "Removing property " + name + " for resource " + resource.getPath();
+        return "Deleting property " + name + " for resource " + resource.getPath();
     }
 }

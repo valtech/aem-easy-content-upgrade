@@ -14,32 +14,30 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
-package de.valtech.aecu.core.groovy.console.bindings.actions;
+package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
  */
-public class SetStringProperty implements Action {
+public class DeleteResource implements Action {
 
-    protected String name;
-    protected Object value;
+    private ResourceResolver resourceResolver;
 
-    protected SetStringProperty() {}
-
-    public SetStringProperty(@Nonnull String name, String value) {
-        this.name = name;
-        this.value = value;
+    public DeleteResource(@Nonnull ResourceResolver resourceResolver) {
+        this.resourceResolver = resourceResolver;
     }
 
     @Override
-    public String doAction(@Nonnull Resource resource) {
-        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-        properties.put(name, value);
-        return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource " + resource.getPath();
+    public String doAction(@Nonnull Resource resource) throws PersistenceException {
+        String path = resource.getPath();
+        resourceResolver.delete(resource);
+        return "Deleted resource " + path;
     }
 }

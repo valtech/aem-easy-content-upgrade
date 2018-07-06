@@ -1,6 +1,10 @@
 package de.valtech.aecu.core.groovy.console.bindings;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.*;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.*;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.core.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
@@ -33,7 +37,7 @@ public class ContentUpgrade {
         this.resourceResolver = resourceResolver;
     }
 
-    /** content filter methods **/
+    /** content path filter methods **/
     public ContentUpgrade forResources(@Nonnull String[] paths) {
         LOG.debug("forResources: {}", paths.toString());
         traversals.add(new ForResources(paths));
@@ -84,9 +88,9 @@ public class ContentUpgrade {
         return this;
     }
 
-    public ContentUpgrade doRemoveProperty(@Nonnull String name) {
-        LOG.debug("doRemoveProperty: {}", name);
-        actions.add(new RemoveProperty(name));
+    public ContentUpgrade doDeleteProperty(@Nonnull String name) {
+        LOG.debug("doDeleteProperty: {}", name);
+        actions.add(new DeleteProperty(name));
         return this;
     }
 
@@ -96,6 +100,38 @@ public class ContentUpgrade {
         return this;
     }
 
+    public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, @Nonnull String relativeResourcePath) {
+        LOG.debug("doCopyProperty: {} to {}", name, relativeResourcePath);
+        actions.add(new CopyPropertyToRelativePath(name, resourceResolver, relativeResourcePath));
+        return this;
+    }
+
+    public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, @Nonnull String relativeResourcePath) {
+        LOG.debug("doMoveProperty: {} to {}", name, relativeResourcePath);
+        actions.add(new MovePropertyToRelativePath(name, resourceResolver, relativeResourcePath));
+        return this;
+    }
+
+    /** resource edit methods **/
+    public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
+        LOG.debug("doCopyResource to {}", relativePath);
+        actions.add(new CopyResourceToRelativePath(relativePath, resourceResolver));
+        return this;
+    }
+
+    public ContentUpgrade doMoveResourceToRelativePath(@Nonnull String relativePath) {
+        LOG.debug("doMoveResource to {}", relativePath);
+        actions.add(new MoveResourceToRelativePath(relativePath, resourceResolver));
+        return this;
+    }
+
+    public ContentUpgrade doDeleteResource() {
+        LOG.debug("doDeleteResource");
+        actions.add(new DeleteResource(resourceResolver));
+        return this;
+    }
+
+    /** runner methods **/
     public StringBuffer apply() throws PersistenceException {
         LOG.debug("apply content upgrade");
         return apply(false);
