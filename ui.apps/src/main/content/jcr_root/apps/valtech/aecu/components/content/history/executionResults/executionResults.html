@@ -6,13 +6,13 @@
 <sly data-sly-test="${!empty}">
   <sly data-sly-use.details="templates/executionResult.html" />
   <sly data-sly-test="${cmp.history.singleResults.size == 1}">
-    <h2>Execution details</h2>
+    <h2 class="aecu-font-large">Execution details</h2>
     <sly data-sly-list="${cmp.history.singleResults}">
       <sly data-sly-call="${details.details @ result = item}" />
     </sly>
   </sly>
   <sly data-sly-test="${cmp.history.singleResults.size > 1}">
-    <h2>Execution details for ${cmp.history.singleResults.size} scripts</h2>
+    <h2 class="aecu-font-large">Execution details for ${cmp.history.singleResults.size} scripts</h2>
     <coral-accordion>
 	    <sly data-sly-list="${cmp.history.singleResults}">
 	      <coral-accordion-item data-path="${item.path}">
