@@ -1,0 +1,2 @@
+#base=js
+aecu_groovyconsole_extension.js
