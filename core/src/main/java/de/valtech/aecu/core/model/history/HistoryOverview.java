@@ -1,23 +1,20 @@
 /*
- *  Copyright 2018 Valtech GmbH
+ * Copyright 2018 Valtech GmbH
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
- *  
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.valtech.aecu.core.model.history;
 
@@ -25,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 
 import javax.annotation.PostConstruct;
 
@@ -48,17 +46,17 @@ import de.valtech.aecu.service.HistoryEntry;
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class HistoryOverview {
-    
+
     @SlingObject
     private SlingHttpServletRequest request;
-    
+
     @SlingObject
     private ResourceResolver resolver;
-    
+
     private HistoryEntry historyEntry;
-    
+
     private final DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-    
+
     /**
      * Reads the history entry from CRX.
      */
@@ -76,7 +74,7 @@ public class HistoryOverview {
         HistoryUtil historyUtil = new HistoryUtil();
         historyEntry = historyUtil.readHistoryEntry(historyResource);
     }
-    
+
     /**
      * Returns the history entry.
      * 
@@ -97,7 +95,7 @@ public class HistoryOverview {
         }
         return format.format(historyEntry.getStart());
     }
-    
+
     /**
      * Returns the end as formatted string.
      * 
@@ -109,9 +107,23 @@ public class HistoryOverview {
         }
         return format.format(historyEntry.getEnd());
     }
-    
+
     /**
-     * Returns the percentages of successful and failed scripts. 
+     * Returns the duration.
+     * 
+     * @return duration
+     */
+    public String getDuration() {
+        Duration duration = Duration.between(historyEntry.getStart().toInstant(), historyEntry.getEnd().toInstant());
+        long seconds = duration.getSeconds();
+        if (seconds > 0) {
+            return duration.getSeconds() + "s";
+        }
+        return (duration.getNano() / 1000000) + "ms";
+    }
+
+    /**
+     * Returns the percentages of successful and failed scripts.
      * 
      * @return percentages (successful, failed)
      */
@@ -125,8 +137,7 @@ public class HistoryOverview {
         for (ExecutionResult result : historyEntry.getSingleResults()) {
             if (result.isSuccess()) {
                 countOk++;
-            }
-            else {
+            } else {
                 countFailed++;
             }
         }
@@ -136,5 +147,5 @@ public class HistoryOverview {
         String valueFailed = percentageFailed.round(new MathContext(2)).toPlainString();
         return Pair.of(valueOk, valueFailed);
     }
-    
+
 }

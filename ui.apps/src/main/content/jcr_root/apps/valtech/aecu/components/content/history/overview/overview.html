@@ -3,7 +3,7 @@
 <table class="aecu-history-overview aecu-font-normal" width="100%">
   <tr>
     <td>State: ${cmp.history.state.label}</td>
-    <td rowspan="4" align="right">
+    <td rowspan="5" align="right">
       <svg width="150px" height="150px" viewBox="0 0 50 50" class="donut">
           <circle class="donut-ring" cx="25" cy="25" r="22" fill="transparent" stroke="grey" stroke-width="0.2"></circle>
           <circle class="donut-outerring" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="grey" stroke-width="8.5"></circle>
@@ -23,9 +23,6 @@
     <td>Result: ${cmp.history.result.label}</td>
   </tr>
   <tr>
-    <td>Start: ${cmp.start}</td>
-  </tr>
-  <tr>
-    <td>End: ${cmp.end}</td>
+    <td>Duration: <span title="${cmp.start} - ${cmp.end}">${cmp.duration}</span></td>
   </tr>
 </table>
