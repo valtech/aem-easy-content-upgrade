@@ -20,7 +20,7 @@ println aecu.contentUpgradeBuilder()
         .doSetIntegerProperty("newStringProperty", 123)
         .doRenameProperty("newStringProperty", "delete_me_later")
 //    .removeProperty("delete_me_later")
-        .apply()
+        .run()
 
 
 
@@ -46,4 +46,4 @@ println aecu.contentUpgradeBuilder()
         .doSetIntegerProperty("newStringProperty", 789)
         .doRenameProperty("newStringProperty", "delete_me_later")
 //    .removeProperty("delete_me_later")
-        .apply()
+        .run()

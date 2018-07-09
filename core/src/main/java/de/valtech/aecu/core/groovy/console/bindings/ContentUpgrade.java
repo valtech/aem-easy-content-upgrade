@@ -70,6 +70,7 @@ public class ContentUpgrade {
     }
 
     /** properties edit methods **/
+    // TODO test with Object and see type conversion!!!
     public ContentUpgrade doSetStringProperty(@Nonnull String name, String value) {
         LOG.debug("doSetStringProperty: {} = {}", name, value);
         actions.add(new SetStringProperty(name, value));
@@ -132,17 +133,17 @@ public class ContentUpgrade {
     }
 
     /** runner methods **/
-    public StringBuffer apply() throws PersistenceException {
+    public StringBuffer run() throws PersistenceException {
         LOG.debug("apply content upgrade");
-        return apply(false);
+        return run(false);
     }
 
-    public StringBuffer applyDry() throws PersistenceException {
+    public StringBuffer dryRun() throws PersistenceException {
         LOG.debug("apply content upgrade dry");
-        return apply(true);
+        return run(true);
     }
 
-    private StringBuffer apply(boolean dryRun) throws PersistenceException {
+    private StringBuffer run(boolean dryRun) throws PersistenceException {
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
             for (Action action : actions) {
