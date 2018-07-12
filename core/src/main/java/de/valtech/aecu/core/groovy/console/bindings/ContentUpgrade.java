@@ -1,6 +1,7 @@
 package de.valtech.aecu.core.groovy.console.bindings;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
@@ -13,6 +14,8 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourc
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.filters.FilterByNodeName;
+import de.valtech.aecu.core.groovy.console.bindings.filters.FilterByNodeNameRegex;
 import de.valtech.aecu.core.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
@@ -74,6 +77,18 @@ public class ContentUpgrade {
     public ContentUpgrade filterByProperties(@Nonnull Map<String, String> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
         filter = new FilterByProperties(conditionProperties);
+        return this;
+    }
+
+    public ContentUpgrade filterByNodeName(@Nonnull String nodeName) {
+        LOG.debug("filterByNodeName: {}", nodeName);
+        filter = new FilterByNodeName(nodeName);
+        return this;
+    }
+
+    public ContentUpgrade filterByNodeNameRegex(@Nonnull String regex) {
+        LOG.debug("filterByNodeNameRegex: {}", regex);
+        filter = new FilterByNodeNameRegex(regex);
         return this;
     }
 
@@ -152,6 +167,15 @@ public class ContentUpgrade {
     public ContentUpgrade doDeleteResource() {
         LOG.debug("doDeleteResource");
         actions.add(new DeleteResource(resourceResolver));
+        return this;
+    }
+
+    /**
+     * Print path
+     */
+    public ContentUpgrade printPath() {
+        LOG.debug("printPath");
+        actions.add(new PrintPath());
         return this;
     }
 
