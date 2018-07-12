@@ -1,17 +1,13 @@
 $(document).ready(function () {
 
-    if ($("#bindings").length != 0) {
-        $("#bindings ul").append("<li>aecu - de.valtech.aecu.core.groovy.console.bindings.SimpleContentUpdate</li>"); // TODO:
-                                                                                                                      // url to
-                                                                                                                      // some
-                                                                                                                      // javadoc
-                                                                                                                      // available
-                                                                                                                      // public
+    if ($("#bindings").length != 0 && $("#bindings ul li.aecu-binding").length == 0) {
+        // TODO url to some public available javadoc
+        $("#bindings ul").append("<li class='aecu-binding'>aecu - de.valtech.aecu.core.groovy.console.bindings.SimpleContentUpdate</li>");
     }
 
-    if ($("#imports").length != 0) {
-        $("#imports ul").append("<li>de.valtech.aecu.core.groovy.console.bindings.filters</li>"); // TODO: url to some javadoc
-                                                                                                  // available public
+    if ($("#imports").length != 0 && $("#bindings ul li.aecu-import").length == 0) {
+        // TODO url to some public available javadoc
+        $("#imports ul").append("<li class='aecu-import'>de.valtech.aecu.core.groovy.console.bindings.filters</li>");
     }
 
 });
