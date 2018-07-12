@@ -1,28 +1,28 @@
 <sly data-sly-use.cmp="de.valtech.aecu.core.model.history.HistoryOverview" />
 <h1>Run details</h1>
 <table class="aecu-history-overview aecu-font-normal" width="100%">
-  <tr>
-    <td>State: ${cmp.history.state.label}</td>
-    <td rowspan="5" align="right">
-      <svg width="150px" height="150px" viewBox="0 0 50 50" class="donut">
-          <circle class="donut-ring" cx="25" cy="25" r="22" fill="transparent" stroke="grey" stroke-width="0.2"></circle>
-          <circle class="donut-outerring" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="grey" stroke-width="8.5"></circle>
-          <circle class="donut-hole" cx="25" cy="25" r="15.91549430918954" fill="#fff"></circle>
-          <circle class="donut-innerring" cx="25" cy="25" r="12.5" fill="transparent" stroke="grey" stroke-width="2"></circle>
-          <circle class="donut-red" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="#ef1616" stroke-width="8"></circle>
-          <circle class="donut-green" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="#4bb43d" stroke-width="8" stroke-dasharray="${cmp.percentages.left} ${cmp.percentages.right}" stroke-dashoffset="25"></circle>
-          <g>
-            <text x="50%" y="50%" class="aecu-chart-text">
-              ${cmp.percentages.left}%
-            </text>
-        </g>
-      </svg>
-    </td>
-  </tr>
-  <tr>
-    <td>Result: ${cmp.history.result.label}</td>
-  </tr>
-  <tr>
-    <td>Duration: <span title="${cmp.start} - ${cmp.end}">${cmp.duration}</span></td>
-  </tr>
+    <tr>
+        <td>State: ${cmp.history.state.label}</td>
+        <td rowspan="5" align="right">
+            <svg width="150px" height="150px" viewBox="0 0 50 50" class="donut">
+                <circle class="donut-ring" cx="25" cy="25" r="22" fill="transparent" stroke="grey" stroke-width="0.2"></circle>
+                <circle class="donut-outerring" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="grey" stroke-width="8.5"></circle>
+                <circle class="donut-hole" cx="25" cy="25" r="15.91549430918954" fill="#fff"></circle>
+                <circle class="donut-innerring" cx="25" cy="25" r="12.5" fill="transparent" stroke="grey" stroke-width="2"></circle>
+                <circle class="donut-red" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="#ef1616" stroke-width="8"></circle>
+                <circle class="donut-green" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="#4bb43d" stroke-width="8" stroke-dasharray="${cmp.percentages.left} ${cmp.percentages.right}" stroke-dashoffset="25"></circle>
+                <g>
+                    <text x="50%" y="50%" class="aecu-chart-text">
+                        ${cmp.percentages.left}%
+                    </text>
+                </g>
+            </svg>
+        </td>
+    </tr>
+    <tr>
+        <td>Result: ${cmp.history.result.label}</td>
+    </tr>
+    <tr>
+        <td>Duration: <span title="${cmp.start} - ${cmp.end}">${cmp.duration}</span></td>
+    </tr>
 </table>
