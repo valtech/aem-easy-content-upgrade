@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,18 +36,16 @@ import de.valtech.aecu.service.ExecutionResult;
 import de.valtech.aecu.service.HistoryEntry;
 
 @Component(service = {AecuServiceMBean.class}, immediate = true, property = {
-    "jmx.objectname=de.valtech:type=AECU",
-    "pattern=/.*"
+        "jmx.objectname=de.valtech:type=AECU",
+        "pattern=/.*"
 })
 public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements AecuServiceMBean {
-    
+
     @Reference
     AecuService aecuService;
 
     /**
      * Constructor
-     * 
-     * @throws NotCompliantMBeanException
      */
     public AecuServiceMBeanImpl() throws NotCompliantMBeanException {
         super(AecuServiceMBean.class);

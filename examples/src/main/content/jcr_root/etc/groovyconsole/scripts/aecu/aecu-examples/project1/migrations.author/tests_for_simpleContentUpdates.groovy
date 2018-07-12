@@ -9,7 +9,7 @@ conditionMap_Page['jcr:primaryType'] = "cq:PageContent"
 
 println aecu.contentUpgradeBuilder()
 // traversers
-        .forResources((String[])["/content/we-retail/ca/en/jcr:content", "/content/we-retail/ca/en/experience/jcr:content"]) //,"/invalid/path"
+        .forResources((String[]) ["/content/we-retail/ca/en/jcr:content", "/content/we-retail/ca/en/experience/jcr:content"]) //,"/invalid/path"
         .forChildResourcesOf("/content/we-retail/ca/en/men")
         .forDescendantResourcesOf("/content/we-retail/ca/en/women")
 // filters
@@ -25,17 +25,17 @@ println aecu.contentUpgradeBuilder()
 
 
 
-def complexFilter =  new ORFilter(
-        [ new FilterByProperties(conditionMap_Page),
-          new ANDFilter( [
-                  new FilterByProperties(conditionMap_Hero1),
-                  new FilterByProperties(conditionMap_Hero2)
-          ] )
+def complexFilter = new ORFilter(
+        [new FilterByProperties(conditionMap_Page),
+         new ANDFilter([
+                 new FilterByProperties(conditionMap_Hero1),
+                 new FilterByProperties(conditionMap_Hero2)
+         ])
         ])
 
 println aecu.contentUpgradeBuilder()
 // traversers
-        .forResources((String[])["/content/we-retail/ca/en/jcr:content", "/content/we-retail/ca/en/experience/jcr:content"]) //,"/invalid/path"
+        .forResources((String[]) ["/content/we-retail/ca/en/jcr:content", "/content/we-retail/ca/en/experience/jcr:content"]) //,"/invalid/path"
         .forChildResourcesOf("/content/we-retail/ca/en/men")
         .forDescendantResourcesOf("/content/we-retail/ca/en/women")
 // filters

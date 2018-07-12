@@ -1,29 +1,29 @@
-<sly data-sly-use.cmp="de.valtech.aecu.core.model.history.HistoryOverview" />
+<sly data-sly-use.cmp="de.valtech.aecu.core.model.history.HistoryOverview"/>
 
 <sly data-sly-test.empty="${cmp.history.singleResults.empty}">
-  <h2>No scripts executed</h2>
+    <h2>No scripts executed</h2>
 </sly>
 <sly data-sly-test="${!empty}">
-  <sly data-sly-use.details="templates/executionResult.html" />
-  <sly data-sly-test="${cmp.history.singleResults.size == 1}">
-    <h2 class="aecu-font-large">Execution details</h2>
-    <sly data-sly-list="${cmp.history.singleResults}">
-      <sly data-sly-call="${details.details @ result = item}" />
+    <sly data-sly-use.details="templates/executionResult.html"/>
+    <sly data-sly-test="${cmp.history.singleResults.size == 1}">
+        <h2 class="aecu-font-large">Execution details</h2>
+        <sly data-sly-list="${cmp.history.singleResults}">
+            <sly data-sly-call="${details.details @ result = item}"/>
+        </sly>
     </sly>
-  </sly>
-  <sly data-sly-test="${cmp.history.singleResults.size > 1}">
-    <h2 class="aecu-font-large">Execution details for ${cmp.history.singleResults.size} scripts</h2>
-    <coral-accordion>
-	    <sly data-sly-list="${cmp.history.singleResults}">
-	      <coral-accordion-item data-path="${item.path}">
-	       <coral-accordion-item-label class="aecu-color-${item.success ? 'ok' : 'fail'}">
-	         ${item.path}
-	       </coral-accordion-item-label>
-	       <coral-accordion-item-content>
-	         <sly data-sly-call="${details.details @ result = item}" />
-	       </coral-accordion-item-content>
-	      </coral-accordion-item>
-	    </sly>
-    </coral-accordion>
-  </sly>
+    <sly data-sly-test="${cmp.history.singleResults.size > 1}">
+        <h2 class="aecu-font-large">Execution details for ${cmp.history.singleResults.size} scripts</h2>
+        <coral-accordion>
+            <sly data-sly-list="${cmp.history.singleResults}">
+                <coral-accordion-item data-path="${item.path}">
+                    <coral-accordion-item-label class="aecu-color-${item.success ? 'ok' : 'fail'}">
+                        ${item.path}
+                    </coral-accordion-item-label>
+                    <coral-accordion-item-content>
+                        <sly data-sly-call="${details.details @ result = item}"/>
+                    </coral-accordion-item-content>
+                </coral-accordion-item>
+            </sly>
+        </coral-accordion>
+    </sly>
 </sly>

@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,22 +43,22 @@ import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * Sling model for history overview area.
- * 
+ *
  * @author Roland Gruber
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class HistoryOverview {
-    
+
     @SlingObject
     private SlingHttpServletRequest request;
-    
+
     @SlingObject
     private ResourceResolver resolver;
-    
+
     private HistoryEntry historyEntry;
-    
+
     private final DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-    
+
     /**
      * Reads the history entry from CRX.
      */
@@ -76,10 +76,10 @@ public class HistoryOverview {
         HistoryUtil historyUtil = new HistoryUtil();
         historyEntry = historyUtil.readHistoryEntry(historyResource);
     }
-    
+
     /**
      * Returns the history entry.
-     * 
+     *
      * @return history
      */
     public HistoryEntry getHistory() {
@@ -88,7 +88,7 @@ public class HistoryOverview {
 
     /**
      * Returns the start as formatted string.
-     * 
+     *
      * @return start date
      */
     public String getStart() {
@@ -97,10 +97,10 @@ public class HistoryOverview {
         }
         return format.format(historyEntry.getStart());
     }
-    
+
     /**
      * Returns the end as formatted string.
-     * 
+     *
      * @return end date
      */
     public String getEnd() {
@@ -109,10 +109,10 @@ public class HistoryOverview {
         }
         return format.format(historyEntry.getEnd());
     }
-    
+
     /**
-     * Returns the percentages of successful and failed scripts. 
-     * 
+     * Returns the percentages of successful and failed scripts.
+     *
      * @return percentages (successful, failed)
      */
     public Pair<String, String> getPercentages() {
@@ -125,8 +125,7 @@ public class HistoryOverview {
         for (ExecutionResult result : historyEntry.getSingleResults()) {
             if (result.isSuccess()) {
                 countOk++;
-            }
-            else {
+            } else {
                 countFailed++;
             }
         }
@@ -136,5 +135,5 @@ public class HistoryOverview {
         String valueFailed = percentageFailed.round(new MathContext(2)).toPlainString();
         return Pair.of(valueOk, valueFailed);
     }
-    
+
 }

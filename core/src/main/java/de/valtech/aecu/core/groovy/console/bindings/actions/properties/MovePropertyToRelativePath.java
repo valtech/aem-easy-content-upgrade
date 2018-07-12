@@ -17,6 +17,7 @@
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;

@@ -17,6 +17,7 @@
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -45,8 +46,8 @@ public class CopyPropertyToRelativePath implements Action {
     public String doAction(@Nonnull Resource resource) {
         ValueMap sourceProperties = resource.adaptTo(ValueMap.class);
 
-        Resource destinationResource = resourceResolver.getResource(resource, relativeResourcePath);
-        ModifiableValueMap destinationProperties = destinationResource.adaptTo(ModifiableValueMap.class);
+        Resource destinationResource = resourceResolver.getResource(resource, relativeResourcePath);// TODO null check!!!!
+        ModifiableValueMap destinationProperties = destinationResource.adaptTo(ModifiableValueMap.class);// TODO null check!!!!
 
         Object propValue = sourceProperties.get(name);
         String key = (newName != null) ? newName : name;

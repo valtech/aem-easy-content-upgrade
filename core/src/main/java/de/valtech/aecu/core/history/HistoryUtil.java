@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -53,11 +53,11 @@ import de.valtech.aecu.service.HistoryEntry.STATE;
 
 /**
  * Reads and writes history entries.
- * 
+ *
  * @author Roland Gruber
  */
 public class HistoryUtil {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(HistoryUtil.class);
 
     private static final String HISTORY_BASE = "/var/aecu";
@@ -76,7 +76,7 @@ public class HistoryUtil {
 
     /**
      * Starts a new history entry.
-     * 
+     *
      * @param resolver resource resolver
      * @return history entry
      * @throws AecuException error setting up entry
@@ -102,9 +102,9 @@ public class HistoryUtil {
 
     /**
      * Stores an execution run in existing history.
-     * 
-     * @param history history entry
-     * @param result script execution result
+     *
+     * @param history  history entry
+     * @param result   script execution result
      * @param resolver resource resolver
      * @throws AecuException error inserting history entry
      */
@@ -115,8 +115,8 @@ public class HistoryUtil {
 
     /**
      * Finishes the history entry.
-     * 
-     * @param history open history entry
+     *
+     * @param history  open history entry
      * @param resolver resource resolver
      * @return history entry
      */
@@ -133,10 +133,10 @@ public class HistoryUtil {
 
     /**
      * Returns the last history entries. The search starts at the newest entry.
-     * 
+     *
      * @param startIndex start reading at this index (first is 0)
-     * @param count number of entries to read
-     * @param resolver resource resolver
+     * @param count      number of entries to read
+     * @param resolver   resource resolver
      * @return history entries (newest first)
      */
     public List<HistoryEntry> getHistory(int startIndex, int count, ResourceResolver resolver) {
@@ -165,8 +165,8 @@ public class HistoryUtil {
 
     /**
      * Returns the run before the given one.
-     * 
-     * @param current current run 
+     *
+     * @param current current run
      * @return previous run
      */
     private Resource getPreviousHistoryEntry(Resource current) {
@@ -180,10 +180,10 @@ public class HistoryUtil {
         // go back up the folders
         return ascendToLastRun(base);
     }
-    
+
     /**
      * Gos up the folders to last run.
-     * 
+     *
      * @param resource current node
      * @return last run
      */
@@ -206,7 +206,7 @@ public class HistoryUtil {
     /**
      * Descends in history till a previous sibling is found.
      * Descending stops at history base level
-     * 
+     *
      * @param current current resource
      * @return previous sibling
      */
@@ -224,7 +224,7 @@ public class HistoryUtil {
 
     /**
      * Returns the previous sibling of the given node.
-     * 
+     *
      * @param resource current node
      * @return last sibling or null
      */
@@ -245,7 +245,7 @@ public class HistoryUtil {
 
     /**
      * Returns the latest history entry.
-     * 
+     *
      * @param base base resource
      * @return latest run resource
      */
@@ -255,10 +255,10 @@ public class HistoryUtil {
         }
         return ascendToLastRun(base);
     }
-    
+
     /**
      * Returns the last child of the given resource.
-     * 
+     *
      * @param resource resource
      * @return last child
      */
@@ -276,10 +276,10 @@ public class HistoryUtil {
         }
         return last;
     }
-    
+
     /**
      * Reads a history entry from JCR.
-     * 
+     *
      * @param resource history resource
      * @return history entry
      */
@@ -305,7 +305,7 @@ public class HistoryUtil {
 
     /**
      * Reads a single script run from history.
-     * 
+     *
      * @param resource resource
      * @return result
      */
@@ -348,9 +348,9 @@ public class HistoryUtil {
 
     /**
      * Creates the folder at the given path if not yet existing.
-     * 
-     * @param path path
-     * @param resolver resource resolver
+     *
+     * @param path        path
+     * @param resolver    resource resolver
      * @param primaryType primary type
      * @throws AecuException error creating folder
      */
@@ -374,7 +374,7 @@ public class HistoryUtil {
 
     /**
      * Generates the node name for a history entry.
-     * 
+     *
      * @return name
      */
     private String generateHistoryNodeName() {
@@ -384,8 +384,8 @@ public class HistoryUtil {
 
     /**
      * Purges the history by keeping only entries within the set number of days.
-     * 
-     * @param resolver resource resolver
+     *
+     * @param resolver   resource resolver
      * @param daysToKeep number of days to keep
      * @throws PersistenceException error deleting node
      */
@@ -394,15 +394,15 @@ public class HistoryUtil {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
         LOG.debug("Starting purge with limit " + calendar.getTime().toString());
-        deleteRecursive(base.listChildren(), calendar, new int[] {Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH});
+        deleteRecursive(base.listChildren(), calendar, new int[]{Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH});
     }
 
     /**
      * Deletes the year resources that are too old.
-     * 
+     *
      * @param resources resources
-     * @param calendar time limit
-     * @param fields calendar fields
+     * @param calendar  time limit
+     * @param fields    calendar fields
      * @throws PersistenceException error deleting node
      */
     private void deleteRecursive(Iterator<Resource> resources, Calendar calendar, int[] fields) throws PersistenceException {
@@ -423,8 +423,7 @@ public class HistoryUtil {
             }
             if (nodeValue > limit) {
                 LOG.debug("Skipping purge of too young node: " + resource.getPath());
-            }
-            else if (nodeValue == limit) {
+            } else if (nodeValue == limit) {
                 LOG.debug("Skipping purge of too young node: " + resource.getPath());
                 // check next level
                 if (fields.length == 1) {
@@ -433,8 +432,7 @@ public class HistoryUtil {
                 int[] fieldsNew = new int[fields.length - 1];
                 System.arraycopy(fields, 1, fieldsNew, 0, fieldsNew.length);
                 deleteRecursive(resource.listChildren(), calendar, fieldsNew);
-            }
-            else {
+            } else {
                 LOG.debug("Purging node: " + resource.getPath());
                 BatchResourceRemover remover = ResourceUtil.getBatchResourceRemover(1000);
                 remover.delete(resource);

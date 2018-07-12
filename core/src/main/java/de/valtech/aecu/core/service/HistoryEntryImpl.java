@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,7 +30,7 @@ import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * Implementation of history entry.
- * 
+ *
  * @author Roland Gruber
  */
 public class HistoryEntryImpl implements HistoryEntry {
@@ -45,22 +45,22 @@ public class HistoryEntryImpl implements HistoryEntry {
     public Date getStart() {
         return start;
     }
-    
+
     @Override
     public Date getEnd() {
         return end;
     }
-    
+
     @Override
     public List<ExecutionResult> getSingleResults() {
         return singleResults;
     }
-    
+
     @Override
     public STATE getState() {
         return state;
     }
-    
+
     @Override
     public RESULT getResult() {
         if (singleResults.isEmpty()) {
@@ -75,15 +75,15 @@ public class HistoryEntryImpl implements HistoryEntry {
         }
         return result;
     }
-    
+
     @Override
     public String getRepositoryPath() {
         return path;
     }
-    
+
     /**
      * Sets the start date.
-     * 
+     *
      * @param start start date
      */
     public void setStart(Date start) {
@@ -92,7 +92,7 @@ public class HistoryEntryImpl implements HistoryEntry {
 
     /**
      * Sets the end date.
-     * 
+     *
      * @param end end date
      */
     public void setEnd(Date end) {
@@ -101,17 +101,17 @@ public class HistoryEntryImpl implements HistoryEntry {
 
     /**
      * Sets the node path.
-     * 
+     *
      * @param path node path
      */
     public void setRepositoryPath(String path) {
         this.path = path;
     }
-    
+
     public void setState(STATE state) {
         this.state = state;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();

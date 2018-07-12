@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,8 +28,10 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.adobe.granite.ui.components.ds.ValueMapResource;
+
 import de.valtech.aecu.service.AecuException;
 import de.valtech.aecu.service.AecuService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -46,7 +48,7 @@ import com.adobe.granite.ui.components.ds.SimpleDataSource;
  *
  * @author Bryan Chavez
  */
-@Model(adaptables=SlingHttpServletRequest.class)
+@Model(adaptables = SlingHttpServletRequest.class)
 public class ExecuteDataSource {
 
     private static final String ITEM_TYPE = "valtech/aecu/tools/execute/dataitem";
@@ -59,15 +61,15 @@ public class ExecuteDataSource {
     private AecuService aecuService;
 
     @PostConstruct
-    public void setup() throws AecuException{
+    public void setup() throws AecuException {
 
         String path = request.getParameter("searchPath");
         List<Resource> entries = new ArrayList<>();
 
-        if(path!=null && StringUtils.isNotEmpty(path) && path.startsWith(ALLOWED_PATH)){
+        if (path != null && StringUtils.isNotEmpty(path) && path.startsWith(ALLOWED_PATH)) {
             List<String> allowedScripts = aecuService.getFiles(path);
             ResourceResolver resourceResolver = request.getResourceResolver();
-            for(String scriptPath : allowedScripts){
+            for (String scriptPath : allowedScripts) {
                 entries.add(new ValueMapResource(resourceResolver, scriptPath, ITEM_TYPE, null));
             }
         }

@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -51,18 +51,18 @@ import de.valtech.aecu.service.HistoryEntry.STATE;
 
 /**
  * AECU service.
- * 
+ *
  * @author Roland Gruber
  */
-@Component(service=AecuService.class)
+@Component(service = AecuService.class)
 public class AecuServiceImpl implements AecuService {
 
     @Reference
     private ServiceResourceResolverService resolverService;
-    
+
     @Reference
     private SlingSettingsService slingSettings;
-    
+
     @Reference
     private GroovyConsoleService groovyConsoleService;
 
@@ -75,17 +75,16 @@ public class AecuServiceImpl implements AecuService {
     public List<String> getFiles(String path) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
             return findCandidates(resolver, path);
-        }
-        catch (LoginException e) {
+        } catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
         }
     }
 
     /**
      * Finds all candidates for scripts to run.
-     * 
+     *
      * @param resolver service resource resolver
-     * @param path starting path
+     * @param path     starting path
      * @return candidate list
      * @throws AecuException error finding candidates
      */
@@ -102,8 +101,7 @@ public class AecuServiceImpl implements AecuService {
             for (Resource child : resource.getChildren()) {
                 candidates.addAll(findCandidates(resolver, child.getPath()));
             }
-        }
-        else if (isValidScriptName(resource.getName())) {
+        } else if (isValidScriptName(resource.getName())) {
             candidates.add(path);
         }
         return candidates;
@@ -111,20 +109,20 @@ public class AecuServiceImpl implements AecuService {
 
     /**
      * Checks if the resource is a folder.
-     * 
+     *
      * @param resource resource
      * @return is folder
      */
     private boolean isFolder(Resource resource) {
         String type = resource.getValueMap().get(JcrConstants.JCR_PRIMARYTYPE, String.class);
         return JcrResourceConstants.NT_SLING_FOLDER.equals(type)
-                        || JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(type)
-                        || JcrConstants.NT_FOLDER.equals(type);
+                || JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(type)
+                || JcrConstants.NT_FOLDER.equals(type);
     }
 
     /**
      * Checks if the folder matches the system's run modes if specified in folder name.
-     * 
+     *
      * @param name resource name
      * @return matches run modes
      */
@@ -146,7 +144,7 @@ public class AecuServiceImpl implements AecuService {
 
     /**
      * Checks if the name is a valid script.
-     * 
+     *
      * @param name file name
      * @return is valid
      */
@@ -172,17 +170,16 @@ public class AecuServiceImpl implements AecuService {
             }
             ExecutionResult result = executeScript(resolver, path);
             return result;
-        }
-        catch (LoginException e) {
+        } catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
         }
     }
 
     /**
      * Executes the script.
-     * 
+     *
      * @param resolver resource resolver
-     * @param path path
+     * @param path     path
      * @return result
      */
     private ExecutionResult executeScript(ResourceResolver resolver, String path) {
@@ -196,12 +193,12 @@ public class AecuServiceImpl implements AecuService {
         }
         return new ExecutionResult(success, response.getRunningTime(), result, response.getOutput() + response.getExceptionStackTrace(), fallbackResult, path);
     }
-    
+
     /**
      * Returns the fallback script name if any exists.
-     * 
+     *
      * @param resolver resource resolver
-     * @param path original script path
+     * @param path     original script path
      * @return fallback script path
      */
     protected String getFallbackScript(ResourceResolver resolver, String path) {
@@ -227,8 +224,7 @@ public class AecuServiceImpl implements AecuService {
             return entry;
         } catch (PersistenceException e) {
             throw new AecuException("Unable to create history", e);
-        }
-        catch (LoginException e) {
+        } catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
         }
     }
@@ -240,11 +236,9 @@ public class AecuServiceImpl implements AecuService {
             historyUtil.finishHistoryEntry(history, resolver);
             resolver.commit();
             return history;
-        }
-        catch (LoginException e) {
+        } catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new AecuException("Unable to finish history " + history.getRepositoryPath(), e);
         }
     }
@@ -260,24 +254,21 @@ public class AecuServiceImpl implements AecuService {
             historyUtil.storeExecutionInHistory(history, result, resolver);
             resolver.commit();
             return history;
-        }
-        catch (LoginException e) {
+        } catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new AecuException("Unable to add history entry " + history.getRepositoryPath(), e);
         }
     }
-    
+
     @Override
     public List<HistoryEntry> getHistory(int startIndex, int count) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
             HistoryUtil historyUtil = new HistoryUtil();
             return historyUtil.getHistory(startIndex, count, resolver);
-        }
-        catch (LoginException e) {
+        } catch (LoginException e) {
             throw new AecuException("Unable to get service resource resolver", e);
         }
     }
-    
+
 }

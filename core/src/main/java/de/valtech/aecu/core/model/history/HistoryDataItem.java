@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,36 +38,36 @@ import de.valtech.aecu.service.HistoryEntry.STATE;
 
 /**
  * Model class for a single history item.
- * 
+ *
  * @author Roland Gruber
  */
 @Model(adaptables = Resource.class)
 public class HistoryDataItem {
-    
+
     private final DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-    
+
     @SlingObject
     private Resource resource;
-    
+
     private HistoryEntry history = null;
-    
+
     @PostConstruct
     public void setup() {
         history = resource.adaptTo(ValueMap.class).get(HistoryDataSource.ATTR_HISTORY, HistoryEntry.class);
     }
-    
+
     /**
      * Returns the date of the run.
-     * 
+     *
      * @return date
      */
     public String getDate() {
         return format.format(history.getEnd());
     }
-    
+
     /**
      * Returns the duration of the run.
-     * 
+     *
      * @return duration
      */
     public String getDuration() {
@@ -81,10 +81,10 @@ public class HistoryDataItem {
         }
         return (duration.getNano() / 1000000) + "ms";
     }
-    
+
     /**
      * Returns the status icon of the run.
-     * 
+     *
      * @return icon
      */
     public String getStatusIcon() {
@@ -99,7 +99,7 @@ public class HistoryDataItem {
 
     /**
      * Returns the status color of the run.
-     * 
+     *
      * @return icon
      */
     public String getStatusColor() {
@@ -114,7 +114,7 @@ public class HistoryDataItem {
 
     /**
      * Returns the path of the run.
-     * 
+     *
      * @return path
      */
     public String getPath() {

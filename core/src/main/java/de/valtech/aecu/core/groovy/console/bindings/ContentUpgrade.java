@@ -1,7 +1,13 @@
 package de.valtech.aecu.core.groovy.console.bindings;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.*;
-import de.valtech.aecu.core.groovy.console.bindings.actions.properties.*;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetBooleanProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetIntegerProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetStringProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
@@ -11,16 +17,18 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResources
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
+
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.scribe.utils.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 public class ContentUpgrade {
 
@@ -37,7 +45,9 @@ public class ContentUpgrade {
         this.resourceResolver = resourceResolver;
     }
 
-    /** content path filter methods **/
+    /**
+     * content path filter methods
+     **/
     public ContentUpgrade forResources(@Nonnull String[] paths) {
         LOG.debug("forResources: {}", paths.toString());
         traversals.add(new ForResources(paths));
@@ -56,7 +66,9 @@ public class ContentUpgrade {
         return this;
     }
 
-    /** filters **/
+    /**
+     * filters
+     **/
     public ContentUpgrade filterByProperties(@Nonnull Map<String, String> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
         filter = new FilterByProperties(conditionProperties);
@@ -69,7 +81,9 @@ public class ContentUpgrade {
         return this;
     }
 
-    /** properties edit methods **/
+    /**
+     * properties edit methods
+     **/
     // TODO test with Object and see type conversion!!!
     public ContentUpgrade doSetStringProperty(@Nonnull String name, String value) {
         LOG.debug("doSetStringProperty: {} = {}", name, value);
@@ -113,7 +127,9 @@ public class ContentUpgrade {
         return this;
     }
 
-    /** resource edit methods **/
+    /**
+     * resource edit methods
+     **/
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doCopyResource to {}", relativePath);
         actions.add(new CopyResourceToRelativePath(relativePath, resourceResolver));
@@ -132,7 +148,9 @@ public class ContentUpgrade {
         return this;
     }
 
-    /** runner methods **/
+    /**
+     * runner methods
+     **/
     public StringBuffer run() throws PersistenceException {
         LOG.debug("apply content upgrade");
         return run(false);

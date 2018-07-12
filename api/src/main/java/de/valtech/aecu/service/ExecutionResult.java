@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Result of a script execution.
- * 
+ *
  * @author Roland Gruber
  */
 public class ExecutionResult {
@@ -36,16 +36,16 @@ public class ExecutionResult {
     private String result;
     private ExecutionResult fallbackResult;
     private String path;
-    
+
     /**
      * Constructor
-     * 
-     * @param success execution was successful
-     * @param time execution time
-     * @param result result 
-     * @param output script output
+     *
+     * @param success        execution was successful
+     * @param time           execution time
+     * @param result         result
+     * @param output         script output
      * @param fallbackResult fallback script result
-     * @param path script path
+     * @param path           script path
      */
     public ExecutionResult(boolean success, String time, String result, String output, ExecutionResult fallbackResult, String path) {
         this.success = success;
@@ -55,10 +55,10 @@ public class ExecutionResult {
         this.fallbackResult = fallbackResult;
         this.path = path;
     }
-    
+
     /**
      * Returns if execution was successful.
-     * 
+     *
      * @return successful
      */
     public boolean isSuccess() {
@@ -67,25 +67,25 @@ public class ExecutionResult {
 
     /**
      * Returns the script result.
-     * 
+     *
      * @return output
      */
     public String getResult() {
         return result;
     }
-    
+
     /**
      * Returns the script output.
-     * 
+     *
      * @return output
      */
     public String getOutput() {
         return output;
     }
-    
+
     /**
      * Returns the execution time.
-     * 
+     *
      * @return time
      */
     public String getTime() {
@@ -94,16 +94,16 @@ public class ExecutionResult {
 
     /**
      * Returns the fallback script result if any.
-     * 
+     *
      * @return result
      */
     public ExecutionResult getFallbackResult() {
         return fallbackResult;
     }
-    
+
     /**
      * Returns the script path.
-     * 
+     *
      * @return path
      */
     public String getPath() {
@@ -113,8 +113,8 @@ public class ExecutionResult {
     @Override
     public String toString() {
         StringBuilder stringVal = new StringBuilder(
-            "Successful: " + Boolean.toString(success) +
-            "Path: " + path
+                "Successful: " + Boolean.toString(success) +
+                        "Path: " + path
         );
         if (StringUtils.isNotBlank(time)) {
             stringVal.append("\n" + "Execution time: " + time);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
-    jcr:primaryType="rep:SystemUser"
-    jcr:uuid="0597301b-4690-30ea-8cba-217f5a66faf6"
-    rep:authorizableId="aecu-content-migrator"
-    rep:principalName="aecu-content-migrator"/>
+          jcr:primaryType="rep:SystemUser"
+          jcr:uuid="0597301b-4690-30ea-8cba-217f5a66faf6"
+          rep:authorizableId="aecu-content-migrator"
+          rep:principalName="aecu-content-migrator"/>

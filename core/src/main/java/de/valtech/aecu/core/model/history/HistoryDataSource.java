@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -48,23 +48,23 @@ import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * Datasource model for history overview page.
- * 
+ *
  * @author Roland Gruber
  */
-@Model(adaptables=SlingHttpServletRequest.class)
+@Model(adaptables = SlingHttpServletRequest.class)
 public class HistoryDataSource {
-    
+
     private static final String ITEM_TYPE = "valtech/aecu/tools/history/dataitem";
     public static final String ATTR_HISTORY = "history";
 
     private Logger LOG = LoggerFactory.getLogger(DataSource.class);
-    
+
     @SlingObject
     SlingHttpServletRequest request;
-    
+
     @OSGiService
     AecuService aecuService;
-    
+
     @PostConstruct
     public void setup() {
         String[] selectors = request.getRequestPathInfo().getSelectors();
@@ -79,14 +79,14 @@ public class HistoryDataSource {
 
     /**
      * Returns the history entries.
-     * 
+     *
      * @param offset offset where to start reading
-     * @param limit maximum number of entries to return
+     * @param limit  maximum number of entries to return
      * @return entries
      */
     private DataSource getResourceIterator(int offset, int limit) {
         return new AbstractDataSource() {
-            
+
             @Override
             public Iterator<Resource> iterator() {
                 List<Resource> entries = new ArrayList<>();
@@ -102,7 +102,7 @@ public class HistoryDataSource {
                 }
                 return entries.iterator();
             }
-            
+
         };
     }
 

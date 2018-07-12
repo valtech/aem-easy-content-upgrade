@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-    jcr:primaryType="cq:Page">
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          jcr:primaryType="cq:Page">
     <jcr:content
             jcr:mixinTypes="[sling:VanityPath]"
             jcr:primaryType="nt:unstructured"
@@ -22,62 +23,62 @@
                     jcr:primaryType="nt:unstructured"
                     jcr:title="Search"
                     sling:resourceType="granite/ui/components/coral/foundation/panel/railpanel"
-                    >
+            >
                 <items jcr:primaryType="nt:unstructured">
                     <content
-								      jcr:primaryType="nt:unstructured"
-								      sling:resourceType="granite/ui/components/coral/foundation/container"
-								      granite:class="base-container"
-								    >
-                      <items jcr:primaryType="nt:unstructured">
-		                    <form
-		                            granite:id="aecu-execute-scripts-search-form"
-		                            jcr:primaryType="nt:unstructured"
-		                            sling:resourceType="granite/ui/components/coral/foundation/form"
-		                            action="/apps/valtech/aecu/tools/execute/page.html"
-		                            modeGroup="aecu-execute-scripts-search"
-		                            searchResultTitle="Scripts to execute"
-		                            targetCollection="#aecu-execute-scripts-search">
-		                        <successresponse
-		                                jcr:primaryType="nt:unstructured"
-		                                sling:resourceType="granite/ui/components/coral/foundation/form/responses/reload"/>
-		                        <items jcr:primaryType="nt:unstructured">
-		                            <searchPath
-		                                    granite:class="aecu-searchfield"
-		                                    jcr:primaryType="nt:unstructured"
-		                                    sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
-		                                    fieldLabel="Select the folder or script"
-		                                    rootPath="/etc/groovyconsole/scripts"
-		                                    required="{Boolean}true"
-		                                    filter="hierarchy"
-		                                    name="searchPath"/>
-		                            <submit
-		                                jcr:primaryType="nt:unstructured"
-		                                sling:resourceType="granite/ui/components/foundation/form/submit"
-		                                text="Search"/>
-		                        </items>
-		                    </form>
-                      </items>
+                            jcr:primaryType="nt:unstructured"
+                            sling:resourceType="granite/ui/components/coral/foundation/container"
+                            granite:class="base-container"
+                    >
+                        <items jcr:primaryType="nt:unstructured">
+                            <form
+                                    granite:id="aecu-execute-scripts-search-form"
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/coral/foundation/form"
+                                    action="/apps/valtech/aecu/tools/execute/page.html"
+                                    modeGroup="aecu-execute-scripts-search"
+                                    searchResultTitle="Scripts to execute"
+                                    targetCollection="#aecu-execute-scripts-search">
+                                <successresponse
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/responses/reload"/>
+                                <items jcr:primaryType="nt:unstructured">
+                                    <searchPath
+                                            granite:class="aecu-searchfield"
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                                            fieldLabel="Select the folder or script"
+                                            rootPath="/etc/groovyconsole/scripts"
+                                            required="{Boolean}true"
+                                            filter="hierarchy"
+                                            name="searchPath"/>
+                                    <submit
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/foundation/form/submit"
+                                            text="Search"/>
+                                </items>
+                            </form>
+                        </items>
                     </content>
                 </items>
             </search>
         </rails>
         <views jcr:primaryType="nt:unstructured">
             <list
-                granite:rel="aecu-execute-scripts"
-                jcr:primaryType="nt:unstructured"
-                sling:resourceType="granite/ui/components/coral/foundation/table"
-                selectionMode="none"
-                orderable="{Boolean}true"
-                src="/mnt/overlay/valtech/aecu/tools/execute/page/jcr:content/views/list{.offset,limit}.html"
-                stateId="shell.collectionpage">
+                    granite:rel="aecu-execute-scripts"
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/coral/foundation/table"
+                    selectionMode="none"
+                    orderable="{Boolean}true"
+                    src="/mnt/overlay/valtech/aecu/tools/execute/page/jcr:content/views/list{.offset,limit}.html"
+                    stateId="shell.collectionpage">
                 <columns jcr:primaryType="nt:unstructured">
                     <button
-                        jcr:primaryType="nt:unstructured"
-                        jcr:title="Action"/>
+                            jcr:primaryType="nt:unstructured"
+                            jcr:title="Action"/>
                     <script
-                        jcr:primaryType="nt:unstructured"
-                        jcr:title="Script"/>
+                            jcr:primaryType="nt:unstructured"
+                            jcr:title="Script"/>
                     <history
                             jcr:primaryType="nt:unstructured"
                             jcr:title="History"/>

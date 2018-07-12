@@ -25,11 +25,10 @@
  * Output: "Hello World!"
  *
  */
-String.prototype.format = function(){
+String.prototype.format = function () {
     var content = this;
     var length = arguments.length;
-    for (var i=0; i < length; i++)
-    {
+    for (var i = 0; i < length; i++) {
         var replacement = '{' + i + '}';
         content = content.replace(replacement, arguments[i]);
     }
