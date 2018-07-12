@@ -1,6 +1,9 @@
 package de.valtech.aecu.core.groovy.console.bindings;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
@@ -23,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +113,24 @@ public class ContentUpgrade {
     public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName, @Nonnull String relativeResourcePath) {
         LOG.debug("doMoveProperty: {} to {}", name, relativeResourcePath);
         actions.add(new MovePropertyToRelativePath(name, newName, resourceResolver, relativeResourcePath));
+        return this;
+    }
+
+    public ContentUpgrade doAddValuesToMultiValueProperty(@Nonnull String name, @Nonnull String[] values) {
+        LOG.debug("doAddToMultiValueProperty: {} + {}", name, Arrays.toString(values));
+        actions.add(new AddMultiValues(name, values));
+        return this;
+    }
+
+    public ContentUpgrade doRemoveValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] values) {
+        LOG.debug("doRemoveValuesFromMultiValueProperty: {} - {}", name, Arrays.toString(values));
+        actions.add(new RemoveMultiValues(name, values));
+        return this;
+    }
+
+    public ContentUpgrade doReplaceValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] oldValues, @Nonnull String[] newValues) {
+        LOG.debug("doReplaceValuesOfMultiValueProperty: {} - {}", name, Arrays.toString(oldValues) + " + " +  Arrays.toString(newValues));
+        actions.add(new ReplaceMultiValues(name, oldValues, newValues));
         return this;
     }
 
