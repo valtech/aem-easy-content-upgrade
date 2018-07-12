@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 
 import javax.annotation.PostConstruct;
 
@@ -108,6 +109,20 @@ public class HistoryOverview {
             return StringUtils.EMPTY;
         }
         return format.format(historyEntry.getEnd());
+    }
+
+    /**
+     * Returns the duration.
+     *
+     * @return duration
+     */
+    public String getDuration() {
+        Duration duration = Duration.between(historyEntry.getStart().toInstant(), historyEntry.getEnd().toInstant());
+        long seconds = duration.getSeconds();
+        if (seconds > 0) {
+            return duration.getSeconds() + "s";
+        }
+        return (duration.getNano() / 1000000) + "ms";
     }
 
     /**
