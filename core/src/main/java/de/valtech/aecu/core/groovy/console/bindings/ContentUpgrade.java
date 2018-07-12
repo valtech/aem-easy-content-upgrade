@@ -5,9 +5,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPrope
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
-import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetBooleanProperty;
-import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetIntegerProperty;
-import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetStringProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
@@ -84,22 +82,9 @@ public class ContentUpgrade {
     /**
      * properties edit methods
      **/
-    // TODO test with Object and see type conversion!!!
-    public ContentUpgrade doSetStringProperty(@Nonnull String name, String value) {
-        LOG.debug("doSetStringProperty: {} = {}", name, value);
-        actions.add(new SetStringProperty(name, value));
-        return this;
-    }
-
-    public ContentUpgrade doSetBooleanProperty(@Nonnull String name, Boolean value) {
-        LOG.debug("doSetBooleanProperty: {} = {}", name, value);
-        actions.add(new SetBooleanProperty(name, value));
-        return this;
-    }
-
-    public ContentUpgrade doSetIntegerProperty(@Nonnull String name, int value) {
-        LOG.debug("doSetIntegerProperty: {} = {}", name, value);
-        actions.add(new SetIntegerProperty(name, value));
+    public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
+        LOG.debug("doSetProperty: {} = {}", name, value);
+        actions.add(new SetProperty(name, value));
         return this;
     }
 

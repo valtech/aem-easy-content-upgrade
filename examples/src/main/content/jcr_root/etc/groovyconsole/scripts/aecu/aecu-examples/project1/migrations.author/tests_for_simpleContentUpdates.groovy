@@ -15,10 +15,10 @@ println aecu.contentUpgradeBuilder()
 // filters
         .filterByProperties(conditionMap_Page)
 // actions
-        .doSetStringProperty("newStringProperty1", "aecu test with conditionMap_Page")
-        .doSetBooleanProperty("newBooleanProperty1", true)
-        .doSetIntegerProperty("newIntegerProperty1", 123)
-        .doRenameProperty("newStringProperty1", "delete_me_later")
+        .doSetProperty("newStringProperty1", "aecu test with conditionMap_Page")
+        .doSetProperty("newBooleanProperty1", true)
+        .doSetProperty("newIntegerProperty1", 123)
+//        .doRenameProperty("newStringProperty1", "delete_me_later")
 //    .removeProperty("delete_me_later")
         .dryRun()
 
@@ -41,9 +41,9 @@ println aecu.contentUpgradeBuilder()
 // filters
         .filterWith(complexFilter)
 // actions
-        .doSetStringProperty("newStringProperty2", "aecu test with conditionMap_Hero")
-        .doSetBooleanProperty("newBooleanProperty2", false)
-        .doSetIntegerProperty("newIntegerProperty2", 789)
-        .doRenameProperty("newStringProperty2", "delete_me_later2")
+        .doSetProperty("newStringProperty2", "aecu test with conditionMap_Hero")
+        .doSetProperty("newBooleanProperty2", false)
+        .doSetProperty("newIntegerProperty2", 789)
+//        .doRenameProperty("newStringProperty2", "delete_me_later2")
 //    .removeProperty("delete_me_later")
         .dryRun()

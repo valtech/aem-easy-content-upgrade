@@ -31,15 +31,12 @@ import javax.annotation.Nonnull;
 /**
  * @author Roxana Muresan
  */
-public class SetStringProperty implements Action {
+public class SetProperty implements Action {
 
     protected String name;
     protected Object value;
 
-    protected SetStringProperty() {
-    }
-
-    public SetStringProperty(@Nonnull String name, String value) {
+    public SetProperty(@Nonnull String name, Object value) {
         this.name = name;
         this.value = value;
     }
