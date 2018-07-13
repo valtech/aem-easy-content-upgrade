@@ -35,15 +35,27 @@ public interface HistoryEntry {
      * Execution state (e.g. running)
      */
     public enum STATE {
+        /** Execution ongoing */
         RUNNING("Running"),
+        /** Execution finished */
         FINISHED("Finished");
 
         private String label;
 
+        /**
+         * Constructor
+         * 
+         * @param label label
+         */
         private STATE(String label) {
             this.label = label;
         }
 
+        /**
+         * Returns the human-readable label for this result.
+         * 
+         * @return label
+         */
         public String getLabel() {
             return label;
         }
@@ -55,16 +67,29 @@ public interface HistoryEntry {
      * Execution result (e.g. successful)
      */
     public enum RESULT {
+        /** All scripts executed successfully */
         SUCCESS("Success"),
+        /** Execution of one or more scripts failed */
         FAILURE("Failed"),
+        /** Execution not yet finished */
         UNKNOWN("Unknown");
 
         private String label;
 
+        /**
+         * Constructor
+         * 
+         * @param label label
+         */
         private RESULT(String label) {
             this.label = label;
         }
 
+        /**
+         * Returns the human-readable label for this result.
+         * 
+         * @return label
+         */
         public String getLabel() {
             return label;
         }

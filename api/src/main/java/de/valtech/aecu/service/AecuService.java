@@ -26,7 +26,17 @@ import java.util.List;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Service interface for AECU.
+ * Service interface for AECU. Use this to execute scripts or query the history.
+ * <br>
+ * <br>
+ * How to perform an execution:
+ * <ol>
+ *  <li>Get a list of files to execute using {@link #getFiles(String) getFiles}. This will filter all files that do not match the run mode and any fallback scripts.</li>
+ *  <li>Start a new history entry to store your results using {@link #createHistoryEntry() createHistoryEntry}. This store a new run with in-progress state.</li>
+ *  <li>Execute your files one by one with {@link #execute(String) execute}</li>
+ *  <li>Store each script run in history using  {@link #storeExecutionInHistory(HistoryEntry, ExecutionResult) storeExecutionInHistory}</li>
+ *  <li>Mark the run as done by closing the history with {@link #finishHistoryEntry(HistoryEntry) finishHistoryEntry}</li>
+ * </ol>
  *
  * @author Roland Gruber
  */

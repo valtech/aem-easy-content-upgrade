@@ -20,6 +20,13 @@
  *  SOFTWARE.
  */
 
+/**
+ * This package contains the service API for AEM Easy Content Upgrade (AECU).
+ * You can use this to integrate AECU into your own software.
+ * See {@link de.valtech.aecu.service.AecuService} for a starting point.
+ * 
+ * @author Roland Gruber
+ */
 @Version("1.0")
 package de.valtech.aecu.service;
 
