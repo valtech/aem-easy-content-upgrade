@@ -1,23 +1,20 @@
 /*
- *  Copyright 2018 Valtech GmbH
+ * Copyright 2018 Valtech GmbH
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.valtech.aecu.core.servlets;
 
@@ -47,26 +44,23 @@ import de.valtech.aecu.service.HistoryEntry;
  * @author Bryan Chavez
  */
 
-@Component(immediate = true,
-        service = {Servlet.class},
-        property = {
-                "sling.servlet.paths=/bin/public/valtech/aecu/execute",
-                "sling.servlet.extensions=json",
-                "sling.servlet.methods=GET"
-        })
+@Component(immediate = true, service = {Servlet.class}, property = {"sling.servlet.paths=/bin/public/valtech/aecu/execute",
+        "sling.servlet.extensions=json", "sling.servlet.methods=GET"})
 public class ExecutionServlet extends BaseServlet {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(ExecutionServlet.class);
 
-    protected static final String ERROR_MESSAGE_MANDATORY = "ExecutionServlet :: Make sure your are sending the correct parameters.";
+    protected static final String ERROR_MESSAGE_MANDATORY =
+            "ExecutionServlet :: Make sure your are sending the correct parameters.";
 
     @Reference
     AecuService aecuService;
 
 
     @Override
-    protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
+            throws ServletException, IOException {
 
         this.setNoCache(response);
 
@@ -90,15 +84,15 @@ public class ExecutionServlet extends BaseServlet {
 
     }
 
-    protected HistoryEntry getHistoryEntry(SlingHttpServletRequest request, SlingHttpServletResponse response, String historyEntryAction)
-            throws AecuException, IOException {
+    protected HistoryEntry getHistoryEntry(SlingHttpServletRequest request, SlingHttpServletResponse response,
+            String historyEntryAction) throws AecuException, IOException {
 
         HistoryEntry historyEntry;
 
         switch (historyEntryAction.toLowerCase()) {
             case "use":
             case "close":
-                //Used for "use" and "close"
+                // Used for "use" and "close"
                 String historyEntryPath = request.getParameter("historyEntryPath");
                 if (!this.validateParameter(historyEntryPath)) {
                     writeResult(response, ERROR_MESSAGE_MANDATORY);
@@ -110,7 +104,7 @@ public class ExecutionServlet extends BaseServlet {
                 historyEntry = historyUtil.readHistoryEntry(resolver.getResource(historyEntryPath));
                 break;
             default:
-                //Used for "single" and "create"
+                // Used for "single" and "create"
                 historyEntry = aecuService.createHistoryEntry();
                 break;
         }
@@ -123,7 +117,7 @@ public class ExecutionServlet extends BaseServlet {
         switch (historyEntryAction.toLowerCase()) {
             case "single":
             case "close":
-                //Used for "single" and "close"
+                // Used for "single" and "close"
                 aecuService.finishHistoryEntry(historyEntry);
                 break;
         }
@@ -133,8 +127,8 @@ public class ExecutionServlet extends BaseServlet {
     }
 
     /**
-     * This method builds the JSON String for the response.
-     * Eg: {"success": true,"historyEntryPath":"/var/aecu/2018/6/13/152892696338961314"}
+     * This method builds the JSON String for the response. Eg: {"success":
+     * true,"historyEntryPath":"/var/aecu/2018/6/13/152892696338961314"}
      *
      * @return json String
      */

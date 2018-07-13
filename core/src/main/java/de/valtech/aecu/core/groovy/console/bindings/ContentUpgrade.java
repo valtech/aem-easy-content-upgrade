@@ -119,13 +119,15 @@ public class ContentUpgrade {
         return this;
     }
 
-    public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName, @Nonnull String relativeResourcePath) {
+    public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName,
+            @Nonnull String relativeResourcePath) {
         LOG.debug("doCopyProperty: {} to {}", name, relativeResourcePath);
         actions.add(new CopyPropertyToRelativePath(name, newName, resourceResolver, relativeResourcePath));
         return this;
     }
 
-    public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName, @Nonnull String relativeResourcePath) {
+    public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName,
+            @Nonnull String relativeResourcePath) {
         LOG.debug("doMoveProperty: {} to {}", name, relativeResourcePath);
         actions.add(new MovePropertyToRelativePath(name, newName, resourceResolver, relativeResourcePath));
         return this;
@@ -143,8 +145,10 @@ public class ContentUpgrade {
         return this;
     }
 
-    public ContentUpgrade doReplaceValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] oldValues, @Nonnull String[] newValues) {
-        LOG.debug("doReplaceValuesOfMultiValueProperty: {} - {}", name, Arrays.toString(oldValues) + " + " +  Arrays.toString(newValues));
+    public ContentUpgrade doReplaceValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] oldValues,
+            @Nonnull String[] newValues) {
+        LOG.debug("doReplaceValuesOfMultiValueProperty: {} - {}", name,
+                Arrays.toString(oldValues) + " + " + Arrays.toString(newValues));
         actions.add(new ReplaceMultiValues(name, oldValues, newValues));
         return this;
     }
