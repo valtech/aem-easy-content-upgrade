@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,20 +33,20 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
  * Checks if the internal service user is ok.
- * 
+ *
  * @author Roland Gruber
  */
 @Component(
-    immediate = true,
-    service = HealthCheck.class,
-    property = {
-        HealthCheck.TAGS + "=aecu",
-        HealthCheck.NAME + "=AECU Self Check",
-        HealthCheck.MBEAN_NAME + "=aecuSelfCheckHCmBean"
-    }
+        immediate = true,
+        service = HealthCheck.class,
+        property = {
+                HealthCheck.TAGS + "=aecu",
+                HealthCheck.NAME + "=AECU Self Check",
+                HealthCheck.MBEAN_NAME + "=aecuSelfCheckHCmBean"
+        }
 )
 public class SelfCheckHealthCheck implements HealthCheck {
-    
+
     @Reference
     private ServiceResourceResolverService resolverService;
 

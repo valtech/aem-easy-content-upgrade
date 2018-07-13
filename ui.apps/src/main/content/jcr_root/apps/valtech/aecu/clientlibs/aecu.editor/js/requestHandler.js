@@ -23,14 +23,17 @@
 AECU.RequestHandler = {};
 
 AECU.RequestHandler.getProps = {
-    type : 'GET',
+    type: 'GET',
     cache: false,
-    success : function(data){},
-    error : function(jqXHR, textStatus, errorThrown){},
-    complete: function (jqXHR, textStatus) {}
+    success: function (data) {
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+    },
+    complete: function (jqXHR, textStatus) {
+    }
 }
 
-AECU.RequestHandler.GET = function(props){
-    var finalProps = $.extend({},this.getProps, props);
+AECU.RequestHandler.GET = function (props) {
+    var finalProps = $.extend({}, this.getProps, props);
     $.ajax(finalProps);
 }

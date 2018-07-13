@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,15 +21,16 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions;
 
-import javax.annotation.Nonnull;
-
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
  */
 public interface Action {
 
-    String doAction(@Nonnull Resource resource);
+    String doAction(@Nonnull Resource resource) throws PersistenceException;
 
 }

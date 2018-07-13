@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -48,12 +48,12 @@ import de.valtech.aecu.service.HistoryEntry;
  */
 
 @Component(immediate = true,
-service = {Servlet.class},
-property = {
-        "sling.servlet.paths=/bin/public/valtech/aecu/execute",
-        "sling.servlet.extensions=json",
-        "sling.servlet.methods=GET"
-})
+        service = {Servlet.class},
+        property = {
+                "sling.servlet.paths=/bin/public/valtech/aecu/execute",
+                "sling.servlet.extensions=json",
+                "sling.servlet.methods=GET"
+        })
 public class ExecutionServlet extends BaseServlet {
 
     private static final long serialVersionUID = 1L;
@@ -72,7 +72,7 @@ public class ExecutionServlet extends BaseServlet {
 
         String historyEntryAction = request.getParameter("historyEntryAction");
         String aecuScriptPath = request.getParameter("aecuScriptPath");
-        if(!this.validateParameter(aecuScriptPath) || !this.validateParameter(historyEntryAction)){
+        if (!this.validateParameter(aecuScriptPath) || !this.validateParameter(historyEntryAction)) {
             writeResult(response, ERROR_MESSAGE_MANDATORY);
             return;
         }
@@ -81,17 +81,17 @@ public class ExecutionServlet extends BaseServlet {
             HistoryEntry historyEntry = this.getHistoryEntry(request, response, historyEntryAction);
             ExecutionResult executionResult = aecuService.execute(aecuScriptPath);
             aecuService.storeExecutionInHistory(historyEntry, executionResult);
-            this.finishHistoryEntry(historyEntry,historyEntryAction);
-            writeResult(response, this.prepareJson(executionResult.isSuccess(),historyEntry.getRepositoryPath()));
+            this.finishHistoryEntry(historyEntry, historyEntryAction);
+            writeResult(response, this.prepareJson(executionResult.isSuccess(), historyEntry.getRepositoryPath()));
 
-        }catch (AecuException e){
+        } catch (AecuException e) {
             this.sendInternalServerError(response);
         }
 
     }
 
     protected HistoryEntry getHistoryEntry(SlingHttpServletRequest request, SlingHttpServletResponse response, String historyEntryAction)
-            throws AecuException, IOException{
+            throws AecuException, IOException {
 
         HistoryEntry historyEntry;
 
@@ -100,7 +100,7 @@ public class ExecutionServlet extends BaseServlet {
             case "close":
                 //Used for "use" and "close"
                 String historyEntryPath = request.getParameter("historyEntryPath");
-                if(!this.validateParameter(historyEntryPath)){
+                if (!this.validateParameter(historyEntryPath)) {
                     writeResult(response, ERROR_MESSAGE_MANDATORY);
                     return null;
                 }
@@ -118,7 +118,7 @@ public class ExecutionServlet extends BaseServlet {
         return historyEntry;
     }
 
-    protected HistoryEntry finishHistoryEntry(HistoryEntry historyEntry, String historyEntryAction) throws AecuException{
+    protected HistoryEntry finishHistoryEntry(HistoryEntry historyEntry, String historyEntryAction) throws AecuException {
 
         switch (historyEntryAction.toLowerCase()) {
             case "single":
@@ -136,13 +136,11 @@ public class ExecutionServlet extends BaseServlet {
      * This method builds the JSON String for the response.
      * Eg: {"success": true,"historyEntryPath":"/var/aecu/2018/6/13/152892696338961314"}
      *
-     * @param status
-     * @param historyEntryPath
      * @return json String
      */
-    protected String prepareJson (boolean status, String historyEntryPath) {
+    protected String prepareJson(boolean status, String historyEntryPath) {
         JsonObject json = new JsonObject();
-        json.addProperty("success",status);
+        json.addProperty("success", status);
         json.addProperty("historyEntryPath", historyEntryPath);
         return json.toString();
     }

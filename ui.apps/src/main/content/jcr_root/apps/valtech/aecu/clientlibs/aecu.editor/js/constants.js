@@ -23,46 +23,46 @@
 AECU.Constants = {};
 
 AECU.Constants.Executor = {
-    servletPath : "/bin/public/valtech/aecu/execute.json?aecuScriptPath={0}&historyEntryAction={1}&historyEntryPath={2}",
-    historyPath : "/apps/valtech/aecu/tools/history/details.html?entry={0}&aecuScriptPath={1}"
+    servletPath: "/bin/public/valtech/aecu/execute.json?aecuScriptPath={0}&historyEntryAction={1}&historyEntryPath={2}",
+    historyPath: "/apps/valtech/aecu/tools/history/details.html?entry={0}&aecuScriptPath={1}"
 }
 
 AECU.Constants.Executor.Status = {
-    ready : {
-    	icon: "helpCircle",
-    	className: "",
-    	text: "Ready to run"
+    ready: {
+        icon: "helpCircle",
+        className: "",
+        text: "Ready to run"
     },
-    inProgress : {
-    	icon: "playCircle",
-    	className: "icon-color-inprogress",
-    	text: "In progress"
+    inProgress: {
+        icon: "playCircle",
+        className: "icon-color-inprogress",
+        text: "In progress"
     },
-    fail : {
-    	icon: "closeCircle",
-    	className: "icon-color-fail",
-    	text: "Failed"
+    fail: {
+        icon: "closeCircle",
+        className: "icon-color-fail",
+        text: "Failed"
     },
-    pending : {
-    	icon: "pending",
-    	className: "icon-color-inprogress",
-    	text: "Pending"
+    pending: {
+        icon: "pending",
+        className: "icon-color-inprogress",
+        text: "Pending"
     },
     executed: {
-    	icon: "checkCircle",
-    	className: "icon-color-ok",
-    	text: "Ok"
+        icon: "checkCircle",
+        className: "icon-color-ok",
+        text: "Ok"
     },
     internalError: {
-    	icon: "sentimentNegative",
-    	className: "icon-color-fail",
-    	text: "Internal error"
+        icon: "sentimentNegative",
+        className: "icon-color-fail",
+        text: "Internal error"
     }
 }
 
 AECU.Constants.Executor.HistoryEntryActions = {
-    single : "single",
-    create : "create",
-    use : "use",
-    close : "close"
+    single: "single",
+    create: "create",
+    use: "use",
+    close: "close"
 }

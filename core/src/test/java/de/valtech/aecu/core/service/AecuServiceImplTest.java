@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,22 +46,22 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Tests AecuServiceImpl
- * 
+ *
  * @author Roland Gruber
  */
-@RunWith(value=MockitoJUnitRunner.class)
+@RunWith(value = MockitoJUnitRunner.class)
 public class AecuServiceImplTest {
-    
+
     @InjectMocks
     @Spy
     private AecuServiceImpl service;
-    
+
     @Mock
     private SlingSettingsService settingsService;
-    
+
     @Mock
     private ResourceResolver resolver;
-    
+
     @Before
     public void setup() {
         Set<String> runModes = new HashSet<>();
@@ -71,7 +71,7 @@ public class AecuServiceImplTest {
         runModes.add("test3");
         when(settingsService.getRunModes()).thenReturn(runModes);
     }
-    
+
     @Test
     public void matchesRunmodes_noMode() {
         assertTrue(service.matchesRunmodes("name"));
@@ -116,11 +116,11 @@ public class AecuServiceImplTest {
     public void isValidScriptName_fallback() {
         assertFalse(service.isValidScriptName("test.fallback.groovy"));
     }
-    
+
     @Test
     public void getFallbackScript_Exists() {
         when(resolver.getResource("/path/to/script.fallback.groovy")).thenReturn(mock(Resource.class));
-        
+
         assertEquals("/path/to/script.fallback.groovy", service.getFallbackScript(resolver, "/path/to/script.always.groovy"));
         assertEquals("/path/to/script.fallback.groovy", service.getFallbackScript(resolver, "/path/to/script.groovy"));
     }
@@ -134,8 +134,8 @@ public class AecuServiceImplTest {
     @Test
     public void getFallbackScript_Fallback() {
         verify(resolver, never()).getResource("/path/to/script.fallback.groovy");
-        
+
         assertNull(service.getFallbackScript(resolver, "/path/to/script.fallback.groovy"));
     }
-    
+
 }

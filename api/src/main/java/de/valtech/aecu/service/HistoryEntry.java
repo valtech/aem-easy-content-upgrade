@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,30 +26,31 @@ import java.util.List;
 
 /**
  * History entry for an execution run.
- * 
- * @author Roland Gruber
  *
+ * @author Roland Gruber
  */
 public interface HistoryEntry {
-    
+
     /**
      * Execution state (e.g. running)
      */
     public enum STATE {
         RUNNING("Running"),
         FINISHED("Finished");
-        
+
         private String label;
 
         private STATE(String label) {
             this.label = label;
         }
-        
+
         public String getLabel() {
             return label;
         }
-    };
-    
+    }
+
+    ;
+
     /**
      * Execution result (e.g. successful)
      */
@@ -63,52 +64,54 @@ public interface HistoryEntry {
         private RESULT(String label) {
             this.label = label;
         }
-        
+
         public String getLabel() {
             return label;
         }
-    };
-    
+    }
+
+    ;
+
     /**
      * Returns the start time of the execution.
-     * 
+     *
      * @return start
      */
     Date getStart();
-    
+
     /**
      * Returns the end time of the execution.
-     * 
+     *
      * @return end
      */
     Date getEnd();
-    
+
     /**
      * Returns the single script runs.
-     * 
+     *
      * @return single results
      */
     List<ExecutionResult> getSingleResults();
-    
+
     /**
      * Returns the current state of the run.
-     * 
+     *
      * @return state
      */
     STATE getState();
-    
+
     /**
      * Returns the global result of the run.
-     * 
+     *
      * @return result
      */
     RESULT getResult();
-    
+
     /**
      * Returns the path in repository where the history is stored.
-     * 
+     *
      * @return path
      */
     String getRepositoryPath();
-    
+
 }

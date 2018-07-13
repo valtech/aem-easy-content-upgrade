@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,21 +32,21 @@ import java.util.Map;
 
 /**
  * Provides the service resource resolver.
- * 
+ *
  * @author Roland Gruber
  */
-@Component(service=ServiceResourceResolverService.class)
+@Component(service = ServiceResourceResolverService.class)
 public class ServiceResourceResolverService {
-    
+
     private static final String SUBSERVICE_AECU = "aecu";
     private static final String SUBSERVICE_AECU_CONTENT_MIGRATION = "aecu-content-migrator";
-    
+
     @Reference
     ResourceResolverFactory resolverFactory;
-    
+
     /**
-     * Returns a resource resolver of the AECU service user. 
-     * 
+     * Returns a resource resolver of the AECU service user.
+     *
      * @return service resource resolver
      * @throws LoginException error opening resource resolver
      */
@@ -61,7 +61,7 @@ public class ServiceResourceResolverService {
      *
      * @return service resource resolver
      * @throws LoginException error opening resource resolver
-     */
+     */ // TODO: add /apps write rights!!!
     public ResourceResolver getContentMigratorResourceResolver() throws LoginException {
         final Map<String, Object> authenticationInfo = new HashMap<>();
         authenticationInfo.put(ResourceResolverFactory.SUBSERVICE, SUBSERVICE_AECU_CONTENT_MIGRATION);

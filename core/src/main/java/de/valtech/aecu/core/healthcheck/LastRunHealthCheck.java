@@ -7,10 +7,10 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,20 +35,20 @@ import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * Checks if the last script run was ok.
- * 
+ *
  * @author Roland Gruber
  */
 @Component(
-    immediate = true,
-    service = HealthCheck.class,
-    property = {
-        HealthCheck.TAGS + "=aecu",
-        HealthCheck.NAME + "=AECU Last Run",
-        HealthCheck.MBEAN_NAME + "=aecuLastRunHCmBean"
-    }
+        immediate = true,
+        service = HealthCheck.class,
+        property = {
+                HealthCheck.TAGS + "=aecu",
+                HealthCheck.NAME + "=AECU Last Run",
+                HealthCheck.MBEAN_NAME + "=aecuLastRunHCmBean"
+        }
 )
 public class LastRunHealthCheck implements HealthCheck {
-    
+
     @Reference
     private AecuService aecuService;
 
@@ -59,8 +59,7 @@ public class LastRunHealthCheck implements HealthCheck {
             List<HistoryEntry> history = aecuService.getHistory(0, 1);
             if (history.isEmpty()) {
                 resultLog.info("No runs found");
-            }
-            else {
+            } else {
                 HistoryEntry entry = history.get(0);
                 switch (entry.getResult()) {
                     case FAILURE:
