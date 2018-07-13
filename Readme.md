@@ -160,3 +160,7 @@ For the status of older runs use AECU's history page.
 # License
 
 The AC Tool is licensed under the [MIT LICENSE](LICENSE).
+
+# Developers
+
+See our [developer zone](docs/developers.md)
