@@ -20,6 +20,7 @@ package de.valtech.aecu.core.installhook;
 
 import de.valtech.aecu.service.AecuService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,11 @@ public class AecuTrackerListener implements ProgressTrackerListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuTrackerListener.class);
 
-    private static final Set<String> ACTIONS = new HashSet<>(Arrays.asList("A", "M"));
+    private static final Set<String> ACTIONS = new HashSet<>(Arrays.asList("A", "M", "U"));
+
+    private static final int VALID_ACTION_LENGTH = 1;
+
+    private static final String LOG_PREFIX = "AECU InstallHook: ";
 
     private final ProgressTrackerListener originalListener;
     private final AecuService aecuService;
@@ -55,6 +60,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
         this.originalListener = originalListener;
         this.aecuService = aecuService;
         this.paths = new LinkedList<>();
+        logMessage("Starting install hook...");
     }
 
     /**
@@ -70,13 +76,29 @@ public class AecuTrackerListener implements ProgressTrackerListener {
     public void onMessage(Mode mode, String action, String path) {
         originalListener.onMessage(mode, action, path);
 
-        if (!ACTIONS.contains(action)) {
-            LOG.debug("Skipping {} due to non matching action {}", path, action);
+        if (StringUtils.length(action) != VALID_ACTION_LENGTH) {
+            // skip actions like 'Collecting import information... ', 'Package imported.' etc.
             return;
         }
 
+        if (StringUtils.endsWith(path, "always.groovy")) {
+            logMessage(String.format("Adding %s due to having 'always' in name.", path));
+            paths.add(path);
+            return;
+        }
+
+        if (!ACTIONS.contains(action)) {
+            logMessage(String.format("Skipping %s due to non matching action '%s'", path, action));
+            return;
+        }
+
+        // in case a script was updated the update will actually be shown on jcr:content and not on the groovy script node
+        if (StringUtils.endsWith(path, "/jcr:content")) {
+            path = StringUtils.substringBefore(path, "/jcr:content");
+        }
+
         if (aecuService.isValidScriptName(path)) {
-            LOG.debug("Found valid script path {}", path);
+            logMessage(String.format("Found valid script path '%s'", path));
             paths.add(path);
         }
     }
@@ -84,5 +106,13 @@ public class AecuTrackerListener implements ProgressTrackerListener {
     @Override
     public void onError(Mode mode, String action, Exception e) {
         originalListener.onError(mode, action, e);
+    }
+
+    public void logMessage(String message) {
+        onMessage(Mode.TEXT, LOG_PREFIX + message, "");
+    }
+
+    public void logError(String message, Exception e) {
+        onError(Mode.TEXT, LOG_PREFIX + message, e);
     }
 }

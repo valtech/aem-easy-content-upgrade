@@ -68,12 +68,10 @@ public class AecuInstallHook implements InstallHook {
     private AecuTrackerListener listener;
 
     public AecuInstallHook() {
-        LOG.info("Instantiating install hook");
         this.osgiServiceProvider = new OsgiServiceProvider(this.getClass());
     }
 
-    @Override
-    public void execute(InstallContext installContext) throws PackageException {
+    @Override public void execute(InstallContext installContext) throws PackageException {
         LOG.info("Executing in phase {}", installContext.getPhase());
         ServiceReference<AecuService> aecuServiceReference = osgiServiceProvider.getServiceReference(AecuService.class);
         AecuService aecuService = osgiServiceProvider.getService(aecuServiceReference);
@@ -86,14 +84,18 @@ public class AecuInstallHook implements InstallHook {
                     installContext.getOptions().setListener(listener);
                     break;
                 case INSTALLED:
-                    HistoryEntry installationHistory = executeScripts(aecuService, installContext);
-                    // TODO: decide if we throw an exception or not.
-                    // For example, when a fallback script can be executed but the original script failed the history would
-                    // be marked as failed.
-                    if (!installationHistory.getSingleResults().isEmpty() &&
-                            !HistoryEntry.RESULT.SUCCESS.equals(installationHistory.getResult())) {
-                        throw new PackageException(
-                                "Failed installation, check installation history at " + installationHistory.getRepositoryPath());
+
+                    Archive archive = installContext.getPackage().getArchive();
+                    List<String> allValidScriptCandidatesInArchive = findCandidates("", archive.getJcrRoot(), aecuService);
+                    List<String> scriptsForInstallation =
+                            getScriptsForExecution(allValidScriptCandidatesInArchive, installContext);
+
+                    if (!scriptsForInstallation.isEmpty()) {
+                        HistoryEntry installationHistory = executeScripts(scriptsForInstallation, aecuService, installContext);
+                        if (!HistoryEntry.RESULT.SUCCESS.equals(installationHistory.getResult())) {
+                            throw new PackageException("Failed installation, check installation history at " + installationHistory
+                                    .getRepositoryPath());
+                        }
                     }
                     break;
                 default:
@@ -106,21 +108,39 @@ public class AecuInstallHook implements InstallHook {
         }
     }
 
-    private HistoryEntry executeScripts(AecuService aecuService, InstallContext installContext)
-            throws AecuException, IOException {
-        HistoryEntry installationHistory = aecuService.createHistoryEntry();
-        Archive archive = installContext.getPackage().getArchive();
-        List<String> allValidScriptCandidatesInArchive = findCandidates("", archive.getJcrRoot(), aecuService);
+    private List<String> getScriptsForExecution(List<String> allValidScriptCandidatesInArchive, InstallContext installContext) {
+        List<String> scriptsForExecution = new ArrayList<>();
         List<String> modifiedOrAddedScriptPaths = listener.getModifiedOrAddedPaths();
         for (String groovyScriptPath : allValidScriptCandidatesInArchive) {
-            HookExecutionHistory hookExecutionHistory = new HookExecutionHistory(installContext.getSession(), groovyScriptPath);
-            if (modifiedOrAddedScriptPaths.contains(groovyScriptPath) || !hookExecutionHistory.hasBeenExecutedBefore()) {
-                try {
-                    installationHistory = executeScript(aecuService, installationHistory, groovyScriptPath);
-                    hookExecutionHistory.setExecuted();
-                } catch (AecuException e) {
-                    LOG.warn("Error executing script " + groovyScriptPath, e);
+            try {
+                HookExecutionHistory hookExecutionHistory =
+                        new HookExecutionHistory(installContext.getSession(), groovyScriptPath);
+                if (shouldExecute(modifiedOrAddedScriptPaths, groovyScriptPath, hookExecutionHistory)) {
+                    scriptsForExecution.add(groovyScriptPath);
                 }
+            } catch (AecuException e) {
+                listener.logError("Could not obtain execution history for " + groovyScriptPath, e);
+            }
+
+        }
+        return scriptsForExecution;
+    }
+
+    private boolean shouldExecute(List<String> modifiedOrAddedScriptPaths, String groovyScriptPath,
+            HookExecutionHistory hookExecutionHistory) {
+        return modifiedOrAddedScriptPaths.contains(groovyScriptPath) || !hookExecutionHistory.hasBeenExecutedBefore();
+    }
+
+    private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)
+            throws AecuException, IOException {
+        HistoryEntry installationHistory = aecuService.createHistoryEntry();
+        for (String groovyScriptPath : scriptsForExecution) {
+            HookExecutionHistory hookExecutionHistory = new HookExecutionHistory(installContext.getSession(), groovyScriptPath);
+            try {
+                installationHistory = executeScript(aecuService, installationHistory, groovyScriptPath);
+                hookExecutionHistory.setExecuted();
+            } catch (AecuException e) {
+                listener.logError("Error executing script " + groovyScriptPath, e);
             }
         }
         installationHistory = aecuService.finishHistoryEntry(installationHistory);
@@ -129,10 +149,10 @@ public class AecuInstallHook implements InstallHook {
 
     private HistoryEntry executeScript(AecuService aecuService, HistoryEntry installationHistory, String groovyScriptPath)
             throws AecuException {
-        LOG.info("Executing script {}", groovyScriptPath);
+        listener.logMessage("Executing script " + groovyScriptPath);
         ExecutionResult result = aecuService.execute(groovyScriptPath);
         installationHistory = aecuService.storeExecutionInHistory(installationHistory, result);
-        LOG.info("Executed script {}: {}", groovyScriptPath, result.getOutput());
+        listener.logMessage("Executed script " + groovyScriptPath + ", output: " + result.getOutput());
         return installationHistory;
     }
 
