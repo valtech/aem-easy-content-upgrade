@@ -18,10 +18,9 @@
  */
 package de.valtech.aecu.core.installhook;
 
-import de.valtech.aecu.service.AecuException;
 import de.valtech.aecu.service.AecuService;
 
-import org.apache.jackrabbit.util.Text;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,57 +28,95 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 /**
- * Collects groovy script paths to execute.
+ * Collects groovy script paths to potentially execute based on the given actions.
  */
 public class AecuTrackerListener implements ProgressTrackerListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuTrackerListener.class);
 
-    private static final String SCRIPT_PARENT_PATH = "/etc/groovyconsole/scripts/aecu/";
+    private static final Set<String> ACTIONS = new HashSet<>(Arrays.asList("A", "M", "U"));
+
+    private static final int VALID_ACTION_LENGTH = 1;
+
+    private static final String LOG_PREFIX = "AECU InstallHook: ";
 
     private final ProgressTrackerListener originalListener;
     private final AecuService aecuService;
-    private final Set<String> actions;
-    private final Set<String> paths;
+    private final List<String> paths;
 
-    public AecuTrackerListener(ProgressTrackerListener originalListener, AecuService aecuService, String... actions) {
+    /**
+     * Constructor.
+     * 
+     * @param originalListener the original ProgressTrackerListener.
+     * @param aecuService      an AecuService instance.
+     */
+    public AecuTrackerListener(ProgressTrackerListener originalListener, AecuService aecuService) {
         this.originalListener = originalListener;
         this.aecuService = aecuService;
-        this.actions = new HashSet<>(Arrays.asList(actions));
-        this.paths = new HashSet<>();
+        this.paths = new LinkedList<>();
+        logMessage("Starting install hook...");
     }
 
-    public Set<String> getGroovyScriptPaths() {
-        return Collections.unmodifiableSet(paths);
+    /**
+     * Returns an unmodifiable list of the modified or added paths encountered during the
+     * installation phase.
+     * 
+     * @return a list of modified or added paths, can be empty.
+     */
+    @Nonnull
+    public List<String> getModifiedOrAddedPaths() {
+        return Collections.unmodifiableList(paths);
     }
 
     @Override
     public void onMessage(Mode mode, String action, String path) {
         originalListener.onMessage(mode, action, path);
 
-        if (!actions.contains(action)) {
-            LOG.debug("Skipping {} due to non matching action {}", path, action);
+        if (StringUtils.length(action) != VALID_ACTION_LENGTH) {
+            // skip actions like 'Collecting import information... ', 'Package imported.' etc.
             return;
         }
-        // TODO: not the best idea to couple the detection of project roots to the structure
-        if (path.startsWith(SCRIPT_PARENT_PATH)) {
-            String pathToUse = Text.getAbsoluteParent(path, 4);
-            // grouping items by first sub folder below SCRIPT_PARENT_PATH
-            LOG.info("Found matching path {}, using parent {}", path, pathToUse);
-            try {
-                paths.addAll(aecuService.getFiles(pathToUse));
-            } catch (AecuException e) {
-                // TODO re-throw?
-                LOG.error(e.getMessage(), e);
-            }
+
+        if (StringUtils.endsWith(path, "always.groovy")) {
+            logMessage(String.format("Adding %s due to having 'always' in name.", path));
+            paths.add(path);
+            return;
+        }
+
+        if (!ACTIONS.contains(action)) {
+            logMessage(String.format("Skipping %s due to non matching action '%s'", path, action));
+            return;
+        }
+
+        // in case a script was updated the update will actually be shown on jcr:content and not on
+        // the groovy script node
+        if (StringUtils.endsWith(path, "/jcr:content")) {
+            path = StringUtils.substringBefore(path, "/jcr:content");
+        }
+
+        if (aecuService.isValidScriptName(path)) {
+            logMessage(String.format("Found valid script path '%s'", path));
+            paths.add(path);
         }
     }
 
     @Override
     public void onError(Mode mode, String action, Exception e) {
         originalListener.onError(mode, action, e);
+    }
+
+    public void logMessage(String message) {
+        onMessage(Mode.TEXT, LOG_PREFIX + message, "");
+    }
+
+    public void logError(String message, Exception e) {
+        onError(Mode.TEXT, LOG_PREFIX + message, e);
     }
 }

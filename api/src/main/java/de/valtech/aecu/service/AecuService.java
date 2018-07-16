@@ -60,6 +60,22 @@ public interface AecuService {
     List<String> getFiles(String path) throws AecuException;
 
     /**
+     * Checks if the folder matches the system's run modes if specified in folder name.
+     *
+     * @param name resource name
+     * @return matches run modes
+     */
+    boolean matchesRunmodes(String name);
+
+    /**
+     * Checks if the name is a valid script.
+     *
+     * @param name file name
+     * @return is valid
+     */
+    boolean isValidScriptName(String name);
+
+    /**
      * Executes the script at the given position.
      *
      * @param path path of script

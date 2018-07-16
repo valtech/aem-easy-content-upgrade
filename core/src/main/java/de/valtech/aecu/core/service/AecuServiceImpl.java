@@ -116,13 +116,8 @@ public class AecuServiceImpl implements AecuService {
                 || JcrConstants.NT_FOLDER.equals(type);
     }
 
-    /**
-     * Checks if the folder matches the system's run modes if specified in folder name.
-     *
-     * @param name resource name
-     * @return matches run modes
-     */
-    protected boolean matchesRunmodes(String name) {
+    @Override
+    public boolean matchesRunmodes(String name) {
         if (!name.contains(".")) {
             return true;
         }
@@ -138,13 +133,8 @@ public class AecuServiceImpl implements AecuService {
         return false;
     }
 
-    /**
-     * Checks if the name is a valid script.
-     *
-     * @param name file name
-     * @return is valid
-     */
-    protected boolean isValidScriptName(String name) {
+    @Override
+    public boolean isValidScriptName(String name) {
         if (!name.endsWith(".groovy")) {
             return false;
         }
