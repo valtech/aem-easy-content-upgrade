@@ -112,9 +112,73 @@ You can click on any run to see the full details. This will show the status for 
 
 # Extension to Groovy Console
 
-TODO
+AECU adds its own binding to Groovy Console. You can reach it using "aecu" in your script. This provides methods to perform common tasks like property modification or node deletion.
+
+It follows a collect, filter, execute process.
+
+## Collect Options
+In the collect phase you define which nodes should be checked for a migration.
+
+* forResources(String[] paths): use the given paths without any subnodes
+* forChildResourcesOf(String path): use all direct childs of the given path (but no grandchilds)
+* forDescendantResourcesOf(String path): use the whole subtree under this path
+
+You can call these methods multiple times and combine them. They will be merged together.
+
+Example:
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forResources((String[])["/content/we-retail/ca/en"])
+        .forChildResourcesOf("/content/we-retail/us/en")
+        .forDescendantResourcesOf("/content/we-retail/us/en/experience")
+        .doSetProperty("name", "value")
+        .run()
+```
+
+## Filter options
+These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
+
+### Filter by Properties
+Use this to filter by a list of property values (e.g. sling:resourceType).
+
+```java
+filterByProperties(Map<String, String> properties)
+```
+
+Example:
+
+```java
+def conditionMap = [:]
+conditionMap["sling:resourceType"] = "weretail/components/structure/page"
+
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByProperties(conditionMap)
+        .doSetProperty("name", "value")
+        .run()
+```
 
 <a name="jmx"></a>
+
+### Filter by Node Name
+
+You can also filter nodes by their name.
+
+* filterByNodeName(String name): process only nodes which have this exact name
+* filterByNodeNameRegex(String regex): process nodes that have a name that matches the given regular expression
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .filterByNodeNameRegex("jcr.*")
+        .doSetProperty("name", "value")
+        .run()
+```
+
+<a name="jmx"></a>
+
 
 # JMX Interface
 
