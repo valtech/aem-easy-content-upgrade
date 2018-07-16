@@ -1,12 +1,20 @@
+# AEM Server Setup
+
+By default AEM is expected to listen on localhost on port 5702. This setting can be overridden by adding parameters:
+* -Daem.port=4502
+* -Daem.host=localhost
+
+You need AEM 6.3 with service pack 2.
+
 # Build and Deploy
 
-To build and deploy run this in the base folder:
+To build and deploy run this in the base (aem-easy-content-upgrade) or ui.apps/examples folder:
 
 ```bash
 mvn clean install -PautoInstallPackage
 ```
 
-You can deploy the core project using this command in core folder:
+In case you want to deploy core only you can use this command in core folder:
 
 ```bash
 mvn clean install -PautoInstallBundle
