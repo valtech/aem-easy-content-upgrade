@@ -179,6 +179,51 @@ println aecu.contentUpgradeBuilder()
 
 <a name="jmx"></a>
 
+### Combine Multiple Filters
+You can combine filters with AND and OR to build more complex filters.
+
+```java
+def conditionMap_type = [:]
+conditionMap_type['sling:resourceType'] = "weretail/components/content/heroimage"
+def conditionMap_file = [:]
+conditionMap_file['fileReference'] = "/content/dam/we-retail/en/activities/running/fitness-woman.jpg"
+def conditionMap_page = [:]
+conditionMap_page['jcr:primaryType'] = "cq:PageContent"
+
+def complexFilter =  new ORFilter(
+        [ new FilterByProperties(conditionMap_page),
+          new ANDFilter( [
+                  new FilterByProperties(conditionMap_type),
+                  new FilterByProperties(conditionMap_file)
+          ] )
+        ])
+
+println aecu.contentUpgradeBuilder()
+        .forDescendantResourcesOf("/content/we-retail/ca/en")
+        .filterWith(complexFilter)
+        .doSetProperty("name", "value")
+        .run()        
+```
+
+## Execute Options
+
+### Update Single Value Properies
+
+* doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
+* doDeleteProperty(String name): removes the property with the given name if existing.
+* doRenameProperty(String oldName, String newName): renames the given property if existing. If the new property name already exists it will be overwritten.
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doSetProperty("name", "value")
+        .doDeleteProperty("nameToDelete")
+        .doRenameProperty("oldName", "newName")
+        .run()
+```
+
+TODO
 
 # JMX Interface
 
