@@ -23,6 +23,7 @@ package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -50,15 +51,28 @@ public class MovePropertyToRelativePath implements Action {
     public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap sourceProperties = resource.adaptTo(ModifiableValueMap.class);
 
-        Resource targetResource = resourceResolver.getResource(resource, relativeResourcePath);
-        ModifiableValueMap targetProperties = targetResource.adaptTo(ModifiableValueMap.class);
+        if (sourceProperties != null) {
+            Resource destinationResource = resourceResolver.getResource(resource, relativeResourcePath);
 
-        Object propValue = sourceProperties.get(name);
-        String key = (newName != null) ? newName : name;
-        targetProperties.put(key, propValue);
-        sourceProperties.remove(name);
+            if (destinationResource != null) {
+                ModifiableValueMap destinationProperties = destinationResource.adaptTo(ModifiableValueMap.class);
 
-        return "Moving property " + name + " from " + resource.getPath() + " to resource " + targetResource.getPath() + " as " + key;
+                if (destinationProperties != null) {
+                    Object propValue = sourceProperties.get(name);
+                    String key = (newName != null && StringUtils.isNotBlank(newName)) ? newName : name;
+                    destinationProperties.put(key, propValue);
+                    sourceProperties.remove(name);
+
+                    return "Moving property " + name + " from " + resource.getPath() + " to resource " + destinationResource.getPath() + " as " + key;
+
+                } else {
+                    return "WARNING: could not get ModifiableValueMap for resource " + destinationResource.getPath();
+                }
+            } else {
+                return "WARNING: could not read move destination resource " + relativeResourcePath;
+            }
+        }
+        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
     }
 
 }

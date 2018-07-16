@@ -45,10 +45,13 @@ public class CopyResourceToRelativePath implements Action {
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
         Resource destinationResource = resourceResolver.getResource(resource, relativePath);
-        String sourceAbsPAth = resource.getPath();
-        String destinationAsPath = destinationResource.getPath();
-        resourceResolver.copy(sourceAbsPAth, destinationAsPath);
+        if (destinationResource != null) {
+            String sourceAbsPAth = resource.getPath();
+            String destinationAsPath = destinationResource.getPath();
+            resourceResolver.copy(sourceAbsPAth, destinationAsPath);
 
-        return "Copied " + sourceAbsPAth + " to path " + destinationAsPath;
+            return "Copied " + sourceAbsPAth + " to path " + destinationAsPath;
+        }
+        return "WARNING: could not read copy destination resource " + relativePath;
     }
 }

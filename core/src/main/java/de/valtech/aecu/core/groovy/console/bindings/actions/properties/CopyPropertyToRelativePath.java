@@ -23,6 +23,7 @@ package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -51,14 +52,27 @@ public class CopyPropertyToRelativePath implements Action {
     public String doAction(@Nonnull Resource resource) {
         ValueMap sourceProperties = resource.adaptTo(ValueMap.class);
 
-        Resource destinationResource = resourceResolver.getResource(resource, relativeResourcePath);// TODO null check!!!!
-        ModifiableValueMap destinationProperties = destinationResource.adaptTo(ModifiableValueMap.class);// TODO null check!!!!
+        if (sourceProperties != null) {
+            Resource destinationResource = resourceResolver.getResource(resource, relativeResourcePath);
 
-        Object propValue = sourceProperties.get(name);
-        String key = (newName != null) ? newName : name;
-        destinationProperties.put(key, propValue);
+            if (destinationResource != null) {
+                ModifiableValueMap destinationProperties = destinationResource.adaptTo(ModifiableValueMap.class);
 
-        return "Coping property " + name + " from " + resource.getPath() + " to resource " + destinationResource.getPath() + " as " + key;
+                if (destinationProperties != null) {
+                    Object propValue = sourceProperties.get(name);
+                    String key = (newName != null && StringUtils.isNotBlank(newName)) ? newName : name;
+                    destinationProperties.put(key, propValue);
+
+                    return "Coping property " + name + " from " + resource.getPath() + " to resource " + destinationResource.getPath() + " as " + key;
+
+                } else {
+                    return "WARNING: could not get ModifiableValueMap for resource " + destinationResource.getPath();
+                }
+            } else {
+                return "WARNING: could not read copy destination resource " + relativeResourcePath;
+            }
+        }
+        return "WARNING: could not read properties of resource " + resource.getPath();
     }
 
 }

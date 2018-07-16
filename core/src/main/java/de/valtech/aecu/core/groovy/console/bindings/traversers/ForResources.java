@@ -46,8 +46,12 @@ public class ForResources implements TraversData {
         for (String path : paths) {
             if (path != null) {
                 Resource resource = resourceResolver.getResource(path);
-                if (filter == null || filter.filter(resource)) {
-                    stringBuffer.append(action.doAction(resource) + "\n");
+                if (resource != null) {
+                    if (filter == null || filter.filter(resource)) {
+                        stringBuffer.append(action.doAction(resource) + "\n");
+                    }
+                } else {
+                    stringBuffer.append("WARNING: resource does not exist " + path + "\n");
                 }
             }
         }
