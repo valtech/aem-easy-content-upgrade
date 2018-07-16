@@ -1,23 +1,20 @@
 /*
- *  Copyright 2018 Valtech GmbH
+ * Copyright 2018 Valtech GmbH
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.valtech.aecu.service;
 
@@ -26,7 +23,20 @@ import java.util.List;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Service interface for AECU.
+ * Service interface for AECU. Use this to execute scripts or query the history. <br>
+ * <br>
+ * How to perform an execution:
+ * <ol>
+ * <li>Get a list of files to execute using {@link #getFiles(String) getFiles}. This will filter all
+ * files that do not match the run mode and any fallback scripts.</li>
+ * <li>Start a new history entry to store your results using {@link #createHistoryEntry()
+ * createHistoryEntry}. This store a new run with in-progress state.</li>
+ * <li>Execute your files one by one with {@link #execute(String) execute}</li>
+ * <li>Store each script run in history using
+ * {@link #storeExecutionInHistory(HistoryEntry, ExecutionResult) storeExecutionInHistory}</li>
+ * <li>Mark the run as done by closing the history with {@link #finishHistoryEntry(HistoryEntry)
+ * finishHistoryEntry}</li>
+ * </ol>
  *
  * @author Roland Gruber
  */
@@ -48,6 +58,22 @@ public interface AecuService {
      * @throws AecuException error finding files (e.g. invalid path)
      */
     List<String> getFiles(String path) throws AecuException;
+
+    /**
+     * Checks if the folder matches the system's run modes if specified in folder name.
+     *
+     * @param name resource name
+     * @return matches run modes
+     */
+    boolean matchesRunmodes(String name);
+
+    /**
+     * Checks if the name is a valid script.
+     *
+     * @param name file name
+     * @return is valid
+     */
+    boolean isValidScriptName(String name);
 
     /**
      * Executes the script at the given position.

@@ -1,23 +1,20 @@
 /*
- *  Copyright 2018 Valtech GmbH
+ * Copyright 2018 Valtech GmbH
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.valtech.aecu.core.history;
 
@@ -84,7 +81,8 @@ public class HistoryUtil {
     public HistoryEntry createHistoryEntry(ResourceResolver resolver) throws AecuException {
         HistoryEntryImpl history = new HistoryEntryImpl();
         Calendar start = new GregorianCalendar();
-        String basePath = HISTORY_BASE + "/" + start.get(Calendar.YEAR) + "/" + (start.get(Calendar.MONTH) + 1) + "/" + start.get(Calendar.DAY_OF_MONTH);
+        String basePath = HISTORY_BASE + "/" + start.get(Calendar.YEAR) + "/" + (start.get(Calendar.MONTH) + 1) + "/"
+                + start.get(Calendar.DAY_OF_MONTH);
         String nodeName = generateHistoryNodeName();
         String nodePath = basePath + "/" + nodeName;
         createPath(basePath, resolver, JcrResourceConstants.NT_SLING_ORDERED_FOLDER);
@@ -108,7 +106,8 @@ public class HistoryUtil {
      * @param resolver resource resolver
      * @throws AecuException error inserting history entry
      */
-    public void storeExecutionInHistory(HistoryEntry history, ExecutionResult result, ResourceResolver resolver) throws AecuException {
+    public void storeExecutionInHistory(HistoryEntry history, ExecutionResult result, ResourceResolver resolver)
+            throws AecuException {
         String path = history.getRepositoryPath() + "/" + history.getSingleResults().size();
         saveExecutionResultInHistory(result, path, resolver);
     }
@@ -118,7 +117,6 @@ public class HistoryUtil {
      *
      * @param history  open history entry
      * @param resolver resource resolver
-     * @return history entry
      */
     public void finishHistoryEntry(HistoryEntry history, ResourceResolver resolver) {
         Resource resource = resolver.getResource(history.getRepositoryPath());
@@ -204,8 +202,7 @@ public class HistoryUtil {
     }
 
     /**
-     * Descends in history till a previous sibling is found.
-     * Descending stops at history base level
+     * Descends in history till a previous sibling is found. Descending stops at history base level
      *
      * @param current current resource
      * @return previous sibling
@@ -325,7 +322,8 @@ public class HistoryUtil {
         return result;
     }
 
-    private void saveExecutionResultInHistory(ExecutionResult result, String path, ResourceResolver resolver) throws AecuException {
+    private void saveExecutionResultInHistory(ExecutionResult result, String path, ResourceResolver resolver)
+            throws AecuException {
         createPath(path, resolver, "nt:unstructured");
         Resource entry = resolver.getResource(path);
         ModifiableValueMap values = entry.adaptTo(ModifiableValueMap.class);
@@ -394,7 +392,7 @@ public class HistoryUtil {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
         LOG.debug("Starting purge with limit " + calendar.getTime().toString());
-        deleteRecursive(base.listChildren(), calendar, new int[]{Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH});
+        deleteRecursive(base.listChildren(), calendar, new int[] {Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH});
     }
 
     /**

@@ -112,9 +112,150 @@ You can click on any run to see the full details. This will show the status for 
 
 # Extension to Groovy Console
 
-TODO
+AECU adds its own binding to Groovy Console. You can reach it using "aecu" in your script. This provides methods to perform common tasks like property modification or node deletion.
+
+It follows a collect, filter, execute process.
+
+## Collect Options
+In the collect phase you define which nodes should be checked for a migration.
+
+* forResources(String[] paths): use the given paths without any subnodes
+* forChildResourcesOf(String path): use all direct childs of the given path (but no grandchilds)
+* forDescendantResourcesOf(String path): use the whole subtree under this path
+
+You can call these methods multiple times and combine them. They will be merged together.
+
+Example:
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forResources((String[])["/content/we-retail/ca/en"])
+        .forChildResourcesOf("/content/we-retail/us/en")
+        .forDescendantResourcesOf("/content/we-retail/us/en/experience")
+        .doSetProperty("name", "value")
+        .run()
+```
+
+## Filter options
+These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
+
+### Filter by Properties
+Use this to filter by a list of property values (e.g. sling:resourceType).
+
+```java
+filterByProperties(Map<String, String> properties)
+```
+
+Example:
+
+```java
+def conditionMap = [:]
+conditionMap["sling:resourceType"] = "weretail/components/structure/page"
+
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByProperties(conditionMap)
+        .doSetProperty("name", "value")
+        .run()
+```
 
 <a name="jmx"></a>
+
+### Filter by Node Name
+
+You can also filter nodes by their name.
+
+* filterByNodeName(String name): process only nodes which have this exact name
+* filterByNodeNameRegex(String regex): process nodes that have a name that matches the given regular expression
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .filterByNodeNameRegex("jcr.*")
+        .doSetProperty("name", "value")
+        .run()
+```
+
+<a name="jmx"></a>
+
+### Combine Multiple Filters
+You can combine filters with AND and OR to build more complex filters.
+
+```java
+def conditionMap_type = [:]
+conditionMap_type['sling:resourceType'] = "weretail/components/content/heroimage"
+def conditionMap_file = [:]
+conditionMap_file['fileReference'] = "/content/dam/we-retail/en/activities/running/fitness-woman.jpg"
+def conditionMap_page = [:]
+conditionMap_page['jcr:primaryType'] = "cq:PageContent"
+
+def complexFilter =  new ORFilter(
+        [ new FilterByProperties(conditionMap_page),
+          new ANDFilter( [
+                  new FilterByProperties(conditionMap_type),
+                  new FilterByProperties(conditionMap_file)
+          ] )
+        ])
+
+println aecu.contentUpgradeBuilder()
+        .forDescendantResourcesOf("/content/we-retail/ca/en")
+        .filterWith(complexFilter)
+        .doSetProperty("name", "value")
+        .run()        
+```
+
+## Execute Options
+
+### Update Single-value Properies
+
+* doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
+* doDeleteProperty(String name): removes the property with the given name if existing.
+* doRenameProperty(String oldName, String newName): renames the given property if existing. If the new property name already exists it will be overwritten.
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doSetProperty("name", "value")
+        .doDeleteProperty("nameToDelete")
+        .doRenameProperty("oldName", "newName")
+        .run()
+```
+
+### Update Multi-value Properties
+
+* doAddValuesToMultiValueProperty(String name, String[] values): adds the list of values to a property. The property is created if it does not yet exist.
+* doRemoveValuesOfMultiValueProperty(String name, String[] values): removes the list of values from a given property. 
+* doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues): removes the old values and adds the new values in a given property. 
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doAddValuesToMultiValueProperty("name", (String[])["value1", "value2"])
+        .doRemoveValuesOfMultiValueProperty("name", (String[])["value1", "value2"])
+        .doReplaceValuesOfMultiValueProperty("name", (String[])["old1", "old2"], (String[])["new1", "new2"])
+        .run()
+```
+
+### Copy and Move Properties
+
+This will copy or move a property to a subnode. You can also change the property name.
+
+* doCopyPropertyToRelativePath(String name, String newName, String relativeResourcePath): copy the property to the given path under the new name.
+* doMovePropertyToRelativePath(String name, String newName, String relativeResourcePath): move the property to the given path under the new name.
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doCopyPropertyToRelativePath("name", "newName", "subnode")
+        .doMovePropertyToRelativePath("name", "newName", "subnode")
+        .run()
+```
+
+TODO
 
 # JMX Interface
 
@@ -160,3 +301,7 @@ For the status of older runs use AECU's history page.
 # License
 
 The AC Tool is licensed under the [MIT LICENSE](LICENSE).
+
+# Developers
+
+See our [developer zone](docs/developers.md)

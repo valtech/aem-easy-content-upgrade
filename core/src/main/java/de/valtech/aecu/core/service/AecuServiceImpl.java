@@ -1,23 +1,20 @@
 /*
- *  Copyright 2018 Valtech GmbH
+ * Copyright 2018 Valtech GmbH
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.valtech.aecu.core.service;
 
@@ -115,18 +112,12 @@ public class AecuServiceImpl implements AecuService {
      */
     private boolean isFolder(Resource resource) {
         String type = resource.getValueMap().get(JcrConstants.JCR_PRIMARYTYPE, String.class);
-        return JcrResourceConstants.NT_SLING_FOLDER.equals(type)
-                || JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(type)
+        return JcrResourceConstants.NT_SLING_FOLDER.equals(type) || JcrResourceConstants.NT_SLING_ORDERED_FOLDER.equals(type)
                 || JcrConstants.NT_FOLDER.equals(type);
     }
 
-    /**
-     * Checks if the folder matches the system's run modes if specified in folder name.
-     *
-     * @param name resource name
-     * @return matches run modes
-     */
-    protected boolean matchesRunmodes(String name) {
+    @Override
+    public boolean matchesRunmodes(String name) {
         if (!name.contains(".")) {
             return true;
         }
@@ -142,13 +133,8 @@ public class AecuServiceImpl implements AecuService {
         return false;
     }
 
-    /**
-     * Checks if the name is a valid script.
-     *
-     * @param name file name
-     * @return is valid
-     */
-    protected boolean isValidScriptName(String name) {
+    @Override
+    public boolean isValidScriptName(String name) {
         if (!name.endsWith(".groovy")) {
             return false;
         }
@@ -191,7 +177,8 @@ public class AecuServiceImpl implements AecuService {
         if (!success && (getFallbackScript(resolver, path) != null)) {
             fallbackResult = executeScript(resolver, getFallbackScript(resolver, path));
         }
-        return new ExecutionResult(success, response.getRunningTime(), result, response.getOutput() + response.getExceptionStackTrace(), fallbackResult, path);
+        return new ExecutionResult(success, response.getRunningTime(), result,
+                response.getOutput() + response.getExceptionStackTrace(), fallbackResult, path);
     }
 
     /**

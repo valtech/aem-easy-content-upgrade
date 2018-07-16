@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>AECU</name>
     <description>AEM Easy COntent Upgrade</description>
+    <url>https://github.com/valtech/aem-easy-content-upgrade</url>
 
     <modules>
         <module>api</module>
@@ -33,17 +33,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <scmCommentPrefix>[maven-scm] :</scmCommentPrefix>
-                    <preparationGoals>clean install</preparationGoals>
-                    <goals>install</goals>
-                    <releaseProfiles>release</releaseProfiles>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -104,6 +93,17 @@
                     <downloadSources>true</downloadSources>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -124,6 +124,21 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.9.1</version>
+                </plugin>
+                <plugin>
+								    <groupId>org.apache.maven.plugins</groupId>
+								    <artifactId>maven-project-info-reports-plugin</artifactId>
+								    <version>2.7</version>
+                </plugin>
+								<plugin>
+									  <groupId>org.apache.maven.plugins</groupId>
+									  <artifactId>maven-site-plugin</artifactId>
+									  <version>3.3</version>
+								</plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.5.2</version>
                 </plugin>
@@ -142,6 +157,18 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.8.2</version>
                 </plugin>
+		            <plugin>
+		                <groupId>external.atlassian.jgitflow</groupId>
+		                <artifactId>jgitflow-maven-plugin</artifactId>
+		                <version>1.0-m5.1</version>
+		                <configuration>
+		                    <enableSshAgent>true</enableSshAgent>
+		                    <enableFeatureVersions>true</enableFeatureVersions>
+		                    <pushReleases>true</pushReleases>
+		                    <autoVersionSubmodules>true</autoVersionSubmodules>
+		                    <releaseBranchVersionSuffix>rc</releaseBranchVersionSuffix>
+		                </configuration>
+		            </plugin>
                 <plugin>
                     <groupId>org.apache.sling</groupId>
                     <artifactId>maven-sling-plugin</artifactId>
@@ -216,7 +243,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore/>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -236,7 +263,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore/>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -257,7 +284,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore/>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
@@ -348,6 +375,33 @@
                         </plugin>
                     </plugins>
                 </pluginManagement>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
 
@@ -498,5 +552,84 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Roland Gruber</name>
+            <email>roland.gruber@valtech.de</email>
+            <organization>Valtech GmbH</organization>
+            <organizationUrl>https://www.valtech.de/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Roxana Mureșan</name>
+            <email>roxana.muresan@valtech.de</email>
+            <organization>Valtech GmbH</organization>
+            <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+	      <developer>
+		        <name>Bryan Chavez</name>
+		        <email>bryan.chavez@valtech.de</email>
+		        <organization>Valtech GmbH</organization>
+		        <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+	      <developer>
+		        <name>Christopher Piosecny</name>
+		        <email>christopher.piosecny@valtech.de</email>
+		        <organization>Valtech GmbH</organization>
+		        <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+	      <developer>
+		        <name>Robert Lingner</name>
+		        <email>robert.lingner@valtech.de</email>
+		        <organization>Valtech GmbH</organization>
+		        <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+    </developers>
+    
+    <scm>
+        <connection>scm:git:https://github.com/valtech/aem-easy-content-upgrade.git</connection>
+        <developerConnection>scm:git:git@github.com:valtech/aem-easy-content-upgrade.git</developerConnection>
+        <url>https://github.com/valtech/aem-easy-content-upgrade</url>
+    </scm>
+    
+    <issueManagement>
+		    <system>Github</system>
+		    <url>https://github.com/valtech/aem-easy-content-upgrade/issues</url>
+    </issueManagement>
+    
+    <distributionManagement>
+        <snapshotRepository>
+		        <id>ossrh</id>
+		        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+	      </snapshotRepository>
+	      <repository>
+		        <id>ossrh</id>
+		        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+	      </repository>
+    </distributionManagement>
+
+		<repositories>
+        <repository>
+            <id>adobe</id>
+            <name>Adobe Public Repository</name>
+            <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>adobe</id>
+            <name>Adobe Public Repository</name>
+            <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </pluginRepository>
+		</pluginRepositories>
 
 </project>
