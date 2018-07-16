@@ -41,6 +41,8 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
 
     /**
      * Constructor
+     * 
+     * @throws NotCompliantMBeanException error setting up mbean
      */
     public AecuServiceMBeanImpl() throws NotCompliantMBeanException {
         super(AecuServiceMBean.class);

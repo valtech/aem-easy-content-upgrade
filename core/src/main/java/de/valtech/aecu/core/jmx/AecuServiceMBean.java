@@ -67,6 +67,7 @@ public interface AecuServiceMBean {
      * @param start start index (0 is last run)
      * @param count number of entries to return
      * @return history entries
+     * @throws AecuException error reading history
      */
     @Description("Returns the last history entries")
     String getHistory(@Name("Start index") int start, @Name("Count") int count) throws AecuException;

@@ -1,5 +1,18 @@
 package de.valtech.aecu.core.groovy.console.bindings;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.scribe.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
@@ -22,19 +35,6 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantReso
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 public class ContentUpgrade {
 
     private static Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
@@ -51,7 +51,10 @@ public class ContentUpgrade {
     }
 
     /**
-     * content path filter methods
+     * Loops for given list of resources.
+     * 
+     * @param paths list of paths
+     * @return upgrade object
      **/
     public ContentUpgrade forResources(@Nonnull String[] paths) {
         LOG.debug("forResources: {}", paths.toString());
@@ -72,7 +75,10 @@ public class ContentUpgrade {
     }
 
     /**
-     * filters
+     * Filters by properties.
+     * 
+     * @param conditionProperties properties to filter
+     * @return upgrade object
      **/
     public ContentUpgrade filterByProperties(@Nonnull Map<String, String> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
@@ -99,7 +105,11 @@ public class ContentUpgrade {
     }
 
     /**
-     * properties edit methods
+     * Sets a property value.
+     * 
+     * @param name  property name
+     * @param value property value
+     * @return upgrade object
      **/
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
         LOG.debug("doSetProperty: {} = {}", name, value);
@@ -153,9 +163,6 @@ public class ContentUpgrade {
         return this;
     }
 
-    /**
-     * resource edit methods
-     **/
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doCopyResource to {}", relativePath);
         actions.add(new CopyResourceToRelativePath(relativePath, resourceResolver));
@@ -176,6 +183,8 @@ public class ContentUpgrade {
 
     /**
      * Print path
+     * 
+     * @return upgrade object
      */
     public ContentUpgrade printPath() {
         LOG.debug("printPath");
@@ -183,9 +192,6 @@ public class ContentUpgrade {
         return this;
     }
 
-    /**
-     * runner methods
-     **/
     public StringBuffer run() throws PersistenceException {
         LOG.debug("apply content upgrade");
         return run(false);
