@@ -207,7 +207,7 @@ println aecu.contentUpgradeBuilder()
 
 ## Execute Options
 
-### Update Single Value Properies
+### Update Single-value Properies
 
 * doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
 * doDeleteProperty(String name): removes the property with the given name if existing.
@@ -220,6 +220,38 @@ println aecu.contentUpgradeBuilder()
         .doSetProperty("name", "value")
         .doDeleteProperty("nameToDelete")
         .doRenameProperty("oldName", "newName")
+        .run()
+```
+
+### Update Multi-value Properties
+
+* doAddValuesToMultiValueProperty(String name, String[] values): adds the list of values to a property. The property is created if it does not yet exist.
+* doRemoveValuesOfMultiValueProperty(String name, String[] values): removes the list of values from a given property. 
+* doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues): removes the old values and adds the new values in a given property. 
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doAddValuesToMultiValueProperty("name", (String[])["value1", "value2"])
+        .doRemoveValuesOfMultiValueProperty("name", (String[])["value1", "value2"])
+        .doReplaceValuesOfMultiValueProperty("name", (String[])["old1", "old2"], (String[])["new1", "new2"])
+        .run()
+```
+
+### Copy and Move Properties
+
+This will copy or move a property to a subnode. You can also change the property name.
+
+* doCopyPropertyToRelativePath(String name, String newName, String relativeResourcePath): copy the property to the given path under the new name.
+* doMovePropertyToRelativePath(String name, String newName, String relativeResourcePath): move the property to the given path under the new name.
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doCopyPropertyToRelativePath("name", "newName", "subnode")
+        .doMovePropertyToRelativePath("name", "newName", "subnode")
         .run()
 ```
 
