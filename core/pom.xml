@@ -7,10 +7,12 @@
         <artifactId>aecu</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    
     <artifactId>aecu.core</artifactId>
     <packaging>bundle</packaging>
     <name>AECU - Core</name>
     <description>Core bundle for AECU</description>
+
     <build>
         <plugins>
             <plugin>
@@ -30,6 +32,10 @@
                         </Sling-Model-Packages>
                     </instructions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

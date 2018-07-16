@@ -8,6 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>AECU</name>
     <description>AEM Easy COntent Upgrade</description>
+    <url>https://github.com/valtech/aem-easy-content-upgrade</url>
 
     <modules>
         <module>api</module>
@@ -122,6 +123,21 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.6.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.9.1</version>
+                </plugin>
+                <plugin>
+								    <groupId>org.apache.maven.plugins</groupId>
+								    <artifactId>maven-project-info-reports-plugin</artifactId>
+								    <version>2.7</version>
+                </plugin>
+								<plugin>
+									  <groupId>org.apache.maven.plugins</groupId>
+									  <artifactId>maven-site-plugin</artifactId>
+									  <version>3.3</version>
+								</plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
@@ -498,5 +514,84 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Roland Gruber</name>
+            <email>roland.gruber@valtech.de</email>
+            <organization>Valtech GmbH</organization>
+            <organizationUrl>https://www.valtech.de/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Roxana Mureșan</name>
+            <email>roxana.muresan@valtech.de</email>
+            <organization>Valtech GmbH</organization>
+            <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+	      <developer>
+		        <name>Bryan Chavez</name>
+		        <email>bryan.chavez@valtech.de</email>
+		        <organization>Valtech GmbH</organization>
+		        <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+	      <developer>
+		        <name>Christopher Piosecny</name>
+		        <email>christopher.piosecny@valtech.de</email>
+		        <organization>Valtech GmbH</organization>
+		        <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+	      <developer>
+		        <name>Robert Lingner</name>
+		        <email>robert.lingner@valtech.de</email>
+		        <organization>Valtech GmbH</organization>
+		        <organizationUrl>https://www.valtech.de/</organizationUrl>
+	      </developer>
+    </developers>
+    
+    <scm>
+        <connection>scm:git:https://github.com/valtech/aem-easy-content-upgrade.git</connection>
+        <developerConnection>scm:git:git@github.com:valtech/aem-easy-content-upgrade.git</developerConnection>
+        <url>https://github.com/valtech/aem-easy-content-upgrade</url>
+    </scm>
+    
+    <issueManagement>
+		    <system>Github</system>
+		    <url>https://github.com/valtech/aem-easy-content-upgrade/issues</url>
+    </issueManagement>
+    
+    <distributionManagement>
+        <snapshotRepository>
+		        <id>ossrh</id>
+		        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+	      </snapshotRepository>
+	      <repository>
+		        <id>ossrh</id>
+		        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+	      </repository>
+    </distributionManagement>
+
+		<repositories>
+        <repository>
+            <id>adobe</id>
+            <name>Adobe Public Repository</name>
+            <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>adobe</id>
+            <name>Adobe Public Repository</name>
+            <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </pluginRepository>
+		</pluginRepositories>
 
 </project>
