@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/apps/valtech/aecu"/>
+    <filter root="/apps/cq/core/content/nav/tools/aecu"/>
+    <filter root="/home/users/system/aecu"/>
+    <filter root="/etc/groovyconsole/scripts/aecu" mode="merge"/>
+    <filter root="/apps/settings/granite/operations/hc/aecu"/>
+    <filter root="/apps/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge"/>
+    <filter root="/etc/groovyconsole/scripts/aecu" mode="merge"/>
+    <filter root="/rep:policy" mode="merge"/>
+    <filter root="/var/aecu/rep:policy" mode="merge"/>
+    <filter root="/content/rep:policy" mode="merge"/>
+</workspaceFilter>

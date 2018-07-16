@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          jcr:primaryType="nt:unstructured"
+          jcr:title="Execute"
+          jcr:description="Execute one or more scripts"
+          href="/apps/valtech/aecu/tools/execute/page.html"
+          icon="playCircle"
+/>

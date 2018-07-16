@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root
+        xmlns:jcr="http://www.jcp.org/jcr/1.0"
+        xmlns:rep="internal"
+        xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+        xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+        jcr:primaryType="cq:Page">
+    <jcr:content
+            jcr:primaryType="nt:unstructured"
+            jcr:title="AEM Easy Content Upgrade - History details"
+            sling:resourceType="granite/ui/components/shell/page"
+            consoleId="aecu-history-details"
+    >
+        <head jcr:primaryType="nt:unstructured">
+            <clientlibs
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/foundation/includeclientlibs"
+                    categories="[coralui3,granite.ui.coral.foundation,aecu.editor]"
+            />
+        </head>
+        <title
+                jcr:primaryType="nt:unstructured"
+                text="AEM Easy Content Upgrade - History details"
+                sling:resourceType="granite/ui/components/coral/foundation/text"
+        />
+        <content
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/container"
+                granite:class="base-container"
+        >
+            <items jcr:primaryType="nt:unstructured">
+                <overview
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="valtech/aecu/components/content/history/overview"
+                />
+                <details
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="valtech/aecu/components/content/history/executionResults"
+                />
+            </items>
+        </content>
+    </jcr:content>
+</jcr:root>

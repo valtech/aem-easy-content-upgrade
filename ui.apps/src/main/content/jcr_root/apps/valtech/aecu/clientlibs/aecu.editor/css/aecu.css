@@ -1,0 +1,61 @@
+
+.base-container {
+    margin: 2rem;
+}
+
+.aecu-searchfield {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+table.aecu-history-overview td {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+}
+
+table.aecu-history-detail td {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.icon-color-ok {
+    color: green;
+}
+
+.icon-color-fail {
+    color: red;
+}
+
+.icon-color-inprogress {
+    color: blue;
+}
+
+.aecu-color-ok {
+    color: green;
+}
+
+.aecu-color-fail {
+    color: red;
+}
+
+.aecu-chart-text {
+    line-height: 1;
+    text-anchor: middle;
+    font-size: 0.5em;
+    transform: translateY(0.35em);
+}
+
+.aecu-font-normal {
+    font-size: 1rem;
+}
+
+.aecu-font-large {
+    font-size: 1.25rem;
+}
+
+.aecu-padding-sides5 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}

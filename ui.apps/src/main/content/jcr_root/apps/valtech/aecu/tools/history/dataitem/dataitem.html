@@ -1,0 +1,13 @@
+<sly data-sly-use.dataItem="de.valtech.aecu.core.model.history.HistoryDataItem"/>
+<!--/* TODO: investigate why we need the class for the Paginator to work */-->
+<tr is="coral-table-row" class="foundation-collection-item">
+    <td is="coral-table-cell"><a href="/apps/valtech/aecu/tools/history/details.html?entry=${dataItem.path}">${dataItem.date}</a>
+    </td>
+    <td is="coral-table-cell">
+        ${dataItem.duration}
+    </td>
+    <td is="coral-table-cell">
+        <coral-icon icon="${dataItem.statusIcon}" size="M" class="icon-color-${dataItem.statusColor}">
+        </coral-icon>
+    </td>
+</tr>

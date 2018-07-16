@@ -1,0 +1,32 @@
+<template data-sly-template.details="${ @ result, isFallback=false}">
+    <div class="aecu-padding-sides5">
+        <table class="aecu-history-detail aecu-font-normal" width="100%">
+            <tr>
+                <td>Path: ${result.path}</td>
+                <td rowspan="2">
+                    <coral-icon icon="${result.success ? 'checkCircle' : 'closeCircle'}" size="L"
+                                class="icon-color-${result.success ? 'ok' : 'fail'}">
+                    </coral-icon>
+                </td>
+            </tr>
+            <tr>
+                <td>Execution time: ${result.time}</td>
+            </tr>
+        </table>
+        <sly data-sly-test="${result.result}">
+            <h3 data-sly-test="${!isFallback}" class="aecu-font-large">Result</h3>
+            <h4 data-sly-test="${isFallback}" class="aecu-font-large">Result</h4>
+            <pre class="aecu-font-normal">${result.result}</pre>
+        </sly>
+        <sly data-sly-test="${result.output}">
+            <h3 data-sly-test="${!isFallback}" class="aecu-font-large">Output</h3>
+            <h4 data-sly-test="${isFallback}" class="aecu-font-large">Output</h4>
+            <pre class="aecu-font-normal">${result.output}</pre>
+        </sly>
+
+        <sly data-sly-test="${result.fallbackResult}">
+            <h3 class="aecu-font-large">Fallback script result</h3>
+            <sly data-sly-call="${details @ result = result.fallbackResult, isFallback = true}"/>
+        </sly>
+    </div>
+</template>
