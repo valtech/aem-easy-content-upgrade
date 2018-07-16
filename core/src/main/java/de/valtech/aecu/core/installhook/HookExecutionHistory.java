@@ -47,7 +47,8 @@ public class HookExecutionHistory {
 
     /**
      * Constructor.
-     * @param session a session with write permissons on {@value HISTORY_BASE_PATH}.
+     * 
+     * @param session          a session with write permissons on {@value HISTORY_BASE_PATH}.
      * @param groovyScriptPath the groovy script to instantiate the execution history for.
      * @throws AecuException in case the call to JcrUtils.getOrCreateByPath fails.
      */
@@ -61,8 +62,9 @@ public class HookExecutionHistory {
     }
 
     /**
-     * Returns if the script has been executed before. This is determined by checking existence of the property
-     * {@value PN_EXECUTED} on the history node.
+     * Returns if the script has been executed before. This is determined by checking existence of
+     * the property {@value PN_EXECUTED} on the history node.
+     * 
      * @return true if it has been executed previously, false otherwise.
      */
     public boolean hasBeenExecutedBefore() {
@@ -77,6 +79,7 @@ public class HookExecutionHistory {
 
     /**
      * Sets {@value PN_EXECUTED} on the history node to the current date.
+     * 
      * @throws AecuException in case the property could not be saved.
      */
     public void setExecuted() throws AecuException {

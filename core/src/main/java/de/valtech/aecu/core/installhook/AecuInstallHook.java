@@ -38,9 +38,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * InstallHook handling installation of groovy scripts. The InstallHook gathers groovy scripts contained in the installed vault
- * package and executes them depending on active runmodes and if the script has been added, modified or never executed. <br>
+ * InstallHook handling installation of groovy scripts. The InstallHook gathers groovy scripts
+ * contained in the installed vault package and executes them depending on active runmodes and if
+ * the script has been added, modified or never executed. <br>
  * Example usage in content-package-maven-plugin:
+ * 
  * <pre>
  * {@code
  * <plugin>
@@ -94,8 +96,8 @@ public class AecuInstallHook implements InstallHook {
                     if (!scriptsForInstallation.isEmpty()) {
                         HistoryEntry installationHistory = executeScripts(scriptsForInstallation, aecuService, installContext);
                         if (!HistoryEntry.RESULT.SUCCESS.equals(installationHistory.getResult())) {
-                            throw new PackageException("Failed installation, check installation history at " + installationHistory
-                                    .getRepositoryPath());
+                            throw new PackageException("Failed installation, check installation history at "
+                                    + installationHistory.getRepositoryPath());
                         }
                     }
                     break;

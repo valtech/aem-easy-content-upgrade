@@ -34,6 +34,7 @@ public class OsgiServiceProvider {
 
     /**
      * Constructor.
+     * 
      * @param clazz the class that was loaded over a bundle classloader.
      */
     public OsgiServiceProvider(@Nonnull Class clazz) {
@@ -49,12 +50,14 @@ public class OsgiServiceProvider {
 
     /**
      * Retrieves a {@link ServiceReference} for the given class.
+     * 
      * @see org.osgi.framework.BundleContext#getServiceReference(Class)
      * @param clazz the class to retrieve a {@link ServiceReference} for.
-     * @param <T> the type of the service.
+     * @param       <T> the type of the service.
      * @return a {@link ServiceReference} for the requested service.
      */
-    @Nonnull <T> ServiceReference<T> getServiceReference(@Nonnull Class<T> clazz) {
+    @Nonnull
+    <T> ServiceReference<T> getServiceReference(@Nonnull Class<T> clazz) {
         ServiceReference<T> serviceReference = bundleContext.getServiceReference(clazz);
         if (serviceReference == null) {
             throw new IllegalStateException("Could not retrieve service reference for class " + clazz);
@@ -64,15 +67,17 @@ public class OsgiServiceProvider {
 
     /**
      * Retrieves the service object the {@link ServiceReference} is pointing to.
+     * 
      * @see org.osgi.framework.BundleContext#getService(ServiceReference)
      * @param serviceReference the {@link ServiceReference}.
-     * @param <T> the service type.
+     * @param                  <T> the service type.
      * @return the service instance.
      */
-    @Nonnull <T> T getService(@Nonnull ServiceReference<T> serviceReference) {
+    @Nonnull
+    <T> T getService(@Nonnull ServiceReference<T> serviceReference) {
         T service = bundleContext.getService(serviceReference);
         if (service == null) {
-            throw new IllegalStateException("Could not get the service for reference " +  serviceReference
+            throw new IllegalStateException("Could not get the service for reference " + serviceReference
                     + ", verify that the bundle was installed correctly!");
         }
         return service;

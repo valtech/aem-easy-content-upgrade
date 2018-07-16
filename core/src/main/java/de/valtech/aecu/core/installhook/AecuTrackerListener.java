@@ -53,8 +53,9 @@ public class AecuTrackerListener implements ProgressTrackerListener {
 
     /**
      * Constructor.
+     * 
      * @param originalListener the original ProgressTrackerListener.
-     * @param aecuService an AecuService instance.
+     * @param aecuService      an AecuService instance.
      */
     public AecuTrackerListener(ProgressTrackerListener originalListener, AecuService aecuService) {
         this.originalListener = originalListener;
@@ -64,7 +65,9 @@ public class AecuTrackerListener implements ProgressTrackerListener {
     }
 
     /**
-     * Returns an unmodifiable list of the modified or added paths encountered during the installation phase.
+     * Returns an unmodifiable list of the modified or added paths encountered during the
+     * installation phase.
+     * 
      * @return a list of modified or added paths, can be empty.
      */
     @Nonnull
@@ -92,7 +95,8 @@ public class AecuTrackerListener implements ProgressTrackerListener {
             return;
         }
 
-        // in case a script was updated the update will actually be shown on jcr:content and not on the groovy script node
+        // in case a script was updated the update will actually be shown on jcr:content and not on
+        // the groovy script node
         if (StringUtils.endsWith(path, "/jcr:content")) {
             path = StringUtils.substringBefore(path, "/jcr:content");
         }
