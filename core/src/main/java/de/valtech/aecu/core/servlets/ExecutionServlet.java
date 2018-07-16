@@ -130,6 +130,8 @@ public class ExecutionServlet extends BaseServlet {
      * This method builds the JSON String for the response. Eg: {"success":
      * true,"historyEntryPath":"/var/aecu/2018/6/13/152892696338961314"}
      *
+     * @param status           success or fail
+     * @param historyEntryPath path to history node
      * @return json String
      */
     protected String prepareJson(boolean status, String historyEntryPath) {

@@ -117,7 +117,6 @@ public class HistoryUtil {
      *
      * @param history  open history entry
      * @param resolver resource resolver
-     * @return history entry
      */
     public void finishHistoryEntry(HistoryEntry history, ResourceResolver resolver) {
         Resource resource = resolver.getResource(history.getRepositoryPath());
