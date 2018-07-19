@@ -274,7 +274,60 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-TODO
+### Copy and Move Nodes
+
+The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
+
+* doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
+* doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doCopyResourceToRelativePath("subNode")
+        .doCopyResourceToRelativePath("../subNode")
+        .doMoveResourceToRelativePath("subNode")
+        .run()
+```
+
+### Delete nodes
+
+You can delete all nodes that match your collection and filter.
+
+* doDeleteResource(): deletes the matching nodes
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doDeleteResource()
+        .run()
+```
+
+### Print Nodes
+
+Sometimes, you only want to print the path of the matched nodes.
+
+* printPath(): prints the path of the matched node
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .printPath()
+        .run()
+```
+
+
+## Run Options
+
+At the end you can run all actions or perform a dry-run first. The dry-run will just provide output about modifications but not save any changes. The normal run saves the session, no additional "session.save()" is required.
+
+* run(): performs all actions and saves the session
+* dryRun(): only prints actions but does not perform repository changes
+* run(boolean dryRun): the "dryRun" parameter defines if it should be a run or dry-run
+
 
 # JMX Interface
 
