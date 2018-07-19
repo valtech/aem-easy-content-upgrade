@@ -18,13 +18,6 @@
  */
 package de.valtech.aecu.core.installhook;
 
-import de.valtech.aecu.service.AecuService;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,10 +27,19 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.valtech.aecu.service.AecuService;
+
 /**
  * Collects groovy script paths to potentially execute based on the given actions.
  */
 public class AecuTrackerListener implements ProgressTrackerListener {
+
+    private static final String AECU_FOLDER = "/etc/groovyconsole/scripts/aecu";
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuTrackerListener.class);
 
@@ -90,7 +92,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
             return;
         }
 
-        if (!ACTIONS.contains(action)) {
+        if (!ACTIONS.contains(action) && aecuService.isValidScriptName(path)) {
             logMessage(String.format("Skipping %s due to non matching action '%s'", path, action));
             return;
         }
@@ -101,10 +103,20 @@ public class AecuTrackerListener implements ProgressTrackerListener {
             path = StringUtils.substringBefore(path, "/jcr:content");
         }
 
-        if (aecuService.isValidScriptName(path)) {
+        if (isValid(path)) {
             logMessage(String.format("Found valid script path '%s'", path));
             paths.add(path);
         }
+    }
+
+    /**
+     * Checks if the file and folder name of the script is valid for the install hook.
+     * 
+     * @param path script path
+     * @return is valid
+     */
+    private boolean isValid(String path) {
+        return StringUtils.isNotBlank(path) && aecuService.isValidScriptName(path) && path.startsWith(AECU_FOLDER);
     }
 
     @Override
