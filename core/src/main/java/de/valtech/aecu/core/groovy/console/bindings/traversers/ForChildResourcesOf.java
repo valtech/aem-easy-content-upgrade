@@ -25,9 +25,10 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import javax.annotation.Nonnull;
-
 import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
@@ -42,7 +43,7 @@ public class ForChildResourcesOf implements TraversData {
 
 
     @Override
-    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action,
+    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull List<Action> actions,
             @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         Resource parentResource = resourceResolver.getResource(path);
         if (parentResource != null) {
@@ -50,7 +51,9 @@ public class ForChildResourcesOf implements TraversData {
             while (resourceIterator.hasNext()) {
                 Resource resource = resourceIterator.next();
                 if (filter == null || filter.filter(resource)) {
-                    stringBuffer.append(action.doAction(resource) + "\n");
+                    for (Action action : actions) {
+                        stringBuffer.append(action.doAction(resource) + "\n");
+                    }
                 }
             }
             if (!dryRun) {

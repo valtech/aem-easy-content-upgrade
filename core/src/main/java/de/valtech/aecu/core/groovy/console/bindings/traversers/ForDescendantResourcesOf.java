@@ -25,9 +25,10 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import javax.annotation.Nonnull;
-
 import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
@@ -42,24 +43,26 @@ public class ForDescendantResourcesOf implements TraversData {
 
 
     @Override
-    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull Action action,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
+    public void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull List<Action> actions,
+                         @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         Resource parentResource = resourceResolver.getResource(path);
         if (parentResource != null) {
-            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, action, stringBuffer, dryRun);
+            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, actions, stringBuffer, dryRun);
         }
     }
 
     private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter,
-            Action action, StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
+                                                 List<Action> actions, StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         if (resource != null && resource.hasChildren()) {
             Iterator<Resource> childResources = resource.listChildren();
             while (childResources.hasNext()) {
                 Resource child = childResources.next();
                 if (filter == null || filter.filter(child)) {
-                    stringBuffer.append(action.doAction(child) + "\n");
+                    for (Action action : actions) {
+                        stringBuffer.append(action.doAction(child) + "\n");
+                    }
                 }
-                traverseChildResourcesRecursive(resourceResolver, child, filter, action, stringBuffer, dryRun);
+                traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
             }
             if (!dryRun) {
                 resourceResolver.commit();
