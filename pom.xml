@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>0.9</version>
+    <version>1.0.0</version>
     <name>AECU</name>
     <description>AEM Easy COntent Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -161,6 +161,13 @@
 		                <groupId>external.atlassian.jgitflow</groupId>
 		                <artifactId>jgitflow-maven-plugin</artifactId>
 		                <version>1.0-m5.1</version>
+		                <dependencies>
+									    <dependency>
+									      <groupId>com.jcraft</groupId>
+									      <artifactId>jsch</artifactId>
+									      <version>0.1.54</version>
+									    </dependency>
+									  </dependencies>
 		                <configuration>
 		                    <enableSshAgent>true</enableSshAgent>
 		                    <enableFeatureVersions>true</enableFeatureVersions>

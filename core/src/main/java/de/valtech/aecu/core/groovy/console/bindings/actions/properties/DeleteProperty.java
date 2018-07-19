@@ -20,10 +20,10 @@ package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
@@ -39,7 +39,10 @@ public class DeleteProperty implements Action {
     @Override
     public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-        properties.remove(name);
-        return "Deleting property " + name + " for resource " + resource.getPath();
+        if (properties != null) {
+            properties.remove(name);
+            return "Deleting property " + name + " for resource " + resource.getPath();
+        }
+        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
     }
 }

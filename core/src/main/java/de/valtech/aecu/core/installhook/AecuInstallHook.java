@@ -18,10 +18,9 @@
  */
 package de.valtech.aecu.core.installhook;
 
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
@@ -33,9 +32,10 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import de.valtech.aecu.service.AecuException;
+import de.valtech.aecu.service.AecuService;
+import de.valtech.aecu.service.ExecutionResult;
+import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * InstallHook handling installation of groovy scripts. The InstallHook gathers groovy scripts
@@ -61,10 +61,15 @@ import java.util.List;
  * </plugin>
  * }
  * </pre>
+ * 
+ * @author Christopher Piosecny
+ * @author Roland Gruber
  */
 public class AecuInstallHook implements InstallHook {
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuInstallHook.class);
+
+    public static final String AECU_FOLDER = "/etc/groovyconsole/scripts/aecu";
 
     private final OsgiServiceProvider osgiServiceProvider;
     private AecuTrackerListener listener;
@@ -131,7 +136,25 @@ public class AecuInstallHook implements InstallHook {
 
     private boolean shouldExecute(List<String> modifiedOrAddedScriptPaths, String groovyScriptPath,
             HookExecutionHistory hookExecutionHistory) {
-        return modifiedOrAddedScriptPaths.contains(groovyScriptPath) || !hookExecutionHistory.hasBeenExecutedBefore();
+        if (modifiedOrAddedScriptPaths.contains(groovyScriptPath)) {
+            return true;
+        }
+        boolean wasNotYetExecuted = wasNotExecuted(groovyScriptPath, hookExecutionHistory);
+        if (wasNotYetExecuted) {
+            listener.logMessage("Force executing as not yet run:" + groovyScriptPath);
+        }
+        return wasNotYetExecuted;
+    }
+
+    /**
+     * Checks if the script was not yet executed at all by install hook.
+     * 
+     * @param path    script path
+     * @param history history entry
+     * @return not executed yet
+     */
+    private boolean wasNotExecuted(String path, HookExecutionHistory history) {
+        return !history.hasBeenExecutedBefore() && path.startsWith(AecuInstallHook.AECU_FOLDER);
     }
 
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)

@@ -41,8 +41,10 @@ public class SetProperty implements Action {
     @Override
     public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-        properties.put(name, value);
-        return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource "
-                + resource.getPath();
+        if (properties != null) {
+            properties.put(name, value);
+            return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource " + resource.getPath();
+        }
+        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
     }
 }

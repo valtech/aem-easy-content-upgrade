@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>0.9</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>aecu.bundle</artifactId>
@@ -51,7 +51,12 @@
                 <artifactId>content-package-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
+                    <embeddedTarget>/apps/valtech/aecu-bundle/install/</embeddedTarget>
+					          <filters>
+					            <filter>
+					              <root>/apps/valtech/aecu-bundle</root>
+					            </filter>
+					          </filters>
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
                     <group>Valtech</group>
@@ -59,6 +64,12 @@
                         <subPackage>
                             <groupId>com.icfolson.aem.groovy.console</groupId>
                             <artifactId>aem-groovy-console</artifactId>
+                            <filter>true</filter>
+                        </subPackage>
+                        <subPackage>
+								            <groupId>de.valtech.aecu</groupId>
+								            <artifactId>aecu.ui.apps</artifactId>
+                            <filter>true</filter>
                         </subPackage>
                     </subPackages>
                 </configuration>
@@ -75,6 +86,12 @@
         <dependency>
             <groupId>com.icfolson.aem.groovy.console</groupId>
             <artifactId>aem-groovy-console</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.ui.apps</artifactId>
+            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>

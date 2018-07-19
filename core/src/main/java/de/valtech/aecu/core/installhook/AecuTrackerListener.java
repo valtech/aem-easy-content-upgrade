@@ -18,30 +18,30 @@
  */
 package de.valtech.aecu.core.installhook;
 
-import de.valtech.aecu.service.AecuService;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
+
+import de.valtech.aecu.service.AecuService;
+
 /**
  * Collects groovy script paths to potentially execute based on the given actions.
+ * 
+ * @author Christopher Piosecny
+ * @author Roland Gruber
  */
 public class AecuTrackerListener implements ProgressTrackerListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AecuTrackerListener.class);
-
     private static final Set<String> ACTIONS = new HashSet<>(Arrays.asList("A", "M", "U"));
+
+    private static final String ACTION_DELETE = "D";
 
     private static final int VALID_ACTION_LENGTH = 1;
 
@@ -49,7 +49,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
 
     private final ProgressTrackerListener originalListener;
     private final AecuService aecuService;
-    private final List<String> paths;
+    private final Set<String> paths;
 
     /**
      * Constructor.
@@ -60,7 +60,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
     public AecuTrackerListener(ProgressTrackerListener originalListener, AecuService aecuService) {
         this.originalListener = originalListener;
         this.aecuService = aecuService;
-        this.paths = new LinkedList<>();
+        this.paths = new HashSet<>();
         logMessage("Starting install hook...");
     }
 
@@ -72,7 +72,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
      */
     @Nonnull
     public List<String> getModifiedOrAddedPaths() {
-        return Collections.unmodifiableList(paths);
+        return new ArrayList<>(paths);
     }
 
     @Override
@@ -84,13 +84,18 @@ public class AecuTrackerListener implements ProgressTrackerListener {
             return;
         }
 
+        if (ACTION_DELETE.equals(action)) {
+            // skip deletions
+            return;
+        }
+
         if (StringUtils.endsWith(path, "always.groovy")) {
             logMessage(String.format("Adding %s due to having 'always' in name.", path));
             paths.add(path);
             return;
         }
 
-        if (!ACTIONS.contains(action)) {
+        if (!ACTIONS.contains(action) && isValid(path)) {
             logMessage(String.format("Skipping %s due to non matching action '%s'", path, action));
             return;
         }
@@ -101,10 +106,21 @@ public class AecuTrackerListener implements ProgressTrackerListener {
             path = StringUtils.substringBefore(path, "/jcr:content");
         }
 
-        if (aecuService.isValidScriptName(path)) {
+        if (!paths.contains(path) && isValid(path)) {
             logMessage(String.format("Found valid script path '%s'", path));
             paths.add(path);
         }
+    }
+
+    /**
+     * Checks if the file and folder name of the script is valid for the install hook.
+     * 
+     * @param path script path
+     * @return is valid
+     */
+    private boolean isValid(String path) {
+        return StringUtils.isNotBlank(path) && aecuService.isValidScriptName(path)
+                && path.startsWith(AecuInstallHook.AECU_FOLDER);
     }
 
     @Override
