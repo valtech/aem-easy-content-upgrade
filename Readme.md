@@ -22,7 +22,8 @@ Table of contents
 5. [Extension to Groovy Console](#groovy)
 6. [JMX Interface](#jmx)
 7. [Health Checks](#healthchecks)
-8. [License](#license)
+8. [API Documentation](#api)
+9. [License](#license)
 
 
 <a name="requirements"></a>
@@ -313,6 +314,12 @@ You can access them on the [status page](http://localhost:4502/libs/granite/oper
 For the status of older runs use AECU's history page.
 
 <img src="docs/images/healthCheck.png">
+
+<a name="api"></a>
+
+# API Documentation
+
+You can access our AECU service (AecuService class) in case you have special requirements. See the [API documentation](https://valtech.github.io/aem-easy-content-upgrade/).
 
 <a name="license"></a>
 
