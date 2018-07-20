@@ -213,3 +213,7 @@ table.aecu-history-detail {
 .aecu-font-large {
     font-size: 1.2rem;
 }
+
+pre {
+    margin: 0;
+}
