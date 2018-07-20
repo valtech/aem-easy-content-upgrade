@@ -28,6 +28,7 @@
 
 .aecu-script-history {
     color: #323232;
+    white-space: nowrap;
 }
 
 .coral-Table-cell {
