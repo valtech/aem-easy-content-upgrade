@@ -28,7 +28,7 @@
                     <content
                             jcr:primaryType="nt:unstructured"
                             sling:resourceType="granite/ui/components/coral/foundation/container"
-                            granite:class="base-container"
+                            granite:class="aecu-base-container"
                     >
                         <items jcr:primaryType="nt:unstructured">
                             <form
