@@ -40,9 +40,7 @@
                 if (parts[0] == 'aecuScriptPath') {
                     var name = parts[1];
                     var item = $("coral-accordion-item[data-path='" + name + "']");
-                        Coral.commons.ready(item[0], function () {
-                            item[0].selected = true;
-                        });
+                    item[0].selected = true;
                 }
             }
         }
