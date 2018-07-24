@@ -36,12 +36,11 @@
             for (var i = 0; i < params.length; i++) {
                 var param = params[i];
                 var parts = param.split('=');
+
                 if (parts[0] == 'aecuScriptPath') {
                     var name = parts[1];
-                    var item = jQuery("coral-accordion-item[data-path='" + name + "']");
-                    Coral.commons.ready(item[0], function () {
-                        item[0].selected = true;
-                    });
+                    var item = $("coral-accordion-item[data-path='" + name + "']");
+                    item[0].selected = true;
                 }
             }
         }
@@ -50,8 +49,8 @@
     /**
      * Initial actions
      */
-    $(document).ready(function () {
+    Coral.commons.ready(function () {
         AECU.History.selectAccordion();
     });
 
-})(jQuery, Granite.author, jQuery(document), this);
+})(window.jQuery, Granite.author, jQuery(document), this);
