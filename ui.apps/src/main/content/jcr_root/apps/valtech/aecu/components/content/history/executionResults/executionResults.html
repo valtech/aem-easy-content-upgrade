@@ -6,12 +6,10 @@
 <sly data-sly-test="${!empty}">
     <sly data-sly-use.details="templates/executionResult.html"/>
     <sly  data-sly-test="${cmp.history.singleResults.size == 1}">
-        <div class="aecu-color-${item.success ? 'ok' : 'fail'}">
-            <h2 class="aecu-font-large">Execution details</h2>
-            <sly data-sly-list="${cmp.history.singleResults}">
-                <sly data-sly-call="${details.details @ result = item}"/>
-            </sly>
-        </div>
+        <h2 class="aecu-font-large">Execution details</h2>
+        <sly data-sly-list="${cmp.history.singleResults}">
+            <sly data-sly-call="${details.details @ result = item}"/>
+        </sly>
     </sly>
     <sly data-sly-test="${cmp.history.singleResults.size > 1}">
         <h2 class="aecu-font-large">Execution details for ${cmp.history.singleResults.size} scripts</h2>
