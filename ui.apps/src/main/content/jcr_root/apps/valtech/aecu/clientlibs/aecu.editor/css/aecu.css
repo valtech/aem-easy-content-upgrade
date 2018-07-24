@@ -1,9 +1,3 @@
-
-.aecu-history-table {
-    margin-left: .98rem;
-    margin-right: .98rem;
-}
-
 .aecu-base-container {
     margin: 2.6rem .98rem 5rem;
 }
@@ -37,6 +31,11 @@
     font-size: .9rem;
 }
 
+.aecu-history-table .coral-Table-cell {
+    padding-top: inherit;
+    padding-bottom: inherit;
+}
+
 .coral-Button--quiet:not(:disabled):not(.is-disabled):focus {
     color: #707070;
     text-decoration: none;
@@ -52,8 +51,12 @@
 }
 
 .aecu-searchfield {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: .65rem;
+    margin-bottom: .65rem;
+}
+
+.aecu-search-form {
+    margin-top: -1.95rem;
 }
 
 betty-titlebar {
@@ -65,9 +68,18 @@ betty-titlebar {
     margin-bottom: 58px;
 }
 
-.aecu-padding-sides5 {
+.coral3-Accordion .aecu-padding-sides5, .aecu-padding-sides5 {
     padding: 1.6rem 2.15rem;
     background: #fff;
+}
+
+.aecu-history-entries .coral-Table-wrapper-container {
+    margin-left: .98rem;
+    margin-right: .98rem;
+}
+
+.coral3-Accordion .aecu-padding-sides5 .aecu-padding-sides5, .aecu-padding-sides5 .aecu-padding-sides5 {
+    padding: 0;
 }
 
 .coral3-Accordion .aecu-padding-sides5 {
@@ -83,7 +95,7 @@ betty-titlebar {
 }
 
 .aecu-history-graph-wrap {
-    border-right: 1px solid #c5c5c5;
+    border-right: 1px solid #d2d2d2;
     margin-right: 30px;
 }
 .aecu-history-summary > div {
@@ -109,36 +121,42 @@ betty-titlebar {
     font-size: 1.3rem;
 }
 .aecu-history-summary-field > span:first-child {
-    color: #787878;
+    color: #909090;
 }
 
 .aecu-history-summary-field.finished > span:nth-child(2) {
-    color: green;
+    color: #00AD31;
 }
 .aecu-history-summary-field.failed > span:nth-child(2) {
-    color: #FF140A;
+    color: #FA0A0A;
 }
 
 .icon-color-ok {
-    color: green;
+    color: #00AD31;
 }
 .icon-color-fail {
-    color: red;
+    color: #FA0A0A;
 }
 
 coral-accordion-item.coral3-Accordion-item:hover {
     background: #e8e8e8;
 }
 
+.aecu-execution-time {
+    font-style: italic;
+    color: #909090;
+    padding-top: .89rem;
+}
+
 .aecu-color-fail .coral3-Accordion-header {
-    border-left: 7px solid red;
+    border-left: 7px solid #FA0A0A;
 }
 .aecu-color-ok .coral3-Accordion-header {
-    border-left: 7px solid green;
+    border-left: 7px solid #00AD31;
 }
 
 .icon-color-inprogress {
-    color: blue;
+    color: #316BC9;
 }
 
 .coral3-Accordion-icon {
@@ -167,12 +185,13 @@ coral-accordion-item.coral3-Accordion-item:hover {
     float: right;
 }
 
-.aecu-color-fail h3.aecu-font-large, .aecu-color-ok h3.aecu-font-large {
+h3.aecu-font-large, h3.aecu-font-large, h4.aecu-font-large, h4.aecu-font-large {
     border-bottom: 1px solid #e1e1e1;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
     font-weight: 400;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
+
 }
 
 .coral3-Accordion-header:hover .coral3-Accordion-label, .coral3-Accordion-header:hover .coral3-Accordion-caption {
@@ -186,17 +205,24 @@ coral-accordion-item.coral3-Accordion-item:hover {
 .aecu-history-entries a {
     color: #323232;
 }
+.aecu-history-entries .coral-Table-headerCell, .aecu-history-entries .coral-Table-cell {
+    padding: 0 0.825rem;
+}
 
 table.aecu-history-detail {
     font-size: .9rem;
     line-height: normal;
 }
 
+table.aecu-history-detail td {
+    vertical-align: top;
+}
+
 .aecu-color-fail table.aecu-history-detail {
-    color: red;
+    color: #FA0A0A;
 }
 .aecu-color-ok table.aecu-history-detail {
-    color: green;
+    color: #00AD31;
 }
 
 .aecu-chart-text {

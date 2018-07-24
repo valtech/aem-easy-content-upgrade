@@ -12,6 +12,7 @@
             sling:resourceType="granite/ui/components/shell/collectionpage"
             targetCollection=".aecu-history-entries"
             modeGroup="aecu-history-entries"
+			granite:class="aecu-history-table"
     >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
@@ -26,12 +27,7 @@
                 sling:resourceType="granite/ui/components/coral/foundation/text"
         />
         <views jcr:primaryType="nt:unstructured">
-            <list
-                jcr:primaryType="nt:unstructured"
-                sling:resourceType="granite/ui/components/coral/foundation/container"
-                granite:class="aecu-history-table"
-            >
-                <items jcr:primaryType="nt:unstructured">
+
 				            <list
 				                    jcr:primaryType="nt:unstructured"
 				                    layoutId="list"
@@ -66,8 +62,7 @@
 				                        itemResourceType="valtech/aecu/tools/history/dataitem"
 				                />
 				            </list>
-    		        </items>
-		        </list>
+
         </views>
     </jcr:content>
 </jcr:root>
