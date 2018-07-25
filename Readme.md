@@ -24,6 +24,8 @@ Table of contents
 7. [Health Checks](#healthchecks)
 8. [API Documentation](#api)
 9. [License](#license)
+10. [Changelog](#changelog)
+11. [Developers](#developers)
 
 
 <a name="requirements"></a>
@@ -380,6 +382,14 @@ You can access our AECU service (AecuService class) in case you have special req
 
 The AC Tool is licensed under the [MIT LICENSE](LICENSE).
 
+<a name="changelog"></a>
+
+# Changelog
+
+Please see our [history file](HISTORY).
+
+<a name="developers"></a>
+
 # Developers
 
-See our [developer zone](docs/developers.md)
+See our [developer zone](docs/developers.md).
