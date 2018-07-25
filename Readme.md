@@ -380,7 +380,7 @@ You can access our AECU service (AecuService class) in case you have special req
 
 # License
 
-The AC Tool is licensed under the [MIT LICENSE](LICENSE).
+The AECU tool is licensed under the [MIT LICENSE](LICENSE).
 
 <a name="changelog"></a>
 
