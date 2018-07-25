@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
     
     <artifactId>aecu.core</artifactId>
@@ -24,8 +24,11 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <!-- Import any version of javax.inject, to allow running on multiple versions of AEM -->
-                        <Import-Package>javax.inject;version=0.0.0,*</Import-Package>
+                        <!--
+                          Import any version of javax.inject, to allow running on multiple versions of AEM
+                          Support Groovy Console 11 and 12 versions
+                        -->
+                        <Import-Package>javax.inject;version=0.0.0,com.icfolson.aem.groovy.console;version="[11,13)",com.icfolson.aem.groovy.console.api;version="[11,13)",com.icfolson.aem.groovy.console.constants;version="[11,13)",com.icfolson.aem.groovy.console.response;version="[11,13)",*</Import-Package>
                         <Sling-Model-Packages>
                             de.valtech.aecu.core
                         </Sling-Model-Packages>

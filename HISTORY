@@ -1,0 +1,16 @@
+2018-07-25 1.1.0
+  - Design improvements
+  - AEM 6.4 support
+  - Moved filter classes to API
+  - Bundle: update Groovy Console to version 12.0.0
+
+
+2018-07-19 1.0.0
+  - Fixes for install hook
+  - Bundle package that also installs Groovy Console
+  - Performance improvements
+
+
+2018-07-19 0.9
+  - initial release
+  

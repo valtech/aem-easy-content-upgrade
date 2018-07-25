@@ -28,11 +28,12 @@
                     <content
                             jcr:primaryType="nt:unstructured"
                             sling:resourceType="granite/ui/components/coral/foundation/container"
-                            granite:class="base-container"
+                            granite:class="aecu-base-container"
                     >
                         <items jcr:primaryType="nt:unstructured">
                             <form
                                     granite:id="aecu-execute-scripts-search-form"
+                                    granite:class="aecu-search-form"
                                     jcr:primaryType="nt:unstructured"
                                     sling:resourceType="granite/ui/components/coral/foundation/form"
                                     action="/apps/valtech/aecu/tools/execute/page.html"

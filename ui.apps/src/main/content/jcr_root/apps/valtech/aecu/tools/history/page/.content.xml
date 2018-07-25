@@ -12,6 +12,7 @@
             sling:resourceType="granite/ui/components/shell/collectionpage"
             targetCollection=".aecu-history-entries"
             modeGroup="aecu-history-entries"
+			granite:class="aecu-history-table"
     >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
@@ -26,40 +27,42 @@
                 sling:resourceType="granite/ui/components/coral/foundation/text"
         />
         <views jcr:primaryType="nt:unstructured">
-            <list
-                    jcr:primaryType="nt:unstructured"
-                    layoutId="list"
-                    sling:resourceType="granite/ui/components/coral/foundation/table"
-                    limit="50"
-                    size="${empty requestPathInfo.selectors[1] ? &quot;50&quot; : requestPathInfo.selectors[1]}"
-                    src="/apps/valtech/aecu/tools/history/page/jcr:content/views/list{.offset,limit}.html?wcmmode=disabled"
-                    path="${requestPathInfo.suffix}"
-                    sortMode="remote"
-                    stateId="shell.collectionpage"
-                    modeGroup="aecu-history-entries"
-                    granite:rel="aecu-history-entries"
-            >
-                <columns jcr:primaryType="nt:unstructured">
-                    <date
-                            jcr:primaryType="nt:unstructured"
-                            jcr:title="Date"
-                    />
-                    <duration
-                            jcr:primaryType="nt:unstructured"
-                            jcr:title="Duration"
-                    />
-                    <status
-                            jcr:primaryType="nt:unstructured"
-                            jcr:title="Status"
-                    />
-                </columns>
-                <datasource
-                        jcr:primaryType="nt:unstructured"
-                        path="${requestPathInfo.suffix}"
-                        sling:resourceType="valtech/aecu/tools/history/datasource"
-                        itemResourceType="valtech/aecu/tools/history/dataitem"
-                />
-            </list>
+
+				            <list
+				                    jcr:primaryType="nt:unstructured"
+				                    layoutId="list"
+				                    sling:resourceType="granite/ui/components/coral/foundation/table"
+				                    limit="50"
+				                    size="${empty requestPathInfo.selectors[1] ? &quot;50&quot; : requestPathInfo.selectors[1]}"
+				                    src="/apps/valtech/aecu/tools/history/page/jcr:content/views/list{.offset,limit}.html?wcmmode=disabled"
+				                    path="${requestPathInfo.suffix}"
+				                    sortMode="remote"
+				                    stateId="shell.collectionpage"
+				                    modeGroup="aecu-history-entries"
+				                    granite:rel="aecu-history-entries"
+				            >
+				                <columns jcr:primaryType="nt:unstructured">
+				                    <date
+				                            jcr:primaryType="nt:unstructured"
+				                            jcr:title="Date"
+				                    />
+				                    <duration
+				                            jcr:primaryType="nt:unstructured"
+				                            jcr:title="Duration"
+				                    />
+				                    <status
+				                            jcr:primaryType="nt:unstructured"
+				                            jcr:title="Status"
+				                    />
+				                </columns>
+				                <datasource
+				                        jcr:primaryType="nt:unstructured"
+				                        path="${requestPathInfo.suffix}"
+				                        sling:resourceType="valtech/aecu/tools/history/datasource"
+				                        itemResourceType="valtech/aecu/tools/history/dataitem"
+				                />
+				            </list>
+
         </views>
     </jcr:content>
 </jcr:root>

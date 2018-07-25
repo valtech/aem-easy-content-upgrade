@@ -22,7 +22,10 @@ Table of contents
 5. [Extension to Groovy Console](#groovy)
 6. [JMX Interface](#jmx)
 7. [Health Checks](#healthchecks)
-8. [License](#license)
+8. [API Documentation](#api)
+9. [License](#license)
+10. [Changelog](#changelog)
+11. [Developers](#developers)
 
 
 <a name="requirements"></a>
@@ -35,15 +38,33 @@ AECU requires Java 8 and AEM 6.3 or above. Groovy Console can be installed manua
 
 # Installation
 
-TODO
+You can download the package from [Maven Central](http://repo1.maven.org/maven2/de/valtech/aecu/aecu.ui.apps/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.ui.apps package will install the AECU software. It requires that you installed [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) before.
+
+```xml
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.ui.apps</artifactId>
+            <version>LATEST</version>
+            <type>zip</type>
+        </dependency>
+```
+
 
 <a name="bundleInstall"></a>
 
 ## Bundle Installation
 
 To simplify installation we provide a bundle package that already includes the Groovy Console. This makes sure there are no compatibility issues.
+The package is also available on [Maven Central](http://repo1.maven.org/maven2/de/valtech/aecu/aecu.bundle/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases).
 
-TODO
+```xml
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.bundle</artifactId>
+            <version>LATEST</version>
+            <type>zip</type>
+        </dependency>
+```
 
 
 <a name="execution"></a>
@@ -255,7 +276,60 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-TODO
+### Copy and Move Nodes
+
+The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
+
+* doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
+* doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doCopyResourceToRelativePath("subNode")
+        .doCopyResourceToRelativePath("../subNode")
+        .doMoveResourceToRelativePath("subNode")
+        .run()
+```
+
+### Delete nodes
+
+You can delete all nodes that match your collection and filter.
+
+* doDeleteResource(): deletes the matching nodes
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doDeleteResource()
+        .run()
+```
+
+### Print Nodes
+
+Sometimes, you only want to print the path of the matched nodes.
+
+* printPath(): prints the path of the matched node
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .printPath()
+        .run()
+```
+
+
+## Run Options
+
+At the end you can run all actions or perform a dry-run first. The dry-run will just provide output about modifications but not save any changes. The normal run saves the session, no additional "session.save()" is required.
+
+* run(): performs all actions and saves the session
+* dryRun(): only prints actions but does not perform repository changes
+* run(boolean dryRun): the "dryRun" parameter defines if it should be a run or dry-run
+
 
 # JMX Interface
 
@@ -296,12 +370,26 @@ For the status of older runs use AECU's history page.
 
 <img src="docs/images/healthCheck.png">
 
+<a name="api"></a>
+
+# API Documentation
+
+You can access our AECU service (AecuService class) in case you have special requirements. See the [API documentation](https://valtech.github.io/aem-easy-content-upgrade/).
+
 <a name="license"></a>
 
 # License
 
 The AC Tool is licensed under the [MIT LICENSE](LICENSE).
 
+<a name="changelog"></a>
+
+# Changelog
+
+Please see our [history file](HISTORY).
+
+<a name="developers"></a>
+
 # Developers
 
-See our [developer zone](docs/developers.md)
+See our [developer zone](docs/developers.md).

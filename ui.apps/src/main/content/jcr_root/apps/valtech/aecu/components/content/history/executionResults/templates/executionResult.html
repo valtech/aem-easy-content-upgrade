@@ -2,7 +2,7 @@
     <div class="aecu-padding-sides5">
         <table class="aecu-history-detail aecu-font-normal" width="100%">
             <tr>
-                <td>Path: ${result.path}</td>
+                <td class="icon-color-${result.success ? 'ok' : 'fail'}">Path: ${result.path}</td>
                 <td rowspan="2">
                     <coral-icon icon="${result.success ? 'checkCircle' : 'closeCircle'}" size="L"
                                 class="icon-color-${result.success ? 'ok' : 'fail'}">
@@ -10,7 +10,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Execution time: ${result.time}</td>
+                <td class="aecu-execution-time">Execution time: ${result.time}</td>
             </tr>
         </table>
         <sly data-sly-test="${result.result}">

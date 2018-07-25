@@ -1,61 +1,246 @@
+.aecu-base-container {
+    margin: 2.6rem .98rem 5rem;
+}
 
-.base-container {
-    margin: 2rem;
+.aecu-base-container .coral3-Accordion {
+    background-color: #e4e4e4;
+}
+
+.aecu-base-container .coral3-Accordion-content {
+    background-color: #fff;
+    padding: 0;
+}
+
+.aecu-base-container H1 {
+    font-size: 1.7rem;
+    font-weight: 400;
+}
+.aecu-base-container H2 {
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+}
+
+.aecu-script-history {
+    color: #323232;
+    white-space: nowrap;
+}
+
+.coral-Table-cell {
+    padding-top: 0.5625rem;
+    padding-bottom: 0.5625rem;
+    font-size: .9rem;
+}
+
+.aecu-history-table .coral-Table-cell {
+    padding-top: inherit;
+    padding-bottom: inherit;
+}
+
+.coral-Button--quiet:not(:disabled):not(.is-disabled):focus {
+    color: #707070;
+    text-decoration: none;
+}
+
+.coral-Button--quiet:not(:disabled):not(.is-disabled):hover {
+    color: #323232;
+}
+
+.coral-Icon.coral-Icon--sizeM {
+    font-size: 1.2rem;
+    vertical-align: middle;
 }
 
 .aecu-searchfield {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: .65rem;
+    margin-bottom: .65rem;
 }
 
-table.aecu-history-overview td {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
+.aecu-search-form {
+    margin-top: -1.95rem;
 }
 
-table.aecu-history-detail td {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+betty-titlebar {
+    height: 3.6rem;
+}
+
+.aecu-history-overview {
+    margin-top: 45px;
+    margin-bottom: 58px;
+}
+
+.coral3-Accordion .aecu-padding-sides5, .aecu-padding-sides5 {
+    padding: 1.6rem 2.15rem;
+    background: #fff;
+}
+
+.aecu-history-entries .coral-Table-wrapper-container {
+    margin-left: .98rem;
+    margin-right: .98rem;
+}
+
+.coral3-Accordion .aecu-padding-sides5 .aecu-padding-sides5, .aecu-padding-sides5 .aecu-padding-sides5 {
+    padding: 0;
+}
+
+.coral3-Accordion .aecu-padding-sides5 {
+    padding: 1.6rem 2rem;
+}
+
+.aecu-history-graph {
+    width: 215px;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.aecu-history-graph-wrap {
+    border-right: 1px solid #d2d2d2;
+    margin-right: 30px;
+}
+.aecu-history-summary > div {
+    line-height: 43px;
+}
+.aecu-history-graph svg {
+    width: 180px;
+    height: 200px;
+}
+.aecu-history-overview-inner {
+    display: flex;
+    justify-content: center;
+}
+
+.aecu-history-summary {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.aecu-history-summary-field {
+    font-size: 1.3rem;
+}
+.aecu-history-summary-field > span:first-child {
+    color: #909090;
+}
+
+.aecu-history-summary-field.finished > span:nth-child(2) {
+    color: #00AD31;
+}
+.aecu-history-summary-field.failed > span:nth-child(2) {
+    color: #FA0A0A;
 }
 
 .icon-color-ok {
-    color: green;
+    color: #00AD31;
+}
+.icon-color-fail {
+    color: #FA0A0A;
 }
 
-.icon-color-fail {
-    color: red;
+coral-accordion-item.coral3-Accordion-item:hover {
+    background: #e8e8e8;
+}
+
+.aecu-execution-time {
+    font-style: italic;
+    color: #909090;
+    padding-top: .89rem;
+}
+
+.aecu-color-fail .coral3-Accordion-header {
+    border-left: 7px solid #FA0A0A;
+}
+.aecu-color-ok .coral3-Accordion-header {
+    border-left: 7px solid #00AD31;
 }
 
 .icon-color-inprogress {
-    color: blue;
+    color: #316BC9;
 }
 
-.aecu-color-ok {
-    color: green;
+.coral3-Accordion-icon {
+    display: none;
 }
 
-.aecu-color-fail {
-    color: red;
+.coral3-Accordion-label {
+    font-size: .9rem;
+    font-weight: 400;
+}
+
+.coral3-Accordion-header:focus .coral3-Accordion-label, .coral3-Accordion-header:focus .coral3-Accordion-caption {
+    text-decoration: none;
+}
+
+.coral3-Accordion-header {
+    padding: .25rem 1.6rem .25rem 1.6rem;
+}
+
+.coral3-Accordion-item + .coral3-Accordion-item {
+    border-top: .0625rem solid #fff;
+}
+
+.aecu-history-detail .coral-Icon--sizeL {
+    font-size: 1.7rem;
+    float: right;
+}
+
+h3.aecu-font-large, h3.aecu-font-large, h4.aecu-font-large, h4.aecu-font-large {
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    font-weight: 400;
+    margin-top: 2rem;
+
+}
+
+.coral3-Accordion-header:hover .coral3-Accordion-label, .coral3-Accordion-header:hover .coral3-Accordion-caption {
+    color: #323232;
+}
+
+.coral3-Accordion {
+    border: none;
+}
+
+.aecu-history-entries a {
+    color: #323232;
+}
+.aecu-history-entries .coral-Table-headerCell, .aecu-history-entries .coral-Table-cell {
+    padding: 0 0.825rem;
+}
+
+table.aecu-history-detail {
+    font-size: .9rem;
+    line-height: normal;
+}
+
+table.aecu-history-detail td {
+    vertical-align: top;
+}
+
+.aecu-color-fail table.aecu-history-detail {
+    color: #FA0A0A;
+}
+.aecu-color-ok table.aecu-history-detail {
+    color: #00AD31;
 }
 
 .aecu-chart-text {
     line-height: 1;
     text-anchor: middle;
-    font-size: 0.5em;
+    font-size: 0.43rem;
     transform: translateY(0.35em);
 }
 
 .aecu-font-normal {
-    font-size: 1rem;
+    font-size: .95rem;
+    line-height: 1.15rem;
 }
 
 .aecu-font-large {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
 }
 
-.aecu-padding-sides5 {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+pre {
+    margin: 0;
 }
