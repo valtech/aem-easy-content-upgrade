@@ -16,26 +16,25 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings;
+package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import org.apache.sling.api.resource.ResourceResolver;
+import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
- * Groovy Console Bindings: Simple Content Update
- *
+ * Interface for AECU binding filters.
+ * 
  * @author Roxana Muresan
  */
-public class SimpleContentUpdate {
+public interface FilterBy {
 
-    private ResourceResolver resourceResolver;
-
-
-    public SimpleContentUpdate(ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
-    }
-
-    public ContentUpgrade contentUpgradeBuilder() {
-        return new ContentUpgrade(resourceResolver);
-    }
+    /**
+     * Checks if the given resource matches the filter criteria.
+     * 
+     * @param resource resource
+     * @return matches
+     */
+    boolean filter(@Nonnull Resource resource);
 
 }

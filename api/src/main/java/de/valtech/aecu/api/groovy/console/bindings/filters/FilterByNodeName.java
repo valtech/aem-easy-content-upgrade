@@ -16,34 +16,32 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.service;
+package de.valtech.aecu.api.groovy.console.bindings.filters;
+
+import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
- * Thrown when the AECU service faces an error.
- *
- * @author Roland Gruber
+ * Filters resources by their node name. Only resources that have the exact node name are accepted.
+ * 
+ * @author Roxana Muresan
  */
-public class AecuException extends Exception {
+public class FilterByNodeName implements FilterBy {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Constructor
-     *
-     * @param message error message
-     * @param e       original exception
-     */
-    public AecuException(String message, Throwable e) {
-        super(message, e);
-    }
+    private String name;
 
     /**
      * Constructor
-     *
-     * @param message error message
+     * 
+     * @param name node name
      */
-    public AecuException(String message) {
-        super(message);
+    public FilterByNodeName(@Nonnull String name) {
+        this.name = name;
     }
 
+    @Override
+    public boolean filter(@Nonnull Resource resource) {
+        return resource.getName().equals(this.name);
+    }
 }

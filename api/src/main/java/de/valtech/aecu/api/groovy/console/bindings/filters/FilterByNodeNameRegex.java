@@ -16,32 +16,33 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.filters;
+package de.valtech.aecu.api.groovy.console.bindings.filters;
 
 import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.Resource;
 
 /**
- * Negates a given filter.
+ * Filters resources by node name regular expression. Only resources that have a matching node name
+ * are accepted.
  * 
  * @author Roxana Muresan
  */
-public class NOTFilter implements FilterBy {
+public class FilterByNodeNameRegex implements FilterBy {
 
-    private FilterBy filter;
+    private String regex;
 
     /**
      * Constructor
      * 
-     * @param filter the filter to negate
+     * @param regex regular expression (standard Java pattern)
      */
-    public NOTFilter(@Nonnull FilterBy filter) {
-        this.filter = filter;
+    public FilterByNodeNameRegex(@Nonnull String regex) {
+        this.regex = regex;
     }
 
     @Override
     public boolean filter(@Nonnull Resource resource) {
-        return !filter.filter(resource);
+        return resource.getName().matches(regex);
     }
 }

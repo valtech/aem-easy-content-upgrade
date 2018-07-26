@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
 
-import de.valtech.aecu.service.AecuService;
+import de.valtech.aecu.api.service.AecuService;
 
 /**
  * Collects groovy script paths to potentially execute based on the given actions.

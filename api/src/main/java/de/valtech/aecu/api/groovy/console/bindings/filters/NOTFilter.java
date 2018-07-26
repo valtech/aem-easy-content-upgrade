@@ -16,13 +16,32 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package de.valtech.aecu.api.groovy.console.bindings.filters;
+
+import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
- * Filters are used in AECU Groovy Console binding to filter matching nodes.
+ * Negates a given filter.
  * 
  * @author Roxana Muresan
  */
-@Version("1.0")
-package de.valtech.aecu.core.groovy.console.bindings.filters;
+public class NOTFilter implements FilterBy {
 
-import org.osgi.annotation.versioning.Version;
+    private FilterBy filter;
+
+    /**
+     * Constructor
+     * 
+     * @param filter the filter to negate
+     */
+    public NOTFilter(@Nonnull FilterBy filter) {
+        this.filter = filter;
+    }
+
+    @Override
+    public boolean filter(@Nonnull Resource resource) {
+        return !filter.filter(resource);
+    }
+}

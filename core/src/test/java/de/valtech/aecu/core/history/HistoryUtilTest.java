@@ -36,7 +36,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import de.valtech.aecu.service.AecuException;
+import de.valtech.aecu.api.service.AecuException;
 
 /**
  * Tests HistoryUtil

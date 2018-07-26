@@ -41,12 +41,12 @@ import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.api.service.HistoryEntry.RESULT;
+import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.service.HistoryEntryImpl;
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
-import de.valtech.aecu.service.HistoryEntry.RESULT;
-import de.valtech.aecu.service.HistoryEntry.STATE;
 
 /**
  * Reads and writes history entries.

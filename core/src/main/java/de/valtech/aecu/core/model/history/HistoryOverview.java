@@ -35,9 +35,9 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * Sling model for history overview area.

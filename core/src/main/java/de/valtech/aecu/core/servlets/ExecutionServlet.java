@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * @author Bryan Chavez
