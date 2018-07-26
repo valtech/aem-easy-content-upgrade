@@ -26,9 +26,9 @@ import org.apache.sling.hc.util.FormattingResultLog;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.HistoryEntry;
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.HistoryEntry;
 
 /**
  * Checks if the last script run was ok.

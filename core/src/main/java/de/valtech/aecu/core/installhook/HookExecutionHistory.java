@@ -18,13 +18,13 @@
  */
 package de.valtech.aecu.core.installhook;
 
-import de.valtech.aecu.service.AecuException;
-
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.jackrabbit.value.DateValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.valtech.aecu.api.service.AecuException;
 
 import java.util.Calendar;
 

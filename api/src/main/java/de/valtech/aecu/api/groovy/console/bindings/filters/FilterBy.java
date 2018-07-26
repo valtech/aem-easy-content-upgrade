@@ -16,15 +16,25 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package de.valtech.aecu.api.groovy.console.bindings.filters;
+
+import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
- * This package contains the service API for AEM Easy Content Upgrade (AECU). You can use this to
- * integrate AECU into your own software. See {@link de.valtech.aecu.service.AecuService} for a
- * starting point.
+ * Interface for AECU binding filters.
  * 
- * @author Roland Gruber
+ * @author Roxana Muresan
  */
-@Version("1.0")
-package de.valtech.aecu.service;
+public interface FilterBy {
 
-import org.osgi.annotation.versioning.Version;
+    /**
+     * Checks if the given resource matches the filter criteria.
+     * 
+     * @param resource resource
+     * @return matches
+     */
+    boolean filter(@Nonnull Resource resource);
+
+}

@@ -16,48 +16,35 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.filters;
+package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
 /**
- * Filters resources by properties. You can define multiple properties that all need an exact match.
- * This is for single value properties only.
+ * Combines multiple filters with OR.
  * 
  * @author Roxana Muresan
  */
-public class FilterByProperties implements FilterBy {
+public class ORFilter implements FilterBy {
 
-    private Map<String, String> conditionProperties = new HashMap<>();
+    private List<FilterBy> filters;
 
     /**
      * Constructor
      * 
-     * @param conditionProperties list of properties to match (property name, property value)
+     * @param filters list of filters that should be chained with OR
      */
-    public FilterByProperties(@Nonnull Map<String, String> conditionProperties) {
-        this.conditionProperties.putAll(conditionProperties);
+    public ORFilter(List<FilterBy> filters) {
+        this.filters = filters;
     }
 
     @Override
     public boolean filter(@Nonnull Resource resource) {
-        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-        for (String key : conditionProperties.keySet()) {
-            String conditionValue = conditionProperties.get(key);
-            String propertiesValue = properties.get(key, String.class);
-
-            if ((conditionValue == null && propertiesValue != null)
-                    || (conditionValue != null && !conditionValue.equals(propertiesValue))) {
-                return false;
-            }
-        }
-        return true;
+        boolean foundTrue = filters.parallelStream().filter(f -> f.filter(resource)).findAny().isPresent();
+        return foundTrue;
     }
 }
-

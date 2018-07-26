@@ -16,24 +16,33 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.traversers;
-
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-
-import java.util.List;
+package de.valtech.aecu.api.groovy.console.bindings.filters;
 
 import javax.annotation.Nonnull;
 
+import org.apache.sling.api.resource.Resource;
+
 /**
+ * Filters resources by node name regular expression. Only resources that have a matching node name
+ * are accepted.
+ * 
  * @author Roxana Muresan
  */
-public interface TraversData {
+public class FilterByNodeNameRegex implements FilterBy {
 
-    void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException;
+    private String regex;
 
+    /**
+     * Constructor
+     * 
+     * @param regex regular expression (standard Java pattern)
+     */
+    public FilterByNodeNameRegex(@Nonnull String regex) {
+        this.regex = regex;
+    }
+
+    @Override
+    public boolean filter(@Nonnull Resource resource) {
+        return resource.getName().matches(regex);
+    }
 }

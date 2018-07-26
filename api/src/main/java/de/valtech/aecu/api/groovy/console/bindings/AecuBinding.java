@@ -16,32 +16,20 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.filters;
-
-import javax.annotation.Nonnull;
-
-import org.apache.sling.api.resource.Resource;
+package de.valtech.aecu.api.groovy.console.bindings;
 
 /**
- * Negates a given filter.
+ * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
  * 
  * @author Roxana Muresan
  */
-public class NOTFilter implements FilterBy {
-
-    private FilterBy filter;
+public interface AecuBinding {
 
     /**
-     * Constructor
+     * Returns a content upgrade builder. This is the starting point for the migrations.
      * 
-     * @param filter the filter to negate
+     * @return builder
      */
-    public NOTFilter(@Nonnull FilterBy filter) {
-        this.filter = filter;
-    }
+    ContentUpgrade contentUpgradeBuilder();
 
-    @Override
-    public boolean filter(@Nonnull Resource resource) {
-        return !filter.filter(resource);
-    }
 }

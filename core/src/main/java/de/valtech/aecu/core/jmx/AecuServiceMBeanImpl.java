@@ -27,10 +27,10 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.adobe.granite.jmx.annotation.AnnotatedStandardMBean;
 
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.HistoryEntry;
 
 @Component(service = {AecuServiceMBean.class}, immediate = true,
         property = {"jmx.objectname=de.valtech:type=AECU", "pattern=/.*"})

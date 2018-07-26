@@ -38,13 +38,13 @@ import org.osgi.service.component.annotations.Reference;
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.history.HistoryUtil;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
-import de.valtech.aecu.service.HistoryEntry.STATE;
 
 /**
  * AECU service.

@@ -26,8 +26,8 @@ import javax.inject.Inject;
 
 import com.adobe.granite.ui.components.ds.ValueMapResource;
 
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;

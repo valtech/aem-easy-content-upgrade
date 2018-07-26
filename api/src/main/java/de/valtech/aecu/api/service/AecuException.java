@@ -16,24 +16,34 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.traversers;
-
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
+package de.valtech.aecu.api.service;
 
 /**
- * @author Roxana Muresan
+ * Thrown when the AECU service faces an error.
+ *
+ * @author Roland Gruber
  */
-public interface TraversData {
+public class AecuException extends Exception {
 
-    void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException;
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Constructor
+     *
+     * @param message error message
+     * @param e       original exception
+     */
+    public AecuException(String message, Throwable e) {
+        super(message, e);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param message error message
+     */
+    public AecuException(String message) {
+        super(message);
+    }
 
 }
