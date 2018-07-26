@@ -25,13 +25,19 @@ import javax.annotation.Nonnull;
 import org.apache.sling.api.resource.Resource;
 
 /**
+ * Combines multiple filters with OR.
+ * 
  * @author Roxana Muresan
  */
 public class ORFilter implements FilterBy {
 
     private List<FilterBy> filters;
 
-
+    /**
+     * Constructor
+     * 
+     * @param filters list of filters that should be chained with OR
+     */
     public ORFilter(List<FilterBy> filters) {
         this.filters = filters;
     }

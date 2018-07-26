@@ -18,17 +18,25 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
-import org.apache.sling.api.resource.Resource;
-
 import javax.annotation.Nonnull;
 
+import org.apache.sling.api.resource.Resource;
+
 /**
+ * Filters resources by node name regular expression. Only resources that have a matching node name
+ * are accepted.
+ * 
  * @author Roxana Muresan
  */
 public class FilterByNodeNameRegex implements FilterBy {
 
     private String regex;
 
+    /**
+     * Constructor
+     * 
+     * @param regex regular expression (standard Java pattern)
+     */
     public FilterByNodeNameRegex(@Nonnull String regex) {
         this.regex = regex;
     }

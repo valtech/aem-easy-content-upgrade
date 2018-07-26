@@ -27,12 +27,20 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
 /**
+ * Filters resources by properties. You can define multiple properties that all need an exact match.
+ * This is for single value properties only.
+ * 
  * @author Roxana Muresan
  */
 public class FilterByProperties implements FilterBy {
 
     private Map<String, String> conditionProperties = new HashMap<>();
 
+    /**
+     * Constructor
+     * 
+     * @param conditionProperties list of properties to match (property name, property value)
+     */
     public FilterByProperties(@Nonnull Map<String, String> conditionProperties) {
         this.conditionProperties.putAll(conditionProperties);
     }

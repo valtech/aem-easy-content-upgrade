@@ -18,7 +18,7 @@
  */
 
 /**
- * Filters are used in aecu Groovy Console binding to filter matching nodes.
+ * Filters are used in AECU Groovy Console binding to filter matching nodes.
  * 
  * @author Roxana Muresan
  */

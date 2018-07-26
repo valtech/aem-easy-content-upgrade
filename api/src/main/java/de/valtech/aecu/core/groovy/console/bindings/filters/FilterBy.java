@@ -23,10 +23,18 @@ import javax.annotation.Nonnull;
 import org.apache.sling.api.resource.Resource;
 
 /**
+ * Interface for AECU binding filters.
+ * 
  * @author Roxana Muresan
  */
 public interface FilterBy {
 
+    /**
+     * Checks if the given resource matches the filter criteria.
+     * 
+     * @param resource resource
+     * @return matches
+     */
     boolean filter(@Nonnull Resource resource);
 
 }

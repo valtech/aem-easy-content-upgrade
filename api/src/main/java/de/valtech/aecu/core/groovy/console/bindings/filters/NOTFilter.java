@@ -23,13 +23,19 @@ import javax.annotation.Nonnull;
 import org.apache.sling.api.resource.Resource;
 
 /**
+ * Negates a given filter.
+ * 
  * @author Roxana Muresan
  */
 public class NOTFilter implements FilterBy {
 
     private FilterBy filter;
 
-
+    /**
+     * Constructor
+     * 
+     * @param filter the filter to negate
+     */
     public NOTFilter(@Nonnull FilterBy filter) {
         this.filter = filter;
     }
