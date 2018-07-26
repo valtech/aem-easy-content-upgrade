@@ -144,9 +144,17 @@ $(document).ready(function () {
 
     /* open rail tab */
     var button = $('coral-cyclebutton');
+    var panel =  $('coral-panel');
     if (button) {
         Coral.commons.ready(button[0], function () {
-            button.find('button').click();
+        	if (panel) {
+        		Coral.commons.ready(panel[0], function () {
+        			var selected = panel.attr('aria-selected');
+                    if (!selected || (selected == "false")) {
+                        button.find('button').click();            	
+                    }        			
+        		});
+        	}
         });
     }
 
