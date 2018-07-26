@@ -16,20 +16,13 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.api.groovy.console.bindings;
 
 /**
- * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
+ * Contains the classes for the Groovy binding "aecu".
  * 
  * @author Roxana Muresan
  */
-public interface AecuBinding {
+@Version("1.0")
+package de.valtech.aecu.api.groovy.console.bindings;
 
-    /**
-     * Returns a content upgrade builder. This is the starting point for the migrations.
-     * 
-     * @return builder
-     */
-    ContentUpgrade contentUpgradeBuilder();
-
-}
+import org.osgi.annotation.versioning.Version;
