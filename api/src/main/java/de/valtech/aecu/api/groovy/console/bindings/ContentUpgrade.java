@@ -18,11 +18,11 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 
 import org.apache.sling.api.resource.PersistenceException;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import java.util.Map;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -207,4 +207,11 @@ public interface ContentUpgrade {
      */
     StringBuffer dryRun() throws PersistenceException;
 
+    /**
+     * Executes a run or a dryRun depending on the dryRun parameter value.
+     * @param dryRun
+     * @return
+     * @throws PersistenceException
+     */
+    StringBuffer run(boolean dryRun) throws PersistenceException;
 }

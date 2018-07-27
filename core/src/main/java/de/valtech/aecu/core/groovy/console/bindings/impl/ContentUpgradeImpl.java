@@ -200,7 +200,8 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         return run(true);
     }
 
-    private StringBuffer run(boolean dryRun) throws PersistenceException {
+    @Override
+    public StringBuffer run(boolean dryRun) throws PersistenceException {
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
             traversal.traverse(resourceResolver, filter, actions, stringBuffer, dryRun);
