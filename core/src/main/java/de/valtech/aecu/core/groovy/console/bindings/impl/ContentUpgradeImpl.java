@@ -66,9 +66,9 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade forDescendantResourcesOf(@Nonnull String path) {
+    public ContentUpgrade forDescendantResourcesOf(@Nonnull String path, boolean includeRootResource) {
         LOG.debug("forDescendantResourcesOf: {}", path);
-        traversals.add(new ForDescendantResourcesOf(path));
+        traversals.add(new ForDescendantResourcesOf(path, includeRootResource));
         return this;
     }
 

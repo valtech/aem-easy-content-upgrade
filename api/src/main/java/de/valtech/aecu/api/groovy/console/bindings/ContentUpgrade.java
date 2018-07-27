@@ -53,7 +53,7 @@ public interface ContentUpgrade {
      * @param path path
      * @return upgrade object
      **/
-    ContentUpgrade forDescendantResourcesOf(String path);
+    ContentUpgrade forDescendantResourcesOf(String path, boolean includeRootResource);
 
     /**
      * Filters by properties.
