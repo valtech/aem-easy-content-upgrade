@@ -53,10 +53,11 @@ public class FilterByProperties implements FilterBy {
             Object conditionValue = conditionProperties.get(key);
             Object propertiesValue = properties.get(key);
 
-            if (conditionValue != null && propertiesValue != null && conditionValue instanceof Object[] && propertiesValue instanceof Object[]) {
+            if (conditionValue != null && propertiesValue != null && conditionValue.getClass().isArray() && propertiesValue.getClass().isArray()) {
                 if (!Arrays.equals((Object[]) conditionValue, (Object[]) propertiesValue)) {
                     return false;
                 }
+                continue;
             }
 
             if ((conditionValue == null && propertiesValue != null)

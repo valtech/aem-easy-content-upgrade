@@ -43,6 +43,7 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -59,7 +60,7 @@ public class TestFilters {
 
     @BeforeClass
     public static void init() {
-        properties = new HashMap<>();
+        properties = new LinkedHashMap<>();
         properties.put("has_string_prop", "strrrrrring");
         properties.put("multivalue", new String[] {"v1", "v2", "v3"});
         properties.put("has_boolean_prop", true);
@@ -132,10 +133,6 @@ public class TestFilters {
         filter_properties_1.putAll(properties);
         assertTrue(new FilterByProperties(filter_properties_1).filter(resource));
 
-        filter_properties_1.put("www", 234);
-        assertFalse(new FilterByProperties(filter_properties_1).filter(resource));
-        filter_properties_1.remove("www");
-
         filter_properties_1.remove("has_int_prop");
         assertTrue(new FilterByProperties(filter_properties_1).filter(resource));
 
@@ -147,22 +144,27 @@ public class TestFilters {
 
         filter_properties_1.put("multivalue", new String[] {"v1", "v2"});
         assertFalse(new FilterByProperties(filter_properties_1).filter(resource));
+
+        Map<String, Object> filter_properties_2 = new LinkedHashMap<>();
+        filter_properties_2.put("multivalue", new String[] {"v1", "v2", "v3"});
+        filter_properties_2.put("invalid_after", "make_sure_it_checks_til_the_last_element");
+        assertFalse(new FilterByProperties(filter_properties_2).filter(resource));
     }
 
     @Test
     public void filter_whenMultiValueFieldMatch_thenTrue() {
         Map<String, Object> properties_multiValue = new HashMap<>();
         properties_multiValue.put("testMultiValue", new String[]{"val_1", "val_2", "val_3"});
-        properties_multiValue.put("testMultiValueInt", new Integer[]{1, 2, 2});
+        properties_multiValue.put("testMultiValueInt", new Integer[]{1, 2, 3});
         Resource resource = getMockResourceWithNameAndProperties("any_resource", properties_multiValue);
 
         Map<String, Object> properties_multiValue_same = new HashMap<>();
         properties_multiValue_same.put("testMultiValue", new String[]{"val_1", "val_2", "val_3"});
-        properties_multiValue_same.put("testMultiValueInt", new Integer[]{1, 2, 2});
+        properties_multiValue_same.put("testMultiValueInt", new Integer[]{1, 2, 3});
         assertTrue(new FilterByProperties(properties_multiValue_same).filter(resource));
 
         Map<String, Object> properties_multiValue_same_int = new HashMap<>();
-        properties_multiValue_same.put("testMultiValue", new String[]{"val_1", "val_2", "val_3"});
+        properties_multiValue_same_int.put("testMultiValueInt", new Integer[]{1, 2, 3});
         assertTrue(new FilterByProperties(properties_multiValue_same).filter(resource));
 
         Map<String, Object> properties_multiValue_2 = new HashMap<>();

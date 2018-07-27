@@ -54,7 +54,7 @@ public class FilterByMultiValuePropContains implements FilterBy {
         ValueMap properties = resource.adaptTo(ValueMap.class);
         if (properties != null) {
             Object value = properties.get(name);
-            if (value != null && value instanceof Object[]) {
+            if (value != null && value.getClass().isArray()) {
                 Object[] multiValues = (Object[]) value;
                 return Arrays.asList(multiValues).containsAll(Arrays.asList(values));
             }
