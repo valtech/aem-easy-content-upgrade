@@ -48,11 +48,12 @@ public interface ContentUpgrade {
     ContentUpgrade forChildResourcesOf(String path);
 
     /**
-     * Loops recursive for all child resources of the given path. The path itself is not included.
-     * 
-     * @param path path
-     * @return upgrade object
-     **/
+     * Loops recursive for all child resources of the given path. The path itself can be included or not, depending on the value of includeRootResource.
+     *
+     * @param path
+     * @param includeRootResource
+     * @return
+     */
     ContentUpgrade forDescendantResourcesOf(String path, boolean includeRootResource);
 
     /**
