@@ -26,6 +26,7 @@ import com.adobe.granite.rest.utils.ModifiableMappedValueMapDecorator;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
@@ -34,6 +35,8 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.ORFilter;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -47,6 +50,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Roxana Muresan
+ */
 public class TestFilters {
 
     private static Map<String, Object> properties = null;
@@ -55,6 +61,7 @@ public class TestFilters {
     public static void init() {
         properties = new HashMap<>();
         properties.put("has_string_prop", "strrrrrring");
+        properties.put("multivalue", new String[] {"v1", "v2", "v3"});
         properties.put("has_boolean_prop", true);
         properties.put("has_int_prop", 123);
         properties.put("string_prop_as_int", "456");
@@ -125,6 +132,10 @@ public class TestFilters {
         filter_properties_1.putAll(properties);
         assertTrue(new FilterByProperties(filter_properties_1).filter(resource));
 
+        filter_properties_1.put("www", 234);
+        assertFalse(new FilterByProperties(filter_properties_1).filter(resource));
+        filter_properties_1.remove("www");
+
         filter_properties_1.remove("has_int_prop");
         assertTrue(new FilterByProperties(filter_properties_1).filter(resource));
 
@@ -133,6 +144,30 @@ public class TestFilters {
 
         filter_properties_1.put("any", null);
         assertTrue(new FilterByProperties(filter_properties_1).filter(resource));
+
+        filter_properties_1.put("multivalue", new String[] {"v1", "v2"});
+        assertFalse(new FilterByProperties(filter_properties_1).filter(resource));
+    }
+
+    @Test
+    public void filter_whenMultiValueFieldMatch_thenTrue() {
+        Map<String, Object> properties_multiValue = new HashMap<>();
+        properties_multiValue.put("testMultiValue", new String[]{"val_1", "val_2", "val_3"});
+        properties_multiValue.put("testMultiValueInt", new Integer[]{1, 2, 2});
+        Resource resource = getMockResourceWithNameAndProperties("any_resource", properties_multiValue);
+
+        Map<String, Object> properties_multiValue_same = new HashMap<>();
+        properties_multiValue_same.put("testMultiValue", new String[]{"val_1", "val_2", "val_3"});
+        properties_multiValue_same.put("testMultiValueInt", new Integer[]{1, 2, 2});
+        assertTrue(new FilterByProperties(properties_multiValue_same).filter(resource));
+
+        Map<String, Object> properties_multiValue_same_int = new HashMap<>();
+        properties_multiValue_same.put("testMultiValue", new String[]{"val_1", "val_2", "val_3"});
+        assertTrue(new FilterByProperties(properties_multiValue_same).filter(resource));
+
+        Map<String, Object> properties_multiValue_2 = new HashMap<>();
+        properties_multiValue_2.put("testMultiValue", new String[]{"val_1", "val_2"});
+        assertFalse(new FilterByProperties(properties_multiValue_2).filter(resource));
     }
 
     @Test
@@ -216,6 +251,41 @@ public class TestFilters {
         assertTrue(andFilter_match_2.filter(resource));
     }
 
+    @Test
+    public void testFilterByMultiValuePropContains() {
+        Resource resource = getMockResourceWithNameAndProperties("any_name", properties);
+        FilterBy filter = new FilterByMultiValuePropContains("any", new String[]{"any"});
+
+        assertFalse(filter.filter(resource));
+
+        FilterBy filter_1 = new FilterByMultiValuePropContains("has_string_prop", new String[]{"strrrrrring"});
+        assertFalse(filter_1.filter(resource));
+
+        Map<String, Object> propertiesWithMultiValue = new HashMap<>();
+        propertiesWithMultiValue.put("multiValues", new String[]{"val_1", "val_2", "val_3"});
+        propertiesWithMultiValue.put("multiValuesInt", new Integer[]{1, 2, 3});
+        Resource resource_2 = getMockResourceWithNameAndProperties("any_name", propertiesWithMultiValue);
+
+        assertFalse(filter.filter(resource_2));
+
+        FilterBy filter_2 = new FilterByMultiValuePropContains("multiValues", new String[]{});
+        assertTrue(filter_2.filter(resource_2));
+
+        FilterBy filter_3 = new FilterByMultiValuePropContains("multiValues", new String[]{"no_match"});
+        assertFalse(filter_3.filter(resource_2));
+        FilterBy filter_3_int = new FilterByMultiValuePropContains("multiValuesInt", new Integer[]{56});
+        assertFalse(filter_3_int.filter(resource_2));
+
+        FilterBy filter_4 = new FilterByMultiValuePropContains("multiValues", new String[]{"val_2"});
+        assertTrue(filter_4.filter(resource_2));
+
+        FilterBy filter_5 = new FilterByMultiValuePropContains("multiValuesInt", new Integer[]{1, 2, 3});
+        assertTrue(filter_5.filter(resource_2));
+
+        FilterBy filter_6 = new FilterByMultiValuePropContains("multiValues", new String[]{"val_1", "no_match", "val_3"});
+        assertFalse(filter_6.filter(resource_2));
+    }
+
     private void testWithOneProp(Resource resource, String propName, Object propValue, boolean matches) {
         Map<String, Object> filter_properties = new HashMap<>();
         filter_properties.put(propName, propValue);
@@ -227,6 +297,7 @@ public class TestFilters {
         Resource resourceMock = Mockito.mock(Resource.class);
         when(resourceMock.getName()).thenReturn(name);
         when(resourceMock.adaptTo(ModifiableValueMap.class)).thenReturn(new ModifiableMappedValueMapDecorator(proeprties));
+        when(resourceMock.adaptTo(ValueMap.class)).thenReturn(new ValueMapDecorator(proeprties));
         return resourceMock;
     }
 }

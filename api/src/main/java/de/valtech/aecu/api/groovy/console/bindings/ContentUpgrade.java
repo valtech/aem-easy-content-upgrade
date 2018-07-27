@@ -57,12 +57,20 @@ public interface ContentUpgrade {
     ContentUpgrade forDescendantResourcesOf(String path, boolean includeRootResource);
 
     /**
-     * Filters by properties.
+     * Filters by properties. Can be used also for Multi-value properties.
      * 
      * @param conditionProperties properties to filter
      * @return upgrade object
      **/
     ContentUpgrade filterByProperties(Map<String, Object> conditionProperties);
+
+    /**
+     * Filters by multi-value with the given name containing the given conditionValues
+     * @param name
+     * @param conditionValues
+     * @return
+     */
+    ContentUpgrade filterByMultiValuePropContains(String name,  Object[] conditionValues);
 
     /**
      * Filters by node name exact match.

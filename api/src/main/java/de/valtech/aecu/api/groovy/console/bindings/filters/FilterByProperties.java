@@ -21,6 +21,7 @@ package de.valtech.aecu.api.groovy.console.bindings.filters;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +52,12 @@ public class FilterByProperties implements FilterBy {
         for (String key : conditionProperties.keySet()) {
             Object conditionValue = conditionProperties.get(key);
             Object propertiesValue = properties.get(key);
+
+            if (conditionValue != null && propertiesValue != null && conditionValue instanceof Object[] && propertiesValue instanceof Object[]) {
+                if (!Arrays.equals((Object[]) conditionValue, (Object[]) propertiesValue)) {
+                    return false;
+                }
+            }
 
             if ((conditionValue == null && propertiesValue != null)
                     || (conditionValue != null && !conditionValue.equals(propertiesValue))) {
