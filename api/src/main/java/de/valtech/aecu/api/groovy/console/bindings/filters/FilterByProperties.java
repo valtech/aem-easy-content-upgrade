@@ -18,13 +18,13 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.Resource;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-
-import org.apache.sling.api.resource.ModifiableValueMap;
-import org.apache.sling.api.resource.Resource;
 
 /**
  * Filters resources by properties. You can define multiple properties that all need an exact match.
@@ -34,14 +34,14 @@ import org.apache.sling.api.resource.Resource;
  */
 public class FilterByProperties implements FilterBy {
 
-    private Map<String, String> conditionProperties = new HashMap<>();
+    private Map<String, Object> conditionProperties = new HashMap<>();
 
     /**
      * Constructor
      * 
      * @param conditionProperties list of properties to match (property name, property value)
      */
-    public FilterByProperties(@Nonnull Map<String, String> conditionProperties) {
+    public FilterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         this.conditionProperties.putAll(conditionProperties);
     }
 
@@ -49,8 +49,8 @@ public class FilterByProperties implements FilterBy {
     public boolean filter(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         for (String key : conditionProperties.keySet()) {
-            String conditionValue = conditionProperties.get(key);
-            String propertiesValue = properties.get(key, String.class);
+            Object conditionValue = conditionProperties.get(key);
+            Object propertiesValue = properties.get(key);
 
             if ((conditionValue == null && propertiesValue != null)
                     || (conditionValue != null && !conditionValue.equals(propertiesValue))) {

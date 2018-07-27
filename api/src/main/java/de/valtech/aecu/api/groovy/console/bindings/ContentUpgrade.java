@@ -62,7 +62,7 @@ public interface ContentUpgrade {
      * @param conditionProperties properties to filter
      * @return upgrade object
      **/
-    ContentUpgrade filterByProperties(Map<String, String> conditionProperties);
+    ContentUpgrade filterByProperties(Map<String, Object> conditionProperties);
 
     /**
      * Filters by node name exact match.

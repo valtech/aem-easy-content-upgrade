@@ -73,7 +73,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade filterByProperties(@Nonnull Map<String, String> conditionProperties) {
+    public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
         filter = new FilterByProperties(conditionProperties);
         return this;
