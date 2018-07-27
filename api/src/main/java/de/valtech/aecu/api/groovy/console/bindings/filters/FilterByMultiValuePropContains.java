@@ -29,6 +29,8 @@ import java.util.Arrays;
 import javax.annotation.Nonnull;
 
 /**
+ * Filters resources by multi-value properties. It checks if the given values are contained in the resource's multi-value field, no exact match.
+ *
  * @author Roxana Muresan
  */
 public class FilterByMultiValuePropContains implements FilterBy {
@@ -36,6 +38,12 @@ public class FilterByMultiValuePropContains implements FilterBy {
     private String name;
     private Object[] values;
 
+    /**
+     * Constructor
+     *
+     * @param name name of the multi-value property
+     * @param values values to be searched for
+     */
     public FilterByMultiValuePropContains(@Nonnull String name, @Nonnull Object[] values) {
         this.name = name;
         this.values = values;

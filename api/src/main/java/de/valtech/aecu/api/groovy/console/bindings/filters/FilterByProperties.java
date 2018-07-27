@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Filters resources by properties. You can define multiple properties that all need an exact match.
- * This is for single value properties only.
+ * This works for multi-value properties too with exact match.
  * 
  * @author Roxana Muresan
  */
