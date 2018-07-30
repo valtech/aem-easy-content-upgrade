@@ -18,11 +18,11 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 
 import org.apache.sling.api.resource.PersistenceException;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import java.util.Map;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -49,19 +49,37 @@ public interface ContentUpgrade {
 
     /**
      * Loops recursive for all child resources of the given path. The path itself is not included.
-     * 
+     *
      * @param path path
      * @return upgrade object
      **/
     ContentUpgrade forDescendantResourcesOf(String path);
 
+
     /**
-     * Filters by properties.
+     * Loops recursive over all resources contained in the subtree at the given path.
+     *
+     * @param path path
+     * @return upgrade object
+     */
+    ContentUpgrade forResourcesInSubtree(String path);
+
+    /**
+     * Filters by properties. Can be used also for Multi-value properties.
      * 
      * @param conditionProperties properties to filter
      * @return upgrade object
      **/
-    ContentUpgrade filterByProperties(Map<String, String> conditionProperties);
+    ContentUpgrade filterByProperties(Map<String, Object> conditionProperties);
+
+    /**
+     * Filters by multi-value with the given name containing the given conditionValues
+     *
+     * @param name name of the multi-value property
+     * @param conditionValues values to search for
+     * @return upgrade object
+     */
+    ContentUpgrade filterByMultiValuePropContains(String name,  Object[] conditionValues);
 
     /**
      * Filters by node name exact match.
@@ -207,4 +225,12 @@ public interface ContentUpgrade {
      */
     StringBuffer dryRun() throws PersistenceException;
 
+    /**
+     * Executes a run or a dryRun depending on the dryRun parameter value.
+     *
+     * @param dryRun dryRun option
+     * @return output
+     * @throws PersistenceException error during execution
+     */
+    StringBuffer run(boolean dryRun) throws PersistenceException;
 }

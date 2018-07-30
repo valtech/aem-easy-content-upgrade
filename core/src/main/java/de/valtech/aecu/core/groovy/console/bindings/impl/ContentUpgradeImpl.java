@@ -1,20 +1,8 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
@@ -35,6 +23,19 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResources
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.scribe.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 public class ContentUpgradeImpl implements ContentUpgrade {
 
@@ -68,17 +69,30 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade forDescendantResourcesOf(@Nonnull String path) {
         LOG.debug("forDescendantResourcesOf: {}", path);
-        traversals.add(new ForDescendantResourcesOf(path));
+        traversals.add(new ForDescendantResourcesOf(path, false));
         return this;
     }
 
     @Override
-    public ContentUpgrade filterByProperties(@Nonnull Map<String, String> conditionProperties) {
+    public ContentUpgrade forResourcesInSubtree(@Nonnull String path) {
+        LOG.debug("forResourcesInSubtree: {}", path);
+        traversals.add(new ForDescendantResourcesOf(path, true));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
         filter = new FilterByProperties(conditionProperties);
         return this;
     }
 
+    @Override
+    public ContentUpgrade filterByMultiValuePropContains(@Nonnull String name, @Nonnull Object[] conditionValues) {
+        LOG.debug("filterByMultiValuePropContains {} : {}", name, Arrays.toString(conditionValues));
+        filter = new FilterByMultiValuePropContains(name, conditionValues);
+        return this;
+    }
     @Override
     public ContentUpgrade filterByNodeName(@Nonnull String nodeName) {
         LOG.debug("filterByNodeName: {}", nodeName);
@@ -200,7 +214,8 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         return run(true);
     }
 
-    private StringBuffer run(boolean dryRun) throws PersistenceException {
+    @Override
+    public StringBuffer run(boolean dryRun) throws PersistenceException {
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
             traversal.traverse(resourceResolver, filter, actions, stringBuffer, dryRun);
