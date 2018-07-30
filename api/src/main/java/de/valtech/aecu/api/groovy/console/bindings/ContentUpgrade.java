@@ -48,13 +48,21 @@ public interface ContentUpgrade {
     ContentUpgrade forChildResourcesOf(String path);
 
     /**
-     * Loops recursive for all child resources of the given path. The path itself can be included or not, depending on the value of includeRootResource.
+     * Loops recursive for all child resources of the given path. The path itself is not included.
      *
-     * @param path
-     * @param includeRootResource
-     * @return
+     * @param path path
+     * @return upgrade object
+     **/
+    ContentUpgrade forDescendantResourcesOf(String path);
+
+
+    /**
+     * Loops recursive over all resources contained in the subtree at the given path.
+     *
+     * @param path path
+     * @return upgrade object
      */
-    ContentUpgrade forDescendantResourcesOf(String path, boolean includeRootResource);
+    ContentUpgrade forResourcesInSubtree(String path);
 
     /**
      * Filters by properties. Can be used also for Multi-value properties.
@@ -66,9 +74,10 @@ public interface ContentUpgrade {
 
     /**
      * Filters by multi-value with the given name containing the given conditionValues
-     * @param name
-     * @param conditionValues
-     * @return
+     *
+     * @param name name of the multi-value property
+     * @param conditionValues values to search for
+     * @return upgrade object
      */
     ContentUpgrade filterByMultiValuePropContains(String name,  Object[] conditionValues);
 
@@ -218,9 +227,10 @@ public interface ContentUpgrade {
 
     /**
      * Executes a run or a dryRun depending on the dryRun parameter value.
-     * @param dryRun
-     * @return
-     * @throws PersistenceException
+     *
+     * @param dryRun dryRun option
+     * @return output
+     * @throws PersistenceException error during execution
      */
     StringBuffer run(boolean dryRun) throws PersistenceException;
 }
