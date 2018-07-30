@@ -142,7 +142,7 @@ In the collect phase you define which nodes should be checked for a migration.
 
 * forResources(String[] paths): use the given paths without any subnodes
 * forChildResourcesOf(String path): use all direct childs of the given path (but no grandchilds)
-* forDescendantResourcesOf(String path): use the whole subtree under this path
+* forDescendantResourcesOf(String path, boolean includeRootResource): use the whole subtree under this path including or not including the parent root node
 
 You can call these methods multiple times and combine them. They will be merged together.
 
@@ -152,7 +152,7 @@ Example:
 println aecu.contentUpgradeBuilder()
         .forResources((String[])["/content/we-retail/ca/en"])
         .forChildResourcesOf("/content/we-retail/us/en")
-        .forDescendantResourcesOf("/content/we-retail/us/en/experience")
+        .forDescendantResourcesOf("/content/we-retail/us/en/experience", false)
         .doSetProperty("name", "value")
         .run()
 ```
@@ -220,7 +220,7 @@ def complexFilter =  new ORFilter(
         ])
 
 println aecu.contentUpgradeBuilder()
-        .forDescendantResourcesOf("/content/we-retail/ca/en")
+        .forDescendantResourcesOf("/content/we-retail/ca/en", false)
         .filterWith(complexFilter)
         .doSetProperty("name", "value")
         .run()        
