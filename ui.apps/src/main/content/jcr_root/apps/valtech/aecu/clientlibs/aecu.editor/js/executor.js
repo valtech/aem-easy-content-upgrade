@@ -77,12 +77,16 @@ AECU.Executor.execute = function (row, historyEntryAction, historyEntryPath) {
 AECU.Executor.addHistoryLink = function (row, historyEntryPath) {
     var historyLink = $(row).find("[data-aecu-execute-script-history]")[0];
     historyLink.href = AECU.Constants.Executor.historyPath.format(historyEntryPath, row.dataset.aecuExecuteScript);
-    historyLink.text = "Go to history";
+    historyLink.text = "Show details";
 }
 
 AECU.Executor.changeRowStatus = function (row, value) {
     AECU.Executor.changeStatus($(row).find("[data-aecu-execute-script-status]"), value);
     AECU.Executor.changeScriptColor($(row).find("[data-aecu-execute-script-path]"), value);
+    if (value === AECU.Constants.Executor.Status.inProgress) {
+    	var historyLink = $(row).find("[data-aecu-execute-script-history]")[0];
+    	historyLink.text = ""
+    }
 }
 
 AECU.Executor.changeAllStatus = function (value) {
