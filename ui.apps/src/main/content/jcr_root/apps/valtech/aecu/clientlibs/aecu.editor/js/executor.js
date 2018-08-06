@@ -22,6 +22,8 @@
 
 AECU.Executor = {};
 
+AECU.Executor.tableRows; // Initialize on document ready.
+
 AECU.Executor.doGET = function (getProps) {
     /* ADD HERE YOUR COMMON EXECUTOR AJAX PROPERTIES AND
     MERGE THEM WITH getPros */
@@ -50,8 +52,8 @@ AECU.Executor.execute = function (row, historyEntryAction, historyEntryPath) {
        url: AECU.Constants.Executor.servletPath.format(row.dataset.aecuExecuteScript, historyEntryAction, historyEntryPath),
        beforeSend: function () {
            AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.inProgress);
-           AECU.Executor.disableButton();
            AECU.Executor.disableButton(row);
+           AECU.Executor.disableExecuteAllButton();
        },
        success: function (json) {
            AECU.Executor.addHistoryLink(row, json.historyEntryPath);
@@ -110,27 +112,32 @@ AECU.Executor.changeScriptColor = function (items, value) {
 }
 
 AECU.Executor.disableButton = function (row) {
-    if (row != undefined) {
-        $(row).find("[data-aecu-execute-script-button]").prop('disabled', true);
-    } else {
-        /* The only button not in a row. */
-        $("#aecu-execute-button-all").prop('disabled', true);
-    }
+    $(row).find("[data-aecu-execute-script-button]").prop('disabled', true);
+}
+
+AECU.Executor.disableExecuteAllButton = function () {
+    $("#aecu-execute-button-all").prop('disabled', true);
+}
+
+AECU.Executor.disableAllButtons = function (row) {
+    AECU.Executor.disableExecuteAllButton();
+    AECU.Executor.disableButton(AECU.Executor.tableRows);
 }
 
 $(document).ready(function () {
 
     /* Disable executeAll button is there is one or no scripts displayed. */
-    var tableRows = $('[data-aecu-execute-script]');
-    if (tableRows.length == 0 || tableRows.length == 1) {
-        AECU.Executor.disableButton();
+    AECU.Executor.tableRows = $('[data-aecu-execute-script]');
+    if (AECU.Executor.tableRows.length == 0 || AECU.Executor.tableRows.length == 1) {
+        AECU.Executor.disableExecuteAllButton();
     }
 
     /* Event for executing all scrips displayed in screen. */
     $("#aecu-execute-button-all").on('click', function () {
-        if (tableRows.length > 0) {
+        if (AECU.Executor.tableRows.length > 0) {
+            AECU.Executor.disableAllButtons()
             AECU.Executor.changeAllStatus(AECU.Constants.Executor.Status.pending);
-            AECU.Executor.executeAll(tableRows, AECU.Constants.Executor.HistoryEntryActions.create);
+            AECU.Executor.executeAll(AECU.Executor.tableRows, AECU.Constants.Executor.HistoryEntryActions.create);
         }
     });
 
