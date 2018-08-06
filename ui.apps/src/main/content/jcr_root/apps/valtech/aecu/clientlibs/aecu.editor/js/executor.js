@@ -22,56 +22,52 @@
 
 AECU.Executor = {};
 
-AECU.Executor.historyEntryPath;
-
 AECU.Executor.doGET = function (getProps) {
     /* ADD HERE YOUR COMMON EXECUTOR AJAX PROPERTIES AND
     MERGE THEM WITH getPros */
     var props = {
-        async: false
+        async: true
     }
     var executorGetProps = $.extend({}, props, getProps);
     AECU.RequestHandler.GET(executorGetProps);
 }
 
-AECU.Executor.executeAll = function (tableRows) {
-    AECU.Executor.changeAllStatus(AECU.Constants.Executor.Status.pending);
-    var historyEntryAction;
-    for (var i = 0, length = tableRows.length; i < length; i++) {
-        if (i == 0) {
-            historyEntryAction = AECU.Constants.Executor.HistoryEntryActions.create;
-        } else if (i == tableRows.length - 1) {
-            historyEntryAction = AECU.Constants.Executor.HistoryEntryActions.close;
-        } else {
-            historyEntryAction = AECU.Constants.Executor.HistoryEntryActions.use;
-        }
-        AECU.Executor.execute(tableRows[i], historyEntryAction, AECU.Executor.historyEntryPath);
-    }
-    AECU.Executor.disableButton();
-    AECU.Executor.historyEntryPath = undefined;
+AECU.Executor.executeAll = function(tableRows, historyEntryAction, historyEntryPath){
+    if(tableRows.length == 0) return;
+
+    if(tableRows.length == 1) historyEntryAction = AECU.Constants.Executor.HistoryEntryActions.close;
+
+    AECU.Executor.execute(tableRows[0],historyEntryAction,historyEntryPath).then(function success(newhistoryEntryPath){
+        AECU.Executor.executeAll(tableRows.slice(1), AECU.Constants.Executor.HistoryEntryActions.use, newhistoryEntryPath);
+    }, function error(){
+        AECU.Executor.changeRowStatus(tableRows,AECU.Constants.Executor.Status.internalError);
+    });
 }
 
 AECU.Executor.execute = function (row, historyEntryAction, historyEntryPath) {
+    var deferred = $.Deferred()
     this.doGET({
-                   url: AECU.Constants.Executor.servletPath.format(row.dataset.aecuExecuteScript, historyEntryAction,
-                                                                   historyEntryPath),
-                   beforeSend: function () {
-                       AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.inProgress);
-                       AECU.Executor.disableButton(row);
-                   },
-                   success: function (json) {
-                       AECU.Executor.historyEntryPath = json.historyEntryPath;
-                       AECU.Executor.addHistoryLink(row, json.historyEntryPath);
-                       if (json.success) {
-                           AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.executed);
-                       } else {
-                           AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.fail);
-                       }
-                   },
-                   error: function (jqXHR, textStatus, errorThrown) {
-                       AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.internalError);
-                   }
-               });
+       url: AECU.Constants.Executor.servletPath.format(row.dataset.aecuExecuteScript, historyEntryAction, historyEntryPath),
+       beforeSend: function () {
+           AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.inProgress);
+           AECU.Executor.disableButton();
+           AECU.Executor.disableButton(row);
+       },
+       success: function (json) {
+           AECU.Executor.addHistoryLink(row, json.historyEntryPath);
+           if (json.success) {
+               AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.executed);
+           } else {
+               AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.fail);
+           }
+           deferred.resolve(json.historyEntryPath);
+       },
+       error: function (jqXHR, textStatus, errorThrown) {
+           AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.internalError);
+           deferred.reject();
+       }
+   });
+    return deferred.promise();
 }
 
 AECU.Executor.addHistoryLink = function (row, historyEntryPath) {
@@ -98,7 +94,6 @@ AECU.Executor.changeStatus = function (items, value) {
     iconTags.each(function () {
         this.set('icon', icon);
         this.set('title', title);
-        this._syncDOM();
     });
     iconTags.removeClass('icon-color-inprogress');
     iconTags.addClass(className);
@@ -121,22 +116,22 @@ AECU.Executor.disableButton = function (row) {
 
 $(document).ready(function () {
 
-    /* Disable executeAll button is there are no scripts displayed. */
-    if ($('[data-aecu-execute-script]').length == 0) {
+    /* Disable executeAll button is there is one or no scripts displayed. */
+    var tableRows = $('[data-aecu-execute-script]');
+    if (tableRows.length == 0 || tableRows.length == 1) {
         AECU.Executor.disableButton();
     }
 
     /* Event for executing all scrips displayed in screen. */
-    $("#aecu-execute-button-all").on('click', function (e) {
-        var tableRows = $('[data-aecu-execute-script]');
+    $("#aecu-execute-button-all").on('click', function () {
         if (tableRows.length > 0) {
-            AECU.Executor.executeAll(tableRows);
+            AECU.Executor.changeAllStatus(AECU.Constants.Executor.Status.pending);
+            AECU.Executor.executeAll(tableRows, AECU.Constants.Executor.HistoryEntryActions.create);
         }
     });
 
     /* Event for each row (script) displayed in screen. */
     $('[data-aecu-execute-script-button]').on('click', function (event) {
-        AECU.Executor.disableButton();
         AECU.Executor.execute(
             this.closest('[data-aecu-execute-script]'),
             AECU.Constants.Executor.HistoryEntryActions.single, null);
