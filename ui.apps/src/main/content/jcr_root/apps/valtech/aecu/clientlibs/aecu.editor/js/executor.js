@@ -61,6 +61,9 @@ AECU.Executor.execute = function (row, historyEntryAction, historyEntryPath) {
                AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.executed);
            } else {
                AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.fail);
+               if(json.fallbackSuccess){
+                   AECU.Executor.addFallbackText(row);
+               }
            }
            deferred.resolve(json.historyEntryPath);
        },
@@ -109,6 +112,10 @@ AECU.Executor.changeScriptColor = function (items, value) {
     var className = value.className;
     items.removeClass('icon-color-inprogress');
     items.addClass(className);
+}
+
+AECU.Executor.addFallbackText = function (row){ 
+    $(row).find("[data-aecu-execute-script-path]").append(AECU.Constants.Executor.Status.fallback.element);
 }
 
 AECU.Executor.disableButton = function (row) {

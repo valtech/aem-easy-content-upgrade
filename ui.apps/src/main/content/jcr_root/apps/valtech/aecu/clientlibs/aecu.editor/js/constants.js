@@ -57,6 +57,9 @@ AECU.Constants.Executor.Status = {
         icon: "sentimentNegative",
         className: "icon-color-fail",
         text: "Internal error"
+    },
+    fallback: {
+        element: '&nbsp<span class="icon-color-ok">(Fallback executed)</span>',
     }
 }
 

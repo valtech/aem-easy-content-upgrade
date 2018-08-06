@@ -76,7 +76,7 @@ public class ExecutionServlet extends BaseServlet {
             ExecutionResult executionResult = aecuService.execute(aecuScriptPath);
             aecuService.storeExecutionInHistory(historyEntry, executionResult);
             this.finishHistoryEntry(historyEntry, historyEntryAction);
-            writeResult(response, this.prepareJson(executionResult.isSuccess(), historyEntry.getRepositoryPath()));
+            writeResult(response, this.prepareJson(executionResult, historyEntry.getRepositoryPath()));
 
         } catch (AecuException e) {
             this.sendInternalServerError(response);
@@ -134,10 +134,14 @@ public class ExecutionServlet extends BaseServlet {
      * @param historyEntryPath path to history node
      * @return json String
      */
-    protected String prepareJson(boolean status, String historyEntryPath) {
+    protected String prepareJson(ExecutionResult executionResult, String historyEntryPath) {
         JsonObject json = new JsonObject();
-        json.addProperty("success", status);
+        json.addProperty("success", executionResult.isSuccess());
         json.addProperty("historyEntryPath", historyEntryPath);
+        ExecutionResult fallbackExecutionResult = executionResult.getFallbackResult();
+        if(fallbackExecutionResult != null){
+            json.addProperty("fallbackSuccess", fallbackExecutionResult.isSuccess());
+        }
         return json.toString();
     }
 
