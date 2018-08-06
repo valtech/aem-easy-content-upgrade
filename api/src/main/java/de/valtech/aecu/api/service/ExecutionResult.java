@@ -108,6 +108,15 @@ public class ExecutionResult {
         return path;
     }
 
+    /**
+     * Returns the short script path.
+     *
+     * @return short path
+     */
+    public String getShortPath() {
+        return path.replace(AecuService.AECU_PREFIX + "/", "");
+    }
+
     @Override
     public String toString() {
         StringBuilder stringVal = new StringBuilder("Successful: " + Boolean.toString(success) + "Path: " + path);
