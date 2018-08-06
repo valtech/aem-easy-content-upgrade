@@ -22,8 +22,6 @@
 
 AECU.Executor = {};
 
-AECU.Executor.tableRows; // Initialize on document ready.
-
 AECU.Executor.doGET = function (getProps) {
     /* ADD HERE YOUR COMMON EXECUTOR AJAX PROPERTIES AND
     MERGE THEM WITH getPros */
@@ -128,23 +126,24 @@ AECU.Executor.disableExecuteAllButton = function () {
 
 AECU.Executor.disableAllButtons = function (row) {
     AECU.Executor.disableExecuteAllButton();
-    AECU.Executor.disableButton(AECU.Executor.tableRows);
+    AECU.Executor.disableButton($('[data-aecu-execute-script]'));
 }
 
 $(document).ready(function () {
 
     /* Disable executeAll button is there is one or no scripts displayed. */
-    AECU.Executor.tableRows = $('[data-aecu-execute-script]');
-    if (AECU.Executor.tableRows.length == 0 || AECU.Executor.tableRows.length == 1) {
+    var tableRows = $('[data-aecu-execute-script]');
+    if (tableRows.length == 0 || tableRows.length == 1) {
         AECU.Executor.disableExecuteAllButton();
     }
 
     /* Event for executing all scrips displayed in screen. */
     $("#aecu-execute-button-all").on('click', function () {
-        if (AECU.Executor.tableRows.length > 0) {
+        var tableRows = $('[data-aecu-execute-script]');
+        if (tableRows.length > 0) {
             AECU.Executor.disableAllButtons()
             AECU.Executor.changeAllStatus(AECU.Constants.Executor.Status.pending);
-            AECU.Executor.executeAll(AECU.Executor.tableRows, AECU.Constants.Executor.HistoryEntryActions.create);
+            AECU.Executor.executeAll(tableRows, AECU.Constants.Executor.HistoryEntryActions.create);
         }
     });
 
