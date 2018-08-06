@@ -69,8 +69,6 @@ public class AecuInstallHook implements InstallHook {
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuInstallHook.class);
 
-    public static final String AECU_FOLDER = "/etc/groovyconsole/scripts/aecu";
-
     private final OsgiServiceProvider osgiServiceProvider;
     private AecuTrackerListener listener;
 
@@ -154,7 +152,7 @@ public class AecuInstallHook implements InstallHook {
      * @return not executed yet
      */
     private boolean wasNotExecuted(String path, HookExecutionHistory history) {
-        return !history.hasBeenExecutedBefore() && path.startsWith(AecuInstallHook.AECU_FOLDER);
+        return !history.hasBeenExecutedBefore() && path.startsWith(AecuService.AECU_PREFIX);
     }
 
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)

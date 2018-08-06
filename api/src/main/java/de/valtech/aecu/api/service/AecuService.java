@@ -43,6 +43,8 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface AecuService {
 
+    public static final String AECU_PREFIX = "/etc/groovyconsole/scripts/aecu";
+
     /**
      * Returns the AECU version.
      *

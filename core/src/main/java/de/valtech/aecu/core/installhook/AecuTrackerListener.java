@@ -119,8 +119,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
      * @return is valid
      */
     private boolean isValid(String path) {
-        return StringUtils.isNotBlank(path) && aecuService.isValidScriptName(path)
-                && path.startsWith(AecuInstallHook.AECU_FOLDER);
+        return StringUtils.isNotBlank(path) && aecuService.isValidScriptName(path) && path.startsWith(AecuService.AECU_PREFIX);
     }
 
     @Override
