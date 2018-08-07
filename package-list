@@ -1,2 +1,3 @@
-de.valtech.aecu.core.groovy.console.bindings.filters
-de.valtech.aecu.service
+de.valtech.aecu.api.groovy.console.bindings
+de.valtech.aecu.api.groovy.console.bindings.filters
+de.valtech.aecu.api.service
