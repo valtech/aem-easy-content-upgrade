@@ -10,7 +10,10 @@
             sling:resourceType="granite/ui/components/shell/collectionpage"
             currentView="${state[&quot;shell.collectionpage.layoutId&quot;].string}"
             modeGroup="aecu-execute-scripts"
-            targetCollection=".aecu-execute-scripts">
+            targetCollection=".aecu-execute-scripts"
+            consoleId="cq-aecu-execute"
+            contentPath="${requestPathInfo.suffix}"
+            >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
                     jcr:primaryType="nt:unstructured"
