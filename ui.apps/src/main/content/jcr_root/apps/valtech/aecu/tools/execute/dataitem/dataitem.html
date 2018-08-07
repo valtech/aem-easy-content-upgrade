@@ -4,7 +4,8 @@
             Execute script
         </button>
     </td>
-    <td is="coral-table-cell" data-aecu-execute-script-path>${resource.path}</td>
+    <sly data-sly-use.formatter="${'format.js' @ path=resource.path }">
+    <td is="coral-table-cell" data-aecu-execute-script-path>${formatter.shortPath}</td>
     <td is="coral-table-cell"><a target="_blank" class="aecu-script-history" data-aecu-execute-script-history>Not executed</a></td>
     <td is="coral-table-cell" data-aecu-execute-script-status>
         <coral-icon icon="helpCircle" size="M" title="Not run">

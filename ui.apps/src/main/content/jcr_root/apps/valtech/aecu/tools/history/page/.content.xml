@@ -12,7 +12,8 @@
             sling:resourceType="granite/ui/components/shell/collectionpage"
             targetCollection=".aecu-history-entries"
             modeGroup="aecu-history-entries"
-			granite:class="aecu-history-table"
+			      granite:class="aecu-history-table"
+			      contentPath="${requestPathInfo.suffix}"
     >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
