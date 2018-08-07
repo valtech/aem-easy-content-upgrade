@@ -43,6 +43,9 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface AecuService {
 
+    /**
+     * Prefix in CRX where AECU scripts are located.
+     */
     public static final String AECU_PREFIX = "/etc/groovyconsole/scripts/aecu";
 
     /**
