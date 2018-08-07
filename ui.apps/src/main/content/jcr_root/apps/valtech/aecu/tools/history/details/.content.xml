@@ -9,7 +9,7 @@
             jcr:primaryType="nt:unstructured"
             jcr:title="AEM Easy Content Upgrade - History details"
             sling:resourceType="granite/ui/components/shell/page"
-            consoleId="aecu-history-details"
+            consoleId="aecu-history"
     >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs

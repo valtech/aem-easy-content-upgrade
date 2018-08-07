@@ -8,7 +8,7 @@
     <jcr:content
             jcr:primaryType="nt:unstructured"
             jcr:title="AEM Easy Content Upgrade - History"
-            consoleId="cq-aecu-history"
+            consoleId="aecu-history"
             sling:resourceType="granite/ui/components/shell/collectionpage"
             targetCollection=".aecu-history-entries"
             modeGroup="aecu-history-entries"

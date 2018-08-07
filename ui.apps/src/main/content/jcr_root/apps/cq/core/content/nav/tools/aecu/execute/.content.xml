@@ -5,4 +5,5 @@
           jcr:description="Execute one or more scripts"
           href="/apps/valtech/aecu/tools/execute/page.html"
           icon="playCircle"
+          id="aecu-execute"
 />
