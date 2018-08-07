@@ -10,7 +10,10 @@
             sling:resourceType="granite/ui/components/shell/collectionpage"
             currentView="${state[&quot;shell.collectionpage.layoutId&quot;].string}"
             modeGroup="aecu-execute-scripts"
-            targetCollection=".aecu-execute-scripts">
+            targetCollection=".aecu-execute-scripts"
+            consoleId="aecu-execute"
+            contentPath="${requestPathInfo.suffix}"
+            >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
                     jcr:primaryType="nt:unstructured"
@@ -49,7 +52,7 @@
                                             jcr:primaryType="nt:unstructured"
                                             sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
                                             fieldLabel="Select the folder or script"
-                                            rootPath="/etc/groovyconsole/scripts"
+                                            rootPath="/etc/groovyconsole/scripts/aecu"
                                             required="{Boolean}true"
                                             filter="hierarchy"
                                             name="searchPath"/>

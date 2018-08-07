@@ -17,7 +17,7 @@
             <sly data-sly-list="${cmp.history.singleResults}">
                 <coral-accordion-item data-path="${item.path}" class="aecu-color-${item.success ? 'ok' : 'fail'}">
                     <coral-accordion-item-label class="aecu-item-label">
-                        ${item.path}
+                        ${item.shortPath}
                     </coral-accordion-item-label>
                     <coral-accordion-item-content>
                         <sly data-sly-call="${details.details @ result = item}"/>

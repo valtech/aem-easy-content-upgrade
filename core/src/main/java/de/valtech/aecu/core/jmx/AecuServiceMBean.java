@@ -23,7 +23,7 @@ import java.util.List;
 import com.adobe.granite.jmx.annotation.Description;
 import com.adobe.granite.jmx.annotation.Name;
 
-import de.valtech.aecu.service.AecuException;
+import de.valtech.aecu.api.service.AecuException;
 
 /**
  * JMX service interface.

@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
 
 /**
  * @author Bryan Chavez
@@ -76,7 +76,7 @@ public class ExecutionServlet extends BaseServlet {
             ExecutionResult executionResult = aecuService.execute(aecuScriptPath);
             aecuService.storeExecutionInHistory(historyEntry, executionResult);
             this.finishHistoryEntry(historyEntry, historyEntryAction);
-            writeResult(response, this.prepareJson(executionResult.isSuccess(), historyEntry.getRepositoryPath()));
+            writeResult(response, this.prepareJson(executionResult, historyEntry.getRepositoryPath()));
 
         } catch (AecuException e) {
             this.sendInternalServerError(response);
@@ -130,14 +130,18 @@ public class ExecutionServlet extends BaseServlet {
      * This method builds the JSON String for the response. Eg: {"success":
      * true,"historyEntryPath":"/var/aecu/2018/6/13/152892696338961314"}
      *
-     * @param status           success or fail
+     * @param executionResult  result
      * @param historyEntryPath path to history node
      * @return json String
      */
-    protected String prepareJson(boolean status, String historyEntryPath) {
+    protected String prepareJson(ExecutionResult executionResult, String historyEntryPath) {
         JsonObject json = new JsonObject();
-        json.addProperty("success", status);
+        json.addProperty("success", executionResult.isSuccess());
         json.addProperty("historyEntryPath", historyEntryPath);
+        ExecutionResult fallbackExecutionResult = executionResult.getFallbackResult();
+        if (fallbackExecutionResult != null) {
+            json.addProperty("fallbackSuccess", fallbackExecutionResult.isSuccess());
+        }
         return json.toString();
     }
 

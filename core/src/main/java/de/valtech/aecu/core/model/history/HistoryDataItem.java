@@ -29,9 +29,9 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
-import de.valtech.aecu.service.HistoryEntry;
-import de.valtech.aecu.service.HistoryEntry.RESULT;
-import de.valtech.aecu.service.HistoryEntry.STATE;
+import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.api.service.HistoryEntry.RESULT;
+import de.valtech.aecu.api.service.HistoryEntry.STATE;
 
 /**
  * Model class for a single history item.

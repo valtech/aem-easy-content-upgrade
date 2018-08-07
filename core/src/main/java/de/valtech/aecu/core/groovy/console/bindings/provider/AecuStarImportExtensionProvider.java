@@ -18,12 +18,14 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.provider;
 
-import com.icfolson.aem.groovy.console.api.StarImportExtensionProvider;
-import com.icfolson.aem.groovy.console.constants.GroovyConsoleConstants;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 
-import java.util.Set;
+import com.icfolson.aem.groovy.console.api.StarImportExtensionProvider;
+import com.icfolson.aem.groovy.console.constants.GroovyConsoleConstants;
+
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 
 @Component(immediate = true)
 public class AecuStarImportExtensionProvider implements StarImportExtensionProvider {
@@ -31,7 +33,7 @@ public class AecuStarImportExtensionProvider implements StarImportExtensionProvi
     @Override
     public Set<String> getStarImports() {
         Set<String> imports = GroovyConsoleConstants.DEFAULT_STAR_IMPORTS;
-        imports.add("de.valtech.aecu.core.groovy.console.bindings.filters");
+        imports.add(FilterBy.class.getPackage().getName());
         return imports;
     }
 }

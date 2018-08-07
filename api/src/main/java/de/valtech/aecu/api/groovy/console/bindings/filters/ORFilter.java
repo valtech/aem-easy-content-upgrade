@@ -16,13 +16,35 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package de.valtech.aecu.api.groovy.console.bindings.filters;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
- * Filters are used in aecu Groovy Console binding to filter matching nodes.
+ * Combines multiple filters with OR.
  * 
  * @author Roxana Muresan
  */
-@Version("1.0")
-package de.valtech.aecu.core.groovy.console.bindings.filters;
+public class ORFilter implements FilterBy {
 
-import org.osgi.annotation.versioning.Version;
+    private List<FilterBy> filters;
+
+    /**
+     * Constructor
+     * 
+     * @param filters list of filters that should be chained with OR
+     */
+    public ORFilter(List<FilterBy> filters) {
+        this.filters = filters;
+    }
+
+    @Override
+    public boolean filter(@Nonnull Resource resource) {
+        boolean foundTrue = filters.parallelStream().filter(f -> f.filter(resource)).findAny().isPresent();
+        return foundTrue;
+    }
+}

@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
 
-import de.valtech.aecu.service.AecuService;
+import de.valtech.aecu.api.service.AecuService;
 
 /**
  * Collects groovy script paths to potentially execute based on the given actions.
@@ -119,8 +119,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
      * @return is valid
      */
     private boolean isValid(String path) {
-        return StringUtils.isNotBlank(path) && aecuService.isValidScriptName(path)
-                && path.startsWith(AecuInstallHook.AECU_FOLDER);
+        return StringUtils.isNotBlank(path) && aecuService.isValidScriptName(path) && path.startsWith(AecuService.AECU_PREFIX);
     }
 
     @Override

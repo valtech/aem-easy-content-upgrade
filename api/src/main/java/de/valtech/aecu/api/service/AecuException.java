@@ -16,15 +16,34 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package de.valtech.aecu.api.service;
 
 /**
- * This package contains the service API for AEM Easy Content Upgrade (AECU). You can use this to
- * integrate AECU into your own software. See {@link de.valtech.aecu.service.AecuService} for a
- * starting point.
- * 
+ * Thrown when the AECU service faces an error.
+ *
  * @author Roland Gruber
  */
-@Version("1.0")
-package de.valtech.aecu.service;
+public class AecuException extends Exception {
 
-import org.osgi.annotation.versioning.Version;
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Constructor
+     *
+     * @param message error message
+     * @param e       original exception
+     */
+    public AecuException(String message, Throwable e) {
+        super(message, e);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param message error message
+     */
+    public AecuException(String message) {
+        super(message);
+    }
+
+}

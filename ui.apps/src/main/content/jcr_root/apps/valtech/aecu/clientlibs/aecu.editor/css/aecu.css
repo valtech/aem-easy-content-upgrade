@@ -124,11 +124,17 @@ betty-titlebar {
     color: #909090;
 }
 
+.aecu-history-summary-field.inprogress > span:nth-child(2) {
+    color: #316BC9;
+}
 .aecu-history-summary-field.finished > span:nth-child(2) {
-    color: #00AD31;
+    color: #323232;
 }
 .aecu-history-summary-field.failed > span:nth-child(2) {
     color: #FA0A0A;
+}
+.aecu-history-summary-field.success > span:nth-child(2) {
+    color: #00AD31;
 }
 
 .icon-color-ok {

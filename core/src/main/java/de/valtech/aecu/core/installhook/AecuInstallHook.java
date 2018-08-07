@@ -32,10 +32,10 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.ExecutionResult;
-import de.valtech.aecu.service.HistoryEntry;
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.HistoryEntry;
 
 /**
  * InstallHook handling installation of groovy scripts. The InstallHook gathers groovy scripts
@@ -68,8 +68,6 @@ import de.valtech.aecu.service.HistoryEntry;
 public class AecuInstallHook implements InstallHook {
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuInstallHook.class);
-
-    public static final String AECU_FOLDER = "/etc/groovyconsole/scripts/aecu";
 
     private final OsgiServiceProvider osgiServiceProvider;
     private AecuTrackerListener listener;
@@ -154,7 +152,7 @@ public class AecuInstallHook implements InstallHook {
      * @return not executed yet
      */
     private boolean wasNotExecuted(String path, HookExecutionHistory history) {
-        return !history.hasBeenExecutedBefore() && path.startsWith(AecuInstallHook.AECU_FOLDER);
+        return !history.hasBeenExecutedBefore() && path.startsWith(AecuService.AECU_PREFIX);
     }
 
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)

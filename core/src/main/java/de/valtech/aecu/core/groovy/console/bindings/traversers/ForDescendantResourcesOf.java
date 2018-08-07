@@ -18,8 +18,8 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.traversers;
 
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.filters.FilterBy;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -36,9 +36,11 @@ import javax.annotation.Nonnull;
 public class ForDescendantResourcesOf implements TraversData {
 
     private String path;
+    private boolean includeRootResource;
 
-    public ForDescendantResourcesOf(@Nonnull String path) {
+    public ForDescendantResourcesOf(@Nonnull String path, boolean includeRootResource) {
         this.path = path;
+        this.includeRootResource = includeRootResource;
     }
 
 
@@ -47,6 +49,9 @@ public class ForDescendantResourcesOf implements TraversData {
                          @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         Resource parentResource = resourceResolver.getResource(path);
         if (parentResource != null) {
+            if (includeRootResource) {
+                applyActionOnResource(parentResource, filter, actions, stringBuffer);
+            }
             traverseChildResourcesRecursive(resourceResolver, parentResource, filter, actions, stringBuffer, dryRun);
         }
     }
@@ -57,11 +62,7 @@ public class ForDescendantResourcesOf implements TraversData {
             Iterator<Resource> childResources = resource.listChildren();
             while (childResources.hasNext()) {
                 Resource child = childResources.next();
-                if (filter == null || filter.filter(child)) {
-                    for (Action action : actions) {
-                        stringBuffer.append(action.doAction(child) + "\n");
-                    }
-                }
+                applyActionOnResource(child, filter, actions, stringBuffer);
                 traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
             }
             if (!dryRun) {
@@ -70,4 +71,11 @@ public class ForDescendantResourcesOf implements TraversData {
         }
     }
 
+    private void applyActionOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions, StringBuffer stringBuffer) throws PersistenceException {
+        if (filter == null || filter.filter(resource)) {
+            for (Action action : actions) {
+                stringBuffer.append(action.doAction(resource) + "\n");
+            }
+        }
+    }
 }

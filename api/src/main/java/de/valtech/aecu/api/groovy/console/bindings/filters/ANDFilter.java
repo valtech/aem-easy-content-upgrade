@@ -16,22 +16,28 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.filters;
-
-import org.apache.sling.api.resource.Resource;
+package de.valtech.aecu.api.groovy.console.bindings.filters;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.sling.api.resource.Resource;
+
 /**
+ * Combines multiple filters with AND.
+ * 
  * @author Roxana Muresan
  */
 public class ANDFilter implements FilterBy {
 
     private List<FilterBy> filters;
 
-
+    /**
+     * Constructor
+     * 
+     * @param filters list of filters that should be chained with AND
+     */
     public ANDFilter(@Nonnull List<FilterBy> filters) {
         this.filters = filters;
     }

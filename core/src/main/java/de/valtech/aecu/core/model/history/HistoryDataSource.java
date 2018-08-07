@@ -39,9 +39,9 @@ import com.adobe.granite.ui.components.ds.AbstractDataSource;
 import com.adobe.granite.ui.components.ds.DataSource;
 import com.adobe.granite.ui.components.ds.ValueMapResource;
 
-import de.valtech.aecu.service.AecuException;
-import de.valtech.aecu.service.AecuService;
-import de.valtech.aecu.service.HistoryEntry;
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.HistoryEntry;
 
 /**
  * Datasource model for history overview page.
