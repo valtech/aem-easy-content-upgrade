@@ -130,7 +130,7 @@ public class ExecutionServlet extends BaseServlet {
      * This method builds the JSON String for the response. Eg: {"success":
      * true,"historyEntryPath":"/var/aecu/2018/6/13/152892696338961314"}
      *
-     * @param status           success or fail
+     * @param executionResult  result
      * @param historyEntryPath path to history node
      * @return json String
      */
@@ -139,7 +139,7 @@ public class ExecutionServlet extends BaseServlet {
         json.addProperty("success", executionResult.isSuccess());
         json.addProperty("historyEntryPath", historyEntryPath);
         ExecutionResult fallbackExecutionResult = executionResult.getFallbackResult();
-        if(fallbackExecutionResult != null){
+        if (fallbackExecutionResult != null) {
             json.addProperty("fallbackSuccess", fallbackExecutionResult.isSuccess());
         }
         return json.toString();
