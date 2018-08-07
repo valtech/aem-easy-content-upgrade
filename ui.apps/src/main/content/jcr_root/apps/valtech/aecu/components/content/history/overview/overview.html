@@ -21,8 +21,13 @@
                 </svg>
             </div>
         </div>
-        <div class="aecu-history-summary"><div class="aecu-history-summary-field finished"><span> State:</span> <span>${cmp.history.state.label}</span></div>
-            <div class="aecu-history-summary-field failed"><span>Result:</span> <span>${cmp.history.result.label}</span></div>
+        <div class="aecu-history-summary">
+            <div class="aecu-history-summary-field ${cmp.history.state.name == 'FINISHED' ? 'finished' : 'inprogress'}">
+                <span> State:</span> <span>${cmp.history.state.label}</span>
+            </div>
+            <div class="aecu-history-summary-field ${cmp.history.result.name == 'FAILURE' ? 'failed' : 'success'}">
+              <span>Result:</span> <span>${cmp.history.result.label}</span>
+            </div>
             <div class="aecu-history-summary-field duration"><span>Duration:</span> <span title="${cmp.start} - ${cmp.end}">${cmp.duration}</span></div>
         </div>
     </div>
