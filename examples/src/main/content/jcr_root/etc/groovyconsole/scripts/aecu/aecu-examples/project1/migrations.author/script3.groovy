@@ -1,5 +1,5 @@
 /**
- * Updating the value of a property for all components ound under a certain path
+ * Updating the value of a property for all components found under a certain path
  */
 def conditionMap_resourceType = [:]
 conditionMap_resourceType['sling:resourceType'] = "weretail/components/content/heroimage"
