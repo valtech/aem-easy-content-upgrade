@@ -1,8 +1,8 @@
 
 println aecu
         .contentUpgradeBuilder()
-        // traversers
-        .forDescendantResourcesOf("/content/we-retail")
+        // collectors
+        .forChildResourcesOf("/content/we-retail/ca/en")
         // filters
         .filterByNodeName("equipment")
         // actions

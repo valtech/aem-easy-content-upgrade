@@ -4,7 +4,7 @@ conditionMap_resourceType['sling:resourceType'] = "weretail/components/content/h
 
 println aecu
         .contentUpgradeBuilder()
-        // traversers
+        // collectors
         .forDescendantResourcesOf("/content/we-retail/ca/en")
         // filters
         .filterByProperties(conditionMap_resourceType)
