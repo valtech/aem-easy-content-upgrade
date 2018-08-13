@@ -1,14 +1,11 @@
-/**
- * Moving pages
- */
-println aecu.contentUpgradeBuilder()
-println aecu.contentUpgradeBuilder()
-// traversers
+
+println aecu
+        .contentUpgradeBuilder()
+        // traversers
         .forDescendantResourcesOf("/content/we-retail")
-// filters
+        // filters
         .filterByNodeName("equipment")
-// actions
+        // actions
         .printPath()
         .doMoveResourceToRelativePath("../experience")
-        .dryRun()
-        //.run()
+        .run()
