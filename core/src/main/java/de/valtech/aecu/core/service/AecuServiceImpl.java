@@ -95,8 +95,13 @@ public class AecuServiceImpl implements AecuService {
         }
         List<String> candidates = new ArrayList<>();
         if (isFolder(resource) && matchesRunmodes(resource.getName())) {
+            List<String> childNames = new ArrayList<>();
             for (Resource child : resource.getChildren()) {
-                candidates.addAll(findCandidates(resolver, child.getPath()));
+                childNames.add(child.getName());
+            }
+            childNames.sort(null);
+            for (String childName : childNames) {
+                candidates.addAll(findCandidates(resolver, resource.getChild(childName).getPath()));
             }
         } else if (isValidScriptName(resource.getName())) {
             candidates.add(path);
