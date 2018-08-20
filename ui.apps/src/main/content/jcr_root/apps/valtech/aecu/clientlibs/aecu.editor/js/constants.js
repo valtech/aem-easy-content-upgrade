@@ -23,7 +23,7 @@
 AECU.Constants = {};
 
 AECU.Constants.Executor = {
-    servletPath: "/bin/public/valtech/aecu/execute.json?aecuScriptPath={0}&historyEntryAction={1}&historyEntryPath={2}",
+    servletPath: "/bin/public/valtech/aecu/execute.json?aecuScriptPath={0}&historyEntryAction={1}&historyEntryPath={2}&skipExecution={3}",
     historyPath: "/apps/valtech/aecu/tools/history/details.html?entry={0}&aecuScriptPath={1}"
 }
 
@@ -42,6 +42,11 @@ AECU.Constants.Executor.Status = {
         icon: "closeCircle",
         className: "icon-color-fail",
         text: "Failed"
+    },
+    skip: {
+        icon: "closeCircle",
+        className: "icon-color-skip",
+        text: "Skipped"
     },
     pending: {
         icon: "pending",
