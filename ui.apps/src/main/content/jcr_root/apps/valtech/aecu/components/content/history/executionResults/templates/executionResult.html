@@ -19,6 +19,9 @@
             <tr data-sly-test="${result.time}">
                 <td class="aecu-execution-time">Execution time: ${result.time}</td>
             </tr>
+            <tr data-sly-test="${result.state.name == 'SKIPPED'}">
+                <td class="aecu-execution-skipped">This script was skipped</td>
+            </tr>
         </table>
         <sly data-sly-test="${result.result}">
             <h3 data-sly-test="${!isFallback}" class="aecu-font-large">Result</h3>

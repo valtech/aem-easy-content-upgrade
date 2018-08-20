@@ -145,7 +145,7 @@ betty-titlebar {
 }
 
 .icon-color-skip {
-    color: blue;
+    color: #1D30E2;
 }
 
 coral-accordion-item.coral3-Accordion-item:hover {
@@ -154,6 +154,11 @@ coral-accordion-item.coral3-Accordion-item:hover {
 
 .aecu-execution-time {
     font-style: italic;
+    color: #909090;
+    padding-top: .89rem;
+}
+
+.aecu-execution-skipped {
     color: #909090;
     padding-top: .89rem;
 }
@@ -167,7 +172,7 @@ coral-accordion-item.coral3-Accordion-item:hover {
 }
 
 .aecu-color-skip .coral3-Accordion-header {
-    border-left: 7px solid blue;
+    border-left: 7px solid #1D30E2;
 }
 
 .icon-color-inprogress {
@@ -242,7 +247,7 @@ table.aecu-history-detail td {
 }
 
 .aecu-color-skip table.aecu-history-detail {
-    color: blue;
+    color: #1D30E2;
 }
 
 .aecu-chart-text {

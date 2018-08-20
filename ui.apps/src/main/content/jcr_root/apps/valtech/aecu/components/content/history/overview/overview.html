@@ -8,14 +8,22 @@
                 <svg width="150px" height="150px" viewBox="0 0 50 50" class="donut">
                     <circle class="donut-hole" cx="25" cy="25" r="15.91549430918954" fill="#f5f5f5"></circle>
 
+                    <circle class="donut-blue" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="#1D30E2"
+                            stroke-width="8"
+                    ></circle>
                     <circle class="donut-red" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="#FA0A0A"
-                            stroke-width="8"></circle>
+                            stroke-width="8"
+                            stroke-dasharray="${cmp.donutData.failedLength} ${cmp.donutData.failedRemainder}"
+                            stroke-dashoffset="25"
+                    ></circle>
                     <circle class="donut-green" cx="25" cy="25" r="15.91549430918954" fill="transparent" stroke="#00AD31"
-                            stroke-width="8" stroke-dasharray="${cmp.percentages.left} ${cmp.percentages.right}"
-                            stroke-dashoffset="25"></circle>
+                            stroke-width="8"
+                            stroke-dasharray="${cmp.donutData.okLength} ${cmp.donutData.okRemainder}"
+                            stroke-dashoffset="25"
+                    ></circle>
                     <g>
                         <text x="50%" y="50%" class="aecu-chart-text">
-                            ${cmp.percentages.left}%
+                            ${cmp.donutData.percentageOk}%
                         </text>
                     </g>
                 </svg>
