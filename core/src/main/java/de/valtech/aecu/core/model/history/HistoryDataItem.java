@@ -118,4 +118,16 @@ public class HistoryDataItem {
         return history.getRepositoryPath();
     }
 
+    /**
+     * Returns the number of scripts that were executed.
+     * 
+     * @return script count
+     */
+    public int getScriptCount() {
+        if (history.getSingleResults() == null) {
+            return 0;
+        }
+        return history.getSingleResults().size();
+    }
+
 }
