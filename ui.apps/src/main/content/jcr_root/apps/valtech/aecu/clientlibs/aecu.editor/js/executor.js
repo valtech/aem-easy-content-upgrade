@@ -55,11 +55,11 @@ AECU.Executor.execute = function (row, historyEntryAction, historyEntryPath) {
        },
        success: function (json) {
            AECU.Executor.addHistoryLink(row, json.historyEntryPath);
-           if (json.success) {
+           if (json.state == 'SUCCESS') {
                AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.executed);
            } else {
                AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.fail);
-               if(json.fallbackSuccess){
+               if(json.fallbackState){
                    AECU.Executor.addFallbackText(row);
                }
            }

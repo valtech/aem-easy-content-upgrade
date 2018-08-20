@@ -136,11 +136,11 @@ public class ExecutionServlet extends BaseServlet {
      */
     protected String prepareJson(ExecutionResult executionResult, String historyEntryPath) {
         JsonObject json = new JsonObject();
-        json.addProperty("success", executionResult.isSuccess());
+        json.addProperty("state", executionResult.getState().name());
         json.addProperty("historyEntryPath", historyEntryPath);
         ExecutionResult fallbackExecutionResult = executionResult.getFallbackResult();
         if (fallbackExecutionResult != null) {
-            json.addProperty("fallbackSuccess", fallbackExecutionResult.isSuccess());
+            json.addProperty("fallbackState", fallbackExecutionResult.getState().name());
         }
         return json.toString();
     }

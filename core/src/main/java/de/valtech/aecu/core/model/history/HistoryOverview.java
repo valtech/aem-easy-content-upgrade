@@ -36,6 +36,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
 
@@ -135,9 +136,9 @@ public class HistoryOverview {
         double countOk = 0;
         double countFailed = 0;
         for (ExecutionResult result : historyEntry.getSingleResults()) {
-            if (result.isSuccess()) {
+            if (ExecutionState.SUCCESS.equals(result.getState())) {
                 countOk++;
-            } else {
+            } else if (ExecutionState.FAILED.equals(result.getState())) {
                 countFailed++;
             }
         }

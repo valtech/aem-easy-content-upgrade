@@ -144,6 +144,10 @@ betty-titlebar {
     color: #FA0A0A;
 }
 
+.icon-color-skip {
+    color: blue;
+}
+
 coral-accordion-item.coral3-Accordion-item:hover {
     background: #e8e8e8;
 }
@@ -157,8 +161,13 @@ coral-accordion-item.coral3-Accordion-item:hover {
 .aecu-color-fail .coral3-Accordion-header {
     border-left: 7px solid #FA0A0A;
 }
+
 .aecu-color-ok .coral3-Accordion-header {
     border-left: 7px solid #00AD31;
+}
+
+.aecu-color-skip .coral3-Accordion-header {
+    border-left: 7px solid blue;
 }
 
 .icon-color-inprogress {
@@ -227,8 +236,13 @@ table.aecu-history-detail td {
 .aecu-color-fail table.aecu-history-detail {
     color: #FA0A0A;
 }
+
 .aecu-color-ok table.aecu-history-detail {
     color: #00AD31;
+}
+
+.aecu-color-skip table.aecu-history-detail {
+    color: blue;
 }
 
 .aecu-chart-text {
