@@ -29,14 +29,13 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
 
@@ -49,7 +48,6 @@ import de.valtech.aecu.core.history.HistoryUtil;
 public class ExecutionServlet extends BaseServlet {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOG = LoggerFactory.getLogger(ExecutionServlet.class);
 
     protected static final String ERROR_MESSAGE_MANDATORY =
             "ExecutionServlet :: Make sure your are sending the correct parameters.";
@@ -66,6 +64,8 @@ public class ExecutionServlet extends BaseServlet {
 
         String historyEntryAction = request.getParameter("historyEntryAction");
         String aecuScriptPath = request.getParameter("aecuScriptPath");
+        String skipExecution = request.getParameter("skipExecution");
+        boolean skip = "true".equals(skipExecution);
         if (!this.validateParameter(aecuScriptPath) || !this.validateParameter(historyEntryAction)) {
             writeResult(response, ERROR_MESSAGE_MANDATORY);
             return;
@@ -73,7 +73,12 @@ public class ExecutionServlet extends BaseServlet {
 
         try {
             HistoryEntry historyEntry = this.getHistoryEntry(request, response, historyEntryAction);
-            ExecutionResult executionResult = aecuService.execute(aecuScriptPath);
+            ExecutionResult executionResult;
+            if (skip) {
+                executionResult = new ExecutionResult(ExecutionState.SKIPPED, null, null, null, null, aecuScriptPath);
+            } else {
+                executionResult = aecuService.execute(aecuScriptPath);
+            }
             aecuService.storeExecutionInHistory(historyEntry, executionResult);
             this.finishHistoryEntry(historyEntry, historyEntryAction);
             writeResult(response, this.prepareJson(executionResult, historyEntry.getRepositoryPath()));
