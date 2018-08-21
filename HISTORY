@@ -1,6 +1,7 @@
 1.3.0
   - Execute scripts in alphabetical order
   - Stop execution after first failed script
+  - API changes
 
 2018-08-07 1.2.0
   - Updated API
