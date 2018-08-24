@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ExecutionResult {
 
-    private boolean success;
+    private ExecutionState state;
     private String output;
     private String time;
     private String result;
@@ -37,16 +37,16 @@ public class ExecutionResult {
     /**
      * Constructor
      *
-     * @param success        execution was successful
+     * @param state          execution state
      * @param time           execution time
      * @param result         result
      * @param output         script output
      * @param fallbackResult fallback script result
      * @param path           script path
      */
-    public ExecutionResult(boolean success, String time, String result, String output, ExecutionResult fallbackResult,
+    public ExecutionResult(ExecutionState state, String time, String result, String output, ExecutionResult fallbackResult,
             String path) {
-        this.success = success;
+        this.state = state;
         this.output = output;
         this.time = time;
         this.result = result;
@@ -55,12 +55,12 @@ public class ExecutionResult {
     }
 
     /**
-     * Returns if execution was successful.
-     *
-     * @return successful
+     * Returns the execution state.
+     * 
+     * @return state
      */
-    public boolean isSuccess() {
-        return success;
+    public ExecutionState getState() {
+        return state;
     }
 
     /**
@@ -119,7 +119,7 @@ public class ExecutionResult {
 
     @Override
     public String toString() {
-        StringBuilder stringVal = new StringBuilder("Successful: " + Boolean.toString(success) + "Path: " + path);
+        StringBuilder stringVal = new StringBuilder("Successful: " + state.name() + "Path: " + path);
         if (StringUtils.isNotBlank(time)) {
             stringVal.append("\n" + "Execution time: " + time);
         }

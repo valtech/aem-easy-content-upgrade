@@ -51,6 +51,10 @@
 				                            jcr:primaryType="nt:unstructured"
 				                            jcr:title="Duration"
 				                    />
+                            <scriptcount
+                                    jcr:primaryType="nt:unstructured"
+                                    jcr:title="Number of Scripts"
+                            />
 				                    <status
 				                            jcr:primaryType="nt:unstructured"
 				                            jcr:title="Status"

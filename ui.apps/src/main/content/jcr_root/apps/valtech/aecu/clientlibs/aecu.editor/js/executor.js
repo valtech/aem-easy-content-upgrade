@@ -44,10 +44,12 @@ AECU.Executor.executeAll = function(tableRows, historyEntryAction, historyEntryP
     });
 }
 
+AECU.Executor.executeAllSkip = 'false';
+
 AECU.Executor.execute = function (row, historyEntryAction, historyEntryPath) {
     var deferred = $.Deferred()
     this.doGET({
-       url: AECU.Constants.Executor.servletPath.format(row.dataset.aecuExecuteScript, historyEntryAction, historyEntryPath),
+       url: AECU.Constants.Executor.servletPath.format(row.dataset.aecuExecuteScript, historyEntryAction, historyEntryPath, AECU.Executor.executeAllSkip),
        beforeSend: function () {
            AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.inProgress);
            AECU.Executor.disableButton(row);
@@ -55,11 +57,14 @@ AECU.Executor.execute = function (row, historyEntryAction, historyEntryPath) {
        },
        success: function (json) {
            AECU.Executor.addHistoryLink(row, json.historyEntryPath);
-           if (json.success) {
+           if (json.state == 'SUCCESS') {
                AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.executed);
+           } else if (json.state == 'SKIPPED') {
+        	   AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.skip);
            } else {
                AECU.Executor.changeRowStatus(row, AECU.Constants.Executor.Status.fail);
-               if(json.fallbackSuccess){
+               AECU.Executor.executeAllSkip = 'true';
+               if(json.fallbackState){
                    AECU.Executor.addFallbackText(row);
                }
            }
@@ -143,6 +148,7 @@ $(document).ready(function () {
         if (tableRows.length > 0) {
             AECU.Executor.disableAllButtons()
             AECU.Executor.changeAllStatus(AECU.Constants.Executor.Status.pending);
+            AECU.Executor.executeAllSkip = 'false';
             AECU.Executor.executeAll(tableRows, AECU.Constants.Executor.HistoryEntryActions.create);
         }
     });
@@ -163,7 +169,8 @@ $(document).ready(function () {
         		Coral.commons.ready(panel[0], function () {
         			var selected = panel.attr('aria-selected');
                     if (!selected || (selected == "false")) {
-                        button.find('button').click();            	
+                        button.find('button').click();
+                        setTimeout(function() {button.find('[tabindex="-1"]').click();}, 300);
                     }        			
         		});
         	}

@@ -27,7 +27,6 @@ import java.time.Duration;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.request.RequestParameter;
 import org.apache.sling.api.resource.Resource;
@@ -36,6 +35,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
 
@@ -125,27 +125,94 @@ public class HistoryOverview {
     /**
      * Returns the percentages of successful and failed scripts.
      *
-     * @return percentages (successful, failed)
+     * @return data for donut diagram
      */
-    public Pair<String, String> getPercentages() {
+    public DonutData getDonutData() {
         int countAll = historyEntry.getSingleResults().size();
         if (countAll == 0) {
-            return Pair.of("0", "0");
+            return new DonutData(BigDecimal.ZERO, BigDecimal.ZERO);
         }
         double countOk = 0;
         double countFailed = 0;
         for (ExecutionResult result : historyEntry.getSingleResults()) {
-            if (result.isSuccess()) {
+            if (ExecutionState.SUCCESS.equals(result.getState())) {
                 countOk++;
-            } else {
+            } else if (ExecutionState.FAILED.equals(result.getState())) {
                 countFailed++;
             }
         }
         BigDecimal percentageOk = new BigDecimal((countOk / countAll) * 100);
         BigDecimal percentageFailed = new BigDecimal((countFailed / countAll) * 100);
-        String valueOk = percentageOk.round(new MathContext(2)).toPlainString();
-        String valueFailed = percentageFailed.round(new MathContext(2)).toPlainString();
-        return Pair.of(valueOk, valueFailed);
+        return new DonutData(percentageOk, percentageFailed);
+    }
+
+    /**
+     * Data for the donut chart.
+     */
+    public static class DonutData {
+
+        private BigDecimal percentageOk;
+        private BigDecimal percentageFail;
+
+        /**
+         * Constructor
+         * 
+         * @param percentageOk   percentage of successful scripts
+         * @param percentageFail percentage of failed scripts
+         */
+        public DonutData(BigDecimal percentageOk, BigDecimal percentageFail) {
+            this.percentageOk = percentageOk.round(new MathContext(2));
+            this.percentageFail = percentageFail.round(new MathContext(2));
+        }
+
+        /**
+         * Length (0..100) of filled ok cicle part.
+         * 
+         * @return length
+         */
+        public String getOkLength() {
+            return percentageOk.toPlainString();
+        }
+
+        /**
+         * Length (0..100) of non-filled ok cicle part.
+         * 
+         * @return length
+         */
+        public String getOkRemainder() {
+            return new BigDecimal(100).subtract(percentageOk).toPlainString();
+        }
+
+        /**
+         * Length (0..100) of filled failed cicle part.
+         * 
+         * @return length
+         */
+        public String getFailedLength() {
+            // Failed circle is below ok circle. Therefore, the length is the sum of ok and failed.
+            return percentageFail.add(percentageOk).toPlainString();
+        }
+
+        /**
+         * Length (0..100) of non-filled failed cicle part.
+         * 
+         * @return length
+         */
+        public String getFailedRemainder() {
+            // Failed circle is below ok circle. Therefore, the length is 100 minus the sum of ok
+            // and failed.
+            return new BigDecimal(100).subtract(percentageFail).subtract(percentageOk).toPlainString();
+        }
+
+        /**
+         * Returns the percentage text for the circle center.
+         * 
+         * @return percentage
+         */
+        public String getPercentageOk() {
+            return percentageOk.toPlainString();
+        }
+
     }
 
 }

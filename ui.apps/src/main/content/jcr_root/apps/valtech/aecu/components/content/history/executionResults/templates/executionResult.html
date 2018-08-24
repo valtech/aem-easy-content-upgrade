@@ -2,7 +2,8 @@
     <div class="aecu-padding-sides5">
         <table class="aecu-history-detail aecu-font-normal" width="100%">
             <tr>
-                <td class="icon-color-${result.success ? 'ok' : 'fail'}">Path: 
+                <td class="icon-color-${(result.state.name == 'SUCCESS') ? 'ok' : ((result.state.name == 'FAILED') ? 'fail' : 'skip')}">
+                  Path: 
                   <a
                     target="_blank"
                     href="${result.path}">
@@ -10,13 +11,16 @@
                   </a>
                 </td>
                 <td rowspan="2">
-                    <coral-icon icon="${result.success ? 'checkCircle' : 'closeCircle'}" size="L"
-                                class="icon-color-${result.success ? 'ok' : 'fail'}">
+                    <coral-icon icon="${(result.state.name == 'SUCCESS') ? 'checkCircle' : 'closeCircle'}" size="L"
+                                class="icon-color-${(result.state.name == 'SUCCESS') ? 'ok' : ((result.state.name == 'FAILED') ? 'fail' : 'skip')}">
                     </coral-icon>
                 </td>
             </tr>
-            <tr>
+            <tr data-sly-test="${result.time}">
                 <td class="aecu-execution-time">Execution time: ${result.time}</td>
+            </tr>
+            <tr data-sly-test="${result.state.name == 'SKIPPED'}">
+                <td class="aecu-execution-skipped">This script was skipped</td>
             </tr>
         </table>
         <sly data-sly-test="${result.result}">

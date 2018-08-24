@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 
 /**
@@ -65,7 +66,7 @@ public class HistoryEntryImpl implements HistoryEntry {
         }
         RESULT result = RESULT.SUCCESS;
         for (ExecutionResult singleResult : singleResults) {
-            if (!singleResult.isSuccess()) {
+            if (ExecutionState.FAILED.equals(singleResult.getState())) {
                 result = RESULT.FAILURE;
                 break;
             }

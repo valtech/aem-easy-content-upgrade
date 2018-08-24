@@ -15,7 +15,7 @@
         <h2 class="aecu-font-large">Execution details for ${cmp.history.singleResults.size} scripts</h2>
         <coral-accordion>
             <sly data-sly-list="${cmp.history.singleResults}">
-                <coral-accordion-item data-path="${item.path}" class="aecu-color-${item.success ? 'ok' : 'fail'}">
+                <coral-accordion-item data-path="${item.path}" class="aecu-color-${(item.state.name == 'SUCCESS') ? 'ok' : ((item.state.name == 'FAILED') ? 'fail' : 'skip')}">
                     <coral-accordion-item-label class="aecu-item-label">
                         ${item.shortPath}
                     </coral-accordion-item-label>

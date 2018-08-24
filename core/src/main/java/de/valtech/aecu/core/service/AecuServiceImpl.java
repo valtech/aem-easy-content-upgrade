@@ -41,6 +41,7 @@ import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.history.HistoryUtil;
@@ -95,8 +96,13 @@ public class AecuServiceImpl implements AecuService {
         }
         List<String> candidates = new ArrayList<>();
         if (isFolder(resource) && matchesRunmodes(resource.getName())) {
+            List<String> childNames = new ArrayList<>();
             for (Resource child : resource.getChildren()) {
-                candidates.addAll(findCandidates(resolver, child.getPath()));
+                childNames.add(child.getName());
+            }
+            childNames.sort(null);
+            for (String childName : childNames) {
+                candidates.addAll(findCandidates(resolver, resource.getChild(childName).getPath()));
             }
         } else if (isValidScriptName(resource.getName())) {
             candidates.add(path);
@@ -177,7 +183,8 @@ public class AecuServiceImpl implements AecuService {
         if (!success && (getFallbackScript(resolver, path) != null)) {
             fallbackResult = executeScript(resolver, getFallbackScript(resolver, path));
         }
-        return new ExecutionResult(success, response.getRunningTime(), result,
+        ExecutionState state = success ? ExecutionState.SUCCESS : ExecutionState.FAILED;
+        return new ExecutionResult(state, response.getRunningTime(), result,
                 response.getOutput() + response.getExceptionStackTrace(), fallbackResult, path);
     }
 

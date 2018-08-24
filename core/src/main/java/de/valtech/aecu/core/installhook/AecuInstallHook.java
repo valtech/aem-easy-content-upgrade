@@ -35,7 +35,9 @@ import org.slf4j.LoggerFactory;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.api.service.HistoryEntry.RESULT;
 
 /**
  * InstallHook handling installation of groovy scripts. The InstallHook gathers groovy scripts
@@ -158,16 +160,42 @@ public class AecuInstallHook implements InstallHook {
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)
             throws AecuException, IOException {
         HistoryEntry installationHistory = aecuService.createHistoryEntry();
+        boolean stopExecution = false;
         for (String groovyScriptPath : scriptsForExecution) {
             HookExecutionHistory hookExecutionHistory = new HookExecutionHistory(installContext.getSession(), groovyScriptPath);
             try {
-                installationHistory = executeScript(aecuService, installationHistory, groovyScriptPath);
-                hookExecutionHistory.setExecuted();
+                if (!stopExecution) {
+                    installationHistory = executeScript(aecuService, installationHistory, groovyScriptPath);
+                    hookExecutionHistory.setExecuted();
+                    if (RESULT.FAILURE.equals(installationHistory.getResult())) {
+                        // stop execution on first failed script run
+                        stopExecution = true;
+                    }
+                } else {
+                    installationHistory = skipScript(aecuService, installationHistory, groovyScriptPath);
+                }
             } catch (AecuException e) {
                 listener.logError("Error executing script " + groovyScriptPath, e);
             }
         }
         installationHistory = aecuService.finishHistoryEntry(installationHistory);
+        return installationHistory;
+    }
+
+    /**
+     * Adds an entry to history that the given script was skipped.
+     * 
+     * @param aecuService         AECU service
+     * @param installationHistory history
+     * @param groovyScriptPath    path of skipped script
+     * @return history
+     * @throws AecuException error storing status
+     */
+    private HistoryEntry skipScript(AecuService aecuService, HistoryEntry installationHistory, String groovyScriptPath)
+            throws AecuException {
+        listener.logMessage("Skipping script because of previous error " + groovyScriptPath);
+        ExecutionResult result = new ExecutionResult(ExecutionState.SKIPPED, null, null, null, null, groovyScriptPath);
+        installationHistory = aecuService.storeExecutionInHistory(installationHistory, result);
         return installationHistory;
     }
 
@@ -190,7 +218,13 @@ public class AecuInstallHook implements InstallHook {
         String entryPath = parent + "/" + entryName;
 
         if (entry.isDirectory() && aecuService.matchesRunmodes(entryName)) {
-            for (Archive.Entry childEntry : entry.getChildren()) {
+            List<String> childNames = new ArrayList<>();
+            for (Archive.Entry child : entry.getChildren()) {
+                childNames.add(child.getName());
+            }
+            childNames.sort(null);
+            for (String childName : childNames) {
+                Archive.Entry childEntry = entry.getChild(childName);
                 candidates.addAll(findCandidates(entryPath, childEntry, aecuService));
             }
         } else if (aecuService.isValidScriptName(entryName)) {
