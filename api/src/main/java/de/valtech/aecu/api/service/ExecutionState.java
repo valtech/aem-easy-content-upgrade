@@ -16,15 +16,27 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-/**
- * This package contains the service API for AEM Easy Content Upgrade (AECU). You can use this to
- * integrate AECU into your own software. See {@link de.valtech.aecu.api.service.AecuService} for a
- * starting point.
- * 
- * @author Roland Gruber
- */
-@Version("2.0")
 package de.valtech.aecu.api.service;
 
-import org.osgi.annotation.versioning.Version;
+/**
+ * State of a script execution.
+ * 
+ * @author Roland Gruber
+ *
+ */
+public enum ExecutionState {
+
+    /**
+     * Script run without errors.
+     */
+    SUCCESS,
+    /**
+     * Script failed with exception.
+     */
+    FAILED,
+    /**
+     * Script was skipped because e.g. previous script failed.
+     */
+    SKIPPED
+
+}

@@ -137,11 +137,15 @@ betty-titlebar {
     color: #00AD31;
 }
 
-.icon-color-ok {
+.icon-color-ok, .icon-color-ok a {
     color: #00AD31;
 }
-.icon-color-fail {
+.icon-color-fail, .icon-color-fail a {
     color: #FA0A0A;
+}
+
+.icon-color-skip, .icon-color-skip a {
+    color: #a2a2a2;
 }
 
 coral-accordion-item.coral3-Accordion-item:hover {
@@ -150,15 +154,25 @@ coral-accordion-item.coral3-Accordion-item:hover {
 
 .aecu-execution-time {
     font-style: italic;
-    color: #909090;
+    color: #a2a2a2;
+    padding-top: .89rem;
+}
+
+.aecu-execution-skipped {
+    color: #a2a2a2;
     padding-top: .89rem;
 }
 
 .aecu-color-fail .coral3-Accordion-header {
     border-left: 7px solid #FA0A0A;
 }
+
 .aecu-color-ok .coral3-Accordion-header {
     border-left: 7px solid #00AD31;
+}
+
+.aecu-color-skip .coral3-Accordion-header {
+    border-left: 7px solid #a2a2a2;
 }
 
 .icon-color-inprogress {
@@ -227,8 +241,13 @@ table.aecu-history-detail td {
 .aecu-color-fail table.aecu-history-detail {
     color: #FA0A0A;
 }
+
 .aecu-color-ok table.aecu-history-detail {
     color: #00AD31;
+}
+
+.aecu-color-skip table.aecu-history-detail {
+    color: #a2a2a2;
 }
 
 .aecu-chart-text {

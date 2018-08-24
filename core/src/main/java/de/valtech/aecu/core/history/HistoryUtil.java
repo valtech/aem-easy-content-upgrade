@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.api.service.HistoryEntry.RESULT;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
@@ -63,7 +64,7 @@ public class HistoryUtil {
 
     private static final String ATTR_PATH = "path";
     private static final String ATTR_RUN_OUTPUT = "runOutput";
-    private static final String ATTR_RUN_SUCCESS = "runSuccess";
+    private static final String ATTR_RUN_STATE = "runState";
     private static final String ATTR_RUN_RESULT = "runResult";
     private static final String ATTR_RUN_TIME = "runTime";
     private static final String ATTR_RESULT = "result";
@@ -315,10 +316,10 @@ public class HistoryUtil {
         ValueMap values = resource.adaptTo(ValueMap.class);
         String output = values.get(ATTR_RUN_OUTPUT, "");
         String time = values.get(ATTR_RUN_TIME, "");
-        Boolean success = values.get(ATTR_RUN_SUCCESS, Boolean.FALSE);
+        ExecutionState state = ExecutionState.valueOf(values.get(ATTR_RUN_STATE, ExecutionState.FAILED.name()));
         String runResult = values.get(ATTR_RUN_RESULT, "");
         String path = values.get(ATTR_PATH, "");
-        ExecutionResult result = new ExecutionResult(success, time, runResult, output, fallback, path);
+        ExecutionResult result = new ExecutionResult(state, time, runResult, output, fallback, path);
         return result;
     }
 
@@ -327,7 +328,7 @@ public class HistoryUtil {
         createPath(path, resolver, "nt:unstructured");
         Resource entry = resolver.getResource(path);
         ModifiableValueMap values = entry.adaptTo(ModifiableValueMap.class);
-        values.put(ATTR_RUN_SUCCESS, result.isSuccess());
+        values.put(ATTR_RUN_STATE, result.getState().name());
         values.put(ATTR_PATH, result.getPath());
         if (StringUtils.isNotBlank(result.getOutput())) {
             values.put(ATTR_RUN_OUTPUT, result.getOutput());
