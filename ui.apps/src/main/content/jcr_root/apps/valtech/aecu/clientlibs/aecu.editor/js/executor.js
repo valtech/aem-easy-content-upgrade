@@ -169,7 +169,8 @@ $(document).ready(function () {
         		Coral.commons.ready(panel[0], function () {
         			var selected = panel.attr('aria-selected');
                     if (!selected || (selected == "false")) {
-                        button.find('button').click();            	
+                        button.find('button').click();
+                        setTimeout(function() {button.find('[tabindex="-1"]').click();}, 300);
                     }        			
         		});
         	}
