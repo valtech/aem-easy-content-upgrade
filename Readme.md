@@ -161,10 +161,15 @@ println aecu.contentUpgradeBuilder()
 These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
 
 ### Filter by Properties
-Use this to filter by a list of property values (e.g. sling:resourceType).
+
+Filters the resources by property values.
+
+* filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
+* filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
 
 ```java
 filterByProperties(Map<String, String> properties)
+filterByMultiValuePropContains(String name,  Object[] conditionValues)
 ```
 
 Example:
@@ -176,6 +181,7 @@ conditionMap["sling:resourceType"] = "weretail/components/structure/page"
 println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByProperties(conditionMap)
+        .filterByMultiValuePropContains("myAttribute", ["value"] as String[])
         .doSetProperty("name", "value")
         .run()
 ```
