@@ -18,11 +18,11 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import java.util.Map;
 
 import org.apache.sling.api.resource.PersistenceException;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -65,6 +65,15 @@ public interface ContentUpgrade {
     ContentUpgrade forResourcesInSubtree(String path);
 
     /**
+     * Filters by a single property.
+     * 
+     * @param name  property name
+     * @param value property value
+     * @return upgrade object
+     */
+    ContentUpgrade filterByProperty(String name, Object value);
+
+    /**
      * Filters by properties. Can be used also for Multi-value properties.
      * 
      * @param conditionProperties properties to filter
@@ -75,11 +84,11 @@ public interface ContentUpgrade {
     /**
      * Filters by multi-value with the given name containing the given conditionValues
      *
-     * @param name name of the multi-value property
+     * @param name            name of the multi-value property
      * @param conditionValues values to search for
      * @return upgrade object
      */
-    ContentUpgrade filterByMultiValuePropContains(String name,  Object[] conditionValues);
+    ContentUpgrade filterByMultiValuePropContains(String name, Object[] conditionValues);
 
     /**
      * Filters by node name exact match.
@@ -233,4 +242,5 @@ public interface ContentUpgrade {
      * @throws PersistenceException error during execution
      */
     StringBuffer run(boolean dryRun) throws PersistenceException;
+
 }

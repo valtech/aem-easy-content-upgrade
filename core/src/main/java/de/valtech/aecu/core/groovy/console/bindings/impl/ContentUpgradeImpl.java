@@ -1,11 +1,25 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.scribe.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
@@ -23,19 +37,6 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResources
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
 
 public class ContentUpgradeImpl implements ContentUpgrade {
 
@@ -88,11 +89,19 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade filterByProperty(@Nonnull String name, Object value) {
+        LOG.debug("filterByProperty: {} {}", name, value);
+        filter = new FilterByProperty(name, value);
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterByMultiValuePropContains(@Nonnull String name, @Nonnull Object[] conditionValues) {
         LOG.debug("filterByMultiValuePropContains {} : {}", name, Arrays.toString(conditionValues));
         filter = new FilterByMultiValuePropContains(name, conditionValues);
         return this;
     }
+
     @Override
     public ContentUpgrade filterByNodeName(@Nonnull String nodeName) {
         LOG.debug("filterByNodeName: {}", nodeName);
