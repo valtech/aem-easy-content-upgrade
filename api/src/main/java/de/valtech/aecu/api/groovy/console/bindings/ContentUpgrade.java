@@ -65,6 +65,14 @@ public interface ContentUpgrade {
     ContentUpgrade forResourcesInSubtree(String path);
 
     /**
+     * Filters by existence of a single property.
+     * 
+     * @param name property name
+     * @return upgrade object
+     */
+    ContentUpgrade filterByHasProperty(String name);
+
+    /**
      * Filters by a single property.
      * 
      * @param name  property name

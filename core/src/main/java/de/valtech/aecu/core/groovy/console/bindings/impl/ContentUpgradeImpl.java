@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
@@ -92,6 +93,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade filterByProperty(@Nonnull String name, Object value) {
         LOG.debug("filterByProperty: {} {}", name, value);
         filter = new FilterByProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByHasProperty(@Nonnull String name) {
+        LOG.debug("filterByHasProperty: {} {}", name);
+        filter = new FilterByHasProperty(name);
         return this;
     }
 
