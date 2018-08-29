@@ -152,7 +152,7 @@ public class AecuServiceImpl implements AecuService {
 
     @Override
     public ExecutionResult execute(String path) throws AecuException {
-        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+        try (ResourceResolver resolver = resolverService.getContentMigratorResourceResolver()) {
             Resource resource = resolver.getResource(path);
             if (resource == null) {
                 throw new AecuException("Path is invalid");

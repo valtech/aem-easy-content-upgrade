@@ -5,4 +5,8 @@
             jcr:primaryType="rep:GrantACE"
             rep:principalName="aecu-service"
             rep:privileges="{Name}[jcr:read]"/>
+    <allow
+            jcr:primaryType="rep:GrantACE"
+            rep:principalName="aecu-content-migrator"
+            rep:privileges="{Name}[jcr:read]"/>
 </jcr:root>

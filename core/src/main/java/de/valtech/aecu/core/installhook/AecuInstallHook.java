@@ -204,7 +204,7 @@ public class AecuInstallHook implements InstallHook {
         listener.logMessage("Executing script " + groovyScriptPath);
         ExecutionResult result = aecuService.execute(groovyScriptPath);
         installationHistory = aecuService.storeExecutionInHistory(installationHistory, result);
-        listener.logMessage("Executed script " + groovyScriptPath + ", output: " + result.getOutput());
+        listener.logMessage("Executed script " + groovyScriptPath + ", output: \n" + result.getOutput());
         return installationHistory;
     }
 

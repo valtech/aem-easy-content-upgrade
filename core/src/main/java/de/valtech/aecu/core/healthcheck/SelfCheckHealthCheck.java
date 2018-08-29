@@ -44,7 +44,12 @@ public class SelfCheckHealthCheck implements HealthCheck {
     public Result execute() {
         final FormattingResultLog resultLog = new FormattingResultLog();
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            resultLog.info("Ok");
+            resultLog.info("Service user ok");
+        } catch (LoginException e) {
+            resultLog.critical("Unable to open service resource resolver {}", e.getMessage());
+        }
+        try (ResourceResolver resolver = resolverService.getContentMigratorResourceResolver()) {
+            resultLog.info("Migration user ok");
         } catch (LoginException e) {
             resultLog.critical("Unable to open service resource resolver {}", e.getMessage());
         }
