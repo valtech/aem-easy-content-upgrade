@@ -439,4 +439,17 @@ public class HistoryUtil {
         }
     }
 
+    /**
+     * Self test of history. Checks if the history node exists.
+     * 
+     * @param resolver resource resolver
+     * @throws AecuException check failed
+     */
+    public void selfCheck(ResourceResolver resolver) throws AecuException {
+        Resource base = resolver.getResource(HISTORY_BASE);
+        if (base == null) {
+            throw new AecuException(HISTORY_BASE + " does not exist or is not accessible.");
+        }
+    }
+
 }

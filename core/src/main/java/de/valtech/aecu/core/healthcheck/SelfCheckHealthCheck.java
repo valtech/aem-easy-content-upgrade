@@ -26,6 +26,9 @@ import org.apache.sling.hc.util.FormattingResultLog;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.core.installhook.HookExecutionHistory;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
@@ -43,6 +46,47 @@ public class SelfCheckHealthCheck implements HealthCheck {
     @Override
     public Result execute() {
         final FormattingResultLog resultLog = new FormattingResultLog();
+        checkServiceResolver(resultLog);
+        checkHistoryNodeAccess(resultLog);
+        checkHookHistoryNodeAccess(resultLog);
+        return new Result(resultLog);
+    }
+
+    /**
+     * Checks the history node.
+     * 
+     * @param resultLog result log
+     */
+    private void checkHistoryNodeAccess(FormattingResultLog resultLog) {
+        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+            HistoryUtil util = new HistoryUtil();
+            util.selfCheck(resolver);
+            resultLog.info("History node ok");
+        } catch (LoginException | AecuException e) {
+            resultLog.critical("History node check failed: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Checks the install hook history node.
+     * 
+     * @param resultLog result log
+     */
+    private void checkHookHistoryNodeAccess(FormattingResultLog resultLog) {
+        try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+            HookExecutionHistory.selfCheck(resolver);
+            resultLog.info("Install hook history node ok");
+        } catch (LoginException | AecuException e) {
+            resultLog.critical("Install hook history node check failed: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Checks if the service resource resolvers are accessible.
+     * 
+     * @param resultLog result log
+     */
+    private void checkServiceResolver(FormattingResultLog resultLog) {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
             resultLog.info("Service user ok");
         } catch (LoginException e) {
@@ -53,7 +97,6 @@ public class SelfCheckHealthCheck implements HealthCheck {
         } catch (LoginException e) {
             resultLog.critical("Unable to open service resource resolver {}", e.getMessage());
         }
-        return new Result(resultLog);
     }
 
 }

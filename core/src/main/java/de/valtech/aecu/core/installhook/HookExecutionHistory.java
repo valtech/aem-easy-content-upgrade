@@ -18,19 +18,21 @@
  */
 package de.valtech.aecu.core.installhook;
 
-import org.apache.jackrabbit.JcrConstants;
-import org.apache.jackrabbit.commons.JcrUtils;
-import org.apache.jackrabbit.value.DateValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.valtech.aecu.api.service.AecuException;
-
 import java.util.Calendar;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.jackrabbit.commons.JcrUtils;
+import org.apache.jackrabbit.value.DateValue;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.valtech.aecu.api.service.AecuException;
 
 /**
  * Execution history for groovy scripts executed during {@link AecuInstallHook} invocation.
@@ -88,6 +90,19 @@ public class HookExecutionHistory {
             hookHistory.getSession().save();
         } catch (RepositoryException e) {
             throw new AecuException("Could not set property " + PN_EXECUTED, e);
+        }
+    }
+
+    /**
+     * Self test of history. Checks if the history node exists.
+     * 
+     * @param resolver resource resolver
+     * @throws AecuException check failed
+     */
+    public static void selfCheck(ResourceResolver resolver) throws AecuException {
+        Resource base = resolver.getResource(HISTORY_BASE_PATH);
+        if (base == null) {
+            throw new AecuException(HISTORY_BASE_PATH + " does not exist or is not accessible.");
         }
     }
 
