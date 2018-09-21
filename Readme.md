@@ -12,20 +12,23 @@ Features:
 * Service API
 * Health Checks
 
+The tool was presented at [adaptTo() conference in Berlin](https://adapt.to/2018/en/schedule/aem-easy-content-upgrade.html)
+
 Table of contents
 1. [Requirements](#requirements)
 2. [Installation](#installation)
-3. [Execution of Migration Scripts](#execution)
+3. [File and Folder Structure](#structure)
+4. [Execution of Migration Scripts](#execution)
     1. [Install Hook](#installHook)
     2. [Manual Execution](#manualExecution)
-4. [History of Past Runs](#history)
-5. [Extension to Groovy Console](#groovy)
-6. [JMX Interface](#jmx)
-7. [Health Checks](#healthchecks)
-8. [API Documentation](#api)
-9. [License](#license)
-10. [Changelog](#changelog)
-11. [Developers](#developers)
+5. [History of Past Runs](#history)
+6. [Extension to Groovy Console](#groovy)
+7. [JMX Interface](#jmx)
+8. [Health Checks](#healthchecks)
+9. [API Documentation](#api)
+10. [License](#license)
+11. [Changelog](#changelog)
+12. [Developers](#developers)
 
 
 <a name="requirements"></a>
@@ -66,6 +69,25 @@ The package is also available on [Maven Central](http://repo1.maven.org/maven2/d
         </dependency>
 ```
 
+
+<a name="structure"></a>
+
+# File and Folder Structure
+
+All migration scripts need to be located in /etc/groovyconsole/scripts/aecu. There you can create
+an unlimited number of folders and files. E.g. organize your files by project or deployment.
+The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+
+<img src="docs/images/files.png">
+
+There are just a few naming conventions:
+
+* Run modes: folders can contain run modes to limit the execution to a specific target environment. E.g. some scripts are for author only or for your local dev environment.
+* Always selector: if a script name ends with ".always.groovy" then it will be executed by
+[install hook](#installHook) on each package installation. There will be no more check if this script
+was already executed before.
+* Fallback selector: if a script name ends with ".fallback.groovy" then it will be executed only if
+the corresponding script failed with an exception. E.g. if there is "script.groovy" and "script.fallback.groovy" then the fallback script only gets executed if "script.groovy" fails.
 
 <a name="execution"></a>
 
@@ -353,7 +375,7 @@ AECU provides JMX methods for executing scripts and reading the history. You can
 
 ## Execute
 
-This will execute the given script or folder. If a folder is specified then all files (incl. any subfolders) are executed. AECU will respect runmodes during execution.
+This will execute the given script or folder. If a folder is specified then all files (incl. any subfolders) are executed. AECU will respect run modes during execution.
 
 Parameters:
  * Path: file or folder to execute
