@@ -34,6 +34,8 @@ import org.apache.sling.settings.SlingSettingsService;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
@@ -54,6 +56,8 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
  */
 @Component(service = AecuService.class)
 public class AecuServiceImpl implements AecuService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AecuServiceImpl.class);
 
     @Reference
     private ServiceResourceResolverService resolverService;
@@ -176,8 +180,14 @@ public class AecuServiceImpl implements AecuService {
      */
     private ExecutionResult executeScript(ResourceResolver resolver, String path) {
         GroovyConsoleRequest request = new GroovyConsoleRequest(resolver);
+        LOG.info("Executing script " + path);
         RunScriptResponse response = groovyConsoleService.runScript(request, path);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
+        if (success) {
+            LOG.info("Executed script " + path + " with status OK");
+        } else {
+            LOG.error("Executed script " + path + " with status FAILED");
+        }
         String result = response.getResult();
         ExecutionResult fallbackResult = null;
         if (!success && (getFallbackScript(resolver, path) != null)) {
