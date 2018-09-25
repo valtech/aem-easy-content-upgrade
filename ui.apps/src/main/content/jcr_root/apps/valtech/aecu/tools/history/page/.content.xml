@@ -34,7 +34,6 @@
 				                    layoutId="list"
 				                    sling:resourceType="granite/ui/components/coral/foundation/table"
 				                    limit="50"
-				                    size="${empty requestPathInfo.selectors[1] ? &quot;50&quot; : requestPathInfo.selectors[1]}"
 				                    src="/apps/valtech/aecu/tools/history/page/jcr:content/views/list{.offset,limit}.html?wcmmode=disabled"
 				                    path="${requestPathInfo.suffix}"
 				                    sortMode="remote"
@@ -65,6 +64,8 @@
 				                        path="${requestPathInfo.suffix}"
 				                        sling:resourceType="valtech/aecu/tools/history/datasource"
 				                        itemResourceType="valtech/aecu/tools/history/dataitem"
+										limit="${empty requestPathInfo.selectors[1] ? &quot;50&quot; : requestPathInfo.selectors[1]}"
+										offset="${requestPathInfo.selectors[0]}"
 				                />
 				            </list>
 
