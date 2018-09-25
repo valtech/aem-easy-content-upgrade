@@ -65,6 +65,7 @@
 				                        path="${requestPathInfo.suffix}"
 				                        sling:resourceType="valtech/aecu/tools/history/datasource"
 				                        itemResourceType="valtech/aecu/tools/history/dataitem"
+										limit="${empty requestPathInfo.selectors[1] ? &quot;50&quot; : requestPathInfo.selectors[1]}"
 				                />
 				            </list>
 
