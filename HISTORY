@@ -1,3 +1,10 @@
+1.5.0
+  - Run custom code as binding action (#28)
+  - Better logging (#25)
+  - Enhanced health check (#26)
+  - Fixed bugs:
+    - Exception in log for history page on AEM 6.4 (#24)
+
 2018-08-29 1.4.0
   - Groovy Console extension:
     - added filterByProperty()

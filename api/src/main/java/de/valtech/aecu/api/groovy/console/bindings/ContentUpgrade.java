@@ -220,6 +220,14 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteResource();
 
     /**
+     * Performs a custom action with providing a function.
+     * 
+     * @param action action to perform on resource
+     * @return upgrade object
+     */
+    ContentUpgrade doCustomResourceBasedAction(CustomResourceAction action);
+
+    /**
      * Print path
      * 
      * @return upgrade object
