@@ -16,13 +16,35 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+
+import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
- * Contains the classes for the Groovy binding "aecu".
+ * Generic action based on a Lambda.
  * 
- * @author Roxana Muresan
+ * @author Roland Gruber
  */
-@Version("1.1")
-package de.valtech.aecu.api.groovy.console.bindings;
+public class CustomAction implements Action {
 
-import org.osgi.annotation.versioning.Version;
+    private CustomResourceAction action;
+
+    /**
+     * Constructor
+     * 
+     * @param action action to perform
+     */
+    public CustomAction(CustomResourceAction action) {
+        this.action = action;
+    }
+
+    @Override
+    public String doAction(Resource resource) throws PersistenceException {
+        return action.doAction(resource);
+    }
+
+}

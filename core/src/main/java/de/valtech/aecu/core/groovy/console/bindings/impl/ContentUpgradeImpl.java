@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
+import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
@@ -32,6 +33,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePrope
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
@@ -209,6 +211,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doDeleteResource() {
         LOG.debug("doDeleteResource");
         actions.add(new DeleteResource(resourceResolver));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCustomResourceBasedAction(CustomResourceAction action) {
+        LOG.debug("doCustomResourceBasedAction");
+        actions.add(new CustomAction(action));
         return this;
     }
 

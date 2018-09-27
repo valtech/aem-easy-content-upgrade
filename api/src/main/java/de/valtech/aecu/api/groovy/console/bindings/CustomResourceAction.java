@@ -16,13 +16,24 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-/**
- * Contains the classes for the Groovy binding "aecu".
- * 
- * @author Roxana Muresan
- */
-@Version("1.1")
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import org.osgi.annotation.versioning.Version;
+import org.apache.sling.api.resource.Resource;
+
+/**
+ * Functional interface to define custom action on content upgrade.
+ * 
+ * @author Roland Gruber
+ */
+@FunctionalInterface
+public interface CustomResourceAction {
+
+    /**
+     * Performs the provided action on the resource.
+     * 
+     * @param resource resource
+     * @return log output
+     */
+    String doAction(Resource resource);
+
+}

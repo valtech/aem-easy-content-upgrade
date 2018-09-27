@@ -329,7 +329,7 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Delete nodes
+### Delete Nodes
 
 You can delete all nodes that match your collection and filter.
 
@@ -356,6 +356,28 @@ println aecu.contentUpgradeBuilder()
         .printPath()
         .run()
 ```
+
+### Custom Actions
+
+You can also hook in custom code to perform actions on resources. For this "doCustomResourceBasedAction()" can take a Lambda expression.
+
+* doCustomResourceBasedAction(): run your custom code
+
+```java
+def myAction = {
+    resource -> 
+    hasChildren = resource.hasChildren()
+    String output = resource.path + " has children: "
+    output += hasChildren ? "yes" : "no"
+    return output
+}
+
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .doCustomResourceBasedAction(myAction)
+        .run()
+```
+
 
 
 ## Run Options
