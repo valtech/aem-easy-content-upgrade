@@ -27,6 +27,8 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
@@ -45,7 +47,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     private static Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
 
-    private ResourceResolver resourceResolver = null;
+    private BindingContext context = null;
 
     private List<TraversData> traversals = new ArrayList<>();
     private FilterBy filter = null;
@@ -53,7 +55,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
 
     public ContentUpgradeImpl(@Nonnull ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
+        this.context = new BindingContext(resourceResolver);
     }
 
     @Override
@@ -158,7 +160,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName,
             @Nonnull String relativeResourcePath) {
         LOG.debug("doCopyProperty: {} to {}", name, relativeResourcePath);
-        actions.add(new CopyPropertyToRelativePath(name, newName, resourceResolver, relativeResourcePath));
+        actions.add(new CopyPropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
@@ -166,7 +168,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName,
             @Nonnull String relativeResourcePath) {
         LOG.debug("doMoveProperty: {} to {}", name, relativeResourcePath);
-        actions.add(new MovePropertyToRelativePath(name, newName, resourceResolver, relativeResourcePath));
+        actions.add(new MovePropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
@@ -196,21 +198,21 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doCopyResource to {}", relativePath);
-        actions.add(new CopyResourceToRelativePath(relativePath, resourceResolver));
+        actions.add(new CopyResourceToRelativePath(relativePath, context.getResolver()));
         return this;
     }
 
     @Override
     public ContentUpgrade doMoveResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doMoveResource to {}", relativePath);
-        actions.add(new MoveResourceToRelativePath(relativePath, resourceResolver));
+        actions.add(new MoveResourceToRelativePath(relativePath, context.getResolver()));
         return this;
     }
 
     @Override
     public ContentUpgrade doDeleteResource() {
         LOG.debug("doDeleteResource");
-        actions.add(new DeleteResource(resourceResolver));
+        actions.add(new DeleteResource(context.getResolver()));
         return this;
     }
 
@@ -218,6 +220,27 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doCustomResourceBasedAction(CustomResourceAction action) {
         LOG.debug("doCustomResourceBasedAction");
         actions.add(new CustomAction(action));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doActivateContainingPage() {
+        LOG.debug("doActivateContainingPage");
+        actions.add(new ReplicatePageAction(true, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeactivateContainingPage() {
+        LOG.debug("doDeactivateContainingPage");
+        actions.add(new ReplicatePageAction(false, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeleteContainingPage() {
+        LOG.debug("doDeleteContainingPage");
+        actions.add(new DeletePageAction(context));
         return this;
     }
 
@@ -242,10 +265,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public StringBuffer run(boolean dryRun) throws PersistenceException {
+        context.setDryRun(dryRun);
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
-            traversal.traverse(resourceResolver, filter, actions, stringBuffer, dryRun);
+            traversal.traverse(context, filter, actions, stringBuffer, dryRun);
         }
         return stringBuffer;
     }
+
 }

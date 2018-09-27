@@ -1,0 +1,74 @@
+/*
+ * Copyright 2018 Valtech GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package de.valtech.aecu.core.groovy.console.bindings.actions.page;
+
+import javax.jcr.Session;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+
+import com.day.cq.replication.ReplicationActionType;
+import com.day.cq.replication.ReplicationException;
+import com.day.cq.wcm.api.Page;
+
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+
+/**
+ * Replicates the page of a given resource.
+ * 
+ * @author Roland Gruber
+ */
+public class ReplicatePageAction implements Action {
+
+    private boolean activate;
+    private BindingContext context;
+
+    /**
+     * Constructor
+     * 
+     * @param activate activate or deactivate
+     * @param context  binding context
+     */
+    public ReplicatePageAction(boolean activate, BindingContext context) {
+        this.activate = activate;
+        this.context = context;
+    }
+
+    @Override
+    public String doAction(Resource resource) throws PersistenceException {
+        Page page = context.getPageManager().getContainingPage(resource);
+        if (page == null) {
+            return "Unable to find a page for resource " + resource.getPath();
+        }
+        String action = activate ? "activate" : "deactivate";
+        String successMessage = "Replicated page " + page.getPath() + " with action " + action;
+        if (context.isDryRun()) {
+            return successMessage;
+        }
+        try {
+            ReplicationActionType type = activate ? ReplicationActionType.ACTIVATE : ReplicationActionType.DEACTIVATE;
+            context.getReplicator().replicate(context.getResolver().adaptTo(Session.class), type, page.getPath());
+        } catch (ReplicationException e) {
+            throw new PersistenceException("Unable to replicate " + page.getPath());
+        }
+        return successMessage;
+    }
+
+}

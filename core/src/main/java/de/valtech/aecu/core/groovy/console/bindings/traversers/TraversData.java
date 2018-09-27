@@ -18,22 +18,32 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.traversers;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.PersistenceException;
+
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * @author Roxana Muresan
  */
 public interface TraversData {
 
-    void traverse(@Nonnull ResourceResolver resourceResolver, FilterBy filter, @Nonnull List<Action> actions,
+    /**
+     * Traverses the resources and performs the filters and actions.
+     * 
+     * @param context      binding context
+     * @param filter       filter
+     * @param actions      list of actions
+     * @param stringBuffer output buffer
+     * @param dryRun       dry run
+     * @throws PersistenceException error traversing nodes
+     */
+    void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
             @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException;
 
 }
