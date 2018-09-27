@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
+import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
@@ -89,50 +90,67 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
-        filter = new FilterByProperties(conditionProperties);
+        addFilter(new FilterByProperties(conditionProperties));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByProperty(@Nonnull String name, Object value) {
         LOG.debug("filterByProperty: {} {}", name, value);
-        filter = new FilterByProperty(name, value);
+        addFilter(new FilterByProperty(name, value));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByHasProperty(@Nonnull String name) {
         LOG.debug("filterByHasProperty: {} {}", name);
-        filter = new FilterByHasProperty(name);
+        addFilter(new FilterByHasProperty(name));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByMultiValuePropContains(@Nonnull String name, @Nonnull Object[] conditionValues) {
         LOG.debug("filterByMultiValuePropContains {} : {}", name, Arrays.toString(conditionValues));
-        filter = new FilterByMultiValuePropContains(name, conditionValues);
+        addFilter(new FilterByMultiValuePropContains(name, conditionValues));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByNodeName(@Nonnull String nodeName) {
         LOG.debug("filterByNodeName: {}", nodeName);
-        filter = new FilterByNodeName(nodeName);
+        addFilter(new FilterByNodeName(nodeName));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByNodeNameRegex(@Nonnull String regex) {
         LOG.debug("filterByNodeNameRegex: {}", regex);
-        filter = new FilterByNodeNameRegex(regex);
+        addFilter(new FilterByNodeNameRegex(regex));
         return this;
     }
 
     @Override
     public ContentUpgrade filterWith(@Nonnull FilterBy filter) {
         LOG.debug("filterWith: {}", filter);
-        this.filter = filter;
+        addFilter(filter);
         return this;
+    }
+
+    /**
+     * Adds another filter. If there is already a filter then an AND filter will be created.
+     * 
+     * @param filter filter
+     */
+    private void addFilter(@Nonnull FilterBy filter) {
+        if (this.filter == null) {
+            this.filter = filter;
+            return;
+        }
+        if (this.filter instanceof ANDFilter) {
+            ((ANDFilter) this.filter).addFilter(filter);
+        }
+        ANDFilter newFilter = new ANDFilter(Arrays.asList(this.filter, filter));
+        this.filter = newFilter;
     }
 
     @Override
