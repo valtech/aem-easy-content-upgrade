@@ -52,6 +52,9 @@ public class ForChildResourcesOf implements TraversData {
             Iterator<Resource> resourceIterator = resourceResolver.listChildren(parentResource);
             while (resourceIterator.hasNext()) {
                 Resource resource = resourceIterator.next();
+                if (!isResourceValid(resource)) {
+                    continue;
+                }
                 if (filter == null || filter.filter(resource)) {
                     for (Action action : actions) {
                         stringBuffer.append(action.doAction(resource) + "\n");
@@ -63,4 +66,7 @@ public class ForChildResourcesOf implements TraversData {
             }
         }
     }
+
+
+
 }

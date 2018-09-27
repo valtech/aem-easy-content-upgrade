@@ -64,6 +64,9 @@ public class ForDescendantResourcesOf implements TraversData {
             Iterator<Resource> childResources = resource.listChildren();
             while (childResources.hasNext()) {
                 Resource child = childResources.next();
+                if (!isResourceValid(child)) {
+                    continue;
+                }
                 applyActionOnResource(child, filter, actions, stringBuffer);
                 traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
             }

@@ -22,7 +22,10 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
@@ -30,6 +33,7 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * @author Roxana Muresan
+ * @author Roland Gruber
  */
 public interface TraversData {
 
@@ -45,5 +49,20 @@ public interface TraversData {
      */
     void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
             @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException;
+
+    /**
+     * Checks if the resource is still valid. E.g. this returns false if it was already deleted.
+     * 
+     * @param resource resource
+     * @return valid
+     */
+    default boolean isResourceValid(Resource resource) {
+        try {
+            ValueMap values = resource.getValueMap();
+            return values.get(JcrConstants.JCR_PRIMARYTYPE, String.class) != null;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 
 }
