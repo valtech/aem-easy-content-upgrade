@@ -16,46 +16,24 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.api.groovy.console.bindings.filters;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
+package de.valtech.aecu.api.groovy.console.bindings;
 
 import org.apache.sling.api.resource.Resource;
 
 /**
- * Combines multiple filters with AND.
+ * Functional interface to define custom action on content upgrade.
  * 
- * @author Roxana Muresan
+ * @author Roland Gruber
  */
-public class ANDFilter implements FilterBy {
-
-    private List<FilterBy> filters;
-
-    /**
-     * Constructor
-     * 
-     * @param filters list of filters that should be chained with AND
-     */
-    public ANDFilter(@Nonnull List<FilterBy> filters) {
-        this.filters = filters;
-    }
-
-    @Override
-    public boolean filter(@Nonnull Resource resource) {
-        boolean foundFalse = filters.parallelStream().filter(f -> f.filter(resource) == false).findAny().isPresent();
-        return !foundFalse;
-
-    }
+@FunctionalInterface
+public interface CustomResourceAction {
 
     /**
-     * Adds a new filter to the AND condition.
+     * Performs the provided action on the resource.
      * 
-     * @param filter filter
+     * @param resource resource
+     * @return log output
      */
-    public void addFilter(@Nonnull FilterBy filter) {
-        filters.add(filter);
-    }
+    String doAction(Resource resource);
 
 }

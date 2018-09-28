@@ -16,46 +16,35 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.api.groovy.console.bindings.filters;
+package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-/**
- * Combines multiple filters with AND.
- * 
- * @author Roxana Muresan
- */
-public class ANDFilter implements FilterBy {
+import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
-    private List<FilterBy> filters;
+/**
+ * Generic action based on a Lambda.
+ * 
+ * @author Roland Gruber
+ */
+public class CustomAction implements Action {
+
+    private CustomResourceAction action;
 
     /**
      * Constructor
      * 
-     * @param filters list of filters that should be chained with AND
+     * @param action action to perform
      */
-    public ANDFilter(@Nonnull List<FilterBy> filters) {
-        this.filters = filters;
+    public CustomAction(CustomResourceAction action) {
+        this.action = action;
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource) {
-        boolean foundFalse = filters.parallelStream().filter(f -> f.filter(resource) == false).findAny().isPresent();
-        return !foundFalse;
-
-    }
-
-    /**
-     * Adds a new filter to the AND condition.
-     * 
-     * @param filter filter
-     */
-    public void addFilter(@Nonnull FilterBy filter) {
-        filters.add(filter);
+    public String doAction(Resource resource) throws PersistenceException {
+        return action.doAction(resource);
     }
 
 }

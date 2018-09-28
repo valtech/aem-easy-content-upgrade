@@ -220,6 +220,36 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteResource();
 
     /**
+     * Performs a custom action with providing a function.
+     * 
+     * @param action action to perform on resource
+     * @return upgrade object
+     */
+    ContentUpgrade doCustomResourceBasedAction(CustomResourceAction action);
+
+    /**
+     * Activates the page where the resource is located.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doActivateContainingPage();
+
+    /**
+     * Deactivates the page where the resource is located.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doDeactivateContainingPage();
+
+    /**
+     * Deletes the page where the resource is located. This will not work if called multiple times
+     * for the same page.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doDeleteContainingPage();
+
+    /**
      * Print path
      * 
      * @return upgrade object
