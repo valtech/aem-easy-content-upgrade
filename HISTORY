@@ -1,5 +1,7 @@
 1.5.0
-  - Run custom code as binding action (#28)
+  - Groovy Console binding:
+    - Run custom code as binding action (#28)
+    - Page actions: (de)activate and delete containing page
   - Better logging (#25)
   - Enhanced health check (#26)
   - Fixed bugs:

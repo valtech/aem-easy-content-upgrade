@@ -343,6 +343,25 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+### Page Actions
+
+AECU can run actions on the page that contains a filtered resource. This is e.g. helpful if you filter by page resource type.
+Please note that there is no check for duplicate actions. If you run a page action for two resources in the same page then the action will be executed twice.
+
+* doActivateContainingPage(): activates the page that contains the current resource
+* doDeactivateContainingPage(): deactivates the page that contains the current resource
+* doDeleteContainingPage(): deletes the page (incl. subpages) that contains the current resource
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByProperty("sling:resourceType", "weretail/components/structure/page")
+        .doActivateContainingPage()
+        .doDeactivateContainingPage()
+        .doDeleteContainingPage()
+        .run()
+```
+
 ### Print Nodes
 
 Sometimes, you only want to print the path of the matched nodes.

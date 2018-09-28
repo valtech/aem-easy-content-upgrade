@@ -48,4 +48,14 @@ public class ANDFilter implements FilterBy {
         return !foundFalse;
 
     }
+
+    /**
+     * Adds a new filter to the AND condition.
+     * 
+     * @param filter filter
+     */
+    public void addFilter(@Nonnull FilterBy filter) {
+        filters.add(filter);
+    }
+
 }

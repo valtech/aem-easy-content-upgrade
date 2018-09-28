@@ -16,51 +16,51 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.traversers;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
+package de.valtech.aecu.core.groovy.console.bindings.actions.page;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.WCMException;
+
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
- * @author Roxana Muresan
+ * Deletes the page of a given resource.
+ * 
+ * @author Roland Gruber
  */
-public class ForResources implements TraversData {
+public class DeletePageAction implements Action {
 
-    private String[] paths;
+    private BindingContext context;
 
-    public ForResources(@Nonnull String[] paths) {
-        this.paths = paths;
+    /**
+     * Constructor
+     * 
+     * @param context binding context
+     */
+    public DeletePageAction(BindingContext context) {
+        this.context = context;
     }
 
     @Override
-    public void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
-        ResourceResolver resourceResolver = context.getResolver();
-        for (String path : paths) {
-            if (path != null) {
-                Resource resource = resourceResolver.getResource(path);
-                if (resource != null) {
-                    if (filter == null || filter.filter(resource)) {
-                        for (Action action : actions) {
-                            stringBuffer.append(action.doAction(resource) + "\n");
-                        }
-                    }
-                } else {
-                    stringBuffer.append("WARNING: resource does not exist " + path + "\n");
-                }
-            }
+    public String doAction(Resource resource) throws PersistenceException {
+        Page page = context.getPageManager().getContainingPage(resource);
+        if (page == null) {
+            return "Unable to find a page for resource " + resource.getPath();
         }
-        if (!dryRun) {
-            resourceResolver.commit();
+        String successMessage = "Deleted page " + page.getPath();
+        if (context.isDryRun()) {
+            return successMessage;
         }
+        try {
+            context.getPageManager().delete(page, false);
+        } catch (WCMException e) {
+            throw new PersistenceException("Unable to delete " + page.getPath());
+        }
+        return successMessage;
     }
+
 }

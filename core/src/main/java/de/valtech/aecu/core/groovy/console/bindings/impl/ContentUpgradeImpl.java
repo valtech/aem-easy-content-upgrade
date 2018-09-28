@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
+import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
@@ -27,6 +28,8 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
@@ -45,7 +48,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     private static Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
 
-    private ResourceResolver resourceResolver = null;
+    private BindingContext context = null;
 
     private List<TraversData> traversals = new ArrayList<>();
     private FilterBy filter = null;
@@ -53,7 +56,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
 
     public ContentUpgradeImpl(@Nonnull ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
+        this.context = new BindingContext(resourceResolver);
     }
 
     @Override
@@ -87,50 +90,67 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
-        filter = new FilterByProperties(conditionProperties);
+        addFilter(new FilterByProperties(conditionProperties));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByProperty(@Nonnull String name, Object value) {
         LOG.debug("filterByProperty: {} {}", name, value);
-        filter = new FilterByProperty(name, value);
+        addFilter(new FilterByProperty(name, value));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByHasProperty(@Nonnull String name) {
         LOG.debug("filterByHasProperty: {} {}", name);
-        filter = new FilterByHasProperty(name);
+        addFilter(new FilterByHasProperty(name));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByMultiValuePropContains(@Nonnull String name, @Nonnull Object[] conditionValues) {
         LOG.debug("filterByMultiValuePropContains {} : {}", name, Arrays.toString(conditionValues));
-        filter = new FilterByMultiValuePropContains(name, conditionValues);
+        addFilter(new FilterByMultiValuePropContains(name, conditionValues));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByNodeName(@Nonnull String nodeName) {
         LOG.debug("filterByNodeName: {}", nodeName);
-        filter = new FilterByNodeName(nodeName);
+        addFilter(new FilterByNodeName(nodeName));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByNodeNameRegex(@Nonnull String regex) {
         LOG.debug("filterByNodeNameRegex: {}", regex);
-        filter = new FilterByNodeNameRegex(regex);
+        addFilter(new FilterByNodeNameRegex(regex));
         return this;
     }
 
     @Override
     public ContentUpgrade filterWith(@Nonnull FilterBy filter) {
         LOG.debug("filterWith: {}", filter);
-        this.filter = filter;
+        addFilter(filter);
         return this;
+    }
+
+    /**
+     * Adds another filter. If there is already a filter then an AND filter will be created.
+     * 
+     * @param filter filter
+     */
+    private void addFilter(@Nonnull FilterBy filter) {
+        if (this.filter == null) {
+            this.filter = filter;
+            return;
+        }
+        if (this.filter instanceof ANDFilter) {
+            ((ANDFilter) this.filter).addFilter(filter);
+        }
+        ANDFilter newFilter = new ANDFilter(Arrays.asList(this.filter, filter));
+        this.filter = newFilter;
     }
 
     @Override
@@ -158,7 +178,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName,
             @Nonnull String relativeResourcePath) {
         LOG.debug("doCopyProperty: {} to {}", name, relativeResourcePath);
-        actions.add(new CopyPropertyToRelativePath(name, newName, resourceResolver, relativeResourcePath));
+        actions.add(new CopyPropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
@@ -166,7 +186,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName,
             @Nonnull String relativeResourcePath) {
         LOG.debug("doMoveProperty: {} to {}", name, relativeResourcePath);
-        actions.add(new MovePropertyToRelativePath(name, newName, resourceResolver, relativeResourcePath));
+        actions.add(new MovePropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
@@ -196,21 +216,21 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doCopyResource to {}", relativePath);
-        actions.add(new CopyResourceToRelativePath(relativePath, resourceResolver));
+        actions.add(new CopyResourceToRelativePath(relativePath, context.getResolver()));
         return this;
     }
 
     @Override
     public ContentUpgrade doMoveResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doMoveResource to {}", relativePath);
-        actions.add(new MoveResourceToRelativePath(relativePath, resourceResolver));
+        actions.add(new MoveResourceToRelativePath(relativePath, context.getResolver()));
         return this;
     }
 
     @Override
     public ContentUpgrade doDeleteResource() {
         LOG.debug("doDeleteResource");
-        actions.add(new DeleteResource(resourceResolver));
+        actions.add(new DeleteResource(context.getResolver()));
         return this;
     }
 
@@ -218,6 +238,27 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doCustomResourceBasedAction(CustomResourceAction action) {
         LOG.debug("doCustomResourceBasedAction");
         actions.add(new CustomAction(action));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doActivateContainingPage() {
+        LOG.debug("doActivateContainingPage");
+        actions.add(new ReplicatePageAction(true, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeactivateContainingPage() {
+        LOG.debug("doDeactivateContainingPage");
+        actions.add(new ReplicatePageAction(false, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeleteContainingPage() {
+        LOG.debug("doDeleteContainingPage");
+        actions.add(new DeletePageAction(context));
         return this;
     }
 
@@ -242,10 +283,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public StringBuffer run(boolean dryRun) throws PersistenceException {
+        context.setDryRun(dryRun);
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
-            traversal.traverse(resourceResolver, filter, actions, stringBuffer, dryRun);
+            traversal.traverse(context, filter, actions, stringBuffer, dryRun);
         }
         return stringBuffer;
     }
+
 }
