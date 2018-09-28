@@ -18,9 +18,9 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * Filters resources by their node name. Only resources that have the exact node name are accepted.
@@ -41,7 +41,7 @@ public class FilterByNodeName implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource) {
+    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
         return resource.getName().equals(this.name);
     }
 }

@@ -18,10 +18,10 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+
+import javax.annotation.Nonnull;
 
 /**
  * Filters resources by the existence a given property. The filter only matches if the attribute
@@ -43,7 +43,7 @@ public class FilterByHasProperty implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource) {
+    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
         ValueMap properties = resource.getValueMap();
         Object attrValue = properties.get(name);
         return (attrValue != null);

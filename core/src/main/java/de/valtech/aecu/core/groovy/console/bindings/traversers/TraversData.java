@@ -18,18 +18,18 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.traversers;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
