@@ -1,4 +1,4 @@
-1.5.0
+2018-09-28 1.5.0
   - Groovy Console binding:
     - Run custom code as binding action (#28)
     - Page actions: (de)activate and delete containing page
