@@ -35,6 +35,6 @@ public interface FilterBy {
      * @param resource resource
      * @return matches
      */
-    boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer);
+    boolean filter(@Nonnull Resource resource, @Nonnull StringBuffer stringBuffer);
 
 }
