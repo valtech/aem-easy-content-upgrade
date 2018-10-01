@@ -72,6 +72,8 @@ public class HistoryUtil {
     private static final String ATTR_START = "start";
     private static final String ATTR_END = "end";
 
+    private Random random = new Random();
+
     /**
      * Starts a new history entry.
      *
@@ -377,7 +379,6 @@ public class HistoryUtil {
      * @return name
      */
     private String generateHistoryNodeName() {
-        Random random = new Random();
         return System.currentTimeMillis() + "" + random.nextInt(100000);
     }
 

@@ -41,7 +41,7 @@ import de.valtech.aecu.api.service.HistoryEntry.STATE;
 @Model(adaptables = Resource.class)
 public class HistoryDataItem {
 
-    private final DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @SlingObject
     private Resource resource;
