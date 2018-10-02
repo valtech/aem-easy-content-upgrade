@@ -1,6 +1,16 @@
 language: java
+
 addons:
   sonarcloud:
     organization: "valtech_aecu"
     token:
       secure: v0L2WG1NtMt4bXGRipEY9X23Glmz5ZldVCw7LaIUbUwKOB2AVghhUttZAsI0FBntsF0jRHJDk3L/4g45UZWSZOMRMl3lPm8NTHZLC4TmeDb00H/JXirh5ZghX+9KDiL1X8IF5xX6HRU8WO2XFnPhNR9kdh6JKSBwM2wEXADl8WNWLP7I8hB4hQ+gBdil1zOcT5vnyhc29zSU5EuBp4uZanlNhjry12tIOp/pZpdDO/pzF6m8T0DvGsgvlkZNWF16a0kazsLVWOYZ7QmjM8YDt6jVCNVQ+cImY/YPoq42OdvbIUfTazxiMS+P68Wel7ulH9FqzfHmz+SYPxQ1TfAQ2ltZO05ubQ5C2TScC+mipUkfbgqRr9RJUPkret+nUJ1WaQdf6+W3oZ6pTvn27s+XZFlWTbj6CcmgTPN8cCL5D+A9huvDOD2wWHkP7cquGSIuqh+Nc33K/EWR/BhY4ec2Xk/bjfoPTIE4tOuVyIZQLf64RxL0sRyitj4dZz+aRqhKiCaVKRtELqh8JoteYon+QPw/MF4UOalq+/QAFWvmgMeCouGxLwh2EPlK+3kXFO5tebRv67zLVesfVFCZgKWshTvUJ02kxKqy8HpocMTmoaIsRUHi2E5ucpbMxzKuJitpetrOHIjMNJQhfi0oW17zeB8i/oDwMIdNUGXPAU2MF1g=
+
+script:
+  - mvn test -B
+  - sonar-scanner
+
+cache:
+  directories:
+    - '$HOME/.sonar/cache'
+    - '$HOME/.m2'

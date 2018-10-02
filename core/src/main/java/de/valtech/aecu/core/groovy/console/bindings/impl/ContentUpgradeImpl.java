@@ -61,7 +61,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade forResources(@Nonnull String[] paths) {
-        LOG.debug("forResources: {}", paths.toString());
+        LOG.debug("forResources: {}", Arrays.toString(paths));
         traversals.add(new ForResources(paths));
         return this;
     }
