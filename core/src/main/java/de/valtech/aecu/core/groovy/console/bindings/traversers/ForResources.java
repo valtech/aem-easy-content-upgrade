@@ -18,22 +18,22 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.traversers;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * @author Roxana Muresan
  */
-public class ForResources implements TraversData {
+public class ForResources extends TraversData {
 
     private String[] paths;
 
@@ -46,21 +46,21 @@ public class ForResources implements TraversData {
             @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         ResourceResolver resourceResolver = context.getResolver();
         for (String path : paths) {
-            if (path != null) {
-                Resource resource = resourceResolver.getResource(path);
-                if (resource != null) {
-                    if (filter == null || filter.filter(resource, stringBuffer)) {
-                        for (Action action : actions) {
-                            stringBuffer.append(action.doAction(resource) + "\n");
-                        }
-                    }
-                } else {
-                    stringBuffer.append("WARNING: resource does not exist " + path + "\n");
-                }
+            if (path == null) {
+                continue;
+            }
+            Resource resource = resourceResolver.getResource(path);
+            if (resource == null) {
+                stringBuffer.append("WARNING: resource does not exist " + path + "\n");
+                continue;
+            }
+            if (filter == null || filter.filter(resource, stringBuffer)) {
+                runActions(stringBuffer, resource, actions);
             }
         }
         if (!dryRun) {
             resourceResolver.commit();
         }
     }
+
 }

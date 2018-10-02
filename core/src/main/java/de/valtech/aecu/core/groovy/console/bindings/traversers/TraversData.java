@@ -35,7 +35,7 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
  * @author Roxana Muresan
  * @author Roland Gruber
  */
-public interface TraversData {
+public abstract class TraversData {
 
     /**
      * Traverses the resources and performs the filters and actions.
@@ -47,7 +47,7 @@ public interface TraversData {
      * @param dryRun       dry run
      * @throws PersistenceException error traversing nodes
      */
-    void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
+    public abstract void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
             @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException;
 
     /**
@@ -56,12 +56,27 @@ public interface TraversData {
      * @param resource resource
      * @return valid
      */
-    default boolean isResourceValid(Resource resource) {
+    protected boolean isResourceValid(Resource resource) {
         try {
             ValueMap values = resource.getValueMap();
             return values.get(JcrConstants.JCR_PRIMARYTYPE, String.class) != null;
         } catch (IllegalArgumentException e) {
             return false;
+        }
+    }
+
+    /**
+     * Runs the given list of actions.
+     * 
+     * @param stringBuffer output buffer
+     * @param resource     resource for action
+     * @param actions      action list
+     * @throws PersistenceException error during action processing
+     */
+    protected void runActions(@Nonnull StringBuffer stringBuffer, @Nonnull Resource resource, @Nonnull List<Action> actions)
+            throws PersistenceException {
+        for (Action action : actions) {
+            stringBuffer.append(action.doAction(resource) + "\n");
         }
     }
 

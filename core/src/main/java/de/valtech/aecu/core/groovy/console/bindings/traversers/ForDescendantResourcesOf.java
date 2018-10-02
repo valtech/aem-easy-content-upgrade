@@ -18,23 +18,23 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.traversers;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-
 import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+
 /**
  * @author Roxana Muresan
  */
-public class ForDescendantResourcesOf implements TraversData {
+public class ForDescendantResourcesOf extends TraversData {
 
     private String path;
     private boolean includeRootResource;
@@ -60,28 +60,27 @@ public class ForDescendantResourcesOf implements TraversData {
 
     private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter,
             List<Action> actions, StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
-        if (resource != null && resource.hasChildren()) {
-            Iterator<Resource> childResources = resource.listChildren();
-            while (childResources.hasNext()) {
-                Resource child = childResources.next();
-                if (!isResourceValid(child)) {
-                    continue;
-                }
-                applyActionOnResource(child, filter, actions, stringBuffer);
-                traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
+        if (resource == null || !resource.hasChildren()) {
+            return;
+        }
+        Iterator<Resource> childResources = resource.listChildren();
+        while (childResources.hasNext()) {
+            Resource child = childResources.next();
+            if (!isResourceValid(child)) {
+                continue;
             }
-            if (!dryRun) {
-                resourceResolver.commit();
-            }
+            applyActionOnResource(child, filter, actions, stringBuffer);
+            traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
+        }
+        if (!dryRun) {
+            resourceResolver.commit();
         }
     }
 
     private void applyActionOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions,
             StringBuffer stringBuffer) throws PersistenceException {
         if (filter == null || filter.filter(resource, stringBuffer)) {
-            for (Action action : actions) {
-                stringBuffer.append(action.doAction(resource) + "\n");
-            }
+            runActions(stringBuffer, resource, actions);
         }
     }
 }
