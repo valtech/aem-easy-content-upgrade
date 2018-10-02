@@ -316,13 +316,19 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
     }
 
     @Override
-    public void removeAttribute(String arg0) {}
+    public void removeAttribute(String arg0) {
+        throw new UnsupportedOperationException("removeAttribute not implemented");
+    }
 
     @Override
-    public void setAttribute(String arg0, Object arg1) {}
+    public void setAttribute(String arg0, Object arg1) {
+        throw new UnsupportedOperationException("setAttribute not implemented");
+    }
 
     @Override
-    public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {}
+    public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
+        throw new UnsupportedOperationException("setCharacterEncoding not implemented");
+    }
 
     @Override
     public <AdapterType> AdapterType adaptTo(Class<AdapterType> arg0) {
