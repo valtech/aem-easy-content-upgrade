@@ -18,23 +18,23 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.traversers;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-
 import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+
 /**
  * @author Roxana Muresan
  */
-public class ForChildResourcesOf implements TraversData {
+public class ForChildResourcesOf extends TraversData {
 
     private String path;
 
@@ -48,25 +48,22 @@ public class ForChildResourcesOf implements TraversData {
             @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         ResourceResolver resourceResolver = context.getResolver();
         Resource parentResource = resourceResolver.getResource(path);
-        if (parentResource != null) {
-            Iterator<Resource> resourceIterator = resourceResolver.listChildren(parentResource);
-            while (resourceIterator.hasNext()) {
-                Resource resource = resourceIterator.next();
-                if (!isResourceValid(resource)) {
-                    continue;
-                }
-                if (filter == null || filter.filter(resource, stringBuffer)) {
-                    for (Action action : actions) {
-                        stringBuffer.append(action.doAction(resource) + "\n");
-                    }
-                }
+        if (parentResource == null) {
+            return;
+        }
+        Iterator<Resource> resourceIterator = resourceResolver.listChildren(parentResource);
+        while (resourceIterator.hasNext()) {
+            Resource resource = resourceIterator.next();
+            if (!isResourceValid(resource)) {
+                continue;
             }
-            if (!dryRun) {
-                resourceResolver.commit();
+            if (filter == null || filter.filter(resource, stringBuffer)) {
+                runActions(stringBuffer, resource, actions);
             }
         }
+        if (!dryRun) {
+            resourceResolver.commit();
+        }
     }
-
-
 
 }
