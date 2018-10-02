@@ -22,6 +22,7 @@ import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.hc.api.HealthCheck;
 import org.apache.sling.hc.api.Result;
+import org.apache.sling.hc.api.Result.Status;
 import org.apache.sling.hc.util.FormattingResultLog;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -47,6 +48,9 @@ public class SelfCheckHealthCheck implements HealthCheck {
     public Result execute() {
         final FormattingResultLog resultLog = new FormattingResultLog();
         checkServiceResolver(resultLog);
+        if (resultLog.getAggregateStatus().equals(Status.CRITICAL)) {
+            return new Result(resultLog);
+        }
         checkHistoryNodeAccess(resultLog);
         checkHookHistoryNodeAccess(resultLog);
         return new Result(resultLog);
@@ -88,14 +92,22 @@ public class SelfCheckHealthCheck implements HealthCheck {
      */
     private void checkServiceResolver(FormattingResultLog resultLog) {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
+            if (resolver == null) {
+                resultLog.critical("Unable to open service resource resolver: null");
+                return;
+            }
             resultLog.info("Service user ok");
         } catch (LoginException e) {
             resultLog.critical("Unable to open service resource resolver {}", e.getMessage());
         }
         try (ResourceResolver resolver = resolverService.getContentMigratorResourceResolver()) {
+            if (resolver == null) {
+                resultLog.critical("Unable to open migration resource resolver: null");
+                return;
+            }
             resultLog.info("Migration user ok");
         } catch (LoginException e) {
-            resultLog.critical("Unable to open service resource resolver {}", e.getMessage());
+            resultLog.critical("Unable to open migration resource resolver {}", e.getMessage());
         }
     }
 
