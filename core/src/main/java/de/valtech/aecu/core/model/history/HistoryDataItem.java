@@ -59,6 +59,9 @@ public class HistoryDataItem {
      * @return date
      */
     public String getDate() {
+        if (history.getEnd() == null) {
+            return format.format(history.getStart());
+        }
         return format.format(history.getEnd());
     }
 
