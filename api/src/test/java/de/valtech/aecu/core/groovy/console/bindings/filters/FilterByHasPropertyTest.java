@@ -18,9 +18,7 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -30,7 +28,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests FilterByHasProperty
@@ -59,7 +59,7 @@ public class FilterByHasPropertyTest {
         FilterByHasProperty filter = new FilterByHasProperty(NAME);
         when(values.get(NAME)).thenReturn(null);
 
-        assertFalse(filter.filter(resource));
+        assertFalse(filter.filter(resource, new StringBuffer()));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class FilterByHasPropertyTest {
         FilterByHasProperty filter = new FilterByHasProperty(NAME);
         when(values.get(NAME)).thenReturn(VALUE);
 
-        assertTrue(filter.filter(resource));
+        assertTrue(filter.filter(resource, new StringBuffer()));
     }
 
 }

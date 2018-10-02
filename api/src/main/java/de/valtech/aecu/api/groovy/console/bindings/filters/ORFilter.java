@@ -18,11 +18,11 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
+import org.apache.sling.api.resource.Resource;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import org.apache.sling.api.resource.Resource;
 
 /**
  * Combines multiple filters with OR.
@@ -43,8 +43,8 @@ public class ORFilter implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource) {
-        boolean foundTrue = filters.parallelStream().filter(f -> f.filter(resource)).findAny().isPresent();
+    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
+        boolean foundTrue = filters.parallelStream().filter(f -> f.filter(resource, stringBuffer)).findAny().isPresent();
         return foundTrue;
     }
 }

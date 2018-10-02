@@ -18,18 +18,18 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.traversers;
 
-import java.util.Iterator;
-import java.util.List;
-
-import javax.annotation.Nonnull;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roxana Muresan
@@ -78,7 +78,7 @@ public class ForDescendantResourcesOf implements TraversData {
 
     private void applyActionOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions,
             StringBuffer stringBuffer) throws PersistenceException {
-        if (filter == null || filter.filter(resource)) {
+        if (filter == null || filter.filter(resource, stringBuffer)) {
             for (Action action : actions) {
                 stringBuffer.append(action.doAction(resource) + "\n");
             }

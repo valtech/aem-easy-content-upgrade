@@ -47,8 +47,13 @@ public class FilterByProperties implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource) {
+    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        if (properties == null) {
+            stringBuffer.append("WARNING: Could not get ModifiableValueMap of resource " + resource.getPath());
+            return false;
+        }
+
         for (String key : conditionProperties.keySet()) {
             Object conditionValue = conditionProperties.get(key);
             Object propertiesValue = properties.get(key);
