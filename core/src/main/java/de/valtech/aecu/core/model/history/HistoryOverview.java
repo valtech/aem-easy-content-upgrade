@@ -55,7 +55,7 @@ public class HistoryOverview {
 
     private HistoryEntry historyEntry;
 
-    private final DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Reads the history entry from CRX.
@@ -141,8 +141,8 @@ public class HistoryOverview {
                 countFailed++;
             }
         }
-        BigDecimal percentageOk = new BigDecimal((countOk / countAll) * 100);
-        BigDecimal percentageFailed = new BigDecimal((countFailed / countAll) * 100);
+        BigDecimal percentageOk = BigDecimal.valueOf((countOk / countAll) * 100);
+        BigDecimal percentageFailed = BigDecimal.valueOf((countFailed / countAll) * 100);
         return new DonutData(percentageOk, percentageFailed);
     }
 
