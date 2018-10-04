@@ -28,6 +28,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.AddPageTagsAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
@@ -259,6 +260,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doDeleteContainingPage() {
         LOG.debug("doDeleteContainingPage");
         actions.add(new DeletePageAction(context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doAddTagsToContainingPage(String... tags) {
+        LOG.debug("doAddTagsToContainingPage");
+        actions.add(new AddPageTagsAction(context, tags));
         return this;
     }
 

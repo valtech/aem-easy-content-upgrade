@@ -250,6 +250,14 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteContainingPage();
 
     /**
+     * Adds tags to the containing page of the matching resource.
+     * 
+     * @param tags tag IDs or paths
+     * @return upgrade object
+     */
+    ContentUpgrade doAddTagsToContainingPage(String... tags);
+
+    /**
      * Print path
      * 
      * @return upgrade object
