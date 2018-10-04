@@ -25,7 +25,6 @@ import java.time.Duration;
 import javax.annotation.PostConstruct;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
@@ -50,7 +49,7 @@ public class HistoryDataItem {
 
     @PostConstruct
     public void setup() {
-        history = resource.adaptTo(ValueMap.class).get(HistoryDataSource.ATTR_HISTORY, HistoryEntry.class);
+        history = resource.getValueMap().get(HistoryDataSource.ATTR_HISTORY, HistoryEntry.class);
     }
 
     /**
