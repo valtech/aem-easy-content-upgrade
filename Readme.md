@@ -380,7 +380,8 @@ println aecu.contentUpgradeBuilder()
 Tags can be specified by Id (e.g. "properties:style/color") or path (e.g. "/etc/tags/properties/orientation/landscape").
 
 * doAddTagsToContainingPage(): adds the given tags to the page
-* doSetTagsForContainingPage(): sets the page's tags. This will delete any tags that were assigned but are not part of the new tag list.
+* doSetTagsForContainingPage(): sets the page's tags. This will delete any tags that were assigned but are not part of the new tag list. An empty list of tags will delete all tags.
+* doRemoveTagsFromContainingPage(): removes the given tags from the page
 
 ```java
 println aecu.contentUpgradeBuilder()
@@ -388,6 +389,7 @@ println aecu.contentUpgradeBuilder()
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doAddTagsToContainingPage("properties:style/color", "/etc/tags/properties/orientation/landscape")
         .doSetTagsForContainingPage("properties:style/color", "/etc/tags/properties/orientation/landscape")
+        .doRemoveTagsFromContainingPage("properties:style/color", "/etc/tags/properties/orientation/landscape")
         .run()
 ```
 

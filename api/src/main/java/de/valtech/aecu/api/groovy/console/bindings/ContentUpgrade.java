@@ -267,6 +267,14 @@ public interface ContentUpgrade {
     ContentUpgrade doSetTagsForContainingPage(String... tags);
 
     /**
+     * Removes tags from the containing page of the matching resource.
+     * 
+     * @param tags tag IDs or paths
+     * @return upgrade object
+     */
+    ContentUpgrade doRemoveTagsFromContainingPage(String... tags);
+
+    /**
      * Print path
      * 
      * @return upgrade object

@@ -20,15 +20,16 @@ import com.day.cq.wcm.api.PageManager;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
- * Tests SetPageTagsAction
+ * Tests RemovePageTagsAction
  * 
  * @author Roland Gruber
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SetPageTagsActionTest {
+public class RemovePageTagsActionTest {
 
     private static final String TAG1 = "tag1";
     private static final String TAG2 = "tag2";
+    private static final String TAG3 = "tag3";
 
     @Mock
     private TagManager tagManager;
@@ -51,22 +52,29 @@ public class SetPageTagsActionTest {
     @Mock
     private Tag tag2;
 
-    private SetPageTagsAction action;
+    @Mock
+    private Tag tag3;
+
+    private RemovePageTagsAction action;
 
     @Before
     public void setup() {
         when(context.getTagManager()).thenReturn(tagManager);
         when(context.getPageManager()).thenReturn(pageManager);
         when(pageManager.getContainingPage(resource)).thenReturn(page);
-        action = new SetPageTagsAction(context, TAG1, TAG2);
+        action = new RemovePageTagsAction(context, TAG1, TAG2);
+        when(page.getTags()).thenReturn(new Tag[] {tag2, tag3});
         when(tagManager.resolve(TAG1)).thenReturn(tag1);
         when(tagManager.resolve(TAG2)).thenReturn(tag2);
+        when(tag1.getPath()).thenReturn(TAG1);
+        when(tag2.getPath()).thenReturn(TAG2);
+        when(tag3.getPath()).thenReturn(TAG3);
         when(page.getContentResource()).thenReturn(resource);
     }
 
     @Test(expected = PersistenceException.class)
     public void doAction_invalidTag() throws PersistenceException {
-        action = new SetPageTagsAction(context, "invalid");
+        action = new RemovePageTagsAction(context, "invalid");
 
         action.doAction(resource);
     }
@@ -75,7 +83,7 @@ public class SetPageTagsActionTest {
     public void doAction() throws PersistenceException {
         action.doAction(resource);
 
-        verify(tagManager, times(1)).setTags(resource, new Tag[] {tag1, tag2});
+        verify(tagManager, times(1)).setTags(resource, new Tag[] {tag3});
     }
 
 }
