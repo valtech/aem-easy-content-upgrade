@@ -58,19 +58,19 @@ public class HistoryUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(HistoryUtil.class);
 
-    private static final String HISTORY_BASE = "/var/aecu";
+    protected static final String HISTORY_BASE = "/var/aecu";
 
-    private static final String NODE_FALLBACK = "fallback";
+    protected static final String NODE_FALLBACK = "fallback";
 
-    private static final String ATTR_PATH = "path";
-    private static final String ATTR_RUN_OUTPUT = "runOutput";
-    private static final String ATTR_RUN_STATE = "runState";
-    private static final String ATTR_RUN_RESULT = "runResult";
-    private static final String ATTR_RUN_TIME = "runTime";
-    private static final String ATTR_RESULT = "result";
-    private static final String ATTR_STATE = "state";
-    private static final String ATTR_START = "start";
-    private static final String ATTR_END = "end";
+    protected static final String ATTR_PATH = "path";
+    protected static final String ATTR_RUN_OUTPUT = "runOutput";
+    protected static final String ATTR_RUN_STATE = "runState";
+    protected static final String ATTR_RUN_RESULT = "runResult";
+    protected static final String ATTR_RUN_TIME = "runTime";
+    protected static final String ATTR_RESULT = "result";
+    protected static final String ATTR_STATE = "state";
+    protected static final String ATTR_START = "start";
+    protected static final String ATTR_END = "end";
 
     private Random random = new Random();
 
