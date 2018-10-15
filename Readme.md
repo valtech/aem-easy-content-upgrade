@@ -12,7 +12,9 @@ Features:
 * Service API
 * Health Checks
 
-The tool was presented at [adaptTo() conference in Berlin](https://adapt.to/2018/en/schedule/aem-easy-content-upgrade.html)
+The tool was presented at [adaptTo() conference in Berlin](https://adapt.to/2018/en/schedule/aem-easy-content-upgrade.html). You can get the slides there and also see the video here:
+
+[![AECU @ adaptTo() 2018](https://img.youtube.com/vi/ZPEJ_cbzBoE/0.jpg)](https://www.youtube.com/watch?v=ZPEJ_cbzBoE "AECU @ adaptTo() 2018")
 
 Table of contents
 1. [Requirements](#requirements)
