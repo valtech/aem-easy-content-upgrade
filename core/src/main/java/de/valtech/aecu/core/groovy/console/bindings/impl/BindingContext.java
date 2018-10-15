@@ -24,6 +24,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import com.day.cq.replication.Replicator;
+import com.day.cq.tagging.TagManager;
 import com.day.cq.wcm.api.PageManager;
 
 /**
@@ -35,6 +36,7 @@ public class BindingContext {
 
     private ResourceResolver resolver;
     private PageManager pageManager;
+    private TagManager tagManager;
     private Replicator replicator;
     private boolean dryRun = true;
 
@@ -67,6 +69,19 @@ public class BindingContext {
         }
         pageManager = resolver.adaptTo(PageManager.class);
         return pageManager;
+    }
+
+    /**
+     * Returns the tag manager.
+     * 
+     * @return tag manager
+     */
+    public TagManager getTagManager() {
+        if (tagManager != null) {
+            return tagManager;
+        }
+        tagManager = resolver.adaptTo(TagManager.class);
+        return tagManager;
     }
 
     /**
