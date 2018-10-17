@@ -57,9 +57,7 @@ public class ForChildResourcesOf extends TraversData {
             if (!isResourceValid(resource)) {
                 continue;
             }
-            if (filter == null || filter.filter(resource, stringBuffer)) {
-                runActions(stringBuffer, resource, actions);
-            }
+            applyActionsOnResource(resource, filter, actions, stringBuffer);
         }
         if (!dryRun) {
             resourceResolver.commit();

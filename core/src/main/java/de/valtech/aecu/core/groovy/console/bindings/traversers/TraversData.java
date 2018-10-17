@@ -66,6 +66,22 @@ public abstract class TraversData {
     }
 
     /**
+     * Applies the actions on the given resource.
+     * 
+     * @param resource     resource
+     * @param filter       filter
+     * @param actions      list of actions
+     * @param stringBuffer output
+     * @throws PersistenceException error during execution
+     */
+    protected void applyActionsOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions,
+            StringBuffer stringBuffer) throws PersistenceException {
+        if (filter == null || filter.filter(resource, stringBuffer)) {
+            runActions(stringBuffer, resource, actions);
+        }
+    }
+
+    /**
      * Runs the given list of actions.
      * 
      * @param stringBuffer output buffer
@@ -73,7 +89,7 @@ public abstract class TraversData {
      * @param actions      action list
      * @throws PersistenceException error during action processing
      */
-    protected void runActions(@Nonnull StringBuffer stringBuffer, @Nonnull Resource resource, @Nonnull List<Action> actions)
+    private void runActions(@Nonnull StringBuffer stringBuffer, @Nonnull Resource resource, @Nonnull List<Action> actions)
             throws PersistenceException {
         for (Action action : actions) {
             stringBuffer.append(action.doAction(resource) + "\n");
