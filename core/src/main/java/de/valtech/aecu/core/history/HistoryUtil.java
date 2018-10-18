@@ -38,6 +38,7 @@ import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ResourceUtil.BatchResourceRemover;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +55,7 @@ import de.valtech.aecu.core.service.HistoryEntryImpl;
  *
  * @author Roland Gruber
  */
+@Component(service = HistoryUtil.class)
 public class HistoryUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(HistoryUtil.class);

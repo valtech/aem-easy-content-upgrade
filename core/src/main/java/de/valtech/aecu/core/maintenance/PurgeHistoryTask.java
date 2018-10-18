@@ -51,6 +51,9 @@ public class PurgeHistoryTask implements JobExecutor {
     @Reference
     private ServiceResourceResolverService resolverService;
 
+    @Reference
+    private HistoryUtil historyUtil;
+
     /**
      * Activates the service.
      *
@@ -64,7 +67,6 @@ public class PurgeHistoryTask implements JobExecutor {
     @Override
     public JobExecutionResult process(Job job, JobExecutionContext context) {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             historyUtil.purgeHistory(resolver, config.daysToKeep());
             resolver.commit();
             return context.result().message("Purged AECU history entries").succeeded();

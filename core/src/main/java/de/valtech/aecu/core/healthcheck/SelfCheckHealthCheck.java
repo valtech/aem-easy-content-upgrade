@@ -44,6 +44,9 @@ public class SelfCheckHealthCheck implements HealthCheck {
     @Reference
     private ServiceResourceResolverService resolverService;
 
+    @Reference
+    private HistoryUtil historyUtil;
+
     @Override
     public Result execute() {
         final FormattingResultLog resultLog = new FormattingResultLog();
@@ -63,8 +66,7 @@ public class SelfCheckHealthCheck implements HealthCheck {
      */
     private void checkHistoryNodeAccess(FormattingResultLog resultLog) {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil util = new HistoryUtil();
-            util.selfCheck(resolver);
+            historyUtil.selfCheck(resolver);
             resultLog.info("History node ok");
         } catch (LoginException | AecuException e) {
             resultLog.critical("History node check failed: {}", e.getMessage());

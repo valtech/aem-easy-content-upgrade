@@ -32,6 +32,7 @@ import org.apache.sling.api.request.RequestParameter;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import de.valtech.aecu.api.service.ExecutionResult;
@@ -53,6 +54,9 @@ public class HistoryOverview {
     @SlingObject
     private ResourceResolver resolver;
 
+    @OSGiService
+    private HistoryUtil historyUtil;
+
     private HistoryEntry historyEntry;
 
     private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -71,7 +75,6 @@ public class HistoryOverview {
         if (historyResource == null) {
             return;
         }
-        HistoryUtil historyUtil = new HistoryUtil();
         historyEntry = historyUtil.readHistoryEntry(historyResource);
     }
 

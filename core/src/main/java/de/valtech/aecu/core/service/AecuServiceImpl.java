@@ -70,6 +70,9 @@ public class AecuServiceImpl implements AecuService {
     @Reference
     private GroovyConsoleService groovyConsoleService;
 
+    @Reference
+    private HistoryUtil historyUtil;
+
     @Override
     public String getVersion() {
         return FrameworkUtil.getBundle(AecuServiceImpl.class).getVersion().toString();
@@ -224,7 +227,6 @@ public class AecuServiceImpl implements AecuService {
     @Override
     public HistoryEntry createHistoryEntry() throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             HistoryEntry entry = historyUtil.createHistoryEntry(resolver);
             resolver.commit();
             return entry;
@@ -238,7 +240,6 @@ public class AecuServiceImpl implements AecuService {
     @Override
     public HistoryEntry finishHistoryEntry(HistoryEntry history) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             historyUtil.finishHistoryEntry(history, resolver);
             resolver.commit();
             return history;
@@ -256,7 +257,6 @@ public class AecuServiceImpl implements AecuService {
         }
         history.getSingleResults().add(result);
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             historyUtil.storeExecutionInHistory(history, result, resolver);
             resolver.commit();
             return history;
@@ -270,7 +270,6 @@ public class AecuServiceImpl implements AecuService {
     @Override
     public List<HistoryEntry> getHistory(int startIndex, int count) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             return historyUtil.getHistory(startIndex, count, resolver);
         } catch (LoginException e) {
             throw new AecuException(ERR_NO_RESOLVER, e);

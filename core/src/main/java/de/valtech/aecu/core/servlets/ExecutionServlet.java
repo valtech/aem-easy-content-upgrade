@@ -55,6 +55,9 @@ public class ExecutionServlet extends BaseServlet {
     @Reference
     AecuService aecuService;
 
+    @Reference
+    private HistoryUtil historyUtil;
+
 
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
@@ -105,7 +108,6 @@ public class ExecutionServlet extends BaseServlet {
                 }
 
                 ResourceResolver resolver = request.getResourceResolver();
-                HistoryUtil historyUtil = new HistoryUtil();
                 historyEntry = historyUtil.readHistoryEntry(resolver.getResource(historyEntryPath));
                 break;
             default:
