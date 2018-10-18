@@ -65,6 +65,14 @@ public interface ContentUpgrade {
     ContentUpgrade forResourcesInSubtree(String path);
 
     /**
+     * Loops over resources found by SQL2 query.
+     * 
+     * @param query query string
+     * @return upgrade object
+     */
+    ContentUpgrade forResourcesBySql2Query(String query);
+
+    /**
      * Filters by existence of a single property.
      * 
      * @param name property name

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -44,6 +45,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResou
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 
@@ -87,6 +89,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade forResourcesInSubtree(@Nonnull String path) {
         LOG.debug("forResourcesInSubtree: {}", path);
         traversals.add(new ForDescendantResourcesOf(path, true));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade forResourcesBySql2Query(String query) {
+        traversals.add(new ForQuery(query, Query.JCR_SQL2));
         return this;
     }
 

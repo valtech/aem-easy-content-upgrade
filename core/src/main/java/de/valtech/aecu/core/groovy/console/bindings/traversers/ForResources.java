@@ -54,9 +54,7 @@ public class ForResources extends TraversData {
                 stringBuffer.append("WARNING: resource does not exist " + path + "\n");
                 continue;
             }
-            if (filter == null || filter.filter(resource, stringBuffer)) {
-                runActions(stringBuffer, resource, actions);
-            }
+            applyActionsOnResource(resource, filter, actions, stringBuffer);
         }
         if (!dryRun) {
             resourceResolver.commit();

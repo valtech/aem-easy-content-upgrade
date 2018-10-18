@@ -32,45 +32,35 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
- * @author Roxana Muresan
+ * Traverses resources based on a query.
+ * 
+ * @author Roland Gruber
  */
-public class ForDescendantResourcesOf extends TraversData {
+public class ForQuery extends TraversData {
 
-    private String path;
-    private boolean includeRootResource;
+    private String query;
+    private String queryType;
 
-    public ForDescendantResourcesOf(@Nonnull String path, boolean includeRootResource) {
-        this.path = path;
-        this.includeRootResource = includeRootResource;
+    /**
+     * Constructor
+     * 
+     * @param query     query string
+     * @param queryType query type
+     * @see javax.jcr.query.Query
+     */
+    public ForQuery(@Nonnull String query, @Nonnull String queryType) {
+        this.query = query;
+        this.queryType = queryType;
     }
-
 
     @Override
     public void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
             @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
         ResourceResolver resourceResolver = context.getResolver();
-        Resource parentResource = resourceResolver.getResource(path);
-        if (parentResource != null) {
-            if (includeRootResource) {
-                applyActionsOnResource(parentResource, filter, actions, stringBuffer);
-            }
-            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, actions, stringBuffer, dryRun);
-        }
-    }
-
-    private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter,
-            List<Action> actions, StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
-        if (resource == null || !resource.hasChildren()) {
-            return;
-        }
-        Iterator<Resource> childResources = resource.listChildren();
-        while (childResources.hasNext()) {
-            Resource child = childResources.next();
-            if (!isResourceValid(child)) {
-                continue;
-            }
-            applyActionsOnResource(child, filter, actions, stringBuffer);
-            traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
+        Iterator<Resource> queryResult = resourceResolver.findResources(query, queryType);
+        while (queryResult.hasNext()) {
+            Resource resource = queryResult.next();
+            applyActionsOnResource(resource, filter, actions, stringBuffer);
         }
         if (!dryRun) {
             resourceResolver.commit();
