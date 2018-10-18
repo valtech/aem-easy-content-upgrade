@@ -45,8 +45,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import com.icfolson.aem.groovy.console.GroovyConsoleService;
+import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.HistoryEntry;
@@ -77,6 +81,9 @@ public class AecuServiceImplTest {
     private ServiceResourceResolverService resolverService;
 
     @Mock
+    private GroovyConsoleService groovyConsoleService;
+
+    @Mock
     private ResourceResolver resolver;
 
     @Mock
@@ -91,6 +98,7 @@ public class AecuServiceImplTest {
         runModes.add("test3");
         when(settingsService.getRunModes()).thenReturn(runModes);
         when(resolverService.getServiceResourceResolver()).thenReturn(resolver);
+        when(resolverService.getContentMigratorResourceResolver()).thenReturn(resolver);
     }
 
     @Test
@@ -250,6 +258,32 @@ public class AecuServiceImplTest {
         service.createHistoryEntry();
 
         verify(historyUtil, times(1)).createHistoryEntry(resolver);
+    }
+
+    @Test(expected = AecuException.class)
+    public void execute_invalidResource() throws AecuException {
+        service.execute("invalid");
+    }
+
+    @Test(expected = AecuException.class)
+    public void execute_invalidFileName() throws AecuException {
+        Resource resource = mock(Resource.class);
+        when(resolver.getResource(DIR)).thenReturn(resource);
+        when(resource.getName()).thenReturn("invalid");
+
+        service.execute(DIR);
+    }
+
+    @Test
+    public void execute() throws AecuException {
+        Resource resource = mock(Resource.class);
+        when(resolver.getResource(DIR)).thenReturn(resource);
+        when(resource.getName()).thenReturn(FILE1);
+
+        RunScriptResponse response = new RunScriptResponse();
+        when(groovyConsoleService.runScript(Mockito.any(), Mockito.eq(DIR))).thenReturn(response);
+
+        service.execute(DIR);
     }
 
 }
