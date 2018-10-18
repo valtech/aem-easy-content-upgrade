@@ -25,6 +25,10 @@ Table of contents
     2. [Manual Execution](#manualExecution)
 5. [History of Past Runs](#history)
 6. [Extension to Groovy Console](#groovy)
+    1. [Collect Options](#binding_collect)
+    2. [Filter Options](#binding_filter)
+    3. [Execute Options](#binding_execute)
+    4. [Run Options](#binding_run)
 7. [JMX Interface](#jmx)
 8. [Health Checks](#healthchecks)
 9. [API Documentation](#api)
@@ -161,6 +165,8 @@ AECU adds its own binding to Groovy Console. You can reach it using "aecu" in yo
 
 It follows a collect, filter, execute process.
 
+<a name="binding_collect"></a>
+
 ## Collect Options
 In the collect phase you define which nodes should be checked for a migration.
 
@@ -185,7 +191,9 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-## Filter options
+<a name="binding_filter"></a>
+
+## Filter Options
 These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
 
 ### Filter by Properties
@@ -265,6 +273,8 @@ println aecu.contentUpgradeBuilder()
         .doSetProperty("name", "value")
         .run()        
 ```
+
+<a name="binding_execute"></a>
 
 ## Execute Options
 
@@ -433,6 +443,8 @@ println aecu.contentUpgradeBuilder()
 ```
 
 
+
+<a name="binding_run"></a>
 
 ## Run Options
 
