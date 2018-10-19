@@ -145,7 +145,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade filterByPathRegex(String regex) {
+    public ContentUpgrade filterByPathRegex(@Nonnull String regex) {
         LOG.debug("filterByPathRegex: {}", regex);
         addFilter(new FilterByPathRegex(regex));
         return this;
@@ -320,7 +320,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade printProperty(String property) {
+    public ContentUpgrade printProperty(@Nonnull String property) {
         LOG.debug("printProperty {}", property);
         actions.add(new PrintProperty(property));
         return this;

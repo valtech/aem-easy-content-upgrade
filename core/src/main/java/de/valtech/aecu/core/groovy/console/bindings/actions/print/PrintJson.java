@@ -30,6 +30,8 @@ import org.apache.sling.api.resource.ValueMap;
 import javax.annotation.Nonnull;
 
 /**
+ * Action for printing a json with the properties of the resource.
+ *
  * @author Roxana Muresan
  */
 public class PrintJson implements Action {

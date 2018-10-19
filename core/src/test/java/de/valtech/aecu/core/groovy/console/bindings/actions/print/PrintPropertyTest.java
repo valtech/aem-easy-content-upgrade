@@ -74,7 +74,7 @@ public class PrintPropertyTest {
 
         verify(properties, times(1)).get("ExistingProperty");
 
-        assertTrue(result.contains("ExistingProperty=any_value"));
+        assertTrue(result.contains("ExistingProperty = any_value"));
     }
 
 }

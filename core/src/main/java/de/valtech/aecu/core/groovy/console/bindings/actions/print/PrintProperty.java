@@ -27,6 +27,8 @@ import org.apache.sling.api.resource.ValueMap;
 import javax.annotation.Nonnull;
 
 /**
+ * Action for printing the name and value of a given property.
+ *
  * @author Roxana Muresan
  */
 public class PrintProperty implements Action {
@@ -42,8 +44,8 @@ public class PrintProperty implements Action {
     public String doAction(@Nonnull Resource resource) {
         ValueMap properties = resource.getValueMap();
         if (properties.containsKey(propertyName)) {
-            return "\n  > " + propertyName + "=" + properties.get(propertyName);
+            return propertyName + " = " + properties.get(propertyName);
         }
-        return "\n  > " + propertyName + " not defined";
+        return propertyName + " not defined";
     }
 }
