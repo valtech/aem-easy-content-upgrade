@@ -18,11 +18,11 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 
 import org.apache.sling.api.resource.PersistenceException;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import java.util.Map;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -121,6 +121,14 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade filterByNodeNameRegex(String regex);
+
+    /**
+     * Filters by node path using regular expression.
+     *
+     * @param regex regular expression (Java standard pattern)
+     * @return upgrade object
+     */
+    ContentUpgrade filterByPathRegex(String regex);
 
     /**
      * Filters by using the given filter.

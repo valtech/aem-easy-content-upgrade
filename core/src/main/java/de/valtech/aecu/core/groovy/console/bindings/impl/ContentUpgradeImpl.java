@@ -1,19 +1,5 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.jcr.query.Query;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
 import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
@@ -22,6 +8,7 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
@@ -48,6 +35,20 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantReso
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.scribe.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
 
 public class ContentUpgradeImpl implements ContentUpgrade {
 
@@ -137,6 +138,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade filterByNodeNameRegex(@Nonnull String regex) {
         LOG.debug("filterByNodeNameRegex: {}", regex);
         addFilter(new FilterByNodeNameRegex(regex));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByPathRegex(String regex) {
+        LOG.debug("filterByPathRegex: {}", regex);
+        addFilter(new FilterByPathRegex(regex));
         return this;
     }
 
