@@ -1,6 +1,7 @@
 2018-10 1.6.0
   - Groovy Console binding:
     - Added SQL2 collection method
+    - Page actions: manage tags
 
 2018-09-28 1.5.0
   - Groovy Console binding:
