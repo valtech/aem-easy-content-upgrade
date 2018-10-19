@@ -244,11 +244,11 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Filter by Node Path regex
+### Filter by Node Path
 
-Nodes can also be filter by their path using a regular expression.
+Nodes can also be filtered by their path using a regular expression.
 
-* filterByPathRegex(String regex): process nodes who's path matches the given regular expression
+* filterByPathRegex(String regex): process nodes whose path matches the given regular expression
 
 ```java
 println aecu.contentUpgradeBuilder()

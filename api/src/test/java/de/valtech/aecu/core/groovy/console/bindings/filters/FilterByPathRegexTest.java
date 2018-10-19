@@ -50,9 +50,9 @@ public class FilterByPathRegexTest {
     @Test
     public void test_whenPathNotMatches_returnFalse() {
 
-        assertFalse(new FilterByPathRegex("\\/we\\-retail\\/.+\\/climbing.+").filter(resource, new StringBuffer()));
+        assertFalse(new FilterByPathRegex("/we-retail/.+/climbing.+").filter(resource, new StringBuffer()));
 
-        assertFalse(new FilterByPathRegex("\\/content\\/we\\-retail\\/.+\\/women\\/.+").filter(resource, new StringBuffer()));
+        assertFalse(new FilterByPathRegex("/content/we-retail/.+/women/.+").filter(resource, new StringBuffer()));
     }
 
     @Test
@@ -60,10 +60,10 @@ public class FilterByPathRegexTest {
 
         assertTrue(new FilterByPathRegex(".+").filter(resource, new StringBuffer()));
 
-        assertTrue(new FilterByPathRegex(".+experience.+").filter(resource, new StringBuffer()));
+        assertTrue(new FilterByPathRegex(".+/experience/.+").filter(resource, new StringBuffer()));
 
-        assertTrue(new FilterByPathRegex("\\/content\\/we\\-retail\\/.+\\/climbing[^\\/]+\\/.+").filter(resource, new StringBuffer()));
+        assertTrue(new FilterByPathRegex("/content/we-retail/.+/climbing[^/]+/.+").filter(resource, new StringBuffer()));
 
-        assertTrue(new FilterByPathRegex("^\\/content\\/we\\-retail(\\/[^\\/]+){1,2}\\/experience\\/.+").filter(resource, new StringBuffer()));
+        assertTrue(new FilterByPathRegex("^/content/we-retail(/[^/]+){1,2}/experience/.+").filter(resource, new StringBuffer()));
     }
 }
