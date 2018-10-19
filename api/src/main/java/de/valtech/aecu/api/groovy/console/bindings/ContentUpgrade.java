@@ -18,11 +18,11 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 
 import org.apache.sling.api.resource.PersistenceException;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import java.util.Map;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -288,6 +288,20 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade printPath();
+
+    /**
+     * Print property
+     *
+     * @return upgrade object
+     */
+    ContentUpgrade printProperty(String property);
+
+    /**
+     * Prints the properties json
+     *
+     * @return upgrade object
+     */
+    ContentUpgrade printJson();
 
     /**
      * Saves all changes to repository.

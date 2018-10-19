@@ -407,17 +407,21 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Print Nodes
+### Print Nodes and Properties
 
-Sometimes, you only want to print the path of the matched nodes.
+Sometimes, you only want to print some information about the matched nodes.
 
 * printPath(): prints the path of the matched node
+* printProperty(String property): prints the value of the specified property of the matched node
+* printJson(): prints a json representation of all the matched node's properties
 
 ```java
 println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .printPath()
+        .printProperty("sling:resourceType")
+        .printJson()
         .run()
 ```
 
