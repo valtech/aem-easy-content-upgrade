@@ -205,6 +205,14 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues);
 
     /**
+     * Renames a resource to the given name.
+     * 
+     * @param relativePath path
+     * @return newName new name
+     */
+    ContentUpgrade doRename(String newName);
+
+    /**
      * Copies a resource to a relative path.
      * 
      * @param relativePath path
