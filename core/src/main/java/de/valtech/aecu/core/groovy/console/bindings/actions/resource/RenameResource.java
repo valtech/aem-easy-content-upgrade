@@ -25,6 +25,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.version.VersionException;
 
+import org.apache.jackrabbit.core.fs.FileSystem;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -59,7 +60,7 @@ public class RenameResource implements Action {
             return "Resource " + path + " already has new name, no renaming done";
         }
         Session session = resourceResolver.adaptTo(Session.class);
-        String newPath = resource.getParent().getPath() + "/" + newName;
+        String newPath = resource.getParent().getPath() + FileSystem.SEPARATOR + newName;
         try {
             session.move(path, newPath);
         } catch (ItemExistsException e) {
