@@ -28,6 +28,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
@@ -55,7 +56,7 @@ public class ForQuery extends TraversData {
 
     @Override
     public void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
+            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
         ResourceResolver resourceResolver = context.getResolver();
         Iterator<Resource> queryResult = resourceResolver.findResources(query, queryType);
         while (queryResult.hasNext()) {

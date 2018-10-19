@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -24,6 +25,7 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
@@ -32,6 +34,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMu
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.AddPageTagsAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.RemovePageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.RenderPageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.SetPageTagsAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
@@ -295,6 +298,28 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade doCheckPageRendering() {
+        return doCheckPageRendering(HttpServletResponse.SC_OK);
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(int code) {
+        actions.add(new RenderPageAction(context, code, null, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(String textPresent) {
+        return doCheckPageRendering(textPresent, null);
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(String textPresent, String textNotPresent) {
+        actions.add(new RenderPageAction(context, HttpServletResponse.SC_OK, textPresent, textNotPresent));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade printPath() {
         LOG.debug("printPath");
         actions.add(new PrintPath());
@@ -302,19 +327,19 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public StringBuffer run() throws PersistenceException {
+    public StringBuffer run() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade");
         return run(false);
     }
 
     @Override
-    public StringBuffer dryRun() throws PersistenceException {
+    public StringBuffer dryRun() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade dry");
         return run(true);
     }
 
     @Override
-    public StringBuffer run(boolean dryRun) throws PersistenceException {
+    public StringBuffer run(boolean dryRun) throws PersistenceException, AecuException {
         context.setDryRun(dryRun);
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {

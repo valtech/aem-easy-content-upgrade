@@ -28,6 +28,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
@@ -46,9 +47,10 @@ public abstract class TraversData {
      * @param stringBuffer output buffer
      * @param dryRun       dry run
      * @throws PersistenceException error traversing nodes
+     * @throws AecuException        other error
      */
     public abstract void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException;
+            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException;
 
     /**
      * Checks if the resource is still valid. E.g. this returns false if it was already deleted.
@@ -73,9 +75,10 @@ public abstract class TraversData {
      * @param actions      list of actions
      * @param stringBuffer output
      * @throws PersistenceException error during execution
+     * @throws AecuException        other error
      */
     protected void applyActionsOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions,
-            StringBuffer stringBuffer) throws PersistenceException {
+            StringBuffer stringBuffer) throws PersistenceException, AecuException {
         if (filter == null || filter.filter(resource, stringBuffer)) {
             runActions(stringBuffer, resource, actions);
         }
@@ -88,9 +91,10 @@ public abstract class TraversData {
      * @param resource     resource for action
      * @param actions      action list
      * @throws PersistenceException error during action processing
+     * @throws AecuException        other error
      */
     private void runActions(@Nonnull StringBuffer stringBuffer, @Nonnull Resource resource, @Nonnull List<Action> actions)
-            throws PersistenceException {
+            throws PersistenceException, AecuException {
         for (Action action : actions) {
             stringBuffer.append(action.doAction(resource) + "\n");
         }
