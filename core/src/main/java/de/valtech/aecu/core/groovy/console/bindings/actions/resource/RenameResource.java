@@ -54,8 +54,11 @@ public class RenameResource implements Action {
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
-        Session session = resourceResolver.adaptTo(Session.class);
         String path = resource.getPath();
+        if (resource.getName().equals(newName)) {
+            return "Resource " + path + " already has new name, no renaming done";
+        }
+        Session session = resourceResolver.adaptTo(Session.class);
         String newPath = resource.getParent().getPath() + "/" + newName;
         try {
             session.move(path, newPath);
