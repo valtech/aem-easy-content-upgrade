@@ -228,8 +228,6 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-<a name="jmx"></a>
-
 ### Filter by Node Name
 
 You can also filter nodes by their name.
@@ -246,7 +244,20 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-<a name="jmx"></a>
+### Filter by Node Path
+
+Nodes can also be filtered by their path using a regular expression.
+
+* filterByPathRegex(String regex): process nodes whose path matches the given regular expression
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByPathRegex(".*/jcr:content/.*")
+        .doSetProperty("name", "value")
+        .run()
+```
+
 
 ### Combine Multiple Filters
 You can combine filters with AND and OR to build more complex filters.
