@@ -330,6 +330,7 @@ println aecu.contentUpgradeBuilder()
 
 The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
 
+* doRename(String newName): renames the resource to the given name
 * doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
 
@@ -337,6 +338,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
+        .doRename("newNodeName")
         .doCopyResourceToRelativePath("subNode")
         .doCopyResourceToRelativePath("../subNode")
         .doMoveResourceToRelativePath("subNode")

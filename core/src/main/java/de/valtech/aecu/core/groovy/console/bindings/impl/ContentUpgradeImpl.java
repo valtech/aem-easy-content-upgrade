@@ -31,6 +31,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourc
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
@@ -223,6 +224,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         LOG.debug("doReplaceValuesOfMultiValueProperty: {} - {}", name,
                 Arrays.toString(oldValues) + " + " + Arrays.toString(newValues));
         actions.add(new ReplaceMultiValues(name, oldValues, newValues));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doRename(String newName) {
+        LOG.debug("doRename to {}", newName);
+        actions.add(new RenameResource(context.getResolver(), newName));
         return this;
     }
 
