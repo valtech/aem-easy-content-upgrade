@@ -123,6 +123,14 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNodeNameRegex(String regex);
 
     /**
+     * Filters by node path using regular expression.
+     *
+     * @param regex regular expression (Java standard pattern)
+     * @return upgrade object
+     */
+    ContentUpgrade filterByPathRegex(String regex);
+
+    /**
      * Filters by using the given filter.
      * 
      * @param filter filter
