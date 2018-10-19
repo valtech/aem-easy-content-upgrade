@@ -23,6 +23,11 @@ import org.apache.sling.api.resource.Resource;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Filters resources by path. Resources who's path matches the given regex are accepted.
+ *
+ * @author Roxana Muresan
+ */
 public class FilterByPathRegex implements FilterBy {
 
     private String regex;
