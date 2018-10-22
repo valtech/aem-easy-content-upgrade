@@ -16,37 +16,54 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.actions;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+package de.valtech.aecu.core.groovy.console.bindings.filters;
+
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 
 import org.apache.sling.api.resource.Resource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 /**
- * Tests PrintPath
- * 
- * @author Roland Gruber
+ * @author Roxana Muresan
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PrintPathTest {
+public class FilterByPathRegexTest {
 
     @Mock
     private Resource resource;
 
-    @Test
-    public void doAction() {
-        String path = "path";
-        when(resource.getPath()).thenReturn(path);
 
-        PrintPath action = new PrintPath();
-        String result = action.doAction(resource);
-
-        assertTrue(result.contains(path));
+    @Before
+    public void setup() {
+        when(resource.getPath()).thenReturn("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content");
     }
 
+    @Test
+    public void test_whenPathNotMatches_returnFalse() {
+
+        assertFalse(new FilterByPathRegex("/we-retail/.+/climbing.+").filter(resource, new StringBuffer()));
+
+        assertFalse(new FilterByPathRegex("/content/we-retail/.+/women/.+").filter(resource, new StringBuffer()));
+    }
+
+    @Test
+    public void test_whenPathNotMatches_returnTrue() {
+
+        assertTrue(new FilterByPathRegex(".+").filter(resource, new StringBuffer()));
+
+        assertTrue(new FilterByPathRegex(".+/experience/.+").filter(resource, new StringBuffer()));
+
+        assertTrue(new FilterByPathRegex("/content/we-retail/.+/climbing[^/]+/.+").filter(resource, new StringBuffer()));
+
+        assertTrue(new FilterByPathRegex("^/content/we-retail(/[^/]+){1,2}/experience/.+").filter(resource, new StringBuffer()));
+    }
 }

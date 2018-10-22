@@ -124,6 +124,14 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNodeNameRegex(String regex);
 
     /**
+     * Filters by node path using regular expression.
+     *
+     * @param regex regular expression (Java standard pattern)
+     * @return upgrade object
+     */
+    ContentUpgrade filterByPathRegex(String regex);
+
+    /**
      * Filters by using the given filter.
      * 
      * @param filter filter
@@ -204,6 +212,14 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues);
+
+    /**
+     * Renames a resource to the given name.
+     * 
+     * @param relativePath path
+     * @return newName new name
+     */
+    ContentUpgrade doRename(String newName);
 
     /**
      * Copies a resource to a relative path.
@@ -321,6 +337,20 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade printPath();
+
+    /**
+     * Print property
+     *
+     * @return upgrade object
+     */
+    ContentUpgrade printProperty(String property);
+
+    /**
+     * Prints the properties json
+     *
+     * @return upgrade object
+     */
+    ContentUpgrade printJson();
 
     /**
      * Saves all changes to repository.

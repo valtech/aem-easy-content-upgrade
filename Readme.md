@@ -228,8 +228,6 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-<a name="jmx"></a>
-
 ### Filter by Node Name
 
 You can also filter nodes by their name.
@@ -246,7 +244,20 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-<a name="jmx"></a>
+### Filter by Node Path
+
+Nodes can also be filtered by their path using a regular expression.
+
+* filterByPathRegex(String regex): process nodes whose path matches the given regular expression
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByPathRegex(".*/jcr:content/.*")
+        .doSetProperty("name", "value")
+        .run()
+```
+
 
 ### Combine Multiple Filters
 You can combine filters with AND and OR to build more complex filters.
@@ -330,6 +341,7 @@ println aecu.contentUpgradeBuilder()
 
 The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
 
+* doRename(String newName): renames the resource to the given name
 * doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
 
@@ -337,6 +349,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
+        .doRename("newNodeName")
         .doCopyResourceToRelativePath("subNode")
         .doCopyResourceToRelativePath("../subNode")
         .doMoveResourceToRelativePath("subNode")
@@ -407,17 +420,21 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Print Nodes
+### Print Nodes and Properties
 
-Sometimes, you only want to print the path of the matched nodes.
+Sometimes, you only want to print some information about the matched nodes.
 
 * printPath(): prints the path of the matched node
+* printProperty(String property): prints the value of the specified property of the matched node
+* printJson(): prints a json representation of all the matched node's properties
 
 ```java
 println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .printPath()
+        .printProperty("sling:resourceType")
+        .printJson()
         .run()
 ```
 
