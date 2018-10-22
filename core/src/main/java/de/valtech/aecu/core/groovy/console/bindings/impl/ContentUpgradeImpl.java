@@ -12,7 +12,6 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
@@ -21,6 +20,9 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageActio
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.RemovePageTagsAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.SetPageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintJson;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
@@ -143,7 +145,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade filterByPathRegex(String regex) {
+    public ContentUpgrade filterByPathRegex(@Nonnull String regex) {
         LOG.debug("filterByPathRegex: {}", regex);
         addFilter(new FilterByPathRegex(regex));
         return this;
@@ -314,6 +316,20 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade printPath() {
         LOG.debug("printPath");
         actions.add(new PrintPath());
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade printProperty(@Nonnull String property) {
+        LOG.debug("printProperty {}", property);
+        actions.add(new PrintProperty(property));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade printJson() {
+        LOG.debug("printJson");
+        actions.add(new PrintJson());
         return this;
     }
 

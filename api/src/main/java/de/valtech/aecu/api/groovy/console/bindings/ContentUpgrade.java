@@ -306,6 +306,20 @@ public interface ContentUpgrade {
     ContentUpgrade printPath();
 
     /**
+     * Print property
+     *
+     * @return upgrade object
+     */
+    ContentUpgrade printProperty(String property);
+
+    /**
+     * Prints the properties json
+     *
+     * @return upgrade object
+     */
+    ContentUpgrade printJson();
+
+    /**
      * Saves all changes to repository.
      * 
      * @return output

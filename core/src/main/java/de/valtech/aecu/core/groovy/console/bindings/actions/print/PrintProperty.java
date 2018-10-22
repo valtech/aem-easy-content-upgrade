@@ -16,19 +16,36 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.actions;
+
+package de.valtech.aecu.core.groovy.console.bindings.actions.print;
+
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 
 import javax.annotation.Nonnull;
 
 /**
+ * Action for printing the name and value of a given property.
+ *
  * @author Roxana Muresan
  */
-public class PrintPath implements Action {
+public class PrintProperty implements Action {
+
+    private String propertyName;
+
+
+    public PrintProperty(String propertyName) {
+        this.propertyName = propertyName;
+    }
 
     @Override
     public String doAction(@Nonnull Resource resource) {
-        return "\n> " + resource.getPath();
+        ValueMap properties = resource.getValueMap();
+        if (properties.containsKey(propertyName)) {
+            return propertyName + " = " + properties.get(propertyName);
+        }
+        return propertyName + " not defined";
     }
 }

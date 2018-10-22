@@ -4,6 +4,7 @@
     - Page actions: manage tags
     - Resource actions: rename resource
     - New filter: filter by path regex
+    - New print actions: PrintProperty, PrintJson
 
 2018-09-28 1.5.0
   - Groovy Console binding:
