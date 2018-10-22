@@ -18,7 +18,6 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.page;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -67,7 +66,7 @@ public class RenderPageAction implements Action {
     public String doAction(Resource resource) throws PersistenceException, AecuException {
         Page page = context.getPageManager().getContainingPage(resource);
         if (page == null) {
-            return "Unable to find a page for resource " + resource.getPath();
+            throw new AecuException("Unable to find a page for resource " + resource.getPath());
         }
         String successMessage = "Correct page rendering for " + page.getPath();
         RequestResponseFactory requestResponseFactory = context.getRequestResponseFactory();
@@ -75,15 +74,13 @@ public class RenderPageAction implements Action {
         String requestPath = page.getPath() + ".html";
         HttpServletRequest req = requestResponseFactory.createRequest(HttpConstants.METHOD_GET, requestPath);
         WCMMode.DISABLED.toRequest(req);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        MockHttpServletResponse resp = new MockHttpServletResponse();
+        MockHttpServletResponse resp = createResponse();
         try {
             requestProcessor.processRequest(req, resp, context.getResolver());
             if (resp.getStatus() != statusCode) {
                 throw new AecuException(requestPath + " returned " + resp.getStatus() + " instead of " + statusCode);
             }
             String html = resp.getOutput().toString();
-            out.close();
             if (StringUtils.isNotBlank(textPresent) && !html.contains(textPresent)) {
                 throw new AecuException(requestPath + " did not include " + textPresent);
             }
@@ -94,6 +91,15 @@ public class RenderPageAction implements Action {
             throw new PersistenceException("Unable to render " + requestPath);
         }
         return successMessage;
+    }
+
+    /**
+     * Creates the mocked response. This is needed to get the status code.
+     * 
+     * @return response
+     */
+    protected MockHttpServletResponse createResponse() {
+        return new MockHttpServletResponse();
     }
 
 }
