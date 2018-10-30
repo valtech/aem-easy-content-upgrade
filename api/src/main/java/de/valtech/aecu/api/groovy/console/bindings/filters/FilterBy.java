@@ -18,9 +18,9 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import org.apache.sling.api.resource.Resource;
-
 import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Interface for AECU binding filters.
@@ -32,7 +32,8 @@ public interface FilterBy {
     /**
      * Checks if the given resource matches the filter criteria.
      * 
-     * @param resource resource
+     * @param resource     resource
+     * @param stringBuffer output buffer
      * @return matches
      */
     boolean filter(@Nonnull Resource resource, @Nonnull StringBuffer stringBuffer);
