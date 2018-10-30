@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -21,15 +23,23 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.actions.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.AddPageTagsAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.RemovePageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.RenderPageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.SetPageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintJson;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
@@ -39,8 +49,10 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourc
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 
@@ -61,7 +73,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade forResources(@Nonnull String[] paths) {
-        LOG.debug("forResources: {}", paths.toString());
+        LOG.debug("forResources: {}", Arrays.toString(paths));
         traversals.add(new ForResources(paths));
         return this;
     }
@@ -84,6 +96,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade forResourcesInSubtree(@Nonnull String path) {
         LOG.debug("forResourcesInSubtree: {}", path);
         traversals.add(new ForDescendantResourcesOf(path, true));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade forResourcesBySql2Query(String query) {
+        traversals.add(new ForQuery(query, Query.JCR_SQL2));
         return this;
     }
 
@@ -126,6 +144,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade filterByNodeNameRegex(@Nonnull String regex) {
         LOG.debug("filterByNodeNameRegex: {}", regex);
         addFilter(new FilterByNodeNameRegex(regex));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByPathRegex(@Nonnull String regex) {
+        LOG.debug("filterByPathRegex: {}", regex);
+        addFilter(new FilterByPathRegex(regex));
         return this;
     }
 
@@ -214,6 +239,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade doRename(String newName) {
+        LOG.debug("doRename to {}", newName);
+        actions.add(new RenameResource(context.getResolver(), newName));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doCopyResource to {}", relativePath);
         actions.add(new CopyResourceToRelativePath(relativePath, context.getResolver()));
@@ -263,6 +295,49 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade doAddTagsToContainingPage(String... tags) {
+        LOG.debug("doAddTagsToContainingPage");
+        actions.add(new AddPageTagsAction(context, tags));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doSetTagsForContainingPage(String... tags) {
+        LOG.debug("doSetTagsForContainingPage");
+        actions.add(new SetPageTagsAction(context, tags));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doRemoveTagsFromContainingPage(String... tags) {
+        LOG.debug("doRemoveTagsFromContainingPage");
+        actions.add(new RemovePageTagsAction(context, tags));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering() {
+        return doCheckPageRendering(HttpServletResponse.SC_OK);
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(int code) {
+        actions.add(new RenderPageAction(context, code, null, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(String textPresent) {
+        return doCheckPageRendering(textPresent, null);
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(String textPresent, String textNotPresent) {
+        actions.add(new RenderPageAction(context, HttpServletResponse.SC_OK, textPresent, textNotPresent));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade printPath() {
         LOG.debug("printPath");
         actions.add(new PrintPath());
@@ -270,19 +345,33 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public StringBuffer run() throws PersistenceException {
+    public ContentUpgrade printProperty(@Nonnull String property) {
+        LOG.debug("printProperty {}", property);
+        actions.add(new PrintProperty(property));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade printJson() {
+        LOG.debug("printJson");
+        actions.add(new PrintJson());
+        return this;
+    }
+
+    @Override
+    public StringBuffer run() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade");
         return run(false);
     }
 
     @Override
-    public StringBuffer dryRun() throws PersistenceException {
+    public StringBuffer dryRun() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade dry");
         return run(true);
     }
 
     @Override
-    public StringBuffer run(boolean dryRun) throws PersistenceException {
+    public StringBuffer run(boolean dryRun) throws PersistenceException, AecuException {
         context.setDryRun(dryRun);
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {

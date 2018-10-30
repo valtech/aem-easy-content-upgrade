@@ -32,9 +32,10 @@ public interface FilterBy {
     /**
      * Checks if the given resource matches the filter criteria.
      * 
-     * @param resource resource
+     * @param resource     resource
+     * @param stringBuffer output buffer
      * @return matches
      */
-    boolean filter(@Nonnull Resource resource);
+    boolean filter(@Nonnull Resource resource, @Nonnull StringBuffer stringBuffer);
 
 }

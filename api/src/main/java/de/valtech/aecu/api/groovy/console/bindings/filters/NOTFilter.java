@@ -18,9 +18,9 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.Resource;
+
+import javax.annotation.Nonnull;
 
 /**
  * Negates a given filter.
@@ -41,7 +41,7 @@ public class NOTFilter implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource) {
-        return !filter.filter(resource);
+    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
+        return !filter.filter(resource, stringBuffer);
     }
 }

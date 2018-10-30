@@ -50,7 +50,7 @@ public class FilterByMultiValuePropContains implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource) {
+    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
         ValueMap properties = resource.adaptTo(ValueMap.class);
         if (properties != null) {
             Object value = properties.get(name);

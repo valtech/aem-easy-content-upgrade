@@ -18,16 +18,26 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions;
 
+import javax.annotation.Nonnull;
+
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.api.service.AecuException;
 
 /**
  * @author Roxana Muresan
  */
 public interface Action {
 
-    String doAction(@Nonnull Resource resource) throws PersistenceException;
+    /**
+     * Runs an action.
+     * 
+     * @param resource resource to run action on
+     * @return output message
+     * @throws PersistenceException error saving to JCR
+     * @throws AecuException        other errors
+     */
+    String doAction(@Nonnull Resource resource) throws PersistenceException, AecuException;
 
 }

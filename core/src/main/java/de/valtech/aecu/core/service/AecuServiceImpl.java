@@ -57,6 +57,8 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 @Component(service = AecuService.class)
 public class AecuServiceImpl implements AecuService {
 
+    private static final String ERR_NO_RESOLVER = "Unable to get service resource resolver";
+
     private static final Logger LOG = LoggerFactory.getLogger(AecuServiceImpl.class);
 
     @Reference
@@ -68,6 +70,9 @@ public class AecuServiceImpl implements AecuService {
     @Reference
     private GroovyConsoleService groovyConsoleService;
 
+    @Reference
+    private HistoryUtil historyUtil;
+
     @Override
     public String getVersion() {
         return FrameworkUtil.getBundle(AecuServiceImpl.class).getVersion().toString();
@@ -78,7 +83,7 @@ public class AecuServiceImpl implements AecuService {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
             return findCandidates(resolver, path);
         } catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
+            throw new AecuException(ERR_NO_RESOLVER, e);
         }
     }
 
@@ -167,7 +172,7 @@ public class AecuServiceImpl implements AecuService {
             ExecutionResult result = executeScript(resolver, path);
             return result;
         } catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
+            throw new AecuException(ERR_NO_RESOLVER, e);
         }
     }
 
@@ -222,26 +227,24 @@ public class AecuServiceImpl implements AecuService {
     @Override
     public HistoryEntry createHistoryEntry() throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             HistoryEntry entry = historyUtil.createHistoryEntry(resolver);
             resolver.commit();
             return entry;
         } catch (PersistenceException e) {
             throw new AecuException("Unable to create history", e);
         } catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
+            throw new AecuException(ERR_NO_RESOLVER, e);
         }
     }
 
     @Override
     public HistoryEntry finishHistoryEntry(HistoryEntry history) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             historyUtil.finishHistoryEntry(history, resolver);
             resolver.commit();
             return history;
         } catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
+            throw new AecuException(ERR_NO_RESOLVER, e);
         } catch (PersistenceException e) {
             throw new AecuException("Unable to finish history " + history.getRepositoryPath(), e);
         }
@@ -254,12 +257,11 @@ public class AecuServiceImpl implements AecuService {
         }
         history.getSingleResults().add(result);
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             historyUtil.storeExecutionInHistory(history, result, resolver);
             resolver.commit();
             return history;
         } catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
+            throw new AecuException(ERR_NO_RESOLVER, e);
         } catch (PersistenceException e) {
             throw new AecuException("Unable to add history entry " + history.getRepositoryPath(), e);
         }
@@ -268,10 +270,9 @@ public class AecuServiceImpl implements AecuService {
     @Override
     public List<HistoryEntry> getHistory(int startIndex, int count) throws AecuException {
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
-            HistoryUtil historyUtil = new HistoryUtil();
             return historyUtil.getHistory(startIndex, count, resolver);
         } catch (LoginException e) {
-            throw new AecuException("Unable to get service resource resolver", e);
+            throw new AecuException(ERR_NO_RESOLVER, e);
         }
     }
 

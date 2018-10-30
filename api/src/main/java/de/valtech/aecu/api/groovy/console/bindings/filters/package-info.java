@@ -22,7 +22,7 @@
  * 
  * @author Roxana Muresan
  */
-@Version("1.0")
+@Version("2.0")
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
 import org.osgi.annotation.versioning.Version;

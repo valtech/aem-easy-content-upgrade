@@ -61,6 +61,8 @@ public class LastRunHealthCheck implements HealthCheck {
                     case UNKNOWN:
                         resultLog.warn("Last execution is still running");
                         break;
+                    default:
+                        resultLog.warn("Last execution is still ongoing");
                 }
             }
         } catch (AecuException e) {

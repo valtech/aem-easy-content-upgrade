@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.sling.api.resource.PersistenceException;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -63,6 +64,14 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade forResourcesInSubtree(String path);
+
+    /**
+     * Loops over resources found by SQL2 query.
+     * 
+     * @param query query string
+     * @return upgrade object
+     */
+    ContentUpgrade forResourcesBySql2Query(String query);
 
     /**
      * Filters by existence of a single property.
@@ -113,6 +122,14 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade filterByNodeNameRegex(String regex);
+
+    /**
+     * Filters by node path using regular expression.
+     *
+     * @param regex regular expression (Java standard pattern)
+     * @return upgrade object
+     */
+    ContentUpgrade filterByPathRegex(String regex);
 
     /**
      * Filters by using the given filter.
@@ -197,6 +214,14 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues);
 
     /**
+     * Renames a resource to the given name.
+     * 
+     * @param newName path
+     * @return newName new name
+     */
+    ContentUpgrade doRename(String newName);
+
+    /**
      * Copies a resource to a relative path.
      * 
      * @param relativePath path
@@ -250,6 +275,63 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteContainingPage();
 
     /**
+     * Adds tags to the containing page of the matching resource.
+     * 
+     * @param tags tag IDs or paths
+     * @return upgrade object
+     */
+    ContentUpgrade doAddTagsToContainingPage(String... tags);
+
+    /**
+     * Sets tags for the containing page of the matching resource. All existing tags are
+     * overwritten.
+     * 
+     * @param tags tag IDs or paths
+     * @return upgrade object
+     */
+    ContentUpgrade doSetTagsForContainingPage(String... tags);
+
+    /**
+     * Removes tags from the containing page of the matching resource.
+     * 
+     * @param tags tag IDs or paths
+     * @return upgrade object
+     */
+    ContentUpgrade doRemoveTagsFromContainingPage(String... tags);
+
+    /**
+     * Checks if the containing page renders with status code 200.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering();
+
+    /**
+     * Checks if the containing page renders with given status code.
+     * 
+     * @param code status code
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering(int code);
+
+    /**
+     * Checks if the containing page renders with status code 200 and contains given text.
+     * 
+     * @param textPresent page content must include this text
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering(String textPresent);
+
+    /**
+     * Checks if the containing page renders with status code 200 and (not) contains given text.
+     * 
+     * @param textPresent    page content must include this text (can be null)
+     * @param textNotPresent page content must not include this text (can be null)
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering(String textPresent, String textNotPresent);
+
+    /**
      * Print path
      * 
      * @return upgrade object
@@ -257,20 +339,37 @@ public interface ContentUpgrade {
     ContentUpgrade printPath();
 
     /**
+     * Print property
+     *
+     * @param property property name
+     * @return upgrade object
+     */
+    ContentUpgrade printProperty(String property);
+
+    /**
+     * Prints the properties json
+     *
+     * @return upgrade object
+     */
+    ContentUpgrade printJson();
+
+    /**
      * Saves all changes to repository.
      * 
      * @return output
      * @throws PersistenceException error during execution
+     * @throws AecuException        other error
      */
-    StringBuffer run() throws PersistenceException;
+    StringBuffer run() throws PersistenceException, AecuException;
 
     /**
      * Performs a dry-run. No changes are written to CRX.
      * 
      * @return output
      * @throws PersistenceException error doing dry-run
+     * @throws AecuException        other error
      */
-    StringBuffer dryRun() throws PersistenceException;
+    StringBuffer dryRun() throws PersistenceException, AecuException;
 
     /**
      * Executes a run or a dryRun depending on the dryRun parameter value.
@@ -278,7 +377,8 @@ public interface ContentUpgrade {
      * @param dryRun dryRun option
      * @return output
      * @throws PersistenceException error during execution
+     * @throws AecuException        other error
      */
-    StringBuffer run(boolean dryRun) throws PersistenceException;
+    StringBuffer run(boolean dryRun) throws PersistenceException, AecuException;
 
 }

@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>1.5.0</version>
+        <version>1.6.0</version>
     </parent>
     
     <artifactId>aecu.core</artifactId>
@@ -35,6 +35,32 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+				          <execution>
+				            <id>prepare-agent</id>
+				            <goals>
+				              <goal>prepare-agent</goal>
+				            </goals>
+				          </execution>
+				          <execution>
+				            <id>report</id>
+				            <phase>prepare-package</phase>
+				            <goals>
+				              <goal>report</goal>
+				            </goals>
+				          </execution>
+				          <execution>
+				            <id>post-unit-test</id>
+				            <phase>test</phase>
+				            <goals>
+				              <goal>report</goal>
+				            </goals>
+				          </execution>
+				        </executions>
+            </plugin>            
         </plugins>
     </build>
 
@@ -78,7 +104,7 @@
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <artifactId>javax.servlet-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.adobe.aem</groupId>

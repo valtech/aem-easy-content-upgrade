@@ -12,7 +12,9 @@ Features:
 * Service API
 * Health Checks
 
-The tool was presented at [adaptTo() conference in Berlin](https://adapt.to/2018/en/schedule/aem-easy-content-upgrade.html)
+The tool was presented at [adaptTo() conference in Berlin](https://adapt.to/2018/en/schedule/aem-easy-content-upgrade.html). You can get the slides there and also see the video here:
+
+[![AECU @ adaptTo() 2018](https://img.youtube.com/vi/ZPEJ_cbzBoE/0.jpg)](https://www.youtube.com/watch?v=ZPEJ_cbzBoE "AECU @ adaptTo() 2018")
 
 Table of contents
 1. [Requirements](#requirements)
@@ -23,6 +25,10 @@ Table of contents
     2. [Manual Execution](#manualExecution)
 5. [History of Past Runs](#history)
 6. [Extension to Groovy Console](#groovy)
+    1. [Collect Options](#binding_collect)
+    2. [Filter Options](#binding_filter)
+    3. [Execute Options](#binding_execute)
+    4. [Run Options](#binding_run)
 7. [JMX Interface](#jmx)
 8. [Health Checks](#healthchecks)
 9. [API Documentation](#api)
@@ -159,6 +165,8 @@ AECU adds its own binding to Groovy Console. You can reach it using "aecu" in yo
 
 It follows a collect, filter, execute process.
 
+<a name="binding_collect"></a>
+
 ## Collect Options
 In the collect phase you define which nodes should be checked for a migration.
 
@@ -166,6 +174,7 @@ In the collect phase you define which nodes should be checked for a migration.
 * forChildResourcesOf(String path): use all direct childs of the given path (but no grandchilds)
 * forDescendantResourcesOf(String path): use the whole subtree under this path excluding the parent root node
 * forResourcesInSubtree(String path): use the whole subtree under this path including the parent root node
+* forResourcesBySql2Query(String query): executes the query and applies actions on found resources
 
 You can call these methods multiple times and combine them. They will be merged together.
 
@@ -177,11 +186,14 @@ println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/us/en")
         .forDescendantResourcesOf("/content/we-retail/us/en/experience")
         .forResourcesInSubtree("/content/we-retail/us/en/experience")
+        .forResourcesBySql2Query("SELECT * FROM [cq:Page] AS s WHERE ISDESCENDANTNODE(s,'/content/we-retail/us/en/experience')")
         .doSetProperty("name", "value")
         .run()
 ```
 
-## Filter options
+<a name="binding_filter"></a>
+
+## Filter Options
 These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
 
 ### Filter by Properties
@@ -216,8 +228,6 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-<a name="jmx"></a>
-
 ### Filter by Node Name
 
 You can also filter nodes by their name.
@@ -234,7 +244,20 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
-<a name="jmx"></a>
+### Filter by Node Path
+
+Nodes can also be filtered by their path using a regular expression.
+
+* filterByPathRegex(String regex): process nodes whose path matches the given regular expression
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByPathRegex(".*/jcr:content/.*")
+        .doSetProperty("name", "value")
+        .run()
+```
+
 
 ### Combine Multiple Filters
 You can combine filters with AND and OR to build more complex filters.
@@ -261,6 +284,8 @@ println aecu.contentUpgradeBuilder()
         .doSetProperty("name", "value")
         .run()        
 ```
+
+<a name="binding_execute"></a>
 
 ## Execute Options
 
@@ -316,6 +341,7 @@ println aecu.contentUpgradeBuilder()
 
 The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
 
+* doRename(String newName): renames the resource to the given name
 * doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
 
@@ -323,6 +349,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
+        .doRename("newNodeName")
         .doCopyResourceToRelativePath("subNode")
         .doCopyResourceToRelativePath("../subNode")
         .doMoveResourceToRelativePath("subNode")
@@ -346,11 +373,13 @@ println aecu.contentUpgradeBuilder()
 ### Page Actions
 
 AECU can run actions on the page that contains a filtered resource. This is e.g. helpful if you filter by page resource type.
+
 Please note that there is no check for duplicate actions. If you run a page action for two resources in the same page then the action will be executed twice.
+
+#### Page (De)activation
 
 * doActivateContainingPage(): activates the page that contains the current resource
 * doDeactivateContainingPage(): deactivates the page that contains the current resource
-* doDeleteContainingPage(): deletes the page (incl. subpages) that contains the current resource
 
 ```java
 println aecu.contentUpgradeBuilder()
@@ -358,21 +387,74 @@ println aecu.contentUpgradeBuilder()
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doActivateContainingPage()
         .doDeactivateContainingPage()
+        .run()
+```
+
+#### Page Deletion
+
+* doDeleteContainingPage(): deletes the page (incl. subpages) that contains the current resource
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doDeleteContainingPage()
         .run()
 ```
 
-### Print Nodes
+#### Page Tagging
 
-Sometimes, you only want to print the path of the matched nodes.
+Tags can be specified by Id (e.g. "properties:style/color") or path (e.g. "/etc/tags/properties/orientation/landscape").
+
+* doAddTagsToContainingPage(): adds the given tags to the page
+* doSetTagsForContainingPage(): sets the page's tags. This will delete any tags that were assigned but are not part of the new tag list. An empty list of tags will delete all tags.
+* doRemoveTagsFromContainingPage(): removes the given tags from the page
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByProperty("sling:resourceType", "weretail/components/structure/page")
+        .doAddTagsToContainingPage("properties:style/color", "/etc/tags/properties/orientation/landscape")
+        .doSetTagsForContainingPage("properties:style/color", "/etc/tags/properties/orientation/landscape")
+        .doRemoveTagsFromContainingPage("properties:style/color", "/etc/tags/properties/orientation/landscape")
+        .run()
+```
+
+#### Validate Page Rendering
+
+AECU can do some basic tests if pages render correctly. You can use this to verify a migration run.
+
+* doCheckPageRendering(): checks if page renders with status code 200
+* doCheckPageRendering(int code): checks if page renders with given status code 
+* doCheckPageRendering(String textPresent): verifies that the given text is included in page output + page renders with code 200
+* doCheckPageRendering(String textPresent, String textNotPresent): verifies that the given text is (not) included in page output + page renders with code 200. The parameters textPresent/textNotPresent can be set to null if you do not need the check.
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByProperty("sling:resourceType", "weretail/components/structure/page")
+        .doCheckPageRendering()
+        .doCheckPageRendering(200)
+        .doCheckPageRendering("some test string")
+        .doCheckPageRendering("some test string", "exception")
+        .run()
+```
+
+### Print Nodes and Properties
+
+Sometimes, you only want to print some information about the matched nodes.
 
 * printPath(): prints the path of the matched node
+* printProperty(String property): prints the value of the specified property of the matched node
+* printJson(): prints a json representation of all the matched node's properties
 
 ```java
 println aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .printPath()
+        .printProperty("sling:resourceType")
+        .printJson()
         .run()
 ```
 
@@ -398,6 +480,8 @@ println aecu.contentUpgradeBuilder()
 ```
 
 
+
+<a name="binding_run"></a>
 
 ## Run Options
 

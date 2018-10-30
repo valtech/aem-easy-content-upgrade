@@ -55,6 +55,9 @@ public class ExecutionServlet extends BaseServlet {
     @Reference
     AecuService aecuService;
 
+    @Reference
+    private HistoryUtil historyUtil;
+
 
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
@@ -105,7 +108,6 @@ public class ExecutionServlet extends BaseServlet {
                 }
 
                 ResourceResolver resolver = request.getResourceResolver();
-                HistoryUtil historyUtil = new HistoryUtil();
                 historyEntry = historyUtil.readHistoryEntry(resolver.getResource(historyEntryPath));
                 break;
             default:
@@ -118,17 +120,11 @@ public class ExecutionServlet extends BaseServlet {
     }
 
     protected HistoryEntry finishHistoryEntry(HistoryEntry historyEntry, String historyEntryAction) throws AecuException {
-
-        switch (historyEntryAction.toLowerCase()) {
-            case "single":
-            case "close":
-                // Used for "single" and "close"
-                aecuService.finishHistoryEntry(historyEntry);
-                break;
+        String action = historyEntryAction.toLowerCase();
+        if ("single".equals(action) || "close".equals(action)) {
+            aecuService.finishHistoryEntry(historyEntry);
         }
-
         return historyEntry;
-
     }
 
     /**

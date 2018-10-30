@@ -25,7 +25,6 @@ import java.time.Duration;
 import javax.annotation.PostConstruct;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
@@ -41,7 +40,7 @@ import de.valtech.aecu.api.service.HistoryEntry.STATE;
 @Model(adaptables = Resource.class)
 public class HistoryDataItem {
 
-    private final DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @SlingObject
     private Resource resource;
@@ -50,7 +49,7 @@ public class HistoryDataItem {
 
     @PostConstruct
     public void setup() {
-        history = resource.adaptTo(ValueMap.class).get(HistoryDataSource.ATTR_HISTORY, HistoryEntry.class);
+        history = resource.getValueMap().get(HistoryDataSource.ATTR_HISTORY, HistoryEntry.class);
     }
 
     /**
@@ -59,6 +58,9 @@ public class HistoryDataItem {
      * @return date
      */
     public String getDate() {
+        if (history.getEnd() == null) {
+            return format.format(history.getStart());
+        }
         return format.format(history.getEnd());
     }
 

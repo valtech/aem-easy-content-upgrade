@@ -27,13 +27,14 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * @author Roxana Muresan
  */
-public class ForResources implements TraversData {
+public class ForResources extends TraversData {
 
     private String[] paths;
 
@@ -43,24 +44,22 @@ public class ForResources implements TraversData {
 
     @Override
     public void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
+            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
         ResourceResolver resourceResolver = context.getResolver();
         for (String path : paths) {
-            if (path != null) {
-                Resource resource = resourceResolver.getResource(path);
-                if (resource != null) {
-                    if (filter == null || filter.filter(resource)) {
-                        for (Action action : actions) {
-                            stringBuffer.append(action.doAction(resource) + "\n");
-                        }
-                    }
-                } else {
-                    stringBuffer.append("WARNING: resource does not exist " + path + "\n");
-                }
+            if (path == null) {
+                continue;
             }
+            Resource resource = resourceResolver.getResource(path);
+            if (resource == null) {
+                stringBuffer.append("WARNING: resource does not exist " + path + "\n");
+                continue;
+            }
+            applyActionsOnResource(resource, filter, actions, stringBuffer);
         }
         if (!dryRun) {
             resourceResolver.commit();
         }
     }
+
 }

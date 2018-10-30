@@ -19,11 +19,14 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.engine.SlingRequestProcessor;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import com.day.cq.contentsync.handler.util.RequestResponseFactory;
 import com.day.cq.replication.Replicator;
+import com.day.cq.tagging.TagManager;
 import com.day.cq.wcm.api.PageManager;
 
 /**
@@ -35,8 +38,11 @@ public class BindingContext {
 
     private ResourceResolver resolver;
     private PageManager pageManager;
+    private TagManager tagManager;
     private Replicator replicator;
     private boolean dryRun = true;
+    private RequestResponseFactory requestResponseFactory;
+    private SlingRequestProcessor slingRequestProcessor;
 
     /**
      * Constructor
@@ -70,6 +76,19 @@ public class BindingContext {
     }
 
     /**
+     * Returns the tag manager.
+     * 
+     * @return tag manager
+     */
+    public TagManager getTagManager() {
+        if (tagManager != null) {
+            return tagManager;
+        }
+        tagManager = resolver.adaptTo(TagManager.class);
+        return tagManager;
+    }
+
+    /**
      * Returns the page replicator.
      * 
      * @return replicator
@@ -84,6 +103,42 @@ public class BindingContext {
             replicator = bundle.getBundleContext().getService(replicatorReference);
         }
         return replicator;
+    }
+
+    /**
+     * Returns the request response factory.
+     * 
+     * @return request response factory
+     */
+    public RequestResponseFactory getRequestResponseFactory() {
+        if (requestResponseFactory != null) {
+            return requestResponseFactory;
+        }
+        Bundle bundle = FrameworkUtil.getBundle(BindingContext.class);
+        ServiceReference<RequestResponseFactory> requestResponseFactoryReference =
+                bundle.getBundleContext().getServiceReference(RequestResponseFactory.class);
+        if (requestResponseFactoryReference != null) {
+            requestResponseFactory = bundle.getBundleContext().getService(requestResponseFactoryReference);
+        }
+        return requestResponseFactory;
+    }
+
+    /**
+     * Returns the Sling request processor.
+     * 
+     * @return Sling request processor
+     */
+    public SlingRequestProcessor getSlingRequestProcessor() {
+        if (slingRequestProcessor != null) {
+            return slingRequestProcessor;
+        }
+        Bundle bundle = FrameworkUtil.getBundle(BindingContext.class);
+        ServiceReference<SlingRequestProcessor> slingRequestProcessorReference =
+                bundle.getBundleContext().getServiceReference(SlingRequestProcessor.class);
+        if (slingRequestProcessorReference != null) {
+            slingRequestProcessor = bundle.getBundleContext().getService(slingRequestProcessorReference);
+        }
+        return slingRequestProcessor;
     }
 
     /**

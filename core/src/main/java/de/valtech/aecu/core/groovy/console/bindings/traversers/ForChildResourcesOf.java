@@ -28,13 +28,14 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * @author Roxana Muresan
  */
-public class ForChildResourcesOf implements TraversData {
+public class ForChildResourcesOf extends TraversData {
 
     private String path;
 
@@ -45,28 +46,23 @@ public class ForChildResourcesOf implements TraversData {
 
     @Override
     public void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException {
+            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
         ResourceResolver resourceResolver = context.getResolver();
         Resource parentResource = resourceResolver.getResource(path);
-        if (parentResource != null) {
-            Iterator<Resource> resourceIterator = resourceResolver.listChildren(parentResource);
-            while (resourceIterator.hasNext()) {
-                Resource resource = resourceIterator.next();
-                if (!isResourceValid(resource)) {
-                    continue;
-                }
-                if (filter == null || filter.filter(resource)) {
-                    for (Action action : actions) {
-                        stringBuffer.append(action.doAction(resource) + "\n");
-                    }
-                }
+        if (parentResource == null) {
+            return;
+        }
+        Iterator<Resource> resourceIterator = resourceResolver.listChildren(parentResource);
+        while (resourceIterator.hasNext()) {
+            Resource resource = resourceIterator.next();
+            if (!isResourceValid(resource)) {
+                continue;
             }
-            if (!dryRun) {
-                resourceResolver.commit();
-            }
+            applyActionsOnResource(resource, filter, actions, stringBuffer);
+        }
+        if (!dryRun) {
+            resourceResolver.commit();
         }
     }
-
-
 
 }
