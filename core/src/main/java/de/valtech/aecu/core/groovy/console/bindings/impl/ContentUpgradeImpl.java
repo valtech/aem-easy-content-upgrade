@@ -1,5 +1,20 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.scribe.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
 import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
@@ -11,6 +26,7 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
@@ -18,6 +34,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMu
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.AddPageTagsAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.RemovePageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.RenderPageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.SetPageTagsAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintJson;
@@ -38,20 +55,6 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantReso
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.jcr.query.Query;
 
 public class ContentUpgradeImpl implements ContentUpgrade {
 
@@ -313,6 +316,28 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade doCheckPageRendering() {
+        return doCheckPageRendering(HttpServletResponse.SC_OK);
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(int code) {
+        actions.add(new RenderPageAction(context, code, null, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(String textPresent) {
+        return doCheckPageRendering(textPresent, null);
+    }
+
+    @Override
+    public ContentUpgrade doCheckPageRendering(String textPresent, String textNotPresent) {
+        actions.add(new RenderPageAction(context, HttpServletResponse.SC_OK, textPresent, textNotPresent));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade printPath() {
         LOG.debug("printPath");
         actions.add(new PrintPath());
@@ -334,19 +359,19 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public StringBuffer run() throws PersistenceException {
+    public StringBuffer run() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade");
         return run(false);
     }
 
     @Override
-    public StringBuffer dryRun() throws PersistenceException {
+    public StringBuffer dryRun() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade dry");
         return run(true);
     }
 
     @Override
-    public StringBuffer run(boolean dryRun) throws PersistenceException {
+    public StringBuffer run(boolean dryRun) throws PersistenceException, AecuException {
         context.setDryRun(dryRun);
         StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {

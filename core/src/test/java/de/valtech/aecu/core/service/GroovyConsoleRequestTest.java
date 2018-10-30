@@ -25,6 +25,8 @@ import static org.junit.Assert.assertNull;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import javax.servlet.ServletException;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.junit.Before;
@@ -73,7 +75,7 @@ public class GroovyConsoleRequestTest {
     }
 
     @Test
-    public void emptyMethods() throws IOException {
+    public void emptyMethods() throws IOException, ServletException {
         assertNull(request.getAuthType());
         assertNull(request.getContextPath());
         assertNull(request.getCookies());
@@ -140,6 +142,18 @@ public class GroovyConsoleRequestTest {
         assertNull(request.getResourceBundle("", null));
         assertNull(request.getResponseContentType());
         assertNull(request.getResponseContentTypes());
+        assertFalse(request.authenticate(null));
+        request.login(null, null);
+        request.logout();
+        assertNull(request.getParts());
+        assertNull(request.getPart(null));
+        assertNull(request.getServletContext());
+        assertNull(request.startAsync());
+        assertNull(request.startAsync(null, null));
+        assertFalse(request.isAsyncStarted());
+        assertFalse(request.isAsyncSupported());
+        assertNull(request.getAsyncContext());
+        assertNull(request.getDispatcherType());
     }
 
 }

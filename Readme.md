@@ -420,6 +420,26 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Validate Page Rendering
+
+AECU can do some basic tests if pages render correctly. You can use this to verify a migration run.
+
+* doCheckPageRendering(): checks if page renders with status code 200
+* doCheckPageRendering(int code): checks if page renders with given status code 
+* doCheckPageRendering(String textPresent): verifies that the given text is included in page output + page renders with code 200
+* doCheckPageRendering(String textPresent, String textNotPresent): verifies that the given text is (not) included in page output + page renders with code 200. The parameters textPresent/textNotPresent can be set to null if you do not need the check.
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByProperty("sling:resourceType", "weretail/components/structure/page")
+        .doCheckPageRendering()
+        .doCheckPageRendering(200)
+        .doCheckPageRendering("some test string")
+        .doCheckPageRendering("some test string", "exception")
+        .run()
+```
+
 ### Print Nodes and Properties
 
 Sometimes, you only want to print some information about the matched nodes.

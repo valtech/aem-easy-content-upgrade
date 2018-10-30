@@ -35,6 +35,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
@@ -73,7 +74,7 @@ public class ForQueryTest {
     }
 
     @Test
-    public void traverse() throws PersistenceException {
+    public void traverse() throws PersistenceException, AecuException {
         ForQuery traverser = new ForQuery(QUERY, TYPE);
 
         traverser.traverse(context, null, actions, output, false);
@@ -83,7 +84,7 @@ public class ForQueryTest {
     }
 
     @Test
-    public void traverse_dry() throws PersistenceException {
+    public void traverse_dry() throws PersistenceException, AecuException {
         ForQuery traverser = new ForQuery(QUERY, TYPE);
 
         traverser.traverse(context, null, actions, output, true);

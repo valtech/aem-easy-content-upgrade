@@ -18,11 +18,12 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import java.util.Map;
 
 import org.apache.sling.api.resource.PersistenceException;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -299,6 +300,38 @@ public interface ContentUpgrade {
     ContentUpgrade doRemoveTagsFromContainingPage(String... tags);
 
     /**
+     * Checks if the containing page renders with status code 200.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering();
+
+    /**
+     * Checks if the containing page renders with given status code.
+     * 
+     * @param code status code
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering(int code);
+
+    /**
+     * Checks if the containing page renders with status code 200 and contains given text.
+     * 
+     * @param textPresent page content must include this text
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering(String textPresent);
+
+    /**
+     * Checks if the containing page renders with status code 200 and (not) contains given text.
+     * 
+     * @param textPresent    page content must include this text (can be null)
+     * @param textNotPresent page content must not include this text (can be null)
+     * @return upgrade object
+     */
+    ContentUpgrade doCheckPageRendering(String textPresent, String textNotPresent);
+
+    /**
      * Print path
      * 
      * @return upgrade object
@@ -324,16 +357,18 @@ public interface ContentUpgrade {
      * 
      * @return output
      * @throws PersistenceException error during execution
+     * @throws AecuException        other error
      */
-    StringBuffer run() throws PersistenceException;
+    StringBuffer run() throws PersistenceException, AecuException;
 
     /**
      * Performs a dry-run. No changes are written to CRX.
      * 
      * @return output
      * @throws PersistenceException error doing dry-run
+     * @throws AecuException        other error
      */
-    StringBuffer dryRun() throws PersistenceException;
+    StringBuffer dryRun() throws PersistenceException, AecuException;
 
     /**
      * Executes a run or a dryRun depending on the dryRun parameter value.
@@ -341,7 +376,8 @@ public interface ContentUpgrade {
      * @param dryRun dryRun option
      * @return output
      * @throws PersistenceException error during execution
+     * @throws AecuException        other error
      */
-    StringBuffer run(boolean dryRun) throws PersistenceException;
+    StringBuffer run(boolean dryRun) throws PersistenceException, AecuException;
 
 }
