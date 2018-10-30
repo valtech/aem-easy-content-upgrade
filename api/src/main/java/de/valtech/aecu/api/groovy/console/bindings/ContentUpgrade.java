@@ -216,7 +216,7 @@ public interface ContentUpgrade {
     /**
      * Renames a resource to the given name.
      * 
-     * @param relativePath path
+     * @param newName path
      * @return newName new name
      */
     ContentUpgrade doRename(String newName);
@@ -341,6 +341,7 @@ public interface ContentUpgrade {
     /**
      * Print property
      *
+     * @param property property name
      * @return upgrade object
      */
     ContentUpgrade printProperty(String property);
