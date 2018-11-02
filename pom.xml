@@ -206,6 +206,19 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>osgicheck-maven-plugin</artifactId>
+                    <version>0.1.0</version>
+                    <executions>
+						            <execution>
+						                <id>check-bundle</id>
+						                <goals>
+						                    <goal>check</goal>
+						                </goals>
+						            </execution>
+						        </executions>
+                </plugin>
+                <plugin>
                     <groupId>com.day.jcr.vault</groupId>
                     <artifactId>content-package-maven-plugin</artifactId>
                     <version>0.5.1</version>

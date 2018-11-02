@@ -19,6 +19,7 @@
 package de.valtech.aecu.api.groovy.console.bindings;
 
 import org.apache.sling.api.resource.Resource;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Functional interface to define custom action on content upgrade.
@@ -26,6 +27,7 @@ import org.apache.sling.api.resource.Resource;
  * @author Roland Gruber
  */
 @FunctionalInterface
+@ConsumerType
 public interface CustomResourceAction {
 
     /**
