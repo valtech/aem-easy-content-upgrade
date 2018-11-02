@@ -19,6 +19,10 @@
                 <artifactId>osgicheck-maven-plugin</artifactId>
             </plugin>
             <plugin>
+		            <groupId>biz.aQute.bnd</groupId>
+		            <artifactId>bnd-baseline-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>maven-sling-plugin</artifactId>
             </plugin>
