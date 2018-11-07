@@ -20,6 +20,8 @@ package de.valtech.aecu.core.jmx;
 
 import java.util.List;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 import com.adobe.granite.jmx.annotation.Description;
 import com.adobe.granite.jmx.annotation.Name;
 
@@ -31,6 +33,7 @@ import de.valtech.aecu.api.service.AecuException;
  * @author Roland Gruber
  */
 @Description("AEM Easy Content Upgrade")
+@ProviderType
 public interface AecuServiceMBean {
 
     /**

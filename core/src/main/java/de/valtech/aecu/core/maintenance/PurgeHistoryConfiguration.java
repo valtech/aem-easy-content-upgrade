@@ -18,6 +18,7 @@
  */
 package de.valtech.aecu.core.maintenance;
 
+import org.osgi.annotation.versioning.ProviderType;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.AttributeType;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
@@ -28,6 +29,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
  * @author Roland Gruber
  */
 @ObjectClassDefinition(name = "AECU Purge history configuration")
+@ProviderType
 public @interface PurgeHistoryConfiguration {
 
     @AttributeDefinition(type = AttributeType.INTEGER, name = "Days to keep",

@@ -18,11 +18,14 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 /**
  * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
  * 
  * @author Roxana Muresan
  */
+@ProviderType
 public interface AecuBinding {
 
     /**
