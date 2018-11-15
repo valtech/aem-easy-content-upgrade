@@ -18,6 +18,7 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.provider;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
 
     @Override
-    public Map<String, BindingVariable> getBindingVariables(SlingHttpServletRequest arg0) {
+    public Map<String, BindingVariable> getBindingVariables(SlingHttpServletRequest request, PrintStream printStream) {
         Map<String, BindingVariable> variables = new HashMap<String, BindingVariable>();
         try {
             BindingVariable aecuVar =
