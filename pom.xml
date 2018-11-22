@@ -329,6 +329,23 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>4.0.0</version>
+                    <configuration>
+                        <failBuildOnCVSS>0</failBuildOnCVSS>
+                        <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                        <skipProvidedScope>true</skipProvidedScope>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
