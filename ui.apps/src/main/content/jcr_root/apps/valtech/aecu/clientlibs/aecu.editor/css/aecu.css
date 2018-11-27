@@ -269,3 +269,8 @@ table.aecu-history-detail td {
 pre {
     margin: 0;
 }
+
+.aecu-search-card {
+    text-align: center;
+    font-size: 7rem;
+}

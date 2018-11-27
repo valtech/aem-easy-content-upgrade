@@ -7,4 +7,5 @@
           jcr:title="AECU History"
           listOrder="12"
           nodeType="nt:unstructured"
+          cardPath="valtech/aecu/components/omnisearch/history/historyCard"
 />

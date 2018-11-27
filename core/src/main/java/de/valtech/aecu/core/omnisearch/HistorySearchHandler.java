@@ -51,12 +51,12 @@ public class HistorySearchHandler implements OmniSearchHandler {
 
     @Override
     public String getID() {
-        return "aecu-history";
+        return "AECU History";
     }
 
     @Override
     public Resource getModuleConfig(ResourceResolver resourceResolver) {
-        return resourceResolver.getResource("/var/aecu");
+        return resourceResolver.getResource("/apps/valtech/aecu/omnisearch/content/metadata/aecuHistory");
     }
 
     @Override

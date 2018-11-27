@@ -45,7 +45,7 @@ public class HistoryDataItem {
     @SlingObject
     private Resource resource;
 
-    private HistoryEntry history = null;
+    protected HistoryEntry history = null;
 
     @PostConstruct
     public void setup() {
