@@ -60,7 +60,10 @@ public class HistoryUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(HistoryUtil.class);
 
-    protected static final String HISTORY_BASE = "/var/aecu";
+    /**
+     * Base node for history entries
+     */
+    public static final String HISTORY_BASE = "/var/aecu";
 
     protected static final String NODE_FALLBACK = "fallback";
 

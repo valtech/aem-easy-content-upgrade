@@ -3,7 +3,7 @@
           xmlns:jcr="http://www.jcp.org/jcr/1.0"
           jcr:primaryType="sling:Folder"
           defaultSearchPath="/var/aecu"
-          includeInSuggestions="{Boolean}false"
+          includeInSuggestions="{Boolean}true"
           jcr:title="AECU History"
           listOrder="12"
           nodeType="nt:unstructured"
