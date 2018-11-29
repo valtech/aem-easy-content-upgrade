@@ -201,7 +201,7 @@ These methods can be used to filter the nodes that were collected above. Multipl
 Filters the resources by property values.
 
 * filterByHasProperty: matches all nodes that have the given property. The value of the property is not relevant.
-* filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present.
+* filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
 
