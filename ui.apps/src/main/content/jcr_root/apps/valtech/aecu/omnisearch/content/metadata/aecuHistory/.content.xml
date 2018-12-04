@@ -8,5 +8,5 @@
           listOrder="12"
           nodeType="nt:unstructured"
           cardPath="valtech/aecu/components/omnisearch/history/historyCard"
-          listitemPath="valtech/aecu/components/omnisearch/history/historyListitem"
+          listItemPath="valtech/aecu/components/omnisearch/history/historyListitem"
 />
