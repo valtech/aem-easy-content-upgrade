@@ -12,6 +12,9 @@
             <scripts
                 jcr:primaryType="nt:unstructured"
                 jcr:title="Script count"/>
+            <status
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Status"/>
         </columns>
     </list>
 </jcr:root>
