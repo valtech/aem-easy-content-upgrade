@@ -29,6 +29,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
+import org.apache.jackrabbit.oak.plugins.index.IndexConstants;
 import org.apache.jackrabbit.oak.spi.security.authorization.accesscontrol.AccessControlConstants;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
@@ -241,7 +242,8 @@ public class HistoryUtil {
             if (sibling.getName().equals(resource.getName())) {
                 break;
             }
-            if (!sibling.getName().equals(AccessControlConstants.REP_POLICY)) {
+            if (!sibling.getName().equals(AccessControlConstants.REP_POLICY)
+                    && !sibling.getName().equals(IndexConstants.INDEX_DEFINITIONS_NAME)) {
                 previous = sibling;
             }
         }
@@ -275,7 +277,8 @@ public class HistoryUtil {
         Iterator<Resource> lastIterator = resource.listChildren();
         while (lastIterator.hasNext()) {
             Resource candidate = lastIterator.next();
-            if (!AccessControlConstants.REP_POLICY.equals(candidate.getName())) {
+            if (!AccessControlConstants.REP_POLICY.equals(candidate.getName())
+                    && !IndexConstants.INDEX_DEFINITIONS_NAME.equals(candidate.getName())) {
                 last = candidate;
             }
         }
