@@ -7,7 +7,6 @@
         reindex="{Boolean}false"
         reindexCount="{Long}0"
         type="lucene"
-        includedPaths="[/var/aecu]"
         >
         <aggregates jcr:primaryType="nt:unstructured">
             <nt:base jcr:primaryType="nt:unstructured">
