@@ -12,6 +12,9 @@
             <scripts
                 jcr:primaryType="nt:unstructured"
                 jcr:title="Script count"/>
+            <fragment
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Found in"/>
             <status
                 jcr:primaryType="nt:unstructured"
                 jcr:title="Status"/>

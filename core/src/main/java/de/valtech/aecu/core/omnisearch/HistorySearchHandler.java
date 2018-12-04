@@ -53,6 +53,10 @@ import de.valtech.aecu.core.history.HistoryUtil;
 @Component
 public class HistorySearchHandler implements OmniSearchHandler {
 
+    protected static final String CONFIG_PATH = "/apps/valtech/aecu/omnisearch/content/metadata/aecuHistory";
+
+    protected static final String ID = "AECU History";
+
     private static final Logger LOG = LoggerFactory.getLogger(HistorySearchHandler.class);
 
     @Reference
@@ -60,12 +64,12 @@ public class HistorySearchHandler implements OmniSearchHandler {
 
     @Override
     public String getID() {
-        return "AECU History";
+        return ID;
     }
 
     @Override
     public Resource getModuleConfig(ResourceResolver resourceResolver) {
-        return resourceResolver.getResource("/apps/valtech/aecu/omnisearch/content/metadata/aecuHistory");
+        return resourceResolver.getResource(CONFIG_PATH);
     }
 
     @Override
