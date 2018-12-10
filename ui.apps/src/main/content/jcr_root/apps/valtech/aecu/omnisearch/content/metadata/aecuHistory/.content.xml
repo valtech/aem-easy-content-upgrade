@@ -9,4 +9,5 @@
           nodeType="nt:unstructured"
           cardPath="valtech/aecu/components/omnisearch/history/historyCard"
           listItemPath="valtech/aecu/components/omnisearch/history/historyListitem"
+          clientlibs="[aecu.editor]"
 />
