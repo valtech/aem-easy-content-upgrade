@@ -13,6 +13,7 @@
             targetCollection=".aecu-execute-scripts"
             consoleId="aecu-execute"
             contentPath="${requestPathInfo.suffix}"
+            omnisearchLocationPath="/apps/valtech/aecu/omnisearch/content/metadata/aecuHistory"
             >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
