@@ -155,6 +155,7 @@ $(document).ready(function () {
 
     /* Event for each row (script) displayed in screen. */
     $('[data-aecu-execute-script-button]').on('click', function (event) {
+        AECU.Executor.executeAllSkip = 'false';
         AECU.Executor.execute(
             this.closest('[data-aecu-execute-script]'),
             AECU.Constants.Executor.HistoryEntryActions.single, null);
