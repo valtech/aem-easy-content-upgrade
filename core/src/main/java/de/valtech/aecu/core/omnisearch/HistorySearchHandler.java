@@ -55,7 +55,7 @@ public class HistorySearchHandler implements OmniSearchHandler {
 
     protected static final String CONFIG_PATH = "/apps/valtech/aecu/omnisearch/content/metadata/aecuHistory";
 
-    protected static final String ID = "AECU History";
+    protected static final String ID = "aecuHistory";
 
     private static final Logger LOG = LoggerFactory.getLogger(HistorySearchHandler.class);
 
