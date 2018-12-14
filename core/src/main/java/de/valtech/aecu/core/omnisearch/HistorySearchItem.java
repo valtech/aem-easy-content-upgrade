@@ -50,6 +50,7 @@ public class HistorySearchItem extends HistoryDataItem {
     private SlingHttpServletRequest request;
 
     protected String searchTerm;
+    private Resource entryResource;
 
     @Override
     @PostConstruct
@@ -60,7 +61,8 @@ public class HistorySearchItem extends HistoryDataItem {
 
     protected HistoryEntry readHistory() {
         HistoryUtil util = new HistoryUtil();
-        return util.readHistoryEntry(resource);
+        entryResource = util.getHistoryEntryResource(resource);
+        return util.readHistoryEntry(entryResource);
     }
 
     /**
@@ -119,6 +121,28 @@ public class HistorySearchItem extends HistoryDataItem {
         String prefix = (start > 0) ? DOTS : StringUtils.EMPTY;
         String postfix = (end < text.length() - 3) ? DOTS : StringUtils.EMPTY;
         return prefix + text.substring(start, end) + postfix;
+    }
+
+    /**
+     * Returns the selected script in a run.
+     * 
+     * @return script path
+     */
+    public String getSelectedScript() {
+        Resource scriptResource = resource;
+        if (HistoryUtil.NODE_FALLBACK.equals(resource.getName())) {
+            scriptResource = scriptResource.getParent();
+        }
+        return scriptResource.getValueMap().get(HistoryUtil.ATTR_PATH, String.class);
+    }
+
+    /**
+     * Returns the base path of the run.
+     * 
+     * @return run path
+     */
+    public String getRunPath() {
+        return entryResource.getPath();
     }
 
 }

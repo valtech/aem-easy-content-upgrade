@@ -8,19 +8,12 @@
         reindexCount="{Long}0"
         type="lucene"
         >
-        <aggregates jcr:primaryType="nt:unstructured">
-            <nt:base jcr:primaryType="nt:unstructured">
-                <include0
-                    jcr:primaryType="nt:unstructured"
-                    path="*"/>
-            </nt:base>
-        </aggregates>
         <indexRules jcr:primaryType="nt:unstructured">
             <nt:base jcr:primaryType="nt:unstructured">
                 <properties jcr:primaryType="nt:unstructured">
                     <runOutput
                         jcr:primaryType="nt:unstructured"
-                        name="*/runOutput"
+                        name="runOutput"
                         nodeScopeIndex="{Boolean}true"
                         propertyIndex="{Boolean}true"
                         useInSpellcheck="{Boolean}false"
@@ -29,7 +22,7 @@
                         />
                     <runResult
                         jcr:primaryType="nt:unstructured"
-                        name="*/runResult"
+                        name="runResult"
                         nodeScopeIndex="{Boolean}true"
                         propertyIndex="{Boolean}true"
                         useInSpellcheck="{Boolean}false"
@@ -38,7 +31,7 @@
                         />
                     <path
                         jcr:primaryType="nt:unstructured"
-                        name="*/path"
+                        name="path"
                         nodeScopeIndex="{Boolean}true"
                         propertyIndex="{Boolean}true"
                         useInSpellcheck="{Boolean}false"

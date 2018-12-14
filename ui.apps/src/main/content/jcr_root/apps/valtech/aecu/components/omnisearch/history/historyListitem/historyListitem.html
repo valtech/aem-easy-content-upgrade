@@ -1,6 +1,6 @@
 <tr data-sly-use.dataItem="de.valtech.aecu.core.omnisearch.HistorySearchItem" is="coral-table-row">
     <td is="coral-table-cell" >
-        <a href="/apps/valtech/aecu/tools/history/details.html?entry=${resource.path}">${dataItem.date}</a>
+        <a href="/apps/valtech/aecu/tools/history/details.html?entry=${dataItem.runPath}&aecuScriptPath=${dataItem.selectedScript}">${dataItem.date}</a>
     </td>
     <td is="coral-table-cell" >${dataItem.duration}</td>
     <td is="coral-table-cell" >${dataItem.scriptCount}</td>

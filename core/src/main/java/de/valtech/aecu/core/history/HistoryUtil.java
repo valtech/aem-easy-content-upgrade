@@ -66,9 +66,9 @@ public class HistoryUtil {
      */
     public static final String HISTORY_BASE = "/var/aecu";
 
-    protected static final String NODE_FALLBACK = "fallback";
+    public static final String NODE_FALLBACK = "fallback";
 
-    protected static final String ATTR_PATH = "path";
+    public static final String ATTR_PATH = "path";
     protected static final String ATTR_RUN_OUTPUT = "runOutput";
     protected static final String ATTR_RUN_STATE = "runState";
     protected static final String ATTR_RUN_RESULT = "runResult";
@@ -283,6 +283,26 @@ public class HistoryUtil {
             }
         }
         return last;
+    }
+
+    /**
+     * Returns the base resource for a (fallback) script resource.
+     * 
+     * @param child child of base resource
+     * @return base run resource
+     */
+    public Resource getHistoryEntryResource(Resource child) {
+        Resource resource = child;
+        ValueMap values = resource.adaptTo(ValueMap.class);
+        // if we are in a script subnode then go down to base node of run
+        if (values.containsKey(ATTR_RUN_STATE)) {
+            resource = resource.getParent();
+            values = resource.adaptTo(ValueMap.class);
+            if (values.containsKey(ATTR_RUN_STATE)) {
+                resource = resource.getParent();
+            }
+        }
+        return resource;
     }
 
     /**
