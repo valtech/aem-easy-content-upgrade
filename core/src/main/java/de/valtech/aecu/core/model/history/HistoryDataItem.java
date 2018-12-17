@@ -24,6 +24,7 @@ import java.time.Duration;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -45,7 +46,7 @@ public class HistoryDataItem {
     @SlingObject
     private Resource resource;
 
-    private HistoryEntry history = null;
+    protected HistoryEntry history = null;
 
     @PostConstruct
     public void setup() {
@@ -58,10 +59,13 @@ public class HistoryDataItem {
      * @return date
      */
     public String getDate() {
-        if (history.getEnd() == null) {
+        if (history.getStart() != null) {
             return format.format(history.getStart());
         }
-        return format.format(history.getEnd());
+        if (history.getEnd() != null) {
+            return format.format(history.getEnd());
+        }
+        return StringUtils.EMPTY;
     }
 
     /**

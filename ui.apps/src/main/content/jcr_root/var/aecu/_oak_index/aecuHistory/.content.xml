@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:oak="http://jackrabbit.apache.org/oak/ns/1.0" xmlns:dam="http://www.day.com/dam/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:rep="internal"
+        jcr:primaryType="oak:QueryIndexDefinition"
+        async="async"
+        compatVersion="{Long}2"
+        evaluatePathRestrictions="{Boolean}true"
+        reindex="{Boolean}false"
+        reindexCount="{Long}0"
+        type="lucene"
+        >
+        <indexRules jcr:primaryType="nt:unstructured">
+            <nt:base jcr:primaryType="nt:unstructured">
+                <properties jcr:primaryType="nt:unstructured">
+                    <runOutput
+                        jcr:primaryType="nt:unstructured"
+                        name="runOutput"
+                        nodeScopeIndex="{Boolean}true"
+                        propertyIndex="{Boolean}true"
+                        useInSpellcheck="{Boolean}false"
+                        useInSuggest="{Boolean}false"
+                        index="{Boolean}true"
+                        />
+                    <runResult
+                        jcr:primaryType="nt:unstructured"
+                        name="runResult"
+                        nodeScopeIndex="{Boolean}true"
+                        propertyIndex="{Boolean}true"
+                        useInSpellcheck="{Boolean}false"
+                        useInSuggest="{Boolean}false"
+                        index="{Boolean}true"
+                        />
+                    <path
+                        jcr:primaryType="nt:unstructured"
+                        name="path"
+                        nodeScopeIndex="{Boolean}true"
+                        propertyIndex="{Boolean}true"
+                        useInSpellcheck="{Boolean}false"
+                        useInSuggest="{Boolean}false"
+                        index="{Boolean}true"
+                        />
+                </properties>
+            </nt:base>
+        </indexRules>
+</jcr:root>

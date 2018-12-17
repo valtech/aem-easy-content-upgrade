@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <list jcr:primaryType="nt:unstructured">
+        <columns jcr:primaryType="nt:unstructured">
+            <date
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Date"/>
+            <duration
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Duration"/>
+            <scripts
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Script count"/>
+            <fragment
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Found in"/>
+            <status
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Status"/>
+        </columns>
+    </list>
+</jcr:root>
