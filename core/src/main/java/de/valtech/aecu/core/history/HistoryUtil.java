@@ -337,7 +337,7 @@ public class HistoryUtil {
      * @param resource resource
      * @return result
      */
-    private ExecutionResult readHistorySingleResult(Resource resource) {
+    public ExecutionResult readHistorySingleResult(Resource resource) {
         ExecutionResult fallback = null;
         Resource fallbackResource = resource.getChild(NODE_FALLBACK);
         if (fallbackResource != null) {

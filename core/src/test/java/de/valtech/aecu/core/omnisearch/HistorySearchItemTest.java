@@ -58,9 +58,11 @@ public class HistorySearchItemTest {
     public void setup() {
         HistoryEntryImpl history = new HistoryEntryImpl();
         ExecutionResult fallback = new ExecutionResult(ExecutionState.SUCCESS, "2018", FALLBACK_TEXT, "", null, "");
-        history.getSingleResults()
-                .add(new ExecutionResult(ExecutionState.SUCCESS, "2018", RESULT_TEXT, OUTPUT_TEXT, fallback, PATH_TEXT));
+        ExecutionResult singleResult =
+                new ExecutionResult(ExecutionState.SUCCESS, "2018", RESULT_TEXT, OUTPUT_TEXT, fallback, PATH_TEXT);
+        history.getSingleResults().add(singleResult);
         doReturn(history).when(item).readHistory();
+        doReturn(singleResult).when(item).readSingleResult();
         item.setup();
     }
 

@@ -66,6 +66,16 @@ public class HistorySearchItem extends HistoryDataItem {
     }
 
     /**
+     * Reads the single execution result.
+     * 
+     * @return result
+     */
+    protected ExecutionResult readSingleResult() {
+        HistoryUtil util = new HistoryUtil();
+        return util.readHistorySingleResult(resource);
+    }
+
+    /**
      * Returns a text fragment that matches the search term.
      * 
      * @return fragment
@@ -74,11 +84,10 @@ public class HistorySearchItem extends HistoryDataItem {
         if (StringUtils.isBlank(searchTerm)) {
             return StringUtils.EMPTY;
         }
-        for (ExecutionResult result : history.getSingleResults()) {
-            String snippet = extractFromResult(result);
-            if (StringUtils.isNotBlank(snippet)) {
-                return snippet;
-            }
+        ExecutionResult result = readSingleResult();
+        String snippet = extractFromResult(result);
+        if (StringUtils.isNotBlank(snippet)) {
+            return snippet;
         }
         return StringUtils.EMPTY;
     }
