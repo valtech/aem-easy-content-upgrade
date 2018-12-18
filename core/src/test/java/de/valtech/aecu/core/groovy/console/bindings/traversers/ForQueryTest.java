@@ -23,6 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,6 +71,7 @@ public class ForQueryTest {
         actions = Arrays.asList(action);
         context = new BindingContext(resolver);
         output = new StringBuffer();
+        when(resource.getResourceResolver()).thenReturn(resolver);
         when(resolver.findResources(QUERY, TYPE)).thenReturn(Arrays.asList(resource).iterator());
     }
 
@@ -80,6 +82,21 @@ public class ForQueryTest {
         traverser.traverse(context, null, actions, output, false);
 
         verify(action, times(1)).doAction(resource);
+        verify(resolver, never()).commit();
+    }
+
+    @Test
+    public void traverse_many() throws PersistenceException, AecuException {
+        List<Resource> results = new ArrayList<>();
+        for (int i = 0; i < 1500; i++) {
+            results.add(resource);
+        }
+        when(resolver.findResources(QUERY, TYPE)).thenReturn(results.iterator());
+        ForQuery traverser = new ForQuery(QUERY, TYPE);
+
+        traverser.traverse(context, null, actions, output, false);
+
+        verify(action, times(1500)).doAction(resource);
         verify(resolver, times(1)).commit();
     }
 
