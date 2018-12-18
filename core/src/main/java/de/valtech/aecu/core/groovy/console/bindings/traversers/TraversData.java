@@ -85,9 +85,10 @@ public abstract class TraversData {
     protected void applyActionsOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions,
             StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
         if (filter == null || filter.filter(resource, stringBuffer)) {
+            ResourceResolver resolver = resource.getResourceResolver();
             runActions(stringBuffer, resource, actions);
             if (!dryRun) {
-                save(resource.getResourceResolver());
+                save(resolver);
             }
         }
     }
