@@ -157,6 +157,18 @@ You can click on any run to see the full details. This will show the status for 
 
 <img src="docs/images/historyDetails.png">
 
+## Search History
+
+AECU maintains a full-text search index for the history entries. You can search for script names and their output.
+
+Simply click on the magnifying glass in header to open the search bar:
+
+<img src="docs/images/fulltext1.png">
+
+Now you can enter a search term and will see the runs that contain this text. Click on the link to see the full history entry.
+
+<img src="docs/images/fulltext2.png">
+
 <a name="groovy"></a>
 
 # Extension to Groovy Console
