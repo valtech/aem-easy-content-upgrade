@@ -53,7 +53,7 @@ public class ExecutionServlet extends BaseServlet {
             "ExecutionServlet :: Make sure your are sending the correct parameters.";
 
     @Reference
-    AecuService aecuService;
+    private AecuService aecuService;
 
     @Reference
     private HistoryUtil historyUtil;

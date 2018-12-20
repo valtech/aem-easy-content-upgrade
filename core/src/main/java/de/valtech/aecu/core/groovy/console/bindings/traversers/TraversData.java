@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
@@ -37,6 +38,9 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
  * @author Roland Gruber
  */
 public abstract class TraversData {
+
+    private static final int SAVE_LIMIT = 1000;
+    private int saveCount = 0;
 
     /**
      * Traverses the resources and performs the filters and actions.
@@ -74,13 +78,32 @@ public abstract class TraversData {
      * @param filter       filter
      * @param actions      list of actions
      * @param stringBuffer output
+     * @param dryRun       dry-run active
      * @throws PersistenceException error during execution
      * @throws AecuException        other error
      */
     protected void applyActionsOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions,
-            StringBuffer stringBuffer) throws PersistenceException, AecuException {
+            StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
         if (filter == null || filter.filter(resource, stringBuffer)) {
+            ResourceResolver resolver = resource.getResourceResolver();
             runActions(stringBuffer, resource, actions);
+            if (!dryRun) {
+                save(resolver);
+            }
+        }
+    }
+
+    /**
+     * Saves the changes after a defined number of calls.
+     * 
+     * @param resourceResolver resolver
+     * @throws PersistenceException error saving data
+     */
+    private void save(ResourceResolver resourceResolver) throws PersistenceException {
+        saveCount++;
+        if (saveCount > SAVE_LIMIT) {
+            resourceResolver.commit();
+            saveCount = 0;
         }
     }
 

@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>1.6.0</version>
+    <version>1.7.0</version>
     <name>AECU</name>
     <description>AEM Easy COntent Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -206,6 +206,32 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>osgicheck-maven-plugin</artifactId>
+                    <version>0.1.0</version>
+                    <executions>
+						            <execution>
+						                <id>check-bundle</id>
+						                <goals>
+						                    <goal>check</goal>
+						                </goals>
+						            </execution>
+						        </executions>
+                </plugin>
+                <plugin>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-baseline-maven-plugin</artifactId>
+                    <version>4.1.0</version>
+                    <executions>
+				                <execution>
+				                    <id>baseline</id>
+				                    <goals>
+				                        <goal>baseline</goal>
+				                    </goals>
+				                </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>com.day.jcr.vault</groupId>
                     <artifactId>content-package-maven-plugin</artifactId>
                     <version>0.5.1</version>
@@ -302,6 +328,23 @@
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>4.0.0</version>
+                    <configuration>
+                        <failBuildOnCVSS>0</failBuildOnCVSS>
+                        <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                        <skipProvidedScope>true</skipProvidedScope>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

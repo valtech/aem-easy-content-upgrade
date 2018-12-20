@@ -10,6 +10,7 @@
             jcr:title="AEM Easy Content Upgrade - History details"
             sling:resourceType="granite/ui/components/shell/page"
             consoleId="aecu-history"
+            omnisearchLocationPath="/apps/valtech/aecu/omnisearch/content/metadata/aecuHistory"
     >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs

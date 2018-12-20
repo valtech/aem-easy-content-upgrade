@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
     </parent>
     
     <artifactId>aecu.api</artifactId>
@@ -14,6 +14,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>osgicheck-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+		            <groupId>biz.aQute.bnd</groupId>
+		            <artifactId>bnd-baseline-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>maven-sling-plugin</artifactId>

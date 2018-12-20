@@ -377,6 +377,9 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         for (TraversData traversal : traversals) {
             traversal.traverse(context, filter, actions, stringBuffer, dryRun);
         }
+        if (!dryRun) {
+            context.getResolver().commit();
+        }
         return stringBuffer;
     }
 

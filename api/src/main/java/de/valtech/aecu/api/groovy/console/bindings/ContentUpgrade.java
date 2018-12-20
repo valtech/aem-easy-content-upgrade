@@ -21,6 +21,7 @@ package de.valtech.aecu.api.groovy.console.bindings;
 import java.util.Map;
 
 import org.apache.sling.api.resource.PersistenceException;
+import org.osgi.annotation.versioning.ProviderType;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.api.service.AecuException;
@@ -30,6 +31,7 @@ import de.valtech.aecu.api.service.AecuException;
  * 
  * @author Roxana Muresan
  */
+@ProviderType
 public interface ContentUpgrade {
 
     /**

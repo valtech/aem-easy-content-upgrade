@@ -61,10 +61,7 @@ public class ForQuery extends TraversData {
         Iterator<Resource> queryResult = resourceResolver.findResources(query, queryType);
         while (queryResult.hasNext()) {
             Resource resource = queryResult.next();
-            applyActionsOnResource(resource, filter, actions, stringBuffer);
-        }
-        if (!dryRun) {
-            resourceResolver.commit();
+            applyActionsOnResource(resource, filter, actions, stringBuffer, dryRun);
         }
     }
 

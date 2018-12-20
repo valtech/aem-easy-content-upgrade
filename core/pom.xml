@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
     </parent>
     
     <artifactId>aecu.core</artifactId>
@@ -14,6 +14,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>osgicheck-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>maven-sling-plugin</artifactId>
@@ -60,6 +64,10 @@
 				            </goals>
 				          </execution>
 				        </executions>
+            </plugin>
+            <plugin>
+		            <groupId>org.owasp</groupId>
+		            <artifactId>dependency-check-maven</artifactId>
             </plugin>            
         </plugins>
     </build>
