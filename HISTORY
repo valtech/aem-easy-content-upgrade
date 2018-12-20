@@ -1,3 +1,8 @@
+2018-12-20 1.7.0
+  - Full-text search possibility with Omnisearch (magnifying glass in header)
+  - Groovy Console binding:
+    - Performance increased
+
 2018-10-30 1.6.0
   - Groovy Console binding:
     - Added SQL2 collection method
