@@ -18,13 +18,13 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.osgi.annotation.versioning.ProviderType;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.api.service.AecuException;
+import java.util.Map;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -238,6 +238,15 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade doMoveResourceToRelativePath(String relativePath);
+
+    /**
+     * Moves a resource if its path matches the pattern to the path obtain by applying the replacement expression
+     *
+     * @param matchPattern regular expression for matching the resource path
+     * @param targetPathExpr expression to calculate the target path, can contain matched group references $1, $2, ...
+     * @return upgrade object
+     */
+    ContentUpgrade doMoveResourceToPathRegex(String matchPattern, String targetPathExpr);
 
     /**
      * Deletes the resource.

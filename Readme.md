@@ -344,6 +344,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 * doRename(String newName): renames the resource to the given name
 * doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
+* doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtain by applying the replacement expression
 
 ```java
 println aecu.contentUpgradeBuilder()
@@ -353,6 +354,7 @@ println aecu.contentUpgradeBuilder()
         .doCopyResourceToRelativePath("subNode")
         .doCopyResourceToRelativePath("../subNode")
         .doMoveResourceToRelativePath("subNode")
+        .doMoveResourceToPathRegex("/content/we-retail/(\\w+)/(\\w+)/(\\w+)", "/content/somewhere/$1/and/$2")
         .run()
 ```
 
