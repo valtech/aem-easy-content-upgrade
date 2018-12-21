@@ -37,6 +37,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+/**
+ * Tests MoveResourceToPathRegex
+ *
+ * @author Roxana Muresan
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class MoveResourceToPathRegexTest {
 

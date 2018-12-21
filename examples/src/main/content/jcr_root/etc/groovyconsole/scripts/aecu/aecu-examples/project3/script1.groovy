@@ -7,4 +7,4 @@ println aecu
         // actions
         .printPath()
         .doMoveResourceToPathRegex("/content/we-retail/([\\w-]+)/([\\w-]+)/experience/([\\w-]+)", "/content/we-retail/it/it")
-        .run()
+        .dryRun()

@@ -27,6 +27,11 @@ import org.apache.sling.api.resource.ResourceResolver;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Action class for moving resources via regex
+ *
+ * @author Roxana Muresan
+ */
 public class MoveResourceToPathRegex implements Action {
 
     private ResourceResolver resourceResolver;

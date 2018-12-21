@@ -240,7 +240,7 @@ public interface ContentUpgrade {
     ContentUpgrade doMoveResourceToRelativePath(String relativePath);
 
     /**
-     * Moves a resource if its path matches the pattern to the path obtain by applying the replacement expression
+     * Moves a resource if its path matches the pattern to the path obtained by applying the replacement expression
      *
      * @param matchPattern regular expression for matching the resource path
      * @param targetPathExpr expression to calculate the target path, can contain matched group references $1, $2, ...
