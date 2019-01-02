@@ -40,9 +40,9 @@ public class MoveResourceToPathRegex implements Action {
 
     /**
      * Constructor
-     * @param resourceResolver
      * @param matchPattern
      * @param targetPathExpr
+     * @param resourceResolver
      */
     public MoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr, @Nonnull ResourceResolver resourceResolver) {
         this.resourceResolver = resourceResolver;
