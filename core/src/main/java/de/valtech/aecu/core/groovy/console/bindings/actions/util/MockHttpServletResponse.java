@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
@@ -198,12 +199,12 @@ public class MockHttpServletResponse implements HttpServletResponse {
 
     @Override
     public Collection<String> getHeaders(String name) {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     @Override
     public Collection<String> getHeaderNames() {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
 }

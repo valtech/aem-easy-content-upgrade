@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
@@ -81,7 +82,7 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
 
     @Override
     public Cookie[] getCookies() {
-        return null;
+        return new Cookie[0];
     }
 
     @Override
@@ -266,7 +267,7 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
 
     @Override
     public String[] getParameterValues(String arg0) {
-        return null;
+        return new String[0];
     }
 
     @Override
@@ -371,7 +372,7 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
 
     @Override
     public List<RequestParameter> getRequestParameterList() {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     @Override
@@ -381,7 +382,7 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
 
     @Override
     public RequestParameter[] getRequestParameters(String arg0) {
-        return null;
+        return new RequestParameter[0];
     }
 
     @Override
@@ -430,14 +431,18 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
     }
 
     @Override
-    public void login(String username, String password) throws ServletException {}
+    public void login(String username, String password) throws ServletException {
+        // ignore
+    }
 
     @Override
-    public void logout() throws ServletException {}
+    public void logout() throws ServletException {
+        // ignore
+    }
 
     @Override
     public Collection<Part> getParts() throws IOException, ServletException {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     @Override
@@ -451,12 +456,12 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
     }
 
     @Override
-    public AsyncContext startAsync() throws IllegalStateException {
+    public AsyncContext startAsync() {
         return null;
     }
 
     @Override
-    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
+    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) {
         return null;
     }
 

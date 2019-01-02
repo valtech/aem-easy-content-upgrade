@@ -137,7 +137,7 @@ public class AecuServiceImpl implements AecuService {
             return true;
         }
         Set<String> runModes = slingSettings.getRunModes();
-        String runModeString = name.substring(name.indexOf(".") + 1);
+        String runModeString = name.substring(name.indexOf('.') + 1);
         String[] combinations = runModeString.split(";");
         for (String combination : combinations) {
             String[] modes = combination.split("\\.");
@@ -211,13 +211,13 @@ public class AecuServiceImpl implements AecuService {
      * @return fallback script path
      */
     protected String getFallbackScript(ResourceResolver resolver, String path) {
-        String name = path.substring(path.lastIndexOf("/") + 1);
+        String name = path.substring(path.lastIndexOf('/') + 1);
         if (name.contains(".fallback.")) {
             // skip if script is a fallback script itself
             return null;
         }
-        String baseName = name.substring(0, name.indexOf("."));
-        String fallbackPath = path.substring(0, path.lastIndexOf("/") + 1) + baseName + ".fallback.groovy";
+        String baseName = name.substring(0, name.indexOf('.'));
+        String fallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + ".fallback.groovy";
         if (resolver.getResource(fallbackPath) != null) {
             return fallbackPath;
         }
