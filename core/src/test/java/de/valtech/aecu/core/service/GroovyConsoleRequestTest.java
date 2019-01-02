@@ -78,7 +78,7 @@ public class GroovyConsoleRequestTest {
     public void emptyMethods() throws IOException, ServletException {
         assertNull(request.getAuthType());
         assertNull(request.getContextPath());
-        assertNull(request.getCookies());
+        assertEquals(0, request.getCookies().length);
         assertEquals(0, request.getDateHeader(""));
         assertNull(request.getHeader(""));
         assertNull(request.getHeaderNames());
@@ -114,7 +114,7 @@ public class GroovyConsoleRequestTest {
         assertNull(request.getParameter(""));
         assertNull(request.getParameterMap());
         assertNull(request.getParameterNames());
-        assertNull(request.getParameterValues(""));
+        assertEquals(0, request.getParameterValues("").length);
         assertNull(request.getProtocol());
         assertNull(request.getReader());
         assertNull(request.getRealPath(""));
@@ -132,9 +132,9 @@ public class GroovyConsoleRequestTest {
         assertNull(request.getRequestDispatcher("", null));
         assertNull(request.getRequestDispatcher((Resource) null, null));
         assertNull(request.getRequestParameter(""));
-        assertNull(request.getRequestParameterList());
+        assertEquals(0, request.getRequestParameterList().size());
         assertNull(request.getRequestParameterMap());
-        assertNull(request.getRequestParameters(""));
+        assertEquals(0, request.getRequestParameters("").length);
         assertNull(request.getRequestPathInfo());
         assertNull(request.getRequestProgressTracker());
         assertNull(request.getResource());
@@ -145,7 +145,7 @@ public class GroovyConsoleRequestTest {
         assertFalse(request.authenticate(null));
         request.login(null, null);
         request.logout();
-        assertNull(request.getParts());
+        assertEquals(0, request.getParts().size());
         assertNull(request.getPart(null));
         assertNull(request.getServletContext());
         assertNull(request.startAsync());
