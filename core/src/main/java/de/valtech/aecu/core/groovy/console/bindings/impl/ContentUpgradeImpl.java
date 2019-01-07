@@ -1,20 +1,5 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.jcr.query.Query;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
 import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
@@ -48,6 +33,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProper
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
@@ -55,6 +41,21 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantReso
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.scribe.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
 
 public class ContentUpgradeImpl implements ContentUpgrade {
 
@@ -256,6 +257,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doMoveResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doMoveResource to {}", relativePath);
         actions.add(new MoveResourceToRelativePath(relativePath, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doMoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr) {
+        LOG.debug("doMoveResourceToPathRegex resources matching {} to {}", matchPattern, targetPathExpr);
+        actions.add(new MoveResourceToPathRegex(matchPattern, targetPathExpr, context.getResolver()));
         return this;
     }
 
