@@ -349,6 +349,21 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+### Replace Property Content
+You can replace the content of String properties. This also supports multi-value properties.
+
+* doReplaceValueInProperty(String oldValue, String newValue): replaces the substring "oldValue" with "newValue" for all String properties
+* doReplaceValueInProperty(String oldValue, String newValue, String[] propertyNames): replaces the substring "oldValue" with "newValue" for all given String properties
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doReplaceValueInProperty("old", "new")
+        .doReplaceValueInProperty("old", "new", (String[]) ["propertyName1", "propertyName2"])
+        .run()
+```
+
 ### Copy and Move Nodes
 
 The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.

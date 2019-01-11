@@ -1,4 +1,38 @@
+/*
+ * Copyright 2018 - 2019 Valtech GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package de.valtech.aecu.core.groovy.console.bindings.impl;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.scribe.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
@@ -36,27 +70,19 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResou
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.jcr.query.Query;
-import javax.servlet.http.HttpServletResponse;
-
+/**
+ * Implements the content upgrade API.
+ * 
+ * @author Roxana Muresan
+ * @author Roland Gruber
+ */
 public class ContentUpgradeImpl implements ContentUpgrade {
 
     private static Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
@@ -236,6 +262,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         LOG.debug("doReplaceValuesOfMultiValueProperty: {} - {}", name,
                 Arrays.toString(oldValues) + " + " + Arrays.toString(newValues));
         actions.add(new ReplaceMultiValues(name, oldValues, newValues));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue) {
+        actions.add(new ReplaceResourcePropertyValues(oldValue, newValue, Collections.emptyList()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue, String[] propertyNames) {
+        actions.add(new ReplaceResourcePropertyValues(oldValue, newValue, Arrays.asList(propertyNames)));
         return this;
     }
 
