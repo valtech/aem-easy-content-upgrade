@@ -49,8 +49,9 @@ public class ReplaceResourcePropertyValues implements Action {
     /**
      * Constructor
      * 
-     * @param oldValue old value
-     * @param newValue new value
+     * @param oldValue      old value
+     * @param newValue      new value
+     * @param propertyNames property names to check
      */
     public ReplaceResourcePropertyValues(@Nonnull String oldValue, @Nonnull String newValue,
             @Nonnull List<String> propertyNames) {
@@ -138,8 +139,8 @@ public class ReplaceResourcePropertyValues implements Action {
     /**
      * Checks if the value matches the searched value.
      * 
-     * @param content property value
-     * @return
+     * @param value content property value
+     * @return matches condition
      */
     protected boolean valueMatches(String value) {
         return value.contains(oldValue);
