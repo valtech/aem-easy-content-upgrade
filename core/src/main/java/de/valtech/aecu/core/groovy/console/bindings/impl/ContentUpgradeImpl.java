@@ -71,6 +71,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourc
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValuesRegex;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
@@ -274,6 +275,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue, String[] propertyNames) {
         actions.add(new ReplaceResourcePropertyValues(oldValue, newValue, Arrays.asList(propertyNames)));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement) {
+        actions.add(new ReplaceResourcePropertyValuesRegex(searchRegex, replacement, Collections.emptyList()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement, String[] propertyNames) {
+        actions.add(new ReplaceResourcePropertyValuesRegex(searchRegex, replacement, Arrays.asList(propertyNames)));
         return this;
     }
 

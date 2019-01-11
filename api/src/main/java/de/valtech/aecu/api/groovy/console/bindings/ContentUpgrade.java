@@ -238,6 +238,27 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue, String[] propertyNames);
 
     /**
+     * Replaces a substring in all properties of the matching resource using a regular expression.
+     * Only applies to String properties.
+     * 
+     * @param searchRegex regex to match old value
+     * @param replacement new value, may contain matcher groups (e.g. $1)
+     * @return upgrade object
+     */
+    ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement);
+
+    /**
+     * Replaces a substring in specific properties of the matching resource using a regular
+     * expression. Only applies to String properties.
+     * 
+     * @param searchRegex   regex to match old value
+     * @param replacement   new value, may contain matcher groups (e.g. $1)
+     * @param propertyNames property names that should be checked
+     * @return upgrade object
+     */
+    ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement, String[] propertyNames);
+
+    /**
      * Renames a resource to the given name.
      * 
      * @param newName path

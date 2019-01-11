@@ -97,10 +97,14 @@ public class ReplaceResourcePropertyValues implements Action {
      * @throws RepositoryException error setting property
      */
     private boolean updateSingle(Property property) throws RepositoryException {
-        if (!property.getString().contains(oldValue)) {
+        if (!valueMatches(property.getString())) {
             return false;
         }
-        property.setValue(property.getString().replace(oldValue, newValue));
+        String newPropertyValue = getNewValue(property.getString());
+        if (property.getString().equals(newPropertyValue)) {
+            return false;
+        }
+        property.setValue(newPropertyValue);
         return true;
     }
 
@@ -116,8 +120,12 @@ public class ReplaceResourcePropertyValues implements Action {
         boolean updated = false;
         for (int i = 0; i < values.length; i++) {
             Value value = values[i];
-            if (value.getString().contains(oldValue)) {
-                values[i] = new StringValue(value.getString().replace(oldValue, newValue));
+            if (valueMatches(value.getString())) {
+                String newPropertyValue = getNewValue(value.getString());
+                if (value.getString().equals(newPropertyValue)) {
+                    continue;
+                }
+                values[i] = new StringValue(newPropertyValue);
                 updated = true;
             }
         }
@@ -125,6 +133,26 @@ public class ReplaceResourcePropertyValues implements Action {
             property.setValue(values);
         }
         return updated;
+    }
+
+    /**
+     * Checks if the value matches the searched value.
+     * 
+     * @param content property value
+     * @return
+     */
+    protected boolean valueMatches(String value) {
+        return value.contains(oldValue);
+    }
+
+    /**
+     * Returns the new property value.
+     * 
+     * @param propertyValue old property value
+     * @return new value
+     */
+    protected String getNewValue(String propertyValue) {
+        return propertyValue.replace(oldValue, newValue);
     }
 
     /**
