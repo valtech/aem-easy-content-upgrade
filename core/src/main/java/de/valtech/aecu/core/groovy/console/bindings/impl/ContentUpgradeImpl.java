@@ -267,25 +267,25 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue) {
+    public ContentUpgrade doReplaceValueInAllProperties(String oldValue, String newValue) {
         actions.add(new ReplaceResourcePropertyValues(oldValue, newValue, Collections.emptyList()));
         return this;
     }
 
     @Override
-    public ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue, String[] propertyNames) {
+    public ContentUpgrade doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames) {
         actions.add(new ReplaceResourcePropertyValues(oldValue, newValue, Arrays.asList(propertyNames)));
         return this;
     }
 
     @Override
-    public ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement) {
+    public ContentUpgrade doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement) {
         actions.add(new ReplaceResourcePropertyValuesRegex(searchRegex, replacement, Collections.emptyList()));
         return this;
     }
 
     @Override
-    public ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement, String[] propertyNames) {
+    public ContentUpgrade doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames) {
         actions.add(new ReplaceResourcePropertyValuesRegex(searchRegex, replacement, Arrays.asList(propertyNames)));
         return this;
     }

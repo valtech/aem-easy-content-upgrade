@@ -224,7 +224,7 @@ public interface ContentUpgrade {
      * @param newValue new value
      * @return upgrade object
      */
-    ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue);
+    ContentUpgrade doReplaceValueInAllProperties(String oldValue, String newValue);
 
     /**
      * Replaces a substring in specific properties of the matching resource. Only applies to String
@@ -235,7 +235,7 @@ public interface ContentUpgrade {
      * @param propertyNames property names that should be checked
      * @return upgrade object
      */
-    ContentUpgrade doReplaceValueInProperty(String oldValue, String newValue, String[] propertyNames);
+    ContentUpgrade doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames);
 
     /**
      * Replaces a substring in all properties of the matching resource using a regular expression.
@@ -245,7 +245,7 @@ public interface ContentUpgrade {
      * @param replacement new value, may contain matcher groups (e.g. $1)
      * @return upgrade object
      */
-    ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement);
+    ContentUpgrade doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement);
 
     /**
      * Replaces a substring in specific properties of the matching resource using a regular
@@ -256,7 +256,7 @@ public interface ContentUpgrade {
      * @param propertyNames property names that should be checked
      * @return upgrade object
      */
-    ContentUpgrade doReplaceValueInPropertyRegex(String searchRegex, String replacement, String[] propertyNames);
+    ContentUpgrade doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames);
 
     /**
      * Renames a resource to the given name.
