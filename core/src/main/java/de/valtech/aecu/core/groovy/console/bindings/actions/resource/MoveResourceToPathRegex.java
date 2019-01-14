@@ -19,13 +19,13 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * Action class for moving resources via regex
@@ -40,11 +40,13 @@ public class MoveResourceToPathRegex implements Action {
 
     /**
      * Constructor
-     * @param matchPattern
-     * @param targetPathExpr
-     * @param resourceResolver
+     * 
+     * @param matchPattern     regex pattern
+     * @param targetPathExpr   target regex
+     * @param resourceResolver resolver
      */
-    public MoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr, @Nonnull ResourceResolver resourceResolver) {
+    public MoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr,
+            @Nonnull ResourceResolver resourceResolver) {
         this.resourceResolver = resourceResolver;
         this.matchPattern = matchPattern;
         this.targetPathExpr = targetPathExpr;

@@ -349,6 +349,25 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+### Replace Property Content
+You can replace the content of String properties. This also supports multi-value properties.
+
+* doReplaceValueInAllProperties(String oldValue, String newValue): replaces the substring "oldValue" with "newValue". Applies to all String properties
+* doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames): replaces the substring "oldValue" with "newValue". Applies to all specified String properties
+* doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement): checks if the property value(s) match the search pattern and replaces it with "replacement". Applies to all String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+* doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames): checks if the property value(s) match the search pattern and replaces it with "replacement".  Applies to specified String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doReplaceValueInAllProperties("old", "new")
+        .doReplaceValueInProperties("old", "new", (String[]) ["propertyName1", "propertyName2"])
+        .doReplaceValueInAllPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2")
+        .doReplaceValueInPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2", (String[]) ["propertyName1", "propertyName2"])
+        .run()
+```
+
 ### Copy and Move Nodes
 
 The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
@@ -356,7 +375,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 * doRename(String newName): renames the resource to the given name
 * doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
-* doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtained by applying the replacement expression. You can use group references such as $1 (hint: "$" needs to be escaped in Groovy).
+* doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtained by applying the replacement expression. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 
 ```java
 println aecu.contentUpgradeBuilder()

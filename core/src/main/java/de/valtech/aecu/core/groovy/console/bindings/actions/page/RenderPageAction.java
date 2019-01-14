@@ -53,7 +53,10 @@ public class RenderPageAction implements Action {
     /**
      * Constructor
      * 
-     * @param context binding context
+     * @param context        binding context
+     * @param statusCode     expected status code
+     * @param textPresent    text that must be present
+     * @param textNotPresent text that must not be present
      */
     public RenderPageAction(BindingContext context, int statusCode, String textPresent, String textNotPresent) {
         this.context = context;

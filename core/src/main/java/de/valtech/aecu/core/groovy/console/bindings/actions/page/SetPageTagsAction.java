@@ -45,6 +45,7 @@ public class SetPageTagsAction implements Action {
      * Constructor
      * 
      * @param context binding context
+     * @param tags    tag names
      */
     public SetPageTagsAction(BindingContext context, String... tags) {
         this.context = context;

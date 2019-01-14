@@ -1,3 +1,8 @@
+2019 1.8.0
+  - Groovy Console binding:
+   - Path renaming via regex
+   - Replace substrings in properties
+
 2018-12-20 1.7.0
   - Full-text search possibility with Omnisearch (magnifying glass in header)
   - Groovy Console binding:

@@ -47,6 +47,7 @@ public class RemovePageTagsAction implements Action {
      * Constructor
      * 
      * @param context binding context
+     * @param tags    tag names
      */
     public RemovePageTagsAction(BindingContext context, String... tags) {
         this.context = context;
