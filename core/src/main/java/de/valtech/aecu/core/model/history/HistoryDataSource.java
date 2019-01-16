@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -54,7 +54,7 @@ public class HistoryDataSource {
     private static final String ITEM_TYPE = "valtech/aecu/tools/history/dataitem";
     public static final String ATTR_HISTORY = "history";
 
-    private Logger LOG = LoggerFactory.getLogger(DataSource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DataSource.class);
 
     @SlingObject
     SlingHttpServletRequest request;

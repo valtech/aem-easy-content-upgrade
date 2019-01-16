@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -372,7 +372,7 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
 
     @Override
     public List<RequestParameter> getRequestParameterList() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
@@ -442,7 +442,7 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
 
     @Override
     public Collection<Part> getParts() throws IOException, ServletException {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
