@@ -1,7 +1,26 @@
+/*
+ * Copyright 2018 - 2019 Valtech GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -48,14 +67,23 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProper
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValuesRegex;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 
+/**
+ * Implements the content upgrade API.
+ * 
+ * @author Roxana Muresan
+ * @author Roland Gruber
+ */
 public class ContentUpgradeImpl implements ContentUpgrade {
 
     private static Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
@@ -239,6 +267,30 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade doReplaceValueInAllProperties(String oldValue, String newValue) {
+        actions.add(new ReplaceResourcePropertyValues(oldValue, newValue, Collections.emptyList()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames) {
+        actions.add(new ReplaceResourcePropertyValues(oldValue, newValue, Arrays.asList(propertyNames)));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement) {
+        actions.add(new ReplaceResourcePropertyValuesRegex(searchRegex, replacement, Collections.emptyList()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames) {
+        actions.add(new ReplaceResourcePropertyValuesRegex(searchRegex, replacement, Arrays.asList(propertyNames)));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade doRename(String newName) {
         LOG.debug("doRename to {}", newName);
         actions.add(new RenameResource(context.getResolver(), newName));
@@ -256,6 +308,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doMoveResourceToRelativePath(@Nonnull String relativePath) {
         LOG.debug("doMoveResource to {}", relativePath);
         actions.add(new MoveResourceToRelativePath(relativePath, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doMoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr) {
+        LOG.debug("doMoveResourceToPathRegex resources matching {} to {}", matchPattern, targetPathExpr);
+        actions.add(new MoveResourceToPathRegex(matchPattern, targetPathExpr, context.getResolver()));
         return this;
     }
 

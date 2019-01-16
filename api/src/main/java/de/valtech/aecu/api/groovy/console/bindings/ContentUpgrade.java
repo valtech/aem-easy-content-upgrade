@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,6 +30,7 @@ import de.valtech.aecu.api.service.AecuException;
  * This class provides the builder methods to perform a content upgrade.
  * 
  * @author Roxana Muresan
+ * @author Roland Gruber
  */
 @ProviderType
 public interface ContentUpgrade {
@@ -216,6 +217,48 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues);
 
     /**
+     * Replaces a substring in all properties of the matching resource. Only applies to String
+     * properties.
+     * 
+     * @param oldValue old value
+     * @param newValue new value
+     * @return upgrade object
+     */
+    ContentUpgrade doReplaceValueInAllProperties(String oldValue, String newValue);
+
+    /**
+     * Replaces a substring in specific properties of the matching resource. Only applies to String
+     * properties.
+     * 
+     * @param oldValue      old value
+     * @param newValue      new value
+     * @param propertyNames property names that should be checked
+     * @return upgrade object
+     */
+    ContentUpgrade doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames);
+
+    /**
+     * Replaces a substring in all properties of the matching resource using a regular expression.
+     * Only applies to String properties.
+     * 
+     * @param searchRegex regex to match old value
+     * @param replacement new value, may contain matcher groups (e.g. $1)
+     * @return upgrade object
+     */
+    ContentUpgrade doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement);
+
+    /**
+     * Replaces a substring in specific properties of the matching resource using a regular
+     * expression. Only applies to String properties.
+     * 
+     * @param searchRegex   regex to match old value
+     * @param replacement   new value, may contain matcher groups (e.g. $1)
+     * @param propertyNames property names that should be checked
+     * @return upgrade object
+     */
+    ContentUpgrade doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames);
+
+    /**
      * Renames a resource to the given name.
      * 
      * @param newName path
@@ -238,6 +281,17 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade doMoveResourceToRelativePath(String relativePath);
+
+    /**
+     * Moves a resource if its path matches the pattern to the path obtained by applying the
+     * replacement expression
+     *
+     * @param matchPattern   regular expression for matching the resource path
+     * @param targetPathExpr expression to calculate the target path, can contain matched group
+     *                       references $1, $2, ...
+     * @return upgrade object
+     */
+    ContentUpgrade doMoveResourceToPathRegex(String matchPattern, String targetPathExpr);
 
     /**
      * Deletes the resource.

@@ -386,8 +386,8 @@ public class HistoryUtil {
     protected void createPath(String path, ResourceResolver resolver, String primaryType) throws AecuException {
         Resource folder = resolver.getResource(path);
         if (folder == null) {
-            String parent = path.substring(0, path.lastIndexOf("/"));
-            String name = path.substring(path.lastIndexOf("/") + 1);
+            String parent = path.substring(0, path.lastIndexOf('/'));
+            String name = path.substring(path.lastIndexOf('/') + 1);
             if (resolver.getResource(parent) == null) {
                 createPath(parent, resolver, primaryType);
             }
