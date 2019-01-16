@@ -86,7 +86,7 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
  */
 public class ContentUpgradeImpl implements ContentUpgrade {
 
-    private static Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
 
     private BindingContext context = null;
 
