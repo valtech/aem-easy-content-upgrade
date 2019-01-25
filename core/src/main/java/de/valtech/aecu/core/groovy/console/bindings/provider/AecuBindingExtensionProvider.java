@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.LoginException;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -67,7 +68,8 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
 
     @Override
-    public Map<String, BindingVariable> getBindingVariables(SlingHttpServletRequest request, PrintStream printStream) {
+    public Map<String, BindingVariable> getBindingVariables(SlingHttpServletRequest request, SlingHttpServletResponse response,
+            PrintStream printStream) {
         Map<String, BindingVariable> variables = new HashMap<String, BindingVariable>();
         try {
             BindingVariable aecuVar =

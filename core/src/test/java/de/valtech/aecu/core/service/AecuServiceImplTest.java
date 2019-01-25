@@ -281,7 +281,7 @@ public class AecuServiceImplTest {
         when(resource.getName()).thenReturn(FILE1);
 
         RunScriptResponse response = new RunScriptResponse();
-        when(groovyConsoleService.runScript(Mockito.any(), Mockito.eq(DIR))).thenReturn(response);
+        when(groovyConsoleService.runScript(Mockito.any(), Mockito.any(), Mockito.eq(DIR))).thenReturn(response);
 
         service.execute(DIR);
     }
