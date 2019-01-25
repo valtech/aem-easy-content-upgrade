@@ -4,7 +4,7 @@
     </td>
     <td is="coral-table-cell" >${dataItem.duration}</td>
     <td is="coral-table-cell" >${dataItem.scriptCount}</td>
-    <td is="coral-table-cell" >${dataItem.fragment}</td>
+    <td is="coral-table-cell" >${dataItem.fragment @ context = 'html'}</td>
     <td is="coral-table-cell" >
         <coral-icon
             icon="${dataItem.statusIcon}"
