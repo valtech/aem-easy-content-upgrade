@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <version>1.8.1-SNAPSHOT</version>
     <name>AECU</name>
-    <description>AEM Easy COntent Upgrade</description>
+    <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
 
     <modules>
