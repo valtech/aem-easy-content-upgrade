@@ -12,7 +12,7 @@
         <coral-card-propertylist>
             <coral-card-property>Duration: ${dataItem.duration}</coral-card-property>
             <coral-card-property>Scripts: ${dataItem.scriptCount}</coral-card-property>
-            <coral-card-property>Found in: ${dataItem.fragment}</coral-card-property>
+            <coral-card-property>Found in: ${dataItem.fragment @ context = 'html'}</coral-card-property>
         </coral-card-propertylist>
     </coral-card-content>
     <link rel="properties" href="/apps/valtech/aecu/tools/history/details.html?entry=${dataItem.runPath}&aecuScriptPath=${dataItem.selectedScript}"/>

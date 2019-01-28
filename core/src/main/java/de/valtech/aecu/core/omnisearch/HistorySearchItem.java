@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,13 +18,17 @@
  */
 package de.valtech.aecu.core.omnisearch;
 
+import java.util.regex.Pattern;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.apache.sling.xss.XSSAPI;
 
 import de.valtech.aecu.api.service.ExecutionResult;
 import de.valtech.aecu.api.service.HistoryEntry;
@@ -42,12 +46,17 @@ public class HistorySearchItem extends HistoryDataItem {
     private static final String POST_FULLTEXT = "fulltext";
     private static final String DOTS = "...";
     private static final int RELATED_LENGTH = 20;
+    private static final String HIGHLIGHT_START = "<span class=\"aecu-highlight\">";
+    private static final String HIGHLIGHT_END = "</span>";
 
     @SlingObject
     private Resource resource;
 
     @SlingObject
     private SlingHttpServletRequest request;
+
+    @OSGiService
+    private XSSAPI xssApi;
 
     protected String searchTerm;
     private Resource entryResource;
@@ -129,7 +138,20 @@ public class HistorySearchItem extends HistoryDataItem {
         }
         String prefix = (start > 0) ? DOTS : StringUtils.EMPTY;
         String postfix = (end < text.length() - 3) ? DOTS : StringUtils.EMPTY;
-        return prefix + text.substring(start, end) + postfix;
+        String snippet = prefix + text.substring(start, end) + postfix;
+        return highlight(snippet);
+    }
+
+    /**
+     * Adds extra HTML to highlight the search term.
+     * 
+     * @param snippet text snippet
+     * @return formatted snippet
+     */
+    private String highlight(String snippet) {
+        String escapedSnippet = xssApi.encodeForHTML(snippet);
+        Pattern pattern = Pattern.compile("(" + Pattern.quote(searchTerm) + ")", Pattern.CASE_INSENSITIVE);
+        return pattern.matcher(escapedSnippet).replaceAll(HIGHLIGHT_START + "$1" + HIGHLIGHT_END);
     }
 
     /**
