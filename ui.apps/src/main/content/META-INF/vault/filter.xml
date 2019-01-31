@@ -11,7 +11,7 @@
     <filter root="/var/aecu/rep:policy" mode="merge"/>
     <filter root="/content/rep:policy" mode="merge"/>
     <filter root="/conf/rep:policy" mode="merge"/>
-    <filter root="/etc/designs/rep:policy" mode="merge"/>
+    <filter root="/etc/rep:policy" mode="merge"/>
     <filter root="/apps/rep:policy" mode="merge"/>
     <filter root="/var/aecu/oak:index/aecuHistory"/>
 </workspaceFilter>
