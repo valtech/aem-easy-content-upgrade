@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,19 +18,20 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.multivalue;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * @author Roxana Muresan
@@ -42,7 +43,7 @@ public class AddMultiValues implements Action {
 
     public AddMultiValues(@Nonnull String name, @Nonnull String[] values) {
         this.name = name;
-        this.values = Arrays.stream(values).filter(f -> f != null).collect(Collectors.toList()).toArray(new String[] {});
+        this.values = Arrays.stream(values).filter(Objects::nonNull).collect(Collectors.toList()).toArray(new String[] {});
     }
 
     @Override

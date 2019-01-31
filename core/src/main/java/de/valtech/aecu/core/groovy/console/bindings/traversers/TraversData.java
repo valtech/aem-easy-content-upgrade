@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -119,7 +120,10 @@ public abstract class TraversData {
     private void runActions(@Nonnull StringBuffer stringBuffer, @Nonnull Resource resource, @Nonnull List<Action> actions)
             throws PersistenceException, AecuException {
         for (Action action : actions) {
-            stringBuffer.append(action.doAction(resource) + "\n");
+            String output = action.doAction(resource);
+            if (StringUtils.isNotBlank(output)) {
+                stringBuffer.append(output + "\n");
+            }
         }
     }
 

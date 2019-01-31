@@ -4,9 +4,9 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>1.8.0</version>
+    <version>1.8.1</version>
     <name>AECU</name>
-    <description>AEM Easy COntent Upgrade</description>
+    <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
 
     <modules>

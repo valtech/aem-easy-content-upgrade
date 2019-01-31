@@ -20,13 +20,17 @@ package de.valtech.aecu.core.omnisearch;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.xss.XSSAPI;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -45,6 +49,9 @@ public class HistorySearchItemTest {
     @Mock
     private SlingHttpServletRequest request;
 
+    @Mock
+    private XSSAPI xssApi;
+
     @Spy
     @InjectMocks
     private HistorySearchItem item;
@@ -52,7 +59,7 @@ public class HistorySearchItemTest {
     private static final String RESULT_TEXT = "result_text_sometextsometextsometextsometextsometext_endofresult";
     private static final String OUTPUT_TEXT = "output_text_sometextsometextsometextsometextsometext_endoftext";
     private static final String PATH_TEXT = "path_text_sometextsometext111sometextsometextsometext_endofpath";
-    private static final String FALLBACK_TEXT = "fallback_text_sometextsometext111sometextsometextsometext_endofpath";
+    private static final String FALLBACK_TEXT = "fallback_<b>text_sometextsometext111sometextsometextsometext_endofpath";
 
     @Before
     public void setup() {
@@ -64,6 +71,9 @@ public class HistorySearchItemTest {
         doReturn(history).when(item).readHistory();
         doReturn(singleResult).when(item).readSingleResult();
         item.setup();
+        when(xssApi.encodeForHTML(Mockito.anyString())).then(AdditionalAnswers.returnsFirstArg());
+        when(xssApi.encodeForHTML("fallback_<b>text_sometextsome..."))
+                .thenReturn("fallback_<b>text_sometextsome...".replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
     }
 
     @Test
@@ -71,7 +81,7 @@ public class HistorySearchItemTest {
         item.searchTerm = "path_";
 
         String snippet = item.getFragment();
-        assertEquals("path_text_sometextsometex...", snippet);
+        assertEquals("<span class=\"aecu-highlight\">path_</span>text_sometextsometex...", snippet);
     }
 
     @Test
@@ -79,7 +89,7 @@ public class HistorySearchItemTest {
         item.searchTerm = "_endofpath";
 
         String snippet = item.getFragment();
-        assertEquals("...textsometextsometext_endofpath", snippet);
+        assertEquals("...textsometextsometext<span class=\"aecu-highlight\">_endofpath</span>", snippet);
     }
 
     @Test
@@ -87,7 +97,7 @@ public class HistorySearchItemTest {
         item.searchTerm = "111";
 
         String snippet = item.getFragment();
-        assertEquals("...ext_sometextsometext111sometextsometextsome...", snippet);
+        assertEquals("...ext_sometextsometext<span class=\"aecu-highlight\">111</span>sometextsometextsome...", snippet);
     }
 
     @Test
@@ -95,7 +105,7 @@ public class HistorySearchItemTest {
         item.searchTerm = "result_";
 
         String snippet = item.getFragment();
-        assertEquals("result_text_sometextsometex...", snippet);
+        assertEquals("<span class=\"aecu-highlight\">result_</span>text_sometextsometex...", snippet);
     }
 
     @Test
@@ -103,7 +113,7 @@ public class HistorySearchItemTest {
         item.searchTerm = "output_";
 
         String snippet = item.getFragment();
-        assertEquals("output_text_sometextsometex...", snippet);
+        assertEquals("<span class=\"aecu-highlight\">output_</span>text_sometextsometex...", snippet);
     }
 
     @Test
@@ -111,7 +121,7 @@ public class HistorySearchItemTest {
         item.searchTerm = "fallback_";
 
         String snippet = item.getFragment();
-        assertEquals("fallback_text_sometextsometex...", snippet);
+        assertEquals("<span class=\"aecu-highlight\">fallback_</span>&lt;b&gt;text_sometextsome...", snippet);
     }
 
     @Test
@@ -119,7 +129,7 @@ public class HistorySearchItemTest {
         item.searchTerm = "FALLBACK_";
 
         String snippet = item.getFragment();
-        assertEquals("fallback_text_sometextsometex...", snippet);
+        assertEquals("<span class=\"aecu-highlight\">fallback_</span>&lt;b&gt;text_sometextsome...", snippet);
     }
 
 }
