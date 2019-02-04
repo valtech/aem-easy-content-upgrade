@@ -316,6 +316,21 @@ public interface ContentUpgrade {
     ContentUpgrade doActivateContainingPage();
 
     /**
+     * Activates the page tree where the resource is located.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doTreeActivateContainingPage();
+
+    /**
+     * Activates the page tree where the resource is located.
+     * 
+     * @param skipDeactivated skip pages that are deactivated
+     * @return upgrade object
+     */
+    ContentUpgrade doTreeActivateContainingPage(boolean skipDeactivated);
+
+    /**
      * Deactivates the page where the resource is located.
      * 
      * @return upgrade object

@@ -56,6 +56,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.page.RemovePageTagsA
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.RenderPageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.SetPageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.TreeActivatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintJson;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
@@ -336,6 +337,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     public ContentUpgrade doActivateContainingPage() {
         LOG.debug("doActivateContainingPage");
         actions.add(new ReplicatePageAction(true, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doTreeActivateContainingPage() {
+        actions.add(new TreeActivatePageAction(false, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doTreeActivateContainingPage(boolean skipDeactivated) {
+        actions.add(new TreeActivatePageAction(skipDeactivated, context));
         return this;
     }
 

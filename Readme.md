@@ -413,6 +413,8 @@ Please note that there is no check for duplicate actions. If you run a page acti
 
 * doActivateContainingPage(): activates the page that contains the current resource
 * doDeactivateContainingPage(): deactivates the page that contains the current resource
+* doTreeActivateContainingPage(): activates the page that contains the current resource AND all subpages
+* doTreeActivateContainingPage(boolean skipDeactivated): activates the page that contains the current resource AND all subpages. If "skipDeactivated" is set to true then deactivated pages will be ignored and not activated.
 
 ```java
 println aecu.contentUpgradeBuilder()
@@ -420,6 +422,8 @@ println aecu.contentUpgradeBuilder()
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doActivateContainingPage()
         .doDeactivateContainingPage()
+        .doTreeActivateContainingPage()
+        .doTreeActivateContainingPage(true)
         .run()
 ```
 
