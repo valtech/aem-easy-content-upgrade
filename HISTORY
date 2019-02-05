@@ -1,4 +1,5 @@
 ??? 1.9.0
+  - Support for directory level fallback scripts (fallback.groovy)
   - Groovy Console binding:
    - Added tree activation method doTreeActivateContainingPage()
 
