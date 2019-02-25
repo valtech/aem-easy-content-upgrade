@@ -301,6 +301,20 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteResource();
 
     /**
+     * Activates the resource.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doActivateResource();
+
+    /**
+     * Deactivates the resource.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doDeactivateResource();
+
+    /**
      * Performs a custom action with providing a function.
      * 
      * @param action action to perform on resource

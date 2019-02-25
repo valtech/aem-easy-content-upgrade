@@ -405,11 +405,20 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Node (De)activation
+
+Please note that this is for non-page resources such as commerce products. For page level (de)activation there are [separate methods](#binding_page_replication).
+
+* doActivateResource(): activates the current resource
+* doDeactivateResource(): deactivates the current resource
+
 ### Page Actions
 
 AECU can run actions on the page that contains a filtered resource. This is e.g. helpful if you filter by page resource type.
 
 Please note that there is no check for duplicate actions. If you run a page action for two resources in the same page then the action will be executed twice.
+
+<a name="binding_page_replication"></a>
 
 #### Page (De)activation
 
