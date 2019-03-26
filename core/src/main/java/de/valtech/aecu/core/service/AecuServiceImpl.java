@@ -58,6 +58,7 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 public class AecuServiceImpl implements AecuService {
 
     private static final String ERR_NO_RESOLVER = "Unable to get service resource resolver";
+    protected static final String DIR_FALLBACK_SCRIPT = "fallback.groovy";
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuServiceImpl.class);
 
@@ -153,7 +154,7 @@ public class AecuServiceImpl implements AecuService {
         if (!name.endsWith(".groovy")) {
             return false;
         }
-        return !name.contains(".fallback.");
+        return !name.contains(".fallback.") && !DIR_FALLBACK_SCRIPT.equals(name);
     }
 
     @Override
@@ -208,7 +209,7 @@ public class AecuServiceImpl implements AecuService {
      */
     protected String getFallbackScript(ResourceResolver resolver, String path) {
         String name = path.substring(path.lastIndexOf('/') + 1);
-        if (name.contains(".fallback.")) {
+        if (name.contains(".fallback.") || DIR_FALLBACK_SCRIPT.equals(name)) {
             // skip if script is a fallback script itself
             return null;
         }
@@ -216,6 +217,10 @@ public class AecuServiceImpl implements AecuService {
         String fallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + ".fallback.groovy";
         if (resolver.getResource(fallbackPath) != null) {
             return fallbackPath;
+        }
+        String directoryFallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + DIR_FALLBACK_SCRIPT;
+        if (resolver.getResource(directoryFallbackPath) != null) {
+            return directoryFallbackPath;
         }
         return null;
     }

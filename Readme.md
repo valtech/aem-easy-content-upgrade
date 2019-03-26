@@ -43,6 +43,13 @@ Table of contents
 
 AECU requires Java 8 and AEM 6.3 or above. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
+| AEM Version   | Groovy Console | AECU |
+| ------------- | -------------- | ---- |
+| 6.3           | 12.x           | 1.x  |
+| 6.4           | 12.x           | 1.x  |
+
+**Please note that Groovy Console 13 is not yet supported!**
+
 <a name="installation"></a>
 
 # Installation
@@ -94,6 +101,8 @@ There are just a few naming conventions:
 was already executed before.
 * Fallback selector: if a script name ends with ".fallback.groovy" then it will be executed only if
 the corresponding script failed with an exception. E.g. if there is "script.groovy" and "script.fallback.groovy" then the fallback script only gets executed if "script.groovy" fails.
+* Reserved file names
+    * fallback.groovy: optional directory level fallback script. This will be executed if a script fails and no script specific fallback script is provided.
 
 <a name="execution"></a>
 
@@ -403,16 +412,27 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Node (De)activation
+
+Please note that this is for non-page resources such as commerce products. For page level (de)activation there are [separate methods](#binding_page_replication).
+
+* doActivateResource(): activates the current resource
+* doDeactivateResource(): deactivates the current resource
+
 ### Page Actions
 
 AECU can run actions on the page that contains a filtered resource. This is e.g. helpful if you filter by page resource type.
 
 Please note that there is no check for duplicate actions. If you run a page action for two resources in the same page then the action will be executed twice.
 
+<a name="binding_page_replication"></a>
+
 #### Page (De)activation
 
 * doActivateContainingPage(): activates the page that contains the current resource
 * doDeactivateContainingPage(): deactivates the page that contains the current resource
+* doTreeActivateContainingPage(): activates the page that contains the current resource AND all subpages
+* doTreeActivateContainingPage(boolean skipDeactivated): activates the page that contains the current resource AND all subpages. If "skipDeactivated" is set to true then deactivated pages will be ignored and not activated.
 
 ```java
 println aecu.contentUpgradeBuilder()
@@ -420,6 +440,8 @@ println aecu.contentUpgradeBuilder()
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doActivateContainingPage()
         .doDeactivateContainingPage()
+        .doTreeActivateContainingPage()
+        .doTreeActivateContainingPage(true)
         .run()
 ```
 

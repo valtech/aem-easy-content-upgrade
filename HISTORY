@@ -1,3 +1,9 @@
+2019-03-22 1.9.0
+  - Support for directory level fallback scripts (fallback.groovy)
+  - Groovy Console binding:
+   - Added tree activation method doTreeActivateContainingPage()
+   - Added resource (de)activation actions doActivateResource()/doDeactivateResource()
+
 2019-01-31 1.8.1
   - Groovy Console binding:
    - Write access in whole /etc

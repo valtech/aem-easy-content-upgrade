@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.scribe.utils.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +55,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.page.RemovePageTagsA
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.RenderPageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.page.SetPageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.TreeActivatePageAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintJson;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
@@ -72,6 +72,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourc
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValuesRegex;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplicateResourceAction;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
@@ -101,28 +102,24 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade forResources(@Nonnull String[] paths) {
-        LOG.debug("forResources: {}", Arrays.toString(paths));
         traversals.add(new ForResources(paths));
         return this;
     }
 
     @Override
     public ContentUpgrade forChildResourcesOf(@Nonnull String path) {
-        LOG.debug("forChildResourcesOf: {}", path);
         traversals.add(new ForChildResourcesOf(path));
         return this;
     }
 
     @Override
     public ContentUpgrade forDescendantResourcesOf(@Nonnull String path) {
-        LOG.debug("forDescendantResourcesOf: {}", path);
         traversals.add(new ForDescendantResourcesOf(path, false));
         return this;
     }
 
     @Override
     public ContentUpgrade forResourcesInSubtree(@Nonnull String path) {
-        LOG.debug("forResourcesInSubtree: {}", path);
         traversals.add(new ForDescendantResourcesOf(path, true));
         return this;
     }
@@ -135,56 +132,48 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
-        LOG.debug("filterByProperties: {}", MapUtils.toString(conditionProperties));
         addFilter(new FilterByProperties(conditionProperties));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByProperty(@Nonnull String name, Object value) {
-        LOG.debug("filterByProperty: {} {}", name, value);
         addFilter(new FilterByProperty(name, value));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByHasProperty(@Nonnull String name) {
-        LOG.debug("filterByHasProperty: {} {}", name);
         addFilter(new FilterByHasProperty(name));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByMultiValuePropContains(@Nonnull String name, @Nonnull Object[] conditionValues) {
-        LOG.debug("filterByMultiValuePropContains {} : {}", name, Arrays.toString(conditionValues));
         addFilter(new FilterByMultiValuePropContains(name, conditionValues));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByNodeName(@Nonnull String nodeName) {
-        LOG.debug("filterByNodeName: {}", nodeName);
         addFilter(new FilterByNodeName(nodeName));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByNodeNameRegex(@Nonnull String regex) {
-        LOG.debug("filterByNodeNameRegex: {}", regex);
         addFilter(new FilterByNodeNameRegex(regex));
         return this;
     }
 
     @Override
     public ContentUpgrade filterByPathRegex(@Nonnull String regex) {
-        LOG.debug("filterByPathRegex: {}", regex);
         addFilter(new FilterByPathRegex(regex));
         return this;
     }
 
     @Override
     public ContentUpgrade filterWith(@Nonnull FilterBy filter) {
-        LOG.debug("filterWith: {}", filter);
         addFilter(filter);
         return this;
     }
@@ -208,21 +197,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
-        LOG.debug("doSetProperty: {} = {}", name, value);
         actions.add(new SetProperty(name, value));
         return this;
     }
 
     @Override
     public ContentUpgrade doDeleteProperty(@Nonnull String name) {
-        LOG.debug("doDeleteProperty: {}", name);
         actions.add(new DeleteProperty(name));
         return this;
     }
 
     @Override
     public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName) {
-        LOG.debug("doRenameProperty: {} to {}", oldName, newName);
         actions.add(new RenameProperty(oldName, newName));
         return this;
     }
@@ -230,7 +216,6 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName,
             @Nonnull String relativeResourcePath) {
-        LOG.debug("doCopyProperty: {} to {}", name, relativeResourcePath);
         actions.add(new CopyPropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
@@ -238,21 +223,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName,
             @Nonnull String relativeResourcePath) {
-        LOG.debug("doMoveProperty: {} to {}", name, relativeResourcePath);
         actions.add(new MovePropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
     @Override
     public ContentUpgrade doAddValuesToMultiValueProperty(@Nonnull String name, @Nonnull String[] values) {
-        LOG.debug("doAddToMultiValueProperty: {} + {}", name, Arrays.toString(values));
         actions.add(new AddMultiValues(name, values));
         return this;
     }
 
     @Override
     public ContentUpgrade doRemoveValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] values) {
-        LOG.debug("doRemoveValuesFromMultiValueProperty: {} - {}", name, Arrays.toString(values));
         actions.add(new RemoveMultiValues(name, values));
         return this;
     }
@@ -260,8 +242,6 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doReplaceValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] oldValues,
             @Nonnull String[] newValues) {
-        LOG.debug("doReplaceValuesOfMultiValueProperty: {} - {}", name,
-                Arrays.toString(oldValues) + " + " + Arrays.toString(newValues));
         actions.add(new ReplaceMultiValues(name, oldValues, newValues));
         return this;
     }
@@ -292,84 +272,96 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doRename(String newName) {
-        LOG.debug("doRename to {}", newName);
         actions.add(new RenameResource(context.getResolver(), newName));
         return this;
     }
 
     @Override
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
-        LOG.debug("doCopyResource to {}", relativePath);
         actions.add(new CopyResourceToRelativePath(relativePath, context.getResolver()));
         return this;
     }
 
     @Override
     public ContentUpgrade doMoveResourceToRelativePath(@Nonnull String relativePath) {
-        LOG.debug("doMoveResource to {}", relativePath);
         actions.add(new MoveResourceToRelativePath(relativePath, context.getResolver()));
         return this;
     }
 
     @Override
     public ContentUpgrade doMoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr) {
-        LOG.debug("doMoveResourceToPathRegex resources matching {} to {}", matchPattern, targetPathExpr);
         actions.add(new MoveResourceToPathRegex(matchPattern, targetPathExpr, context.getResolver()));
         return this;
     }
 
     @Override
     public ContentUpgrade doDeleteResource() {
-        LOG.debug("doDeleteResource");
         actions.add(new DeleteResource(context.getResolver()));
         return this;
     }
 
     @Override
+    public ContentUpgrade doActivateResource() {
+        actions.add(new ReplicateResourceAction(true, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeactivateResource() {
+        actions.add(new ReplicateResourceAction(false, context));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade doCustomResourceBasedAction(CustomResourceAction action) {
-        LOG.debug("doCustomResourceBasedAction");
         actions.add(new CustomAction(action));
         return this;
     }
 
     @Override
     public ContentUpgrade doActivateContainingPage() {
-        LOG.debug("doActivateContainingPage");
         actions.add(new ReplicatePageAction(true, context));
         return this;
     }
 
     @Override
+    public ContentUpgrade doTreeActivateContainingPage() {
+        actions.add(new TreeActivatePageAction(false, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doTreeActivateContainingPage(boolean skipDeactivated) {
+        actions.add(new TreeActivatePageAction(skipDeactivated, context));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade doDeactivateContainingPage() {
-        LOG.debug("doDeactivateContainingPage");
         actions.add(new ReplicatePageAction(false, context));
         return this;
     }
 
     @Override
     public ContentUpgrade doDeleteContainingPage() {
-        LOG.debug("doDeleteContainingPage");
         actions.add(new DeletePageAction(context));
         return this;
     }
 
     @Override
     public ContentUpgrade doAddTagsToContainingPage(String... tags) {
-        LOG.debug("doAddTagsToContainingPage");
         actions.add(new AddPageTagsAction(context, tags));
         return this;
     }
 
     @Override
     public ContentUpgrade doSetTagsForContainingPage(String... tags) {
-        LOG.debug("doSetTagsForContainingPage");
         actions.add(new SetPageTagsAction(context, tags));
         return this;
     }
 
     @Override
     public ContentUpgrade doRemoveTagsFromContainingPage(String... tags) {
-        LOG.debug("doRemoveTagsFromContainingPage");
         actions.add(new RemovePageTagsAction(context, tags));
         return this;
     }

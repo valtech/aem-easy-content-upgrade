@@ -301,6 +301,20 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteResource();
 
     /**
+     * Activates the resource.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doActivateResource();
+
+    /**
+     * Deactivates the resource.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doDeactivateResource();
+
+    /**
      * Performs a custom action with providing a function.
      * 
      * @param action action to perform on resource
@@ -314,6 +328,21 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade doActivateContainingPage();
+
+    /**
+     * Activates the page tree where the resource is located.
+     * 
+     * @return upgrade object
+     */
+    ContentUpgrade doTreeActivateContainingPage();
+
+    /**
+     * Activates the page tree where the resource is located.
+     * 
+     * @param skipDeactivated skip pages that are deactivated
+     * @return upgrade object
+     */
+    ContentUpgrade doTreeActivateContainingPage(boolean skipDeactivated);
 
     /**
      * Deactivates the page where the resource is located.
