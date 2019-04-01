@@ -1,3 +1,5 @@
+<img src="https://img.shields.io/github/release/valtech/aem-easy-content-upgrade.svg"> <img src="https://travis-ci.org/valtech/aem-easy-content-upgrade.svg?branch=develop"> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=aecu&metric=alert_status)](https://sonarcloud.io/dashboard?id=aecu)
+
 # AEM Easy Content Upgrade (AECU)
 
 AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
