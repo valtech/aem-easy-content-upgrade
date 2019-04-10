@@ -53,7 +53,7 @@ public class ForDescendantResourcesOf extends TraversData {
         Resource parentResource = resourceResolver.getResource(path);
         if (parentResource != null) {
             if (includeRootResource) {
-                applyActionsOnResource(parentResource, filter, actions, stringBuffer);
+                applyActionsOnResource(parentResource, filter, actions, stringBuffer, dryRun);
             }
             traverseChildResourcesRecursive(resourceResolver, parentResource, filter, actions, stringBuffer, dryRun);
         }
@@ -70,11 +70,8 @@ public class ForDescendantResourcesOf extends TraversData {
             if (!isResourceValid(child)) {
                 continue;
             }
-            applyActionsOnResource(child, filter, actions, stringBuffer);
+            applyActionsOnResource(child, filter, actions, stringBuffer, dryRun);
             traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
-        }
-        if (!dryRun) {
-            resourceResolver.commit();
         }
     }
 

@@ -1,3 +1,24 @@
+2019-03-22 1.9.0
+  - Support for directory level fallback scripts (fallback.groovy)
+  - Groovy Console binding:
+   - Added tree activation method doTreeActivateContainingPage()
+   - Added resource (de)activation actions doActivateResource()/doDeactivateResource()
+
+2019-01-31 1.8.1
+  - Groovy Console binding:
+   - Write access in whole /etc
+   - Do not print empty lines in output
+
+2019-01-16 1.8.0
+  - Groovy Console binding:
+   - Path renaming via regex
+   - Replace substrings in properties
+
+2018-12-20 1.7.0
+  - Full-text search possibility with Omnisearch (magnifying glass in header)
+  - Groovy Console binding:
+    - Performance increased
+
 2018-10-30 1.6.0
   - Groovy Console binding:
     - Added SQL2 collection method

@@ -22,12 +22,14 @@ import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.annotation.versioning.ProviderType;
 
 import de.valtech.aecu.api.service.AecuException;
 
 /**
  * @author Roxana Muresan
  */
+@ProviderType
 public interface Action {
 
     /**

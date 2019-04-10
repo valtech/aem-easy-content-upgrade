@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -60,6 +60,7 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 public class AecuServiceImpl implements AecuService {
 
     private static final String ERR_NO_RESOLVER = "Unable to get service resource resolver";
+    protected static final String DIR_FALLBACK_SCRIPT = "fallback.groovy";
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuServiceImpl.class);
 
@@ -139,7 +140,7 @@ public class AecuServiceImpl implements AecuService {
             return true;
         }
         Set<String> runModes = slingSettings.getRunModes();
-        String runModeString = name.substring(name.indexOf(".") + 1);
+        String runModeString = name.substring(name.indexOf('.') + 1);
         String[] combinations = runModeString.split(";");
         for (String combination : combinations) {
             String[] modes = combination.split("\\.");
@@ -155,10 +156,7 @@ public class AecuServiceImpl implements AecuService {
         if (!name.endsWith(".groovy")) {
             return false;
         }
-        if (name.contains(".fallback.")) {
-            return false;
-        }
-        return true;
+        return !name.contains(".fallback.") && !DIR_FALLBACK_SCRIPT.equals(name);
     }
 
     @Override
@@ -171,8 +169,7 @@ public class AecuServiceImpl implements AecuService {
             if (!isValidScriptName(resource.getName())) {
                 throw new AecuException("Invalid script name");
             }
-            ExecutionResult result = executeScript(resolver, path);
-            return result;
+            return executeScript(resolver, path);
         } catch (LoginException e) {
             throw new AecuException(ERR_NO_RESOLVER, e);
         }
@@ -214,15 +211,19 @@ public class AecuServiceImpl implements AecuService {
      * @return fallback script path
      */
     protected String getFallbackScript(ResourceResolver resolver, String path) {
-        String name = path.substring(path.lastIndexOf("/") + 1);
-        if (name.contains(".fallback.")) {
+        String name = path.substring(path.lastIndexOf('/') + 1);
+        if (name.contains(".fallback.") || DIR_FALLBACK_SCRIPT.equals(name)) {
             // skip if script is a fallback script itself
             return null;
         }
-        String baseName = name.substring(0, name.indexOf("."));
-        String fallbackPath = path.substring(0, path.lastIndexOf("/") + 1) + baseName + ".fallback.groovy";
+        String baseName = name.substring(0, name.indexOf('.'));
+        String fallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + ".fallback.groovy";
         if (resolver.getResource(fallbackPath) != null) {
             return fallbackPath;
+        }
+        String directoryFallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + DIR_FALLBACK_SCRIPT;
+        if (resolver.getResource(directoryFallbackPath) != null) {
+            return directoryFallbackPath;
         }
         return null;
     }

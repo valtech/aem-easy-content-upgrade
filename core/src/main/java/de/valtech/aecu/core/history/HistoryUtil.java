@@ -29,6 +29,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
+import org.apache.jackrabbit.oak.plugins.index.IndexConstants;
 import org.apache.jackrabbit.oak.spi.security.authorization.accesscontrol.AccessControlConstants;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
@@ -60,11 +61,14 @@ public class HistoryUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(HistoryUtil.class);
 
-    protected static final String HISTORY_BASE = "/var/aecu";
+    /**
+     * Base node for history entries
+     */
+    public static final String HISTORY_BASE = "/var/aecu";
 
-    protected static final String NODE_FALLBACK = "fallback";
+    public static final String NODE_FALLBACK = "fallback";
 
-    protected static final String ATTR_PATH = "path";
+    public static final String ATTR_PATH = "path";
     protected static final String ATTR_RUN_OUTPUT = "runOutput";
     protected static final String ATTR_RUN_STATE = "runState";
     protected static final String ATTR_RUN_RESULT = "runResult";
@@ -238,7 +242,8 @@ public class HistoryUtil {
             if (sibling.getName().equals(resource.getName())) {
                 break;
             }
-            if (!sibling.getName().equals(AccessControlConstants.REP_POLICY)) {
+            if (!sibling.getName().equals(AccessControlConstants.REP_POLICY)
+                    && !sibling.getName().equals(IndexConstants.INDEX_DEFINITIONS_NAME)) {
                 previous = sibling;
             }
         }
@@ -272,11 +277,32 @@ public class HistoryUtil {
         Iterator<Resource> lastIterator = resource.listChildren();
         while (lastIterator.hasNext()) {
             Resource candidate = lastIterator.next();
-            if (!AccessControlConstants.REP_POLICY.equals(candidate.getName())) {
+            if (!AccessControlConstants.REP_POLICY.equals(candidate.getName())
+                    && !IndexConstants.INDEX_DEFINITIONS_NAME.equals(candidate.getName())) {
                 last = candidate;
             }
         }
         return last;
+    }
+
+    /**
+     * Returns the base resource for a (fallback) script resource.
+     * 
+     * @param child child of base resource
+     * @return base run resource
+     */
+    public Resource getHistoryEntryResource(Resource child) {
+        Resource resource = child;
+        ValueMap values = resource.adaptTo(ValueMap.class);
+        // if we are in a script subnode then go down to base node of run
+        if (values.containsKey(ATTR_RUN_STATE)) {
+            resource = resource.getParent();
+            values = resource.adaptTo(ValueMap.class);
+            if (values.containsKey(ATTR_RUN_STATE)) {
+                resource = resource.getParent();
+            }
+        }
+        return resource;
     }
 
     /**
@@ -311,7 +337,7 @@ public class HistoryUtil {
      * @param resource resource
      * @return result
      */
-    private ExecutionResult readHistorySingleResult(Resource resource) {
+    public ExecutionResult readHistorySingleResult(Resource resource) {
         ExecutionResult fallback = null;
         Resource fallbackResource = resource.getChild(NODE_FALLBACK);
         if (fallbackResource != null) {
@@ -360,8 +386,8 @@ public class HistoryUtil {
     protected void createPath(String path, ResourceResolver resolver, String primaryType) throws AecuException {
         Resource folder = resolver.getResource(path);
         if (folder == null) {
-            String parent = path.substring(0, path.lastIndexOf("/"));
-            String name = path.substring(path.lastIndexOf("/") + 1);
+            String parent = path.substring(0, path.lastIndexOf('/'));
+            String name = path.substring(path.lastIndexOf('/') + 1);
             if (resolver.getResource(parent) == null) {
                 createPath(parent, resolver, primaryType);
             }

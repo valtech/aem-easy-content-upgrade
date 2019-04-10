@@ -269,3 +269,12 @@ table.aecu-history-detail td {
 pre {
     margin: 0;
 }
+
+.aecu-search-card {
+    text-align: center;
+}
+
+.aecu-highlight {
+	  font-weight: bold;
+	  color: #FA0A0A;
+}

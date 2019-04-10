@@ -167,6 +167,24 @@ public class AecuServiceImplTest {
         assertNull(service.getFallbackScript(resolver, "/path/to/script.fallback.groovy"));
     }
 
+    @Test
+    public void getFallbackScript_DirectoryLevel() {
+        when(resolver.getResource("/path/to/script1.fallback.groovy")).thenReturn(mock(Resource.class));
+        when(resolver.getResource("/path/to/fallback.groovy")).thenReturn(mock(Resource.class));
+
+        assertEquals("/path/to/script1.fallback.groovy", service.getFallbackScript(resolver, "/path/to/script1.always.groovy"));
+        assertEquals("/path/to/script1.fallback.groovy", service.getFallbackScript(resolver, "/path/to/script1.groovy"));
+        assertEquals("/path/to/fallback.groovy", service.getFallbackScript(resolver, "/path/to/script2.always.groovy"));
+        assertEquals("/path/to/fallback.groovy", service.getFallbackScript(resolver, "/path/to/script2.groovy"));
+    }
+
+    @Test
+    public void getFallbackScript_DirectoryLevelFallback() {
+        verify(resolver, never()).getResource("/path/to/fallback.groovy");
+
+        assertNull(service.getFallbackScript(resolver, "/path/to/fallback.groovy"));
+    }
+
     @Test(expected = AecuException.class)
     public void getFiles_invalidPath() throws AecuException {
         service.getFiles(FILE1);

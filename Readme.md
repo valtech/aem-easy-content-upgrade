@@ -1,3 +1,5 @@
+<img src="https://img.shields.io/github/release/valtech/aem-easy-content-upgrade.svg"> <img src="https://travis-ci.org/valtech/aem-easy-content-upgrade.svg?branch=develop"> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=aecu&metric=alert_status)](https://sonarcloud.io/dashboard?id=aecu)
+
 # AEM Easy Content Upgrade (AECU)
 
 AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
@@ -42,6 +44,13 @@ Table of contents
 # Requirements
 
 AECU requires Java 8 and AEM 6.4 or above. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
+
+| AEM Version   | Groovy Console | AECU |
+| ------------- | -------------- | ---- |
+| 6.3           | 12.x           | 1.x  |
+| 6.4           | 12.x           | 1.x  |
+
+**Please note that Groovy Console 13 is not yet supported!**
 
 <a name="installation"></a>
 
@@ -94,6 +103,8 @@ There are just a few naming conventions:
 was already executed before.
 * Fallback selector: if a script name ends with ".fallback.groovy" then it will be executed only if
 the corresponding script failed with an exception. E.g. if there is "script.groovy" and "script.fallback.groovy" then the fallback script only gets executed if "script.groovy" fails.
+* Reserved file names
+    * fallback.groovy: optional directory level fallback script. This will be executed if a script fails and no script specific fallback script is provided.
 
 <a name="execution"></a>
 
@@ -157,6 +168,18 @@ You can click on any run to see the full details. This will show the status for 
 
 <img src="docs/images/historyDetails.png">
 
+## Search History
+
+AECU maintains a full-text search index for the history entries. You can search for script names and their output.
+
+Simply click on the magnifying glass in header to open the search bar:
+
+<img src="docs/images/fulltext1.png">
+
+Now you can enter a search term and will see the runs that contain this text. Click on the link to see the full history entry.
+
+<img src="docs/images/fulltext2.png">
+
 <a name="groovy"></a>
 
 # Extension to Groovy Console
@@ -201,7 +224,7 @@ These methods can be used to filter the nodes that were collected above. Multipl
 Filters the resources by property values.
 
 * filterByHasProperty: matches all nodes that have the given property. The value of the property is not relevant.
-* filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present.
+* filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
 
@@ -337,6 +360,25 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+### Replace Property Content
+You can replace the content of String properties. This also supports multi-value properties.
+
+* doReplaceValueInAllProperties(String oldValue, String newValue): replaces the substring "oldValue" with "newValue". Applies to all String properties
+* doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames): replaces the substring "oldValue" with "newValue". Applies to all specified String properties
+* doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement): checks if the property value(s) match the search pattern and replaces it with "replacement". Applies to all String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+* doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames): checks if the property value(s) match the search pattern and replaces it with "replacement".  Applies to specified String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+
+```java
+println aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doReplaceValueInAllProperties("old", "new")
+        .doReplaceValueInProperties("old", "new", (String[]) ["propertyName1", "propertyName2"])
+        .doReplaceValueInAllPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2")
+        .doReplaceValueInPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2", (String[]) ["propertyName1", "propertyName2"])
+        .run()
+```
+
 ### Copy and Move Nodes
 
 The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
@@ -344,6 +386,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 * doRename(String newName): renames the resource to the given name
 * doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
+* doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtained by applying the replacement expression. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 
 ```java
 println aecu.contentUpgradeBuilder()
@@ -353,6 +396,7 @@ println aecu.contentUpgradeBuilder()
         .doCopyResourceToRelativePath("subNode")
         .doCopyResourceToRelativePath("../subNode")
         .doMoveResourceToRelativePath("subNode")
+        .doMoveResourceToPathRegex("/content/we-retail/(\\w+)/(\\w+)/(\\w+)", "/content/somewhere/\$1/and/\$2")
         .run()
 ```
 
@@ -370,16 +414,27 @@ println aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Node (De)activation
+
+Please note that this is for non-page resources such as commerce products. For page level (de)activation there are [separate methods](#binding_page_replication).
+
+* doActivateResource(): activates the current resource
+* doDeactivateResource(): deactivates the current resource
+
 ### Page Actions
 
 AECU can run actions on the page that contains a filtered resource. This is e.g. helpful if you filter by page resource type.
 
 Please note that there is no check for duplicate actions. If you run a page action for two resources in the same page then the action will be executed twice.
 
+<a name="binding_page_replication"></a>
+
 #### Page (De)activation
 
 * doActivateContainingPage(): activates the page that contains the current resource
 * doDeactivateContainingPage(): deactivates the page that contains the current resource
+* doTreeActivateContainingPage(): activates the page that contains the current resource AND all subpages
+* doTreeActivateContainingPage(boolean skipDeactivated): activates the page that contains the current resource AND all subpages. If "skipDeactivated" is set to true then deactivated pages will be ignored and not activated.
 
 ```java
 println aecu.contentUpgradeBuilder()
@@ -387,6 +442,8 @@ println aecu.contentUpgradeBuilder()
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doActivateContainingPage()
         .doDeactivateContainingPage()
+        .doTreeActivateContainingPage()
+        .doTreeActivateContainingPage(true)
         .run()
 ```
 

@@ -14,6 +14,7 @@
             modeGroup="aecu-history-entries"
 			      granite:class="aecu-history-table"
 			      contentPath="${requestPathInfo.suffix}"
+			      omnisearchLocationPath="/apps/valtech/aecu/omnisearch/content/metadata/aecuHistory"
     >
         <head jcr:primaryType="nt:unstructured">
             <clientlibs

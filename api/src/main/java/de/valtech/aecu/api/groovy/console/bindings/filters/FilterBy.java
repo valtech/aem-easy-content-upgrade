@@ -21,12 +21,14 @@ package de.valtech.aecu.api.groovy.console.bindings.filters;
 import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.Resource;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Interface for AECU binding filters.
  * 
  * @author Roxana Muresan
  */
+@ConsumerType
 public interface FilterBy {
 
     /**

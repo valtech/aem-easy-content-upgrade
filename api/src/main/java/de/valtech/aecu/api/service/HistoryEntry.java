@@ -21,21 +21,24 @@ package de.valtech.aecu.api.service;
 import java.util.Date;
 import java.util.List;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 /**
  * History entry for an execution run.
  *
  * @author Roland Gruber
  */
+@ProviderType
 public interface HistoryEntry {
 
     /**
      * Execution state (e.g. running)
      */
     public enum STATE {
-        /** Execution ongoing */
-        RUNNING("Running"),
-        /** Execution finished */
-        FINISHED("Finished");
+    /** Execution ongoing */
+    RUNNING("Running"),
+    /** Execution finished */
+    FINISHED("Finished");
 
         private String label;
 
@@ -56,9 +59,7 @@ public interface HistoryEntry {
         public String getLabel() {
             return label;
         }
-    }
-
-    ;
+    };
 
     /**
      * Execution result (e.g. successful)
@@ -90,9 +91,7 @@ public interface HistoryEntry {
         public String getLabel() {
             return label;
         }
-    }
-
-    ;
+    };
 
     /**
      * Returns the start time of the execution.
