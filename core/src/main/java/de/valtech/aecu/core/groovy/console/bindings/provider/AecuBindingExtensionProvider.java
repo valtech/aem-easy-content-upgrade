@@ -18,7 +18,9 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.provider;
 
-import org.apache.sling.api.SlingHttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.sling.api.resource.LoginException;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -26,10 +28,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
+import com.icfolson.aem.groovy.console.api.BindingVariable;
+import com.icfolson.aem.groovy.console.api.ScriptContext;
 
+import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 import de.valtech.aecu.core.groovy.console.bindings.impl.AecuBindingImpl;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
-import groovy.lang.Binding;
 
 /**
  * Provides additional AECU Bindings for the Groovy Console
@@ -48,15 +52,18 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
 
     @Override
-    public Binding getBinding(SlingHttpServletRequest request) {
-        Binding binding = defaultBindingExtensionProvider.getBinding(request);
+    public Map<String, BindingVariable> getBindingVariables(ScriptContext context) {
+        Map<String, BindingVariable> variables = new HashMap<String, BindingVariable>();
         try {
-            binding.setVariable("aecu", new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver()));
+            BindingVariable aecuVar =
+                    new BindingVariable(new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver()),
+                            AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
+            variables.put("aecu", aecuVar);
         } catch (LoginException e) {
             LOG.error(
                     "Failed to get resource resolver for aecu-content-migrator, make sure you all the configurations needed for this system user are deployed.");
         }
-        return binding;
+        return variables;
     }
 
 }
