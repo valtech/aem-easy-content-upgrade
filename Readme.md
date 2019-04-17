@@ -43,7 +43,7 @@ Table of contents
 
 # Requirements
 
-AECU requires Java 8 and AEM 6.4 or above. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
+AECU requires Java 8 and AEM 6.4 or above. For AEM 6.3 please install the last 1.x version of AECU. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
 | AEM Version   | Groovy Console | AECU |
 | ------------- | -------------- | ---- |
