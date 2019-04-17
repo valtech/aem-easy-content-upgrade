@@ -91,7 +91,7 @@ The package is also available on [Maven Central](http://repo1.maven.org/maven2/d
 
 The application can be removed by deleting the following paths:
 * /apps/valtech/aecu
-* /etc/groovyconsole/scripts/aecu
+* /var/groovyconsole/scripts/aecu
 * /var/aecu
 * /var/aecu-installhook
 
@@ -101,14 +101,14 @@ For Groovy Console delete:
 
 * /apps/groovyconsole
 * /etc/clientlibs/groovyconsole
-* /etc/groovyconsole
+* /var/groovyconsole
 
 Then delete "aem-groovy-console" packages in package mananger.
 
 
 # File and Folder Structure
 
-All migration scripts need to be located in /etc/groovyconsole/scripts/aecu. There you can create
+All migration scripts need to be located in /var/groovyconsole/scripts/aecu. There you can create
 an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
