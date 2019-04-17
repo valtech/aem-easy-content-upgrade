@@ -246,12 +246,16 @@ Filters the resources by property values.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
+* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties.
+* filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties.
 
 ```java
 filterByHasProperty(String name)
 filterByProperty(String name, Object value)
 filterByProperties(Map<String, String> properties)
 filterByMultiValuePropContains(String name,  Object[] conditionValues)
+filterByPropertyRegex(String name, String regex)
+filterByAnyPropertyRegex(String regex)
 ```
 
 Example:
@@ -266,6 +270,8 @@ println aecu.contentUpgradeBuilder()
         .filterByProperty("sling:resourceType", "wcm/foundation/components/responsivegrid")
         .filterByProperties(conditionMap)
         .filterByMultiValuePropContains("myAttribute", ["value"] as String[])
+        .filterByPropertyRegex("myproperty", ".*test.*")
+        .filterByAnyPropertyRegex(".*test.*")
         .doSetProperty("name", "value")
         .run()
 ```
