@@ -1,4 +1,7 @@
 2.0.0
+  - Require Groovy Console 13
+  - Require AEM 6.4
+  - Script base location moved from /etc/groovyconsole/scripts/aecu to /var/groovyconsole/scripts/aecu
   - Groovy Console binding:
    - Added filterByPropertyRegex() and filterByAnyPropertyRegex()
 
