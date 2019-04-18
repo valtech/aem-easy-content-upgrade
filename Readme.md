@@ -43,14 +43,12 @@ Table of contents
 
 # Requirements
 
-AECU requires Java 8 and AEM 6.4 or above. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
+AECU requires Java 8 and AEM 6.4 or above. For AEM 6.3 please install the last 1.x version of AECU. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
 | AEM Version   | Groovy Console | AECU |
 | ------------- | -------------- | ---- |
 | 6.3           | 12.x           | 1.x  |
-| 6.4           | 12.x           | 1.x  |
-
-**Please note that Groovy Console 13 is not yet supported!**
+| 6.4           | 13.x           | 2.x  |
 
 <a name="installation"></a>
 
@@ -91,7 +89,7 @@ The package is also available on [Maven Central](http://repo1.maven.org/maven2/d
 
 The application can be removed by deleting the following paths:
 * /apps/valtech/aecu
-* /etc/groovyconsole/scripts/aecu
+* /var/groovyconsole/scripts/aecu
 * /var/aecu
 * /var/aecu-installhook
 
@@ -101,14 +99,14 @@ For Groovy Console delete:
 
 * /apps/groovyconsole
 * /etc/clientlibs/groovyconsole
-* /etc/groovyconsole
+* /var/groovyconsole
 
 Then delete "aem-groovy-console" packages in package mananger.
 
 
 # File and Folder Structure
 
-All migration scripts need to be located in /etc/groovyconsole/scripts/aecu. There you can create
+All migration scripts need to be located in /var/groovyconsole/scripts/aecu. There you can create
 an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
