@@ -8,5 +8,5 @@
     <allow
             jcr:primaryType="rep:GrantACE"
             rep:principalName="aecu-content-migrator"
-            rep:privileges="{Name}[jcr:read]"/>
+            rep:privileges="{Name}[jcr:all]"/>
 </jcr:root>
