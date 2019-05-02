@@ -1,9 +1,9 @@
 2.0.0
   - Groovy Console binding:
-   - Added filterByPropertyRegex() and filterByAnyPropertyRegex()
 
 2019-05-02 1.9.1
   - Groovy Console binding:
+   - Added filterByPropertyRegex() and filterByAnyPropertyRegex()
    - Write access in whole /var
 
 2019-03-22 1.9.0
