@@ -1,3 +1,11 @@
+2.0.0
+  - Groovy Console binding:
+
+2019-05-02 1.10.0
+  - Groovy Console binding:
+   - Added filterByPropertyRegex() and filterByAnyPropertyRegex()
+   - Write access in whole /var
+
 2019-03-22 1.9.0
   - Support for directory level fallback scripts (fallback.groovy)
   - Groovy Console binding:
