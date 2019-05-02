@@ -94,6 +94,25 @@ public interface ContentUpgrade {
     ContentUpgrade filterByProperty(String name, Object value);
 
     /**
+     * Filters by a single property using a regular expression for the value. This is intended for
+     * single value properties.
+     * 
+     * @param name  property name
+     * @param regex regular expression to match value
+     * @return upgrade object
+     */
+    ContentUpgrade filterByPropertyRegex(String name, String regex);
+
+    /**
+     * Filters by checking if any property matches the given regular expression for the value. This
+     * is intended for single value properties.
+     * 
+     * @param regex regular expression to match value
+     * @return upgrade object
+     */
+    ContentUpgrade filterByAnyPropertyRegex(String regex);
+
+    /**
      * Filters by properties. Can be used also for Multi-value properties.
      * 
      * @param conditionProperties properties to filter
