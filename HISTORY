@@ -2,8 +2,15 @@
   - Require Groovy Console 13
   - Require AEM 6.4
   - Script base location moved from /etc/groovyconsole/scripts/aecu to /var/groovyconsole/scripts/aecu
+
+2019-05-03 1.10.1
+  - Fixed bugs:
+   - Added missing package filter entry for deploying the permissions on /var.
+
+2019-05-02 1.10.0
   - Groovy Console binding:
    - Added filterByPropertyRegex() and filterByAnyPropertyRegex()
+   - Write access in whole /var
 
 2019-03-22 1.9.0
   - Support for directory level fallback scripts (fallback.groovy)
@@ -65,12 +72,10 @@
   - Moved filter classes to API
   - Bundle: update Groovy Console to version 12.0.0
 
-
 2018-07-19 1.0.0
   - Fixes for install hook
   - Bundle package that also installs Groovy Console
   - Performance improvements
-
 
 2018-07-19 0.9
   - initial release
