@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,36 +16,13 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.impl;
-
-import org.apache.sling.api.resource.ResourceResolver;
-
-import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
-import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
-import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
 
 /**
- * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
- *
- * @author Roxana Muresan
+ * Contains the interfaces for the access right validation.
+ * 
+ * @author Roland Gruber
  */
-public class AecuBindingImpl implements AecuBinding {
+@Version("1.0.0")
+package de.valtech.aecu.api.groovy.console.bindings.accessrights;
 
-    private ResourceResolver resourceResolver;
-
-
-    public AecuBindingImpl(ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
-    }
-
-    @Override
-    public ContentUpgrade contentUpgradeBuilder() {
-        return new ContentUpgradeImpl(resourceResolver);
-    }
-
-    @Override
-    public ValidateAccessRights validateAccessRights() {
-        return new ValidateAccessRightsImpl(resourceResolver);
-    }
-
-}
+import org.osgi.annotation.versioning.Version;

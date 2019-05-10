@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,36 +16,28 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.impl;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights;
 
-import org.apache.sling.api.resource.ResourceResolver;
+import java.util.Comparator;
 
-import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
-import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
-import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
 
 /**
- * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
- *
- * @author Roxana Muresan
+ * Comparator to sort access right validators.
+ * 
+ * @author Roland Gruber
  */
-public class AecuBindingImpl implements AecuBinding {
-
-    private ResourceResolver resourceResolver;
-
-
-    public AecuBindingImpl(ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
-    }
+public class AccessRightValidatorComparator implements Comparator<AccessRightValidator> {
 
     @Override
-    public ContentUpgrade contentUpgradeBuilder() {
-        return new ContentUpgradeImpl(resourceResolver);
-    }
-
-    @Override
-    public ValidateAccessRights validateAccessRights() {
-        return new ValidateAccessRightsImpl(resourceResolver);
+    public int compare(AccessRightValidator o1, AccessRightValidator o2) {
+        if (!o1.getAuthorizableId().equals(o2.getAuthorizableId())) {
+            return o1.getAuthorizableId().compareTo(o2.getAuthorizableId());
+        }
+        if (!o1.getResource().getPath().equals(o2.getResource().getPath())) {
+            return o1.getResource().getPath().compareTo(o2.getResource().getPath());
+        }
+        return o1.getLabel().compareTo(o2.getLabel());
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,25 +21,48 @@ package de.valtech.aecu.api.groovy.console.bindings;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
+ * Validates access rights for users or groups.
  * 
- * @author Roxana Muresan
+ * @author Roland Gruber
  */
 @ProviderType
-public interface AecuBinding {
+public interface ValidateAccessRights {
 
     /**
-     * Returns a content upgrade builder. This is the starting point for the migrations.
+     * Checks the permissions on specific paths.
      * 
-     * @return builder
+     * @param paths repository paths (e.g. /content/project)
+     * @return access right validation builder
      */
-    ContentUpgrade contentUpgradeBuilder();
+    ValidateAccessRights forPaths(String... paths);
 
     /**
-     * Returns an access right validator. This is the starting point for all access right checks.
+     * Checks the permissions for specific users or groups.
      * 
-     * @return access right validator
+     * @param authorizables user or group names
+     * @return access right validation builder
      */
-    ValidateAccessRights validateAccessRights();
+    ValidateAccessRights forAuthorizables(String... authorizables);
+
+    /**
+     * Checks if read access is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canRead();
+
+    /**
+     * Checks if write access is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canWrite();
+
+    /**
+     * Checks if the specified rights are correctly set.
+     * 
+     * @return access right validation builder
+     */
+    String validate();
 
 }

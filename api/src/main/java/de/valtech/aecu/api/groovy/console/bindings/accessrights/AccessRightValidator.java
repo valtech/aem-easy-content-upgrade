@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,36 +16,43 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.impl;
+package de.valtech.aecu.api.groovy.console.bindings.accessrights;
 
-import org.apache.sling.api.resource.ResourceResolver;
-
-import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
-import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
-import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
+import org.apache.sling.api.resource.Resource;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
- *
- * @author Roxana Muresan
+ * Performs an access right validation on a given resource.
+ * 
+ * @author Roland Gruber
  */
-public class AecuBindingImpl implements AecuBinding {
+@ConsumerType
+public interface AccessRightValidator {
 
-    private ResourceResolver resourceResolver;
+    /**
+     * Performs the provided check.
+     */
+    boolean validate();
 
+    /**
+     * Returns a descriptive label for the check.
+     * 
+     * @return label
+     */
+    String getLabel();
 
-    public AecuBindingImpl(ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
-    }
+    /**
+     * Returns the user or group to check.
+     * 
+     * @return user/group
+     */
+    String getAuthorizableId();
 
-    @Override
-    public ContentUpgrade contentUpgradeBuilder() {
-        return new ContentUpgradeImpl(resourceResolver);
-    }
-
-    @Override
-    public ValidateAccessRights validateAccessRights() {
-        return new ValidateAccessRightsImpl(resourceResolver);
-    }
+    /**
+     * Returns the resource to check.
+     * 
+     * @return resource
+     */
+    Resource getResource();
 
 }

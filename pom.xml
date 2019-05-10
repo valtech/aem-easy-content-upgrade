@@ -553,6 +553,11 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>hu.vissy.plain-text-table</groupId>
+                <artifactId>ptt-core</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.6</version>

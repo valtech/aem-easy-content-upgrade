@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,36 +16,37 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.impl;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators;
 
-import org.apache.sling.api.resource.ResourceResolver;
-
-import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
-import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
-import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
+import org.apache.jackrabbit.api.security.user.Authorizable;
+import org.apache.sling.api.resource.Resource;
 
 /**
- * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
- *
- * @author Roxana Muresan
+ * Checks if read access is available.
+ * 
+ * @author Roland Gruber
  */
-public class AecuBindingImpl implements AecuBinding {
+public class ReadAccessValidator extends BaseAccessRightsValidator {
 
-    private ResourceResolver resourceResolver;
-
-
-    public AecuBindingImpl(ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
+    /**
+     * Constructor.
+     * 
+     * @param authorizable user or group
+     * @param resource     resource to check
+     */
+    public ReadAccessValidator(Authorizable authorizable, Resource resource) {
+        super(authorizable, resource);
     }
 
     @Override
-    public ContentUpgrade contentUpgradeBuilder() {
-        return new ContentUpgradeImpl(resourceResolver);
+    public boolean validate() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
-    public ValidateAccessRights validateAccessRights() {
-        return new ValidateAccessRightsImpl(resourceResolver);
+    public String getLabel() {
+        return "Read";
     }
 
 }
