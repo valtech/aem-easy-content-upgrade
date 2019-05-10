@@ -24,11 +24,11 @@ import org.apache.sling.api.resource.Resource;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
 
 /**
- * Checks if read access is available.
+ * Checks if create access is available.
  * 
  * @author Roland Gruber
  */
-public class ReadAccessValidator extends BaseAccessRightsValidator {
+public class CreateAccessValidator extends BaseAccessRightsValidator {
 
     /**
      * Constructor.
@@ -37,20 +37,20 @@ public class ReadAccessValidator extends BaseAccessRightsValidator {
      * @param resource           resource to check
      * @param checkAccessGranted checks if the access is granted or denied
      */
-    public ReadAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+    public CreateAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
             boolean checkAccessGranted) {
         super(authorizable, resource, context, checkAccessGranted);
     }
 
     @Override
     public boolean validate() {
-        boolean permissionOk = checkAction(RIGHT_READ);
+        boolean permissionOk = checkAction(RIGHT_CREATE);
         return permissionOk;
     }
 
     @Override
     public String getLabel() {
-        return getCheckAccessGranted() ? "Read" : "Cannot Read";
+        return getCheckAccessGranted() ? "Create" : "Cannot Create";
     }
 
 }

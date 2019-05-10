@@ -52,11 +52,53 @@ public interface ValidateAccessRights {
     ValidateAccessRights canRead();
 
     /**
-     * Checks if write access is granted.
+     * Checks if modify access is granted.
      * 
      * @return access right validation builder
      */
-    ValidateAccessRights canWrite();
+    ValidateAccessRights canModify();
+
+    /**
+     * Checks if create access is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canCreate();
+
+    /**
+     * Checks if delete access is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canDelete();
+
+    /**
+     * Checks if read access is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotRead();
+
+    /**
+     * Checks if modify access is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotModify();
+
+    /**
+     * Checks if create access is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotCreate();
+
+    /**
+     * Checks if delete access is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotDelete();
 
     /**
      * Checks if the specified rights are correctly set.

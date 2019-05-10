@@ -18,6 +18,8 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators;
 
+import java.util.Collection;
+
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +28,10 @@ import org.apache.sling.api.resource.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.security.util.CqActions;
+
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
 
 /**
  * Base class for access right validators.
@@ -37,18 +42,30 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseAccessRightsValidator.class);
 
+    public static final String RIGHT_READ = "read";
+    public static final String RIGHT_MODIFY = "modify";
+    public static final String RIGHT_CREATE = "create";
+    public static final String RIGHT_DELETE = "delete";
+
     protected Authorizable authorizable;
     private Resource resource;
+    private AccessValidatorContext context;
+    private boolean checkAccessGranted;
 
     /**
      * Constructor.
      * 
-     * @param authorizable user or group
-     * @param resource     resource to check
+     * @param authorizable       user or group
+     * @param resource           resource to check
+     * @param context            context
+     * @param checkAccessGranted check for granted permission
      */
-    protected BaseAccessRightsValidator(Authorizable authorizable, Resource resource) {
+    protected BaseAccessRightsValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+            boolean checkAccessGranted) {
         this.authorizable = authorizable;
         this.resource = resource;
+        this.context = context;
+        this.checkAccessGranted = checkAccessGranted;
     }
 
     @Override
@@ -66,9 +83,31 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
         return resource;
     }
 
+    /**
+     * Returns if the check is for granted or revoked permission.
+     * 
+     * @return check for granted permission
+     */
+    protected boolean getCheckAccessGranted() {
+        return checkAccessGranted;
+    }
+
     @Override
     public String toString() {
         return getAuthorizableId() + " - " + resource.getPath() + " - " + getLabel();
+    }
+
+    protected boolean checkAction(String action) {
+        CqActions actions = context.getCqActions();
+        try {
+            Collection<String> allowedActions =
+                    actions.getAllowedActions(resource.getPath(), context.getPrincipals(authorizable));
+            boolean granted = allowedActions.contains(action);
+            return checkAccessGranted ? granted : !granted;
+        } catch (RepositoryException e) {
+            LOG.error("Unable to check actions", e);
+        }
+        return false;
     }
 
 }

@@ -25,8 +25,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
-import hu.vissy.texttable.TableFormatter;
-import hu.vissy.texttable.column.ColumnDefinition;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciitable.CWC_LongestLine;
 
 /**
  * Table that contains the results of an access right check.
@@ -35,22 +35,7 @@ import hu.vissy.texttable.column.ColumnDefinition;
  */
 public class ValidateAccessRightsTable {
 
-    private TableFormatter<TableRow> formatter;
     private List<TableRow> rows = new ArrayList<>();
-
-    /**
-     * Constructor
-     */
-    public ValidateAccessRightsTable() {
-        formatter = new TableFormatter.Builder<TableRow>().withHeading("Access right test results")
-                .withColumn(new ColumnDefinition.StatelessBuilder<TableRow, String>().withTitle("User/Group")
-                        .withDataExtractor(TableRow::getAuthorizable).build())
-                .withColumn(new ColumnDefinition.StatelessBuilder<TableRow, String>().withTitle("Path")
-                        .withDataExtractor(TableRow::getPath).build())
-                .withColumn(new ColumnDefinition.StatelessBuilder<TableRow, String>().withTitle("Rights")
-                        .withDataExtractor(TableRow::getCheckResultsText).build())
-                .build();
-    }
 
     /**
      * Adds the result of an validator.
@@ -81,7 +66,21 @@ public class ValidateAccessRightsTable {
      * @return text
      */
     public String getText() {
-        return formatter.apply(rows);
+        AsciiTable table = new AsciiTable();
+        CWC_LongestLine cwc = new CWC_LongestLine();
+        table.getRenderer().setCWC(cwc);
+        table.addRule();
+        table.addRow("User/Group", "Path", "Rights");
+        table.addRule();
+        for (TableRow row : rows) {
+            if (row == null) {
+                table.addRule();
+            } else {
+                table.addRow(row.getAuthorizable(), row.getPath(), row.getCheckResultsText());
+            }
+        }
+        table.addRule();
+        return table.render();
     }
 
     /**
@@ -132,7 +131,7 @@ public class ValidateAccessRightsTable {
                 output.append("FAIL: " + labels);
             }
             if (!checkLabelsOk.isEmpty() && !checkLabelsFail.isEmpty()) {
-                output.append("\n");
+                output.append("; ");
             }
             if (!checkLabelsOk.isEmpty()) {
                 String labels = String.join(", ", checkLabelsOk);

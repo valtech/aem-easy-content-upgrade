@@ -552,11 +552,43 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            
             <dependency>
-                <groupId>hu.vissy.plain-text-table</groupId>
-                <artifactId>ptt-core</artifactId>
-                <version>3.0.0</version>
+							  <groupId>de.vandermeer</groupId>
+							  <artifactId>asciitable</artifactId>
+							  <version>0.3.2</version>
             </dependency>
+            <dependency>
+                <groupId>de.vandermeer</groupId>
+                <artifactId>ascii-utf-themes</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>de.vandermeer</groupId>
+                <artifactId>skb-interfaces</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>de.vandermeer</groupId>
+                <artifactId>char-translation</artifactId>
+                <version>0.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr-runtime</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4</artifactId>
+                <version>4.5.1</version>
+            </dependency>
+						<dependency>
+						    <groupId>org.antlr</groupId>
+						    <artifactId>stringtemplate</artifactId>
+						    <version>3.2.1</version>
+						</dependency>
+
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>

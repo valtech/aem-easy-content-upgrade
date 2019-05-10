@@ -35,7 +35,11 @@ import org.slf4j.LoggerFactory;
 import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessRightValidatorComparator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.ValidateAccessRightsTable;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.CreateAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.DeleteAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ModifyAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ReadAccessValidator;
 
 /**
@@ -54,14 +58,17 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     private List<AccessRightValidator> validators = new ArrayList<>();
 
     private ResourceResolver resolver;
+    private AccessValidatorContext context;
 
     /**
      * Constructor
      * 
      * @param resolver resource resolver
+     * @throws RepositoryException error setting up context
      */
-    public ValidateAccessRightsImpl(ResourceResolver resolver) {
+    public ValidateAccessRightsImpl(ResourceResolver resolver) throws RepositoryException {
         this.resolver = resolver;
+        context = new AccessValidatorContext(resolver);
     }
 
     @Override
@@ -82,22 +89,70 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         return this;
     }
 
-    @Override
-    public ValidateAccessRights canRead() {
+    private void addValidators(ValidatorCreator creator, boolean checkAccessGranted) {
         List<Resource> resources = resolveResources();
         List<Authorizable> authorizables = resolveAuthorizables();
         for (Authorizable authorizable : authorizables) {
             for (Resource resource : resources) {
-                validators.add(new ReadAccessValidator(authorizable, resource));
+                validators.add(creator.createValidator(authorizable, resource, checkAccessGranted));
             }
         }
+    }
+
+    @Override
+    public ValidateAccessRights canRead() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReadAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
         return this;
     }
 
     @Override
-    public ValidateAccessRights canWrite() {
-        // TODO Auto-generated method stub
-        return null;
+    public ValidateAccessRights canModify() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ModifyAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canCreate() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new CreateAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canDelete() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new DeleteAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotRead() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReadAccessValidator(authorizable, resource, context,
+                checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotModify() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ModifyAccessValidator(authorizable, resource, context,
+                checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotCreate() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new CreateAccessValidator(authorizable, resource, context,
+                checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotDelete() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new DeleteAccessValidator(authorizable, resource, context,
+                checkAccessGranted), false);
+        return this;
     }
 
     @Override
@@ -143,6 +198,13 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
             }
         }
         return resources;
+    }
+
+    @FunctionalInterface
+    private static interface ValidatorCreator {
+
+        AccessRightValidator createValidator(Authorizable authorizable, Resource resource, boolean checkAccessGranted);
+
     }
 
 }

@@ -55,13 +55,14 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
     public Map<String, BindingVariable> getBindingVariables(ScriptContext context) {
         Map<String, BindingVariable> variables = new HashMap<String, BindingVariable>();
         try {
-            BindingVariable aecuVar =
-                    new BindingVariable(new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver()),
-                            AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
+            BindingVariable aecuVar = new BindingVariable(
+                    new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(),
+                            resourceResolverService.getAdminResourceResolver()),
+                    AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
             variables.put("aecu", aecuVar);
         } catch (LoginException e) {
             LOG.error(
-                    "Failed to get resource resolver for aecu-content-migrator, make sure you all the configurations needed for this system user are deployed.");
+                    "Failed to get resource resolver for aecu-content-migrator or aecu-admin, make sure you all the configurations needed for this system user are deployed.");
         }
         return variables;
     }
