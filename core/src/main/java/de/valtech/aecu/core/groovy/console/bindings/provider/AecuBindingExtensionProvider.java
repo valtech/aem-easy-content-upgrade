@@ -53,7 +53,7 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
     @Override
     public Map<String, BindingVariable> getBindingVariables(ScriptContext context) {
-        Map<String, BindingVariable> variables = new HashMap<String, BindingVariable>();
+        Map<String, BindingVariable> variables = new HashMap<>();
         try {
             BindingVariable aecuVar = new BindingVariable(
                     new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(),

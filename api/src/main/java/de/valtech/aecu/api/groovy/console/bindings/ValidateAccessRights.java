@@ -73,6 +73,20 @@ public interface ValidateAccessRights {
     ValidateAccessRights canDelete();
 
     /**
+     * Checks if read ACL access is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canReadAcl();
+
+    /**
+     * Checks if write ACL access is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canWriteAcl();
+
+    /**
      * Checks if read access is NOT granted.
      * 
      * @return access right validation builder
@@ -99,6 +113,20 @@ public interface ValidateAccessRights {
      * @return access right validation builder
      */
     ValidateAccessRights cannotDelete();
+
+    /**
+     * Checks if read ACL access is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotReadAcl();
+
+    /**
+     * Checks if write ACL access is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotWriteAcl();
 
     /**
      * Checks if the specified rights are correctly set.

@@ -41,6 +41,8 @@ import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.Crea
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.DeleteAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ModifyAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ReadAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ReadAclAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.WriteAclAccessValidator;
 
 /**
  * Validates access rights for users or groups.
@@ -89,6 +91,12 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         return this;
     }
 
+    /**
+     * Adds validators based on set authorizables and resources.
+     * 
+     * @param creator            creator function for validator
+     * @param checkAccessGranted check for granted access
+     */
     private void addValidators(ValidatorCreator creator, boolean checkAccessGranted) {
         List<Resource> resources = resolveResources();
         List<Authorizable> authorizables = resolveAuthorizables();
@@ -128,6 +136,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
+    public ValidateAccessRights canReadAcl() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReadAclAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canWriteAcl() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new WriteAclAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
     public ValidateAccessRights cannotRead() {
         addValidators((authorizable, resource, checkAccessGranted) -> new ReadAccessValidator(authorizable, resource, context,
                 checkAccessGranted), false);
@@ -156,6 +178,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
+    public ValidateAccessRights cannotReadAcl() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReadAclAccessValidator(authorizable, resource, context,
+                checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotWriteAcl() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new WriteAclAccessValidator(authorizable, resource, context,
+                checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
     public String validate() {
         validators.sort(new AccessRightValidatorComparator());
         ValidateAccessRightsTable table = new ValidateAccessRightsTable();
@@ -165,6 +201,11 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         return table.getText();
     }
 
+    /**
+     * Resolves authorizables to be checked.
+     * 
+     * @return authorizables
+     */
     private List<Authorizable> resolveAuthorizables() {
         List<Authorizable> authorizables = new ArrayList<>();
         UserManager userManager = resolver.adaptTo(UserManager.class);
@@ -200,9 +241,22 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         return resources;
     }
 
+    /**
+     * Functional interface to create validator objects.
+     * 
+     * @author Roland Gruber
+     */
     @FunctionalInterface
     private static interface ValidatorCreator {
 
+        /**
+         * Creates a new validator object.
+         * 
+         * @param authorizable       user/group
+         * @param resource           resource
+         * @param checkAccessGranted check for granted access
+         * @return validator
+         */
         AccessRightValidator createValidator(Authorizable authorizable, Resource resource, boolean checkAccessGranted);
 
     }
