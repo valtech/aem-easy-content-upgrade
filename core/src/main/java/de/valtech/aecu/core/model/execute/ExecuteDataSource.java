@@ -48,7 +48,7 @@ import de.valtech.aecu.api.service.AecuService;
 public class ExecuteDataSource {
 
     private static final String ITEM_TYPE = "valtech/aecu/tools/execute/dataitem";
-    private static final String ALLOWED_PATH = "/etc/groovyconsole/scripts";
+    private static final String ALLOWED_PATH = "/var/groovyconsole/scripts";
 
     @SlingObject
     SlingHttpServletRequest request;
