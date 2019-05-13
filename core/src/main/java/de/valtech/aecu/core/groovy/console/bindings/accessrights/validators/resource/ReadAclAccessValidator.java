@@ -16,43 +16,42 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.api.groovy.console.bindings.accessrights;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource;
 
+import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.sling.api.resource.Resource;
-import org.osgi.annotation.versioning.ConsumerType;
+
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.BaseAccessRightsValidator;
 
 /**
- * Performs an access right validation on a given resource.
+ * Checks if read ACL access is available.
  * 
  * @author Roland Gruber
  */
-@ConsumerType
-public interface AccessRightValidator {
+public class ReadAclAccessValidator extends BaseAccessRightsValidator {
 
     /**
-     * Performs the provided check.
-     */
-    ValidationResult validate();
-
-    /**
-     * Returns a descriptive label for the check.
+     * Constructor.
      * 
-     * @return label
+     * @param authorizable       user or group
+     * @param resource           resource to check
+     * @param checkAccessGranted checks if the access is granted or denied
      */
-    String getLabel();
+    public ReadAclAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+            boolean checkAccessGranted) {
+        super(authorizable, resource, context, checkAccessGranted);
+    }
 
-    /**
-     * Returns the user or group to check.
-     * 
-     * @return user/group
-     */
-    String getAuthorizableId();
+    @Override
+    public ValidationResult validate() {
+        return checkAction(RIGHT_READ_ACL);
+    }
 
-    /**
-     * Returns the resource to check.
-     * 
-     * @return resource
-     */
-    Resource getResource();
+    @Override
+    public String getLabel() {
+        return getCheckAccessGranted() ? "Read ACL" : "Cannot Read ACL";
+    }
 
 }

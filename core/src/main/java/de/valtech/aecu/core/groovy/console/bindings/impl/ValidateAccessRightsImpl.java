@@ -37,12 +37,13 @@ import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValid
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessRightValidatorComparator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.ValidateAccessRightsTable;
-import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.CreateAccessValidator;
-import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.DeleteAccessValidator;
-import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ModifyAccessValidator;
-import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ReadAccessValidator;
-import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.ReadAclAccessValidator;
-import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.WriteAclAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ReadPageAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.CreateAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.DeleteAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ModifyAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ReadAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ReadAclAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.WriteAclAccessValidator;
 
 /**
  * Validates access rights for users or groups.
@@ -54,10 +55,9 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     private static final Logger LOG = LoggerFactory.getLogger(ValidateAccessRightsImpl.class);
 
     private Set<String> pathsToCheck = new HashSet<>();
-
     private Set<String> authorizablesToCheck = new HashSet<>();
-
     private List<AccessRightValidator> validators = new ArrayList<>();
+    private List<String> warnings = new ArrayList<>();
 
     private ResourceResolver resolver;
     private AccessValidatorContext context;
@@ -115,44 +115,16 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
-    public ValidateAccessRights canModify() {
-        addValidators((authorizable, resource, checkAccessGranted) -> new ModifyAccessValidator(authorizable, resource, context,
-                checkAccessGranted), true);
-        return this;
-    }
-
-    @Override
-    public ValidateAccessRights canCreate() {
-        addValidators((authorizable, resource, checkAccessGranted) -> new CreateAccessValidator(authorizable, resource, context,
-                checkAccessGranted), true);
-        return this;
-    }
-
-    @Override
-    public ValidateAccessRights canDelete() {
-        addValidators((authorizable, resource, checkAccessGranted) -> new DeleteAccessValidator(authorizable, resource, context,
-                checkAccessGranted), true);
-        return this;
-    }
-
-    @Override
-    public ValidateAccessRights canReadAcl() {
-        addValidators((authorizable, resource, checkAccessGranted) -> new ReadAclAccessValidator(authorizable, resource, context,
-                checkAccessGranted), true);
-        return this;
-    }
-
-    @Override
-    public ValidateAccessRights canWriteAcl() {
-        addValidators((authorizable, resource, checkAccessGranted) -> new WriteAclAccessValidator(authorizable, resource, context,
-                checkAccessGranted), true);
-        return this;
-    }
-
-    @Override
     public ValidateAccessRights cannotRead() {
         addValidators((authorizable, resource, checkAccessGranted) -> new ReadAccessValidator(authorizable, resource, context,
                 checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canModify() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ModifyAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
         return this;
     }
 
@@ -164,9 +136,23 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
+    public ValidateAccessRights canCreate() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new CreateAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
     public ValidateAccessRights cannotCreate() {
         addValidators((authorizable, resource, checkAccessGranted) -> new CreateAccessValidator(authorizable, resource, context,
                 checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canDelete() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new DeleteAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
         return this;
     }
 
@@ -178,9 +164,23 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
+    public ValidateAccessRights canReadAcl() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReadAclAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
     public ValidateAccessRights cannotReadAcl() {
         addValidators((authorizable, resource, checkAccessGranted) -> new ReadAclAccessValidator(authorizable, resource, context,
                 checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canWriteAcl() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new WriteAclAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
         return this;
     }
 
@@ -192,13 +192,31 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
+    public ValidateAccessRights canReadPage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReadPageAccessValidator(authorizable, resource, context,
+                checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotReadPage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReadPageAccessValidator(authorizable, resource, context,
+                checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
     public String validate() {
         validators.sort(new AccessRightValidatorComparator());
         ValidateAccessRightsTable table = new ValidateAccessRightsTable();
         for (AccessRightValidator validator : validators) {
             table.add(validator);
         }
-        return table.getText();
+        StringBuilder output = new StringBuilder();
+        output.append(String.join("\n", warnings));
+        output.append("\n");
+        output.append(table.getText());
+        return output.toString();
     }
 
     /**
@@ -215,9 +233,13 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
                 authorizable = userManager.getAuthorizable(authorizableName);
                 if (authorizable != null) {
                     authorizables.add(authorizable);
+                } else {
+                    warnings.add("Unable to resolve " + authorizableName);
                 }
             } catch (RepositoryException e) {
-                LOG.warn("Unable to resolve {}", authorizableName);
+                String message = "Unable to resolve " + authorizableName;
+                LOG.warn(message);
+                warnings.add(message);
             }
         }
         return authorizables;
@@ -233,7 +255,9 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         for (String path : pathsToCheck) {
             Resource resource = resolver.getResource(path);
             if (resource == null) {
-                LOG.warn("Unable to resolve {}", path);
+                String message = "Unable to resolve " + path;
+                LOG.warn(message);
+                warnings.add(message);
             } else {
                 resources.add(resource);
             }

@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.security.util.CqActions;
+import com.day.cq.wcm.api.PageManager;
 
 /**
  * Contains common objects for access validation.
@@ -48,12 +49,20 @@ public class AccessValidatorContext {
     private ResourceResolver resolver;
     private Session session;
     private CqActions cqActions;
+    private PageManager adminPageManager;
     private Map<String, Set<Principal>> principalCache = new HashMap<>();
 
-    public AccessValidatorContext(ResourceResolver resolver) throws RepositoryException {
-        this.resolver = resolver;
-        this.session = resolver.adaptTo(Session.class);
+    /**
+     * Constructor
+     * 
+     * @param adminResolver admin resource resolver
+     * @throws RepositoryException error setting up CqActions
+     */
+    public AccessValidatorContext(ResourceResolver adminResolver) throws RepositoryException {
+        this.resolver = adminResolver;
+        this.session = adminResolver.adaptTo(Session.class);
         this.cqActions = new CqActions(session);
+        this.adminPageManager = adminResolver.adaptTo(PageManager.class);
     }
 
     /**
@@ -81,6 +90,15 @@ public class AccessValidatorContext {
      */
     public CqActions getCqActions() {
         return cqActions;
+    }
+
+    /**
+     * Returns the admin page manager.
+     * 
+     * @return page manager
+     */
+    public PageManager getAdminPageManager() {
+        return adminPageManager;
     }
 
     public Set<Principal> getPrincipals(Authorizable authorizable) {

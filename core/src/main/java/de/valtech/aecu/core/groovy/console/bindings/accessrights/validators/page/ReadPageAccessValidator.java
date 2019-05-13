@@ -16,41 +16,61 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page;
 
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.sling.api.resource.Resource;
 
+import com.day.cq.wcm.api.Page;
+
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ReadAccessValidator;
 
 /**
- * Checks if delete access is available.
+ * Checks if read access to pages is available.
  * 
  * @author Roland Gruber
  */
-public class DeleteAccessValidator extends BaseAccessRightsValidator {
+public class ReadPageAccessValidator extends ReadAccessValidator {
 
     /**
      * Constructor.
      * 
      * @param authorizable       user or group
-     * @param resource           resource to check
+     * @param resource           page to check
      * @param checkAccessGranted checks if the access is granted or denied
      */
-    public DeleteAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+    public ReadPageAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
             boolean checkAccessGranted) {
         super(authorizable, resource, context, checkAccessGranted);
     }
 
     @Override
-    public boolean validate() {
-        boolean permissionOk = checkAction(RIGHT_DELETE);
-        return permissionOk;
+    public ValidationResult validate() {
+        ValidationResult resourceResult = super.validate();
+        if (!resourceResult.isSuccessful()) {
+            return resourceResult;
+        }
+        if (!pageExists()) {
+            return new ValidationResult(false, true, "Page not found");
+        }
+        return new ValidationResult(false, false, null);
+    }
+
+    /**
+     * Checks if the given page exists.
+     * 
+     * @return page exists
+     */
+    private boolean pageExists() {
+        Page page = getContext().getAdminPageManager().getPage(getResource().getPath());
+        return page != null;
     }
 
     @Override
     public String getLabel() {
-        return getCheckAccessGranted() ? "Delete" : "Cannot Delete";
+        return getCheckAccessGranted() ? "Read Page" : "Cannot Read Page";
     }
 
 }

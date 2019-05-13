@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
 
@@ -43,7 +44,7 @@ public class ValidateAccessRightsTable {
      * @param validator validator
      */
     public void add(AccessRightValidator validator) {
-        boolean success = validator.validate();
+        ValidationResult result = validator.validate();
         String authorizable = validator.getAuthorizableId();
         String path = validator.getResource().getPath();
         if (rows.isEmpty()) {
@@ -57,7 +58,7 @@ public class ValidateAccessRightsTable {
             lastRow = new TableRow(authorizable, path, rows.get(rows.size() - 1));
             rows.add(lastRow);
         }
-        lastRow.addResult(validator.getLabel(), success);
+        lastRow.addResult(validator.getLabel(), result);
     }
 
     /**
@@ -93,6 +94,7 @@ public class ValidateAccessRightsTable {
         private String authorizable;
         private String path;
         private List<String> checkLabelsOk = new ArrayList<>();
+        private List<String> checkLabelsWarning = new ArrayList<>();
         private List<String> checkLabelsFail = new ArrayList<>();
         private TableRow lastRow;
 
@@ -111,17 +113,24 @@ public class ValidateAccessRightsTable {
         /**
          * Adds a result entry.
          * 
-         * @param label   label of check
-         * @param success success or fail
+         * @param label  label of check
+         * @param result success or fail
          */
-        public void addResult(String label, boolean success) {
-            if (success) {
+        public void addResult(String label, ValidationResult result) {
+            if (result.isSuccessful()) {
                 checkLabelsOk.add(label);
+            } else if (result.hasWarnings()) {
+                checkLabelsWarning.add(label);
             } else {
                 checkLabelsFail.add(label);
             }
         }
 
+        /**
+         * Returns the text for the result table.
+         * 
+         * @return text
+         */
         public String getCheckResultsText() {
             Collections.sort(checkLabelsOk);
             Collections.sort(checkLabelsFail);
@@ -130,7 +139,14 @@ public class ValidateAccessRightsTable {
                 String labels = String.join(", ", checkLabelsFail);
                 output.append("FAIL: " + labels);
             }
-            if (!checkLabelsOk.isEmpty() && !checkLabelsFail.isEmpty()) {
+            if (!checkLabelsFail.isEmpty() && !checkLabelsWarning.isEmpty()) {
+                output.append("; ");
+            }
+            if (!checkLabelsWarning.isEmpty()) {
+                String labels = String.join(", ", checkLabelsWarning);
+                output.append("WARNING: " + labels);
+            }
+            if ((!checkLabelsFail.isEmpty() || !checkLabelsWarning.isEmpty()) && !checkLabelsOk.isEmpty()) {
                 output.append("; ");
             }
             if (!checkLabelsOk.isEmpty()) {

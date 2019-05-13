@@ -16,12 +16,14 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource;
 
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.sling.api.resource.Resource;
 
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.BaseAccessRightsValidator;
 
 /**
  * Checks if modify access is available.
@@ -43,9 +45,8 @@ public class ModifyAccessValidator extends BaseAccessRightsValidator {
     }
 
     @Override
-    public boolean validate() {
-        boolean permissionOk = checkAction(RIGHT_MODIFY);
-        return permissionOk;
+    public ValidationResult validate() {
+        return checkAction(RIGHT_MODIFY);
     }
 
     @Override

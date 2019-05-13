@@ -18,41 +18,64 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.accessrights;
 
-import org.apache.sling.api.resource.Resource;
-import org.osgi.annotation.versioning.ConsumerType;
-
 /**
- * Performs an access right validation on a given resource.
+ * Result for an access right validation.
  * 
  * @author Roland Gruber
  */
-@ConsumerType
-public interface AccessRightValidator {
+public class ValidationResult {
+
+    private boolean hasErrors;
+    private boolean hasWarnings;
+    private String message;
 
     /**
-     * Performs the provided check.
-     */
-    ValidationResult validate();
-
-    /**
-     * Returns a descriptive label for the check.
+     * Constructor.
      * 
-     * @return label
+     * @param hasErrors   errors occured
+     * @param hasWarnings warnings occured
+     * @param message     message text in case of errors/warnings
      */
-    String getLabel();
+    public ValidationResult(boolean hasErrors, boolean hasWarnings, String message) {
+        this.hasErrors = hasErrors;
+        this.hasWarnings = hasWarnings;
+        this.message = message;
+    }
 
     /**
-     * Returns the user or group to check.
+     * Returns if errors occured.
      * 
-     * @return user/group
+     * @return errors occured
      */
-    String getAuthorizableId();
+    public boolean hasErrors() {
+        return hasErrors;
+    }
 
     /**
-     * Returns the resource to check.
+     * Returns if warnings occured.
      * 
-     * @return resource
+     * @return warnings occured
      */
-    Resource getResource();
+    public boolean hasWarnings() {
+        return hasWarnings;
+    }
+
+    /**
+     * Returns if validation was successful.
+     * 
+     * @return successful
+     */
+    public boolean isSuccessful() {
+        return !hasErrors && !hasWarnings;
+    }
+
+    /**
+     * Returns the error/warning message if any.
+     * 
+     * @return message
+     */
+    public String getMessage() {
+        return message;
+    }
 
 }

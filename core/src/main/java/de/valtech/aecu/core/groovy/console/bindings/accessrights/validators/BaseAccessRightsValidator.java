@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.security.util.CqActions;
 
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
 
 /**
@@ -99,17 +100,27 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
         return getAuthorizableId() + " - " + resource.getPath() + " - " + getLabel();
     }
 
-    protected boolean checkAction(String action) {
+    protected ValidationResult checkAction(String action) {
         CqActions actions = context.getCqActions();
         try {
             Collection<String> allowedActions =
                     actions.getAllowedActions(resource.getPath(), context.getPrincipals(authorizable));
             boolean granted = allowedActions.contains(action);
-            return checkAccessGranted ? granted : !granted;
+            boolean failed = checkAccessGranted ? !granted : granted;
+            return new ValidationResult(failed, false, null);
         } catch (RepositoryException e) {
             LOG.error("Unable to check actions", e);
+            return new ValidationResult(true, false, e.getMessage());
         }
-        return false;
+    }
+
+    /**
+     * Returns the validation context.
+     * 
+     * @return context context
+     */
+    public AccessValidatorContext getContext() {
+        return context;
     }
 
 }

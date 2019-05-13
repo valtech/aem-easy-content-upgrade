@@ -16,19 +16,21 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource;
 
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.sling.api.resource.Resource;
 
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.BaseAccessRightsValidator;
 
 /**
- * Checks if create access is available.
+ * Checks if delete access is available.
  * 
  * @author Roland Gruber
  */
-public class CreateAccessValidator extends BaseAccessRightsValidator {
+public class DeleteAccessValidator extends BaseAccessRightsValidator {
 
     /**
      * Constructor.
@@ -37,20 +39,19 @@ public class CreateAccessValidator extends BaseAccessRightsValidator {
      * @param resource           resource to check
      * @param checkAccessGranted checks if the access is granted or denied
      */
-    public CreateAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+    public DeleteAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
             boolean checkAccessGranted) {
         super(authorizable, resource, context, checkAccessGranted);
     }
 
     @Override
-    public boolean validate() {
-        boolean permissionOk = checkAction(RIGHT_CREATE);
-        return permissionOk;
+    public ValidationResult validate() {
+        return checkAction(RIGHT_DELETE);
     }
 
     @Override
     public String getLabel() {
-        return getCheckAccessGranted() ? "Create" : "Cannot Create";
+        return getCheckAccessGranted() ? "Delete" : "Cannot Delete";
     }
 
 }

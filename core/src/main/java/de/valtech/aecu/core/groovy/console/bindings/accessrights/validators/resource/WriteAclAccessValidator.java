@@ -16,19 +16,21 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource;
 
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.sling.api.resource.Resource;
 
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.BaseAccessRightsValidator;
 
 /**
- * Checks if read access is available.
+ * Checks if write ACL access is available.
  * 
  * @author Roland Gruber
  */
-public class ReadAccessValidator extends BaseAccessRightsValidator {
+public class WriteAclAccessValidator extends BaseAccessRightsValidator {
 
     /**
      * Constructor.
@@ -37,20 +39,19 @@ public class ReadAccessValidator extends BaseAccessRightsValidator {
      * @param resource           resource to check
      * @param checkAccessGranted checks if the access is granted or denied
      */
-    public ReadAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+    public WriteAclAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
             boolean checkAccessGranted) {
         super(authorizable, resource, context, checkAccessGranted);
     }
 
     @Override
-    public boolean validate() {
-        boolean permissionOk = checkAction(RIGHT_READ);
-        return permissionOk;
+    public ValidationResult validate() {
+        return checkAction(RIGHT_WRITE_ACL);
     }
 
     @Override
     public String getLabel() {
-        return getCheckAccessGranted() ? "Read" : "Cannot Read";
+        return getCheckAccessGranted() ? "Write ACL" : "Cannot Write ACL";
     }
 
 }

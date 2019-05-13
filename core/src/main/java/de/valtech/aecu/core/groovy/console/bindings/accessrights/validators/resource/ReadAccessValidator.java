@@ -16,19 +16,21 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators;
+package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource;
 
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.sling.api.resource.Resource;
 
+import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.BaseAccessRightsValidator;
 
 /**
- * Checks if read ACL access is available.
+ * Checks if read access is available.
  * 
  * @author Roland Gruber
  */
-public class ReadAclAccessValidator extends BaseAccessRightsValidator {
+public class ReadAccessValidator extends BaseAccessRightsValidator {
 
     /**
      * Constructor.
@@ -37,20 +39,19 @@ public class ReadAclAccessValidator extends BaseAccessRightsValidator {
      * @param resource           resource to check
      * @param checkAccessGranted checks if the access is granted or denied
      */
-    public ReadAclAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+    public ReadAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
             boolean checkAccessGranted) {
         super(authorizable, resource, context, checkAccessGranted);
     }
 
     @Override
-    public boolean validate() {
-        boolean permissionOk = checkAction(RIGHT_READ_ACL);
-        return permissionOk;
+    public ValidationResult validate() {
+        return checkAction(RIGHT_READ);
     }
 
     @Override
     public String getLabel() {
-        return getCheckAccessGranted() ? "Read ACL" : "Cannot Read ACL";
+        return getCheckAccessGranted() ? "Read" : "Cannot Read";
     }
 
 }
