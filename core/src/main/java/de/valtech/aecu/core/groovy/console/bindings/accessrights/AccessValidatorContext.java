@@ -121,4 +121,11 @@ public class AccessValidatorContext {
         return principals;
     }
 
+    /**
+     * Cleans up any resources created by the context.
+     */
+    public void cleanup() {
+
+    }
+
 }

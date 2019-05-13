@@ -37,12 +37,12 @@ public interface ValidateAccessRights {
     ValidateAccessRights forPaths(String... paths);
 
     /**
-     * Checks the permissions for specific users or groups.
+     * Checks the permissions for specific groups.
      * 
-     * @param authorizables user or group names
+     * @param groups group names
      * @return access right validation builder
      */
-    ValidateAccessRights forAuthorizables(String... authorizables);
+    ValidateAccessRights forGroups(String... groups);
 
     /**
      * Checks if read access is granted.

@@ -18,7 +18,7 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page;
 
-import org.apache.jackrabbit.api.security.user.Authorizable;
+import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
@@ -37,13 +37,12 @@ public class ReadPageAccessValidator extends ReadAccessValidator {
     /**
      * Constructor.
      * 
-     * @param authorizable       user or group
+     * @param group              group
      * @param resource           page to check
      * @param checkAccessGranted checks if the access is granted or denied
      */
-    public ReadPageAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
-            boolean checkAccessGranted) {
-        super(authorizable, resource, context, checkAccessGranted);
+    public ReadPageAccessValidator(Group group, Resource resource, AccessValidatorContext context, boolean checkAccessGranted) {
+        super(group, resource, context, checkAccessGranted);
     }
 
     @Override

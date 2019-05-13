@@ -18,7 +18,7 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource;
 
-import org.apache.jackrabbit.api.security.user.Authorizable;
+import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.sling.api.resource.Resource;
 
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
@@ -35,13 +35,12 @@ public class ReadAccessValidator extends BaseAccessRightsValidator {
     /**
      * Constructor.
      * 
-     * @param authorizable       user or group
+     * @param group              group
      * @param resource           resource to check
      * @param checkAccessGranted checks if the access is granted or denied
      */
-    public ReadAccessValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
-            boolean checkAccessGranted) {
-        super(authorizable, resource, context, checkAccessGranted);
+    public ReadAccessValidator(Group group, Resource resource, AccessValidatorContext context, boolean checkAccessGranted) {
+        super(group, resource, context, checkAccessGranted);
     }
 
     @Override

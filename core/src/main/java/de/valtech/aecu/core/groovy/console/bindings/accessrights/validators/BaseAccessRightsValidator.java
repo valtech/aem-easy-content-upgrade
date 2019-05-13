@@ -23,7 +23,7 @@ import java.util.Collection;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.api.security.user.Authorizable;
+import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.sling.api.resource.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
     public static final String RIGHT_READ_ACL = "acl_read";
     public static final String RIGHT_WRITE_ACL = "acl_edit";
 
-    protected Authorizable authorizable;
+    protected Group group;
     private Resource resource;
     private AccessValidatorContext context;
     private boolean checkAccessGranted;
@@ -58,25 +58,25 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
     /**
      * Constructor.
      * 
-     * @param authorizable       user or group
+     * @param group              group
      * @param resource           resource to check
      * @param context            context
      * @param checkAccessGranted check for granted permission
      */
-    protected BaseAccessRightsValidator(Authorizable authorizable, Resource resource, AccessValidatorContext context,
+    protected BaseAccessRightsValidator(Group group, Resource resource, AccessValidatorContext context,
             boolean checkAccessGranted) {
-        this.authorizable = authorizable;
+        this.group = group;
         this.resource = resource;
         this.context = context;
         this.checkAccessGranted = checkAccessGranted;
     }
 
     @Override
-    public String getAuthorizableId() {
+    public String getGroupId() {
         try {
-            return authorizable.getID();
+            return group.getID();
         } catch (RepositoryException e) {
-            LOG.error("Authorizable cannot be resolved", e);
+            LOG.error("Group cannot be resolved", e);
             return StringUtils.EMPTY;
         }
     }
@@ -97,14 +97,13 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
 
     @Override
     public String toString() {
-        return getAuthorizableId() + " - " + resource.getPath() + " - " + getLabel();
+        return getGroupId() + " - " + resource.getPath() + " - " + getLabel();
     }
 
     protected ValidationResult checkAction(String action) {
         CqActions actions = context.getCqActions();
         try {
-            Collection<String> allowedActions =
-                    actions.getAllowedActions(resource.getPath(), context.getPrincipals(authorizable));
+            Collection<String> allowedActions = actions.getAllowedActions(resource.getPath(), context.getPrincipals(group));
             boolean granted = allowedActions.contains(action);
             boolean failed = checkAccessGranted ? !granted : granted;
             return new ValidationResult(failed, false, null);

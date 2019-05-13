@@ -20,12 +20,14 @@ package de.valtech.aecu.core.groovy.console.bindings.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.jcr.RepositoryException;
 
 import org.apache.jackrabbit.api.security.user.Authorizable;
+import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -57,7 +59,7 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     private Set<String> pathsToCheck = new HashSet<>();
     private Set<String> authorizablesToCheck = new HashSet<>();
     private List<AccessRightValidator> validators = new ArrayList<>();
-    private List<String> warnings = new ArrayList<>();
+    private Set<String> warnings = new LinkedHashSet<>();
 
     private ResourceResolver resolver;
     private AccessValidatorContext context;
@@ -83,9 +85,9 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
-    public ValidateAccessRights forAuthorizables(String... authorizables) {
+    public ValidateAccessRights forGroups(String... groups) {
         authorizablesToCheck.clear();
-        for (String authorizable : authorizables) {
+        for (String authorizable : groups) {
             authorizablesToCheck.add(authorizable);
         }
         return this;
@@ -99,10 +101,10 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
      */
     private void addValidators(ValidatorCreator creator, boolean checkAccessGranted) {
         List<Resource> resources = resolveResources();
-        List<Authorizable> authorizables = resolveAuthorizables();
-        for (Authorizable authorizable : authorizables) {
+        List<Group> groups = resolveGroups();
+        for (Group group : groups) {
             for (Resource resource : resources) {
-                validators.add(creator.createValidator(authorizable, resource, checkAccessGranted));
+                validators.add(creator.createValidator(group, resource, checkAccessGranted));
             }
         }
     }
@@ -207,16 +209,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
 
     @Override
     public String validate() {
-        validators.sort(new AccessRightValidatorComparator());
-        ValidateAccessRightsTable table = new ValidateAccessRightsTable();
-        for (AccessRightValidator validator : validators) {
-            table.add(validator);
+        try {
+            validators.sort(new AccessRightValidatorComparator());
+            ValidateAccessRightsTable table = new ValidateAccessRightsTable();
+            for (AccessRightValidator validator : validators) {
+                table.add(validator);
+            }
+            StringBuilder output = new StringBuilder();
+            output.append(String.join("\n", warnings));
+            output.append("\n");
+            output.append(table.getText());
+            return output.toString();
+        } finally {
+            context.cleanup();
         }
-        StringBuilder output = new StringBuilder();
-        output.append(String.join("\n", warnings));
-        output.append("\n");
-        output.append(table.getText());
-        return output.toString();
     }
 
     /**
@@ -224,20 +230,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
      * 
      * @return authorizables
      */
-    private List<Authorizable> resolveAuthorizables() {
-        List<Authorizable> authorizables = new ArrayList<>();
+    private List<Group> resolveGroups() {
+        List<Group> authorizables = new ArrayList<>();
         UserManager userManager = resolver.adaptTo(UserManager.class);
-        for (String authorizableName : authorizablesToCheck) {
+        for (String groupName : authorizablesToCheck) {
             Authorizable authorizable;
             try {
-                authorizable = userManager.getAuthorizable(authorizableName);
-                if (authorizable != null) {
-                    authorizables.add(authorizable);
+                authorizable = userManager.getAuthorizable(groupName);
+                if ((authorizable != null) && authorizable.isGroup()) {
+                    authorizables.add((Group) authorizable);
                 } else {
-                    warnings.add("Unable to resolve " + authorizableName);
+                    warnings.add("Unable to resolve " + groupName);
                 }
             } catch (RepositoryException e) {
-                String message = "Unable to resolve " + authorizableName;
+                String message = "Unable to resolve " + groupName;
                 LOG.warn(message);
                 warnings.add(message);
             }
@@ -276,12 +282,12 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         /**
          * Creates a new validator object.
          * 
-         * @param authorizable       user/group
+         * @param group              group
          * @param resource           resource
          * @param checkAccessGranted check for granted access
          * @return validator
          */
-        AccessRightValidator createValidator(Authorizable authorizable, Resource resource, boolean checkAccessGranted);
+        AccessRightValidator createValidator(Group group, Resource resource, boolean checkAccessGranted);
 
     }
 

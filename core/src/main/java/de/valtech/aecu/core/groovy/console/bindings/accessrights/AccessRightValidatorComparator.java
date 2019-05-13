@@ -31,8 +31,8 @@ public class AccessRightValidatorComparator implements Comparator<AccessRightVal
 
     @Override
     public int compare(AccessRightValidator o1, AccessRightValidator o2) {
-        if (!o1.getAuthorizableId().equals(o2.getAuthorizableId())) {
-            return o1.getAuthorizableId().compareTo(o2.getAuthorizableId());
+        if (!o1.getGroupId().equals(o2.getGroupId())) {
+            return o1.getGroupId().compareTo(o2.getGroupId());
         }
         if (!o1.getResource().getPath().equals(o2.getResource().getPath())) {
             return o1.getResource().getPath().compareTo(o2.getResource().getPath());

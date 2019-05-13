@@ -46,7 +46,7 @@ public interface AccessRightValidator {
      * 
      * @return user/group
      */
-    String getAuthorizableId();
+    String getGroupId();
 
     /**
      * Returns the resource to check.

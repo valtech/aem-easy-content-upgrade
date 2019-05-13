@@ -45,7 +45,7 @@ public class ValidateAccessRightsTable {
      */
     public void add(AccessRightValidator validator) {
         ValidationResult result = validator.validate();
-        String authorizable = validator.getAuthorizableId();
+        String authorizable = validator.getGroupId();
         String path = validator.getResource().getPath();
         if (rows.isEmpty()) {
             rows.add(new TableRow(authorizable, path, null));
