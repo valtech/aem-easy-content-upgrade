@@ -31,6 +31,7 @@ import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,9 +71,10 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
      * @param resolver resource resolver
      * @throws RepositoryException error setting up context
      */
-    public ValidateAccessRightsImpl(ResourceResolver resolver) throws RepositoryException {
+    public ValidateAccessRightsImpl(ResourceResolverFactory resourceResolverFactory, ResourceResolver resolver)
+            throws RepositoryException {
         this.resolver = resolver;
-        context = new AccessValidatorContext(resolver);
+        context = new AccessValidatorContext(resourceResolverFactory, resolver);
     }
 
     @Override

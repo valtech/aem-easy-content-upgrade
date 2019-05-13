@@ -22,9 +22,11 @@ import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
 
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext.TestUser;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ReadAccessValidator;
 
 /**
@@ -54,7 +56,9 @@ public class ReadPageAccessValidator extends ReadAccessValidator {
         if (!pageExists()) {
             return new ValidationResult(false, true, "Page not found");
         }
-        return new ValidationResult(false, false, null);
+        boolean readAccess = canReadPageWithUser();
+        boolean failed = getCheckAccessGranted() ? !readAccess : readAccess;
+        return new ValidationResult(failed, false, null);
     }
 
     /**
@@ -64,6 +68,21 @@ public class ReadPageAccessValidator extends ReadAccessValidator {
      */
     private boolean pageExists() {
         Page page = getContext().getAdminPageManager().getPage(getResource().getPath());
+        return page != null;
+    }
+
+    /**
+     * Checks if page can be read with user rights.
+     * 
+     * @return can read page
+     */
+    private boolean canReadPageWithUser() {
+        TestUser testUser = getContext().getTestUserForGroup(group);
+        if (testUser == null) {
+            return false;
+        }
+        PageManager userPageManager = testUser.getResolver().adaptTo(PageManager.class);
+        Page page = userPageManager.getPage(getResource().getPath());
         return page != null;
     }
 

@@ -21,6 +21,7 @@ package de.valtech.aecu.core.groovy.console.bindings.impl;
 import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +40,14 @@ public class AecuBindingImpl implements AecuBinding {
 
     private ResourceResolver resourceResolver;
     private ResourceResolver adminResourceResolver;
+    private ResourceResolverFactory resourceResolverFactory;
 
 
-    public AecuBindingImpl(ResourceResolver resourceResolver, ResourceResolver adminResourceResolver) {
+    public AecuBindingImpl(ResourceResolver resourceResolver, ResourceResolver adminResourceResolver,
+            ResourceResolverFactory resourceResolverFactory) {
         this.resourceResolver = resourceResolver;
         this.adminResourceResolver = adminResourceResolver;
+        this.resourceResolverFactory = resourceResolverFactory;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class AecuBindingImpl implements AecuBinding {
     @Override
     public ValidateAccessRights validateAccessRights() {
         try {
-            return new ValidateAccessRightsImpl(adminResourceResolver);
+            return new ValidateAccessRightsImpl(resourceResolverFactory, adminResourceResolver);
         } catch (RepositoryException e) {
             LOG.error("Error setting up the access right validator", e);
         }

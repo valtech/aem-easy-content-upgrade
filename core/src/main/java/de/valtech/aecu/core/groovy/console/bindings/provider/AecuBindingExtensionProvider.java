@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -49,6 +50,8 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
     private BindingExtensionProvider defaultBindingExtensionProvider;
     @Reference
     private ServiceResourceResolverService resourceResolverService;
+    @Reference
+    private ResourceResolverFactory resourceResolverFactory;
 
 
     @Override
@@ -57,7 +60,7 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
         try {
             BindingVariable aecuVar = new BindingVariable(
                     new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(),
-                            resourceResolverService.getAdminResourceResolver()),
+                            resourceResolverService.getAdminResourceResolver(), resourceResolverFactory),
                     AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
             variables.put("aecu", aecuVar);
         } catch (LoginException e) {
