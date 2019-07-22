@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -119,7 +119,7 @@ public class ExecutionResult {
 
     @Override
     public String toString() {
-        StringBuilder stringVal = new StringBuilder("Successful: " + state.name() + "Path: " + path);
+        StringBuilder stringVal = new StringBuilder("Successful: " + state.name() + "\nPath: " + path);
         if (StringUtils.isNotBlank(time)) {
             stringVal.append("\n" + "Execution time: " + time);
         }
