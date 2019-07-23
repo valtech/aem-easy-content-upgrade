@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -34,10 +34,10 @@ public interface FilterBy {
     /**
      * Checks if the given resource matches the filter criteria.
      * 
-     * @param resource     resource
-     * @param stringBuffer output buffer
+     * @param resource resource
+     * @param output   output buffer
      * @return matches
      */
-    boolean filter(@Nonnull Resource resource, @Nonnull StringBuffer stringBuffer);
+    boolean filter(@Nonnull Resource resource, @Nonnull StringBuilder output);
 
 }

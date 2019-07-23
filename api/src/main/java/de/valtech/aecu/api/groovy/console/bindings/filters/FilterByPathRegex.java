@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,9 +19,9 @@
 
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import org.apache.sling.api.resource.Resource;
-
 import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Filters resources by path. Resources who's path matches the given regex are accepted.
@@ -34,6 +34,7 @@ public class FilterByPathRegex implements FilterBy {
 
     /**
      * Constructor
+     * 
      * @param regex regular expression (standard Java pattern)
      */
     public FilterByPathRegex(@Nonnull String regex) {
@@ -41,7 +42,7 @@ public class FilterByPathRegex implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource, @Nonnull StringBuffer stringBuffer) {
+    public boolean filter(@Nonnull Resource resource, @Nonnull StringBuilder output) {
         return resource.getPath().matches(regex);
     }
 }

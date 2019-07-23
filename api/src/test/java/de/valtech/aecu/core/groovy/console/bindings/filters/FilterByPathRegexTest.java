@@ -19,7 +19,9 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
@@ -28,9 +30,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 
 /**
  * @author Roxana Muresan
@@ -44,26 +44,27 @@ public class FilterByPathRegexTest {
 
     @Before
     public void setup() {
-        when(resource.getPath()).thenReturn("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content");
+        when(resource.getPath())
+                .thenReturn("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content");
     }
 
     @Test
     public void test_whenPathNotMatches_returnFalse() {
 
-        assertFalse(new FilterByPathRegex("/we-retail/.+/climbing.+").filter(resource, new StringBuffer()));
+        assertFalse(new FilterByPathRegex("/we-retail/.+/climbing.+").filter(resource, new StringBuilder()));
 
-        assertFalse(new FilterByPathRegex("/content/we-retail/.+/women/.+").filter(resource, new StringBuffer()));
+        assertFalse(new FilterByPathRegex("/content/we-retail/.+/women/.+").filter(resource, new StringBuilder()));
     }
 
     @Test
     public void test_whenPathNotMatches_returnTrue() {
 
-        assertTrue(new FilterByPathRegex(".+").filter(resource, new StringBuffer()));
+        assertTrue(new FilterByPathRegex(".+").filter(resource, new StringBuilder()));
 
-        assertTrue(new FilterByPathRegex(".+/experience/.+").filter(resource, new StringBuffer()));
+        assertTrue(new FilterByPathRegex(".+/experience/.+").filter(resource, new StringBuilder()));
 
-        assertTrue(new FilterByPathRegex("/content/we-retail/.+/climbing[^/]+/.+").filter(resource, new StringBuffer()));
+        assertTrue(new FilterByPathRegex("/content/we-retail/.+/climbing[^/]+/.+").filter(resource, new StringBuilder()));
 
-        assertTrue(new FilterByPathRegex("^/content/we-retail(/[^/]+){1,2}/experience/.+").filter(resource, new StringBuffer()));
+        assertTrue(new FilterByPathRegex("^/content/we-retail(/[^/]+){1,2}/experience/.+").filter(resource, new StringBuilder()));
     }
 }

@@ -62,7 +62,7 @@ public class ForQueryTest {
     private Action action;
 
     private BindingContext context;
-    private StringBuffer output;
+    private StringBuilder output;
     List<Action> actions;
 
 
@@ -70,7 +70,7 @@ public class ForQueryTest {
     public void setup() {
         actions = Arrays.asList(action);
         context = new BindingContext(resolver);
-        output = new StringBuffer();
+        output = new StringBuilder();
         when(resource.getResourceResolver()).thenReturn(resolver);
         when(resolver.findResources(QUERY, TYPE)).thenReturn(Arrays.asList(resource).iterator());
     }

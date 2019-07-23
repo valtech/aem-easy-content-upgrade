@@ -18,7 +18,9 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -28,9 +30,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
 
 /**
  * Tests FilterByProperty
@@ -59,7 +59,7 @@ public class FilterByPropertyTest {
         FilterByProperty filter = new FilterByProperty(NAME, null);
         when(values.get(NAME)).thenReturn(null);
 
-        assertTrue(filter.filter(resource, new StringBuffer()));
+        assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class FilterByPropertyTest {
         FilterByProperty filter = new FilterByProperty(NAME, VALUE);
         when(values.get(NAME)).thenReturn(null);
 
-        assertFalse(filter.filter(resource, new StringBuffer()));
+        assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class FilterByPropertyTest {
         FilterByProperty filter = new FilterByProperty(NAME, null);
         when(values.get(NAME)).thenReturn(VALUE);
 
-        assertFalse(filter.filter(resource, new StringBuffer()));
+        assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class FilterByPropertyTest {
         FilterByProperty filter = new FilterByProperty(NAME, VALUE);
         when(values.get(NAME)).thenReturn(VALUE);
 
-        assertTrue(filter.filter(resource, new StringBuffer()));
+        assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
 }

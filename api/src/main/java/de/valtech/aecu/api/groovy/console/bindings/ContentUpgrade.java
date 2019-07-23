@@ -460,29 +460,26 @@ public interface ContentUpgrade {
     /**
      * Saves all changes to repository.
      * 
-     * @return output
      * @throws PersistenceException error during execution
      * @throws AecuException        other error
      */
-    StringBuffer run() throws PersistenceException, AecuException;
+    void run() throws PersistenceException, AecuException;
 
     /**
      * Performs a dry-run. No changes are written to CRX.
      * 
-     * @return output
      * @throws PersistenceException error doing dry-run
      * @throws AecuException        other error
      */
-    StringBuffer dryRun() throws PersistenceException, AecuException;
+    void dryRun() throws PersistenceException, AecuException;
 
     /**
      * Executes a run or a dryRun depending on the dryRun parameter value.
      *
      * @param dryRun dryRun option
-     * @return output
      * @throws PersistenceException error during execution
      * @throws AecuException        other error
      */
-    StringBuffer run(boolean dryRun) throws PersistenceException, AecuException;
+    void run(boolean dryRun) throws PersistenceException, AecuException;
 
 }

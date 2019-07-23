@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,11 +18,11 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import org.apache.sling.api.resource.Resource;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Combines multiple filters with AND.
@@ -43,8 +43,8 @@ public class ANDFilter implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
-        boolean foundFalse = filters.parallelStream().filter(f -> f.filter(resource, stringBuffer) == false).findAny().isPresent();
+    public boolean filter(@Nonnull Resource resource, StringBuilder output) {
+        boolean foundFalse = filters.parallelStream().filter(f -> f.filter(resource, output) == false).findAny().isPresent();
         return !foundFalse;
 
     }

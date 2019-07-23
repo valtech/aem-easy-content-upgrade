@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -55,9 +55,9 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
     public Map<String, BindingVariable> getBindingVariables(ScriptContext context) {
         Map<String, BindingVariable> variables = new HashMap<String, BindingVariable>();
         try {
+            AecuBinding aecuBinding = new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(), context);
             BindingVariable aecuVar =
-                    new BindingVariable(new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver()),
-                            AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
+                    new BindingVariable(aecuBinding, AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
             variables.put("aecu", aecuVar);
         } catch (LoginException e) {
             LOG.error(
