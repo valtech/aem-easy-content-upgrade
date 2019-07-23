@@ -55,7 +55,7 @@ public abstract class TraversData {
      * @throws AecuException        other error
      */
     public abstract void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException;
+            @Nonnull StringBuilder stringBuffer, boolean dryRun) throws PersistenceException, AecuException;
 
     /**
      * Checks if the resource is still valid. E.g. this returns false if it was already deleted.
@@ -75,19 +75,19 @@ public abstract class TraversData {
     /**
      * Applies the actions on the given resource.
      * 
-     * @param resource     resource
-     * @param filter       filter
-     * @param actions      list of actions
-     * @param stringBuffer output
-     * @param dryRun       dry-run active
+     * @param resource resource
+     * @param filter   filter
+     * @param actions  list of actions
+     * @param output   output
+     * @param dryRun   dry-run active
      * @throws PersistenceException error during execution
      * @throws AecuException        other error
      */
-    protected void applyActionsOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions,
-            StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
-        if (filter == null || filter.filter(resource, stringBuffer)) {
+    protected void applyActionsOnResource(@Nonnull Resource resource, FilterBy filter, List<Action> actions, StringBuilder output,
+            boolean dryRun) throws PersistenceException, AecuException {
+        if (filter == null || filter.filter(resource, output)) {
             ResourceResolver resolver = resource.getResourceResolver();
-            runActions(stringBuffer, resource, actions);
+            runActions(output, resource, actions);
             if (!dryRun) {
                 save(resolver);
             }
@@ -111,18 +111,18 @@ public abstract class TraversData {
     /**
      * Runs the given list of actions.
      * 
-     * @param stringBuffer output buffer
-     * @param resource     resource for action
-     * @param actions      action list
+     * @param output   output buffer
+     * @param resource resource for action
+     * @param actions  action list
      * @throws PersistenceException error during action processing
      * @throws AecuException        other error
      */
-    private void runActions(@Nonnull StringBuffer stringBuffer, @Nonnull Resource resource, @Nonnull List<Action> actions)
+    private void runActions(@Nonnull StringBuilder output, @Nonnull Resource resource, @Nonnull List<Action> actions)
             throws PersistenceException, AecuException {
         for (Action action : actions) {
-            String output = action.doAction(resource);
-            if (StringUtils.isNotBlank(output)) {
-                stringBuffer.append(output + "\n");
+            String actionOutput = action.doAction(resource);
+            if (StringUtils.isNotBlank(actionOutput)) {
+                output.append(actionOutput + "\n");
             }
         }
     }

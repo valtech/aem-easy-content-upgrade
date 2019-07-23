@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,6 +20,8 @@ package de.valtech.aecu.core.groovy.console.bindings.impl;
 
 import org.apache.sling.api.resource.ResourceResolver;
 
+import com.icfolson.aem.groovy.console.api.ScriptContext;
+
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 
@@ -31,15 +33,22 @@ import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 public class AecuBindingImpl implements AecuBinding {
 
     private ResourceResolver resourceResolver;
+    private ScriptContext scriptContext;
 
-
-    public AecuBindingImpl(ResourceResolver resourceResolver) {
+    /**
+     * Constructor
+     * 
+     * @param resourceResolver resolver
+     * @param scriptContext    Groovy context
+     */
+    public AecuBindingImpl(ResourceResolver resourceResolver, ScriptContext scriptContext) {
         this.resourceResolver = resourceResolver;
+        this.scriptContext = scriptContext;
     }
 
     @Override
     public ContentUpgrade contentUpgradeBuilder() {
-        return new ContentUpgradeImpl(resourceResolver);
+        return new ContentUpgradeImpl(resourceResolver, scriptContext);
     }
 
 }

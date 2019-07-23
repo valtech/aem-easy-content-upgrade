@@ -33,6 +33,8 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.icfolson.aem.groovy.console.api.ScriptContext;
+
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
 import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
@@ -91,14 +93,22 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     private static final Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
 
     private BindingContext context = null;
+    private ScriptContext scriptContext;
 
     private List<TraversData> traversals = new ArrayList<>();
     private FilterBy filter = null;
     private List<Action> actions = new ArrayList<>();
 
 
-    public ContentUpgradeImpl(@Nonnull ResourceResolver resourceResolver) {
+    /**
+     * Constructor
+     * 
+     * @param resourceResolver resolver
+     * @param scriptContext    Groovy context
+     */
+    public ContentUpgradeImpl(@Nonnull ResourceResolver resourceResolver, ScriptContext scriptContext) {
         this.context = new BindingContext(resourceResolver);
+        this.scriptContext = scriptContext;
     }
 
     @Override
@@ -423,28 +433,28 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public StringBuffer run() throws PersistenceException, AecuException {
+    public void run() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade");
-        return run(false);
+        run(false);
     }
 
     @Override
-    public StringBuffer dryRun() throws PersistenceException, AecuException {
+    public void dryRun() throws PersistenceException, AecuException {
         LOG.debug("apply content upgrade dry");
-        return run(true);
+        run(true);
     }
 
     @Override
-    public StringBuffer run(boolean dryRun) throws PersistenceException, AecuException {
+    public void run(boolean dryRun) throws PersistenceException, AecuException {
         context.setDryRun(dryRun);
-        StringBuffer stringBuffer = new StringBuffer("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
+        StringBuilder stringBuffer = new StringBuilder("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
             traversal.traverse(context, filter, actions, stringBuffer, dryRun);
         }
         if (!dryRun) {
             context.getResolver().commit();
         }
-        return stringBuffer;
+        scriptContext.getPrintStream().append(stringBuffer);
     }
 
 }

@@ -48,19 +48,19 @@ public class ForDescendantResourcesOf extends TraversData {
 
     @Override
     public void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
+            @Nonnull StringBuilder output, boolean dryRun) throws PersistenceException, AecuException {
         ResourceResolver resourceResolver = context.getResolver();
         Resource parentResource = resourceResolver.getResource(path);
         if (parentResource != null) {
             if (includeRootResource) {
-                applyActionsOnResource(parentResource, filter, actions, stringBuffer, dryRun);
+                applyActionsOnResource(parentResource, filter, actions, output, dryRun);
             }
-            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, actions, stringBuffer, dryRun);
+            traverseChildResourcesRecursive(resourceResolver, parentResource, filter, actions, output, dryRun);
         }
     }
 
     private void traverseChildResourcesRecursive(ResourceResolver resourceResolver, Resource resource, FilterBy filter,
-            List<Action> actions, StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
+            List<Action> actions, StringBuilder output, boolean dryRun) throws PersistenceException, AecuException {
         if (resource == null || !resource.hasChildren()) {
             return;
         }
@@ -70,8 +70,8 @@ public class ForDescendantResourcesOf extends TraversData {
             if (!isResourceValid(child)) {
                 continue;
             }
-            applyActionsOnResource(child, filter, actions, stringBuffer, dryRun);
-            traverseChildResourcesRecursive(resourceResolver, child, filter, actions, stringBuffer, dryRun);
+            applyActionsOnResource(child, filter, actions, output, dryRun);
+            traverseChildResourcesRecursive(resourceResolver, child, filter, actions, output, dryRun);
         }
     }
 
