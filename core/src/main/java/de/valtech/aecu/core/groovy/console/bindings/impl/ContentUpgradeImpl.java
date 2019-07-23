@@ -447,14 +447,15 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public void run(boolean dryRun) throws PersistenceException, AecuException {
         context.setDryRun(dryRun);
-        StringBuilder stringBuffer = new StringBuilder("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
+        StringBuilder output = new StringBuilder("Running content upgrade " + (dryRun ? "DRY" : "") + "...\n");
         for (TraversData traversal : traversals) {
-            traversal.traverse(context, filter, actions, stringBuffer, dryRun);
+            traversal.traverse(context, filter, actions, output, dryRun);
         }
         if (!dryRun) {
             context.getResolver().commit();
         }
-        scriptContext.getPrintStream().append(stringBuffer);
+        output.append("\n\n");
+        scriptContext.getPrintStream().append(output);
     }
 
 }
