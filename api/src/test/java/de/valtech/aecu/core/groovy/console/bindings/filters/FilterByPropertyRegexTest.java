@@ -72,7 +72,7 @@ public class FilterByPropertyRegexTest {
         FilterByPropertyRegex filter = new FilterByPropertyRegex(NAME1, REGEX);
         when(values.get(NAME1, String.class)).thenReturn(null);
 
-        assertFalse(filter.filter(resource, new StringBuffer()));
+        assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class FilterByPropertyRegexTest {
         FilterByPropertyRegex filter = new FilterByPropertyRegex(NAME1, REGEX);
         when(values.get(NAME1, String.class)).thenReturn(VALUE1);
 
-        assertTrue(filter.filter(resource, new StringBuffer()));
+        assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class FilterByPropertyRegexTest {
         FilterByPropertyRegex filter = new FilterByPropertyRegex(NAME1, REGEX);
         when(values.get(NAME1, String.class)).thenReturn("test");
 
-        assertFalse(filter.filter(resource, new StringBuffer()));
+        assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class FilterByPropertyRegexTest {
         FilterByPropertyRegex filter = new FilterByPropertyRegex(null, ".*value1.*");
         when(values.get(NAME1, String.class)).thenReturn(VALUE1);
 
-        assertTrue(filter.filter(resource, new StringBuffer()));
+        assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class FilterByPropertyRegexTest {
         when(values.get(NAME1, String.class)).thenReturn(VALUE1);
         when(values.get(NAME2, String.class)).thenReturn(VALUE2);
 
-        assertTrue(filter.filter(resource, new StringBuffer()));
+        assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class FilterByPropertyRegexTest {
         when(values.get(NAME2, String.class)).thenReturn(VALUE2);
         when(values.get(NAME3, String.class)).thenReturn(VALUE3);
 
-        assertTrue(filter.filter(resource, new StringBuffer()));
+        assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class FilterByPropertyRegexTest {
         when(values.get(NAME2, String.class)).thenReturn(VALUE2);
         when(values.get(NAME3, String.class)).thenReturn(VALUE3);
 
-        assertFalse(filter.filter(resource, new StringBuffer()));
+        assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
 }

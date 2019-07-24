@@ -22,22 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import com.adobe.granite.ui.components.ds.ValueMapResource;
-
-import de.valtech.aecu.api.service.AecuException;
-import de.valtech.aecu.api.service.AecuService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import com.adobe.granite.ui.components.ds.DataSource;
 import com.adobe.granite.ui.components.ds.SimpleDataSource;
+import com.adobe.granite.ui.components.ds.ValueMapResource;
+
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
 
 
 /**
@@ -49,12 +48,12 @@ import com.adobe.granite.ui.components.ds.SimpleDataSource;
 public class ExecuteDataSource {
 
     private static final String ITEM_TYPE = "valtech/aecu/tools/execute/dataitem";
-    private static final String ALLOWED_PATH = "/etc/groovyconsole/scripts";
+    private static final String ALLOWED_PATH = "/var/groovyconsole/scripts";
 
     @SlingObject
     SlingHttpServletRequest request;
 
-    @Inject
+    @OSGiService
     private AecuService aecuService;
 
     @PostConstruct

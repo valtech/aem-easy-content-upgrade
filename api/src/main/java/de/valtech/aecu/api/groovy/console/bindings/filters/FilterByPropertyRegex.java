@@ -50,7 +50,7 @@ public class FilterByPropertyRegex implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
+    public boolean filter(@Nonnull Resource resource, StringBuilder output) {
         ValueMap properties = resource.getValueMap();
         if (StringUtils.isNotBlank(name)) {
             String value = properties.get(name, String.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -46,7 +46,7 @@ public class ForChildResourcesOf extends TraversData {
 
     @Override
     public void traverse(@Nonnull BindingContext context, FilterBy filter, @Nonnull List<Action> actions,
-            @Nonnull StringBuffer stringBuffer, boolean dryRun) throws PersistenceException, AecuException {
+            @Nonnull StringBuilder output, boolean dryRun) throws PersistenceException, AecuException {
         ResourceResolver resourceResolver = context.getResolver();
         Resource parentResource = resourceResolver.getResource(path);
         if (parentResource == null) {
@@ -58,7 +58,7 @@ public class ForChildResourcesOf extends TraversData {
             if (!isResourceValid(resource)) {
                 continue;
             }
-            applyActionsOnResource(resource, filter, actions, stringBuffer, dryRun);
+            applyActionsOnResource(resource, filter, actions, output, dryRun);
         }
     }
 

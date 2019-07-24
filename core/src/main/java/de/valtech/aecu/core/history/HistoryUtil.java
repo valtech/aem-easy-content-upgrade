@@ -29,7 +29,6 @@ import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
-import org.apache.jackrabbit.oak.plugins.index.IndexConstants;
 import org.apache.jackrabbit.oak.spi.security.authorization.accesscontrol.AccessControlConstants;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
@@ -77,6 +76,7 @@ public class HistoryUtil {
     protected static final String ATTR_STATE = "state";
     protected static final String ATTR_START = "start";
     protected static final String ATTR_END = "end";
+    private static final String NAME_INDEX = "oak:index";
 
     private Random random = new Random();
 
@@ -242,8 +242,7 @@ public class HistoryUtil {
             if (sibling.getName().equals(resource.getName())) {
                 break;
             }
-            if (!sibling.getName().equals(AccessControlConstants.REP_POLICY)
-                    && !sibling.getName().equals(IndexConstants.INDEX_DEFINITIONS_NAME)) {
+            if (!sibling.getName().equals(AccessControlConstants.REP_POLICY) && !sibling.getName().equals(NAME_INDEX)) {
                 previous = sibling;
             }
         }
@@ -277,8 +276,7 @@ public class HistoryUtil {
         Iterator<Resource> lastIterator = resource.listChildren();
         while (lastIterator.hasNext()) {
             Resource candidate = lastIterator.next();
-            if (!AccessControlConstants.REP_POLICY.equals(candidate.getName())
-                    && !IndexConstants.INDEX_DEFINITIONS_NAME.equals(candidate.getName())) {
+            if (!AccessControlConstants.REP_POLICY.equals(candidate.getName()) && !NAME_INDEX.equals(candidate.getName())) {
                 last = candidate;
             }
         }

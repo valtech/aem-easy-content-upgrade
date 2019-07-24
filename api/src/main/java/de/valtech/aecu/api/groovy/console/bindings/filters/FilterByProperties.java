@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,14 +18,14 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
-import org.apache.sling.api.resource.Resource;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Filters resources by properties. You can define multiple properties that all need an exact match.
@@ -47,10 +47,10 @@ public class FilterByProperties implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
+    public boolean filter(@Nonnull Resource resource, StringBuilder output) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         if (properties == null) {
-            stringBuffer.append("WARNING: Could not get ModifiableValueMap of resource " + resource.getPath());
+            output.append("WARNING: Could not get ModifiableValueMap of resource " + resource.getPath());
             return false;
         }
 
@@ -58,7 +58,8 @@ public class FilterByProperties implements FilterBy {
             Object conditionValue = conditionProperties.get(key);
             Object propertiesValue = properties.get(key);
 
-            if (conditionValue != null && propertiesValue != null && conditionValue.getClass().isArray() && propertiesValue.getClass().isArray()) {
+            if (conditionValue != null && propertiesValue != null && conditionValue.getClass().isArray()
+                    && propertiesValue.getClass().isArray()) {
                 if (!Arrays.equals((Object[]) conditionValue, (Object[]) propertiesValue)) {
                     return false;
                 }
