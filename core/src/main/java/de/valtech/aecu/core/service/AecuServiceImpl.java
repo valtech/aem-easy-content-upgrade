@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -181,9 +183,10 @@ public class AecuServiceImpl implements AecuService {
      * @return result
      */
     private ExecutionResult executeScript(ResourceResolver resolver, String path) {
-        GroovyConsoleRequest request = new GroovyConsoleRequest(resolver);
+        SlingHttpServletRequest slingRequest = new GroovyConsoleRequest(resolver);
+        SlingHttpServletResponse slingResponse = new GroovyConsoleResponse();
         LOG.info("Executing script " + path);
-        RunScriptResponse response = groovyConsoleService.runScript(request, path);
+        RunScriptResponse response = groovyConsoleService.runScript(slingRequest, slingResponse, path);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
             LOG.info("Executed script " + path + " with status OK");

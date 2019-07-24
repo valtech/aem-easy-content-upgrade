@@ -43,14 +43,13 @@ Table of contents
 
 # Requirements
 
-AECU requires Java 8 and AEM 6.3 or above. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
+AECU requires Java 8 and AEM 6.4 or above. For AEM 6.3 please install the last 1.x version of AECU. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
 | AEM Version   | Groovy Console | AECU |
 | ------------- | -------------- | ---- |
 | 6.3           | 12.x           | 1.x  |
-| 6.4           | 12.x           | 1.x  |
-
-**Please note that Groovy Console 13 is not yet supported!**
+| 6.4           | 13.x           | 2.x  |
+| 6.5           | 13.x           | 2.x  |
 
 <a name="installation"></a>
 
@@ -87,9 +86,28 @@ The package is also available on [Maven Central](http://repo1.maven.org/maven2/d
 
 <a name="structure"></a>
 
+## Uninstallation
+
+The application can be removed by deleting the following paths:
+* /apps/valtech/aecu
+* /var/groovyconsole/scripts/aecu
+* /var/aecu
+* /var/aecu-installhook
+
+Afterwards, you can delete the "aecu.bundle" and "aecu.ui.apps" packages in package manager.
+
+For Groovy Console delete:
+
+* /apps/groovyconsole
+* /etc/clientlibs/groovyconsole
+* /var/groovyconsole
+
+Then delete "aem-groovy-console" packages in package mananger.
+
+
 # File and Folder Structure
 
-All migration scripts need to be located in /etc/groovyconsole/scripts/aecu. There you can create
+All migration scripts need to be located in /var/groovyconsole/scripts/aecu. There you can create
 an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
@@ -204,7 +222,7 @@ You can call these methods multiple times and combine them. They will be merged 
 Example:
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forResources((String[])["/content/we-retail/ca/en"])
         .forChildResourcesOf("/content/we-retail/us/en")
         .forDescendantResourcesOf("/content/we-retail/us/en/experience")
@@ -245,7 +263,7 @@ Example:
 def conditionMap = [:]
 conditionMap["sling:resourceType"] = "weretail/components/structure/page"
 
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByHasProperty("myProperty")
         .filterByProperty("sling:resourceType", "wcm/foundation/components/responsivegrid")
@@ -265,7 +283,7 @@ You can also filter nodes by their name.
 * filterByNodeNameRegex(String regex): process nodes that have a name that matches the given regular expression
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .filterByNodeNameRegex("jcr.*")
@@ -280,7 +298,7 @@ Nodes can also be filtered by their path using a regular expression.
 * filterByPathRegex(String regex): process nodes whose path matches the given regular expression
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByPathRegex(".*/jcr:content/.*")
         .doSetProperty("name", "value")
@@ -307,7 +325,7 @@ def complexFilter =  new ORFilter(
           ] )
         ])
 
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/ca/en", false)
         .filterWith(complexFilter)
         .doSetProperty("name", "value")
@@ -325,7 +343,7 @@ println aecu.contentUpgradeBuilder()
 * doRenameProperty(String oldName, String newName): renames the given property if existing. If the new property name already exists it will be overwritten.
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doSetProperty("name", "value")
@@ -341,7 +359,7 @@ println aecu.contentUpgradeBuilder()
 * doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues): removes the old values and adds the new values in a given property. 
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doAddValuesToMultiValueProperty("name", (String[])["value1", "value2"])
@@ -358,7 +376,7 @@ This will copy or move a property to a subnode. You can also change the property
 * doMovePropertyToRelativePath(String name, String newName, String relativeResourcePath): move the property to the given path under the new name.
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doCopyPropertyToRelativePath("name", "newName", "subnode")
@@ -375,7 +393,7 @@ You can replace the content of String properties. This also supports multi-value
 * doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames): checks if the property value(s) match the search pattern and replaces it with "replacement".  Applies to specified String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doReplaceValueInAllProperties("old", "new")
@@ -395,7 +413,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 * doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtained by applying the replacement expression. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doRename("newNodeName")
@@ -413,7 +431,7 @@ You can delete all nodes that match your collection and filter.
 * doDeleteResource(): deletes the matching nodes
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doDeleteResource()
@@ -443,7 +461,7 @@ Please note that there is no check for duplicate actions. If you run a page acti
 * doTreeActivateContainingPage(boolean skipDeactivated): activates the page that contains the current resource AND all subpages. If "skipDeactivated" is set to true then deactivated pages will be ignored and not activated.
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doActivateContainingPage()
@@ -458,7 +476,7 @@ println aecu.contentUpgradeBuilder()
 * doDeleteContainingPage(): deletes the page (incl. subpages) that contains the current resource
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doDeleteContainingPage()
@@ -474,7 +492,7 @@ Tags can be specified by Id (e.g. "properties:style/color") or path (e.g. "/etc/
 * doRemoveTagsFromContainingPage(): removes the given tags from the page
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doAddTagsToContainingPage("properties:style/color", "/etc/tags/properties/orientation/landscape")
@@ -493,7 +511,7 @@ AECU can do some basic tests if pages render correctly. You can use this to veri
 * doCheckPageRendering(String textPresent, String textNotPresent): verifies that the given text is (not) included in page output + page renders with code 200. The parameters textPresent/textNotPresent can be set to null if you do not need the check.
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByProperty("sling:resourceType", "weretail/components/structure/page")
         .doCheckPageRendering()
@@ -512,7 +530,7 @@ Sometimes, you only want to print some information about the matched nodes.
 * printJson(): prints a json representation of all the matched node's properties
 
 ```java
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .printPath()
@@ -536,7 +554,7 @@ def myAction = {
     return output
 }
 
-println aecu.contentUpgradeBuilder()
+aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .doCustomResourceBasedAction(myAction)
         .run()

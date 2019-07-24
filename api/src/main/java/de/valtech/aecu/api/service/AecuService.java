@@ -46,7 +46,7 @@ public interface AecuService {
     /**
      * Prefix in CRX where AECU scripts are located.
      */
-    public static final String AECU_PREFIX = "/etc/groovyconsole/scripts/aecu";
+    public static final String AECU_PREFIX = "/var/groovyconsole/scripts/aecu";
 
     /**
      * Returns the AECU version.
