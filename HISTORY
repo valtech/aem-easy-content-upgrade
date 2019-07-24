@@ -1,4 +1,4 @@
-2.0.0
+2019-07-24 2.0.0
   - Require Groovy Console 13
   - Requires AEM 6.4 or 6.5
   - Script base location moved from /etc/groovyconsole/scripts/aecu to /var/groovyconsole/scripts/aecu
