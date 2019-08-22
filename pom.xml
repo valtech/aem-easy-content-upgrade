@@ -332,7 +332,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>4.0.0</version>
+                    <version>5.2.1</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
