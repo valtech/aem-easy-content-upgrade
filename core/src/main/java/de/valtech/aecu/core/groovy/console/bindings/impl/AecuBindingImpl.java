@@ -25,6 +25,8 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.icfolson.aem.groovy.console.api.ScriptContext;
+
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
@@ -41,18 +43,27 @@ public class AecuBindingImpl implements AecuBinding {
     private ResourceResolver resourceResolver;
     private ResourceResolver adminResourceResolver;
     private ResourceResolverFactory resourceResolverFactory;
+    private ScriptContext scriptContext;
 
-
+    /**
+     * Constructor
+     * 
+     * @param resourceResolver        resolver resolver with migration user
+     * @param adminResourceResolver   resolver with admin user
+     * @param resourceResolverFactory resource resolver factory
+     * @param scriptContext           Groovy context
+     */
     public AecuBindingImpl(ResourceResolver resourceResolver, ResourceResolver adminResourceResolver,
-            ResourceResolverFactory resourceResolverFactory) {
+            ResourceResolverFactory resourceResolverFactory, ScriptContext scriptContext) {
         this.resourceResolver = resourceResolver;
         this.adminResourceResolver = adminResourceResolver;
         this.resourceResolverFactory = resourceResolverFactory;
+        this.scriptContext = scriptContext;
     }
 
     @Override
     public ContentUpgrade contentUpgradeBuilder() {
-        return new ContentUpgradeImpl(resourceResolver);
+        return new ContentUpgradeImpl(resourceResolver, scriptContext);
     }
 
     @Override

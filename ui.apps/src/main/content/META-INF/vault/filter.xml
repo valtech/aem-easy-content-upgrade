@@ -5,7 +5,9 @@
     <filter root="/home/users/system/aecu"/>
     <filter root="/var/groovyconsole/scripts/aecu" mode="merge"/>
     <filter root="/apps/settings/granite/operations/hc/aecu"/>
-    <filter root="/apps/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge"/>
+    <filter root="/apps/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge"/><!--removes the old location-->
+    <filter root="/conf/global/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge"/>
+    <filter root="/etc/groovyconsole/scripts/aecu"/><!--removes the old location-->
     <filter root="/rep:policy" mode="merge"/>
     <filter root="/rep:repoPolicy" mode="merge"/>
     <filter root="/var/rep:policy" mode="merge"/>

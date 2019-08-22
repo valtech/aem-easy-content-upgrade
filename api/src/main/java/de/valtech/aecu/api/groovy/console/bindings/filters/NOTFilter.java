@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,9 +18,9 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
-import org.apache.sling.api.resource.Resource;
-
 import javax.annotation.Nonnull;
+
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Negates a given filter.
@@ -41,7 +41,7 @@ public class NOTFilter implements FilterBy {
     }
 
     @Override
-    public boolean filter(@Nonnull Resource resource, StringBuffer stringBuffer) {
-        return !filter.filter(resource, stringBuffer);
+    public boolean filter(@Nonnull Resource resource, StringBuilder output) {
+        return !filter.filter(resource, output);
     }
 }

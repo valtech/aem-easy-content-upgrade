@@ -58,10 +58,10 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
     public Map<String, BindingVariable> getBindingVariables(ScriptContext context) {
         Map<String, BindingVariable> variables = new HashMap<>();
         try {
-            BindingVariable aecuVar = new BindingVariable(
-                    new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(),
-                            resourceResolverService.getAdminResourceResolver(), resourceResolverFactory),
-                    AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
+            AecuBinding aecuBinding = new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(),
+                    resourceResolverService.getAdminResourceResolver(), resourceResolverFactory, context);
+            BindingVariable aecuVar =
+                    new BindingVariable(aecuBinding, AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
             variables.put("aecu", aecuVar);
         } catch (LoginException e) {
             LOG.error(
