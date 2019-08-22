@@ -143,6 +143,20 @@ public interface ValidateAccessRights {
     ValidateAccessRights cannotReadPage();
 
     /**
+     * Checks if delete access to pages is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canDeletePage();
+
+    /**
+     * Checks if delete access to pages is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotDeletePage();
+
+    /**
      * Checks if the specified rights are correctly set.
      * 
      * @return access right validation builder

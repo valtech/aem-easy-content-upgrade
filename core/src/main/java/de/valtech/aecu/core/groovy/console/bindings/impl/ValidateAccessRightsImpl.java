@@ -40,6 +40,7 @@ import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValid
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessRightValidatorComparator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.ValidateAccessRightsTable;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.DeletePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ReadPageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.CreateAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.DeleteAccessValidator;
@@ -206,6 +207,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     public ValidateAccessRights cannotReadPage() {
         addValidators((authorizable, resource, checkAccessGranted) -> new ReadPageAccessValidator(authorizable, resource, context,
                 checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canDeletePage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new DeletePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotDeletePage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new DeletePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted), false);
         return this;
     }
 
