@@ -1,3 +1,25 @@
 println "Example for checking permissions"
 
-
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canRead()
+    .canModify()
+    .canCreate()
+    .canDelete()
+    .cannotReadAcl()
+    .cannotWriteAcl()
+    .canReadPage()
+    .canDeletePage()
+    .forGroups("contributor")
+    .canRead()
+    .cannotModify()
+    .cannotCreate()
+    .cannotDelete()
+    .cannotReadAcl()
+    .cannotWriteAcl()
+    .canReadPage()
+    .cannotDeletePage()
+    .validate()
+    

@@ -88,6 +88,9 @@ public class DeletePageAccessValidator extends DeleteAccessValidator {
             userPageManager.delete(page, false, false);
         } catch (WCMException e) {
             return false;
+        } finally {
+            testUser.getResolver().revert();
+            testUser.getResolver().refresh();
         }
         return true;
     }
