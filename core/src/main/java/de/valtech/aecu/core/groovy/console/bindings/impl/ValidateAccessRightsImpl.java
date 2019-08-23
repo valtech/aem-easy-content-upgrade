@@ -40,6 +40,7 @@ import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValid
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessRightValidatorComparator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidatorContext;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.ValidateAccessRightsTable;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.CreatePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.DeletePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ReadPageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.CreateAccessValidator;
@@ -207,6 +208,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     public ValidateAccessRights cannotReadPage() {
         addValidators((authorizable, resource, checkAccessGranted) -> new ReadPageAccessValidator(authorizable, resource, context,
                 checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canCreatePage(String templatePath) {
+        addValidators((authorizable, resource, checkAccessGranted) -> new CreatePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted, templatePath), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotCreatePage(String templatePath) {
+        addValidators((authorizable, resource, checkAccessGranted) -> new CreatePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted, templatePath), false);
         return this;
     }
 

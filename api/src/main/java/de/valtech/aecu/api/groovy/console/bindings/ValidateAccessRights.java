@@ -143,6 +143,22 @@ public interface ValidateAccessRights {
     ValidateAccessRights cannotReadPage();
 
     /**
+     * Checks if create access to pages is granted.
+     * 
+     * @param templatePath template path
+     * @return access right validation builder
+     */
+    ValidateAccessRights canCreatePage(String templatePath);
+
+    /**
+     * Checks if create access to pages is NOT granted.
+     * 
+     * @param templatePath template path
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotCreatePage(String templatePath);
+
+    /**
      * Checks if delete access to pages is granted.
      * 
      * @return access right validation builder
