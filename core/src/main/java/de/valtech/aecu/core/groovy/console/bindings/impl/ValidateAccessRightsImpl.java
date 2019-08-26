@@ -48,6 +48,7 @@ import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.reso
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ModifyAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ReadAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ReadAclAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ReplicateAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.WriteAclAccessValidator;
 
 /**
@@ -166,6 +167,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     public ValidateAccessRights cannotDelete() {
         addValidators((authorizable, resource, checkAccessGranted) -> new DeleteAccessValidator(authorizable, resource, context,
                 checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canReplicate() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReplicateAccessValidator(authorizable, resource,
+                context, checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotReplicate() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReplicateAccessValidator(authorizable, resource,
+                context, checkAccessGranted), false);
         return this;
     }
 

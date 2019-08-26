@@ -101,6 +101,20 @@ public interface ValidateAccessRights {
     ValidateAccessRights cannotDelete();
 
     /**
+     * Checks if replicate access is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canReplicate();
+
+    /**
+     * Checks if replicate access is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotReplicate();
+
+    /**
      * Checks if read ACL access is granted.
      * 
      * @return access right validation builder

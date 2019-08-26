@@ -49,6 +49,7 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
     public static final String RIGHT_DELETE = "delete";
     public static final String RIGHT_READ_ACL = "acl_read";
     public static final String RIGHT_WRITE_ACL = "acl_edit";
+    public static final String RIGHT_REPLICATE = "replicate";
 
     protected Group group;
     private Resource resource;
