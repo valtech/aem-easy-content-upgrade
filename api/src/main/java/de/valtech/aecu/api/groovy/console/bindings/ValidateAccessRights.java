@@ -179,4 +179,21 @@ public interface ValidateAccessRights {
      */
     String validate();
 
+    /**
+     * Checks if the specified rights are correctly set.
+     * 
+     * @param simulate specifies if actions should also be simulated
+     * @return access right validation builder
+     * @see ValidateAccessRights#simulate()
+     */
+    String validate(boolean simulate);
+
+    /**
+     * Checks if the specified rights are correctly set AND performs actions that cannot be undone
+     * (e.g. page replication).
+     * 
+     * @return access right validation builder
+     */
+    String simulate();
+
 }

@@ -31,8 +31,10 @@ public interface AccessRightValidator {
 
     /**
      * Performs the provided check.
+     * 
+     * @param simulate turn on simulation
      */
-    ValidationResult validate();
+    ValidationResult validate(boolean simulate);
 
     /**
      * Returns a descriptive label for the check.

@@ -117,7 +117,7 @@ public class CreatePageAccessValidatorTest {
         Collection<String> actions = Arrays.asList(BaseAccessRightsValidator.RIGHT_CREATE);
         when(cqActions.getAllowedActions(Mockito.any(), Mockito.any())).thenReturn(actions);
 
-        assertTrue(validator.validate().isSuccessful());
+        assertTrue(validator.validate(true).isSuccessful());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class CreatePageAccessValidatorTest {
         Collection<String> actions = Arrays.asList();
         when(cqActions.getAllowedActions(Mockito.any(), Mockito.any())).thenReturn(actions);
 
-        assertFalse(validator.validate().isSuccessful());
+        assertFalse(validator.validate(true).isSuccessful());
     }
 
 }

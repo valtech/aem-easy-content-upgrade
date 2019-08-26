@@ -55,8 +55,8 @@ public class CreatePageAccessValidator extends CreateAccessValidator {
     }
 
     @Override
-    public ValidationResult validate() {
-        ValidationResult resourceResult = super.validate();
+    public ValidationResult validate(boolean simulate) {
+        ValidationResult resourceResult = super.validate(simulate);
         // stop if no delete access and check for granted permission
         // otherwise, check also template later
         if (!resourceResult.isSuccessful() && getCheckAccessGranted()) {

@@ -44,7 +44,7 @@ public class ModifyAccessValidator extends BaseAccessRightsValidator {
     }
 
     @Override
-    public ValidationResult validate() {
+    public ValidationResult validate(boolean simulate) {
         return checkAction(RIGHT_MODIFY);
     }
 

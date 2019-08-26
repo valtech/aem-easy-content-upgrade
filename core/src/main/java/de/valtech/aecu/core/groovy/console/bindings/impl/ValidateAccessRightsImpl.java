@@ -240,12 +240,12 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
-    public String validate() {
+    public String validate(boolean simulate) {
         try {
             validators.sort(new AccessRightValidatorComparator());
             ValidateAccessRightsTable table = new ValidateAccessRightsTable();
             for (AccessRightValidator validator : validators) {
-                table.add(validator);
+                table.add(validator, simulate);
             }
             StringBuilder output = new StringBuilder();
             output.append(String.join("\n", warnings));
@@ -255,6 +255,16 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         } finally {
             context.cleanup();
         }
+    }
+
+    @Override
+    public String validate() {
+        return validate(false);
+    }
+
+    @Override
+    public String simulate() {
+        return validate(true);
     }
 
     /**

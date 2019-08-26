@@ -48,8 +48,8 @@ public class ReadPageAccessValidator extends ReadAccessValidator {
     }
 
     @Override
-    public ValidationResult validate() {
-        ValidationResult resourceResult = super.validate();
+    public ValidationResult validate(boolean simulate) {
+        ValidationResult resourceResult = super.validate(simulate);
         if (!resourceResult.isSuccessful()) {
             return resourceResult;
         }

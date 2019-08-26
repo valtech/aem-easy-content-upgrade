@@ -44,7 +44,7 @@ public class ReadAccessValidator extends BaseAccessRightsValidator {
     }
 
     @Override
-    public ValidationResult validate() {
+    public ValidationResult validate(boolean simulate) {
         return checkAction(RIGHT_READ);
     }
 

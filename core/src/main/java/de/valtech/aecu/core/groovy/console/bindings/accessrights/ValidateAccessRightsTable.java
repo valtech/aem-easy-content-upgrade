@@ -42,9 +42,10 @@ public class ValidateAccessRightsTable {
      * Adds the result of an validator.
      * 
      * @param validator validator
+     * @param simulate  turn on simulation
      */
-    public void add(AccessRightValidator validator) {
-        ValidationResult result = validator.validate();
+    public void add(AccessRightValidator validator, boolean simulate) {
+        ValidationResult result = validator.validate(simulate);
         String authorizable = validator.getGroupId();
         String path = validator.getResource().getPath();
         if (rows.isEmpty()) {
