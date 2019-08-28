@@ -72,7 +72,7 @@ public class AecuBindingImpl implements AecuBinding {
     @Override
     public ValidateAccessRights validateAccessRights() {
         try {
-            return new ValidateAccessRightsImpl(resourceResolverFactory, adminResourceResolver, replicator);
+            return new ValidateAccessRightsImpl(resourceResolverFactory, adminResourceResolver, replicator, scriptContext);
         } catch (RepositoryException e) {
             LOG.error("Error setting up the access right validator", e);
         }

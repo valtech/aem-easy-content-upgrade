@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.replication.ReplicationActionType;
 import com.day.cq.replication.Replicator;
+import com.icfolson.aem.groovy.console.api.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
@@ -71,6 +72,7 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
 
     private ResourceResolver resolver;
     private AccessValidatorContext context;
+    private ScriptContext scriptContext;
 
     /**
      * Constructor
@@ -78,12 +80,14 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
      * @param resourceResolverFactory resolver factory
      * @param resolver                resource resolver
      * @param replicator              replicator
+     * @param scriptContext
      * @throws RepositoryException error setting up context
      */
     public ValidateAccessRightsImpl(ResourceResolverFactory resourceResolverFactory, ResourceResolver resolver,
-            Replicator replicator) throws RepositoryException {
+            Replicator replicator, ScriptContext scriptContext) throws RepositoryException {
         this.resolver = resolver;
         context = new AccessValidatorContext(resourceResolverFactory, resolver, replicator);
+        this.scriptContext = scriptContext;
     }
 
     @Override
@@ -289,7 +293,7 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     }
 
     @Override
-    public String validate(boolean simulate) {
+    public void validate(boolean simulate) {
         try {
             validators.sort(new AccessRightValidatorComparator());
             ValidateAccessRightsTable table = new ValidateAccessRightsTable();
@@ -300,20 +304,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
             output.append(String.join("\n", warnings));
             output.append("\n");
             output.append(table.getText());
-            return output.toString();
+            scriptContext.getPrintStream().append(output.toString());
         } finally {
             context.cleanup();
         }
     }
 
     @Override
-    public String validate() {
-        return validate(false);
+    public void validate() {
+        validate(false);
     }
 
     @Override
-    public String simulate() {
-        return validate(true);
+    public void simulate() {
+        validate(true);
     }
 
     /**

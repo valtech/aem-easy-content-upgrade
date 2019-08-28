@@ -224,7 +224,7 @@ public interface ValidateAccessRights {
      * 
      * @return access right validation builder
      */
-    String validate();
+    void validate();
 
     /**
      * Checks if the specified rights are correctly set.
@@ -233,7 +233,7 @@ public interface ValidateAccessRights {
      * @return access right validation builder
      * @see ValidateAccessRights#simulate()
      */
-    String validate(boolean simulate);
+    void validate(boolean simulate);
 
     /**
      * Checks if the specified rights are correctly set AND performs actions that cannot be undone
@@ -241,6 +241,6 @@ public interface ValidateAccessRights {
      * 
      * @return access right validation builder
      */
-    String simulate();
+    void simulate();
 
 }
