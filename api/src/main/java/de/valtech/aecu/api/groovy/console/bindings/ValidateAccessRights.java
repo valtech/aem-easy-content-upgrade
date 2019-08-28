@@ -20,6 +20,8 @@ package de.valtech.aecu.api.groovy.console.bindings;
 
 import org.osgi.annotation.versioning.ProviderType;
 
+import com.day.cq.replication.ReplicationActionType;
+
 /**
  * Validates access rights for users or groups.
  * 
@@ -185,6 +187,37 @@ public interface ValidateAccessRights {
      * @return access right validation builder
      */
     ValidateAccessRights cannotDeletePage();
+
+    /**
+     * Checks if replicate access to pages is granted (type ACTIVATE).
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canReplicatePage();
+
+    /**
+     * Checks if replicate access to pages is granted.
+     * 
+     * @param type perform and activation or deactivation
+     * @return access right validation builder
+     */
+    ValidateAccessRights canReplicatePage(ReplicationActionType type);
+
+    /**
+     * Checks if replicate access to pages is NOT granted (type ACTIVATE).
+     * 
+     * @param type perform and activation or deactivation
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotReplicatePage();
+
+    /**
+     * Checks if replicate access to pages is NOT granted.
+     * 
+     * @param type perform and activation or deactivation
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotReplicatePage(ReplicationActionType isActivate);
 
     /**
      * Checks if the specified rights are correctly set.

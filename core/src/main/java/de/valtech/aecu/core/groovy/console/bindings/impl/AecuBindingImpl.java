@@ -25,6 +25,7 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.replication.Replicator;
 import com.icfolson.aem.groovy.console.api.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
@@ -44,6 +45,7 @@ public class AecuBindingImpl implements AecuBinding {
     private ResourceResolver adminResourceResolver;
     private ResourceResolverFactory resourceResolverFactory;
     private ScriptContext scriptContext;
+    private Replicator replicator;
 
     /**
      * Constructor
@@ -54,10 +56,11 @@ public class AecuBindingImpl implements AecuBinding {
      * @param scriptContext           Groovy context
      */
     public AecuBindingImpl(ResourceResolver resourceResolver, ResourceResolver adminResourceResolver,
-            ResourceResolverFactory resourceResolverFactory, ScriptContext scriptContext) {
+            ResourceResolverFactory resourceResolverFactory, Replicator replicator, ScriptContext scriptContext) {
         this.resourceResolver = resourceResolver;
         this.adminResourceResolver = adminResourceResolver;
         this.resourceResolverFactory = resourceResolverFactory;
+        this.replicator = replicator;
         this.scriptContext = scriptContext;
     }
 
@@ -69,7 +72,7 @@ public class AecuBindingImpl implements AecuBinding {
     @Override
     public ValidateAccessRights validateAccessRights() {
         try {
-            return new ValidateAccessRightsImpl(resourceResolverFactory, adminResourceResolver);
+            return new ValidateAccessRightsImpl(resourceResolverFactory, adminResourceResolver, replicator);
         } catch (RepositoryException e) {
             LOG.error("Error setting up the access right validator", e);
         }

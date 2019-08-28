@@ -37,3 +37,10 @@ aecu
     .canDeletePage()
     .validate()
     
+    aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men")
+    .forGroups("content-authors")
+    .canReplicatePage(ReplicationActionType.ACTIVATE)
+//    .simulate()
+    .validate();

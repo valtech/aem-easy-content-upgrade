@@ -42,6 +42,7 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.replication.Replicator;
 import com.day.cq.security.util.CqActions;
 import com.day.cq.wcm.api.PageManager;
 
@@ -60,6 +61,7 @@ public class AccessValidatorContext {
     private CqActions cqActions;
     private PageManager adminPageManager;
     private UserManager adminUserManager;
+    private Replicator replicator;
     private Map<String, Set<Principal>> principalCache = new HashMap<>();
     /** maps groups to test user data */
     private Map<Group, TestUser> testUsers = new HashMap<>();
@@ -69,16 +71,18 @@ public class AccessValidatorContext {
      * 
      * @param resourceResolverFactory resource resolver factory
      * @param adminResolver           admin resource resolver
+     * @param replicator              replicator
      * @throws RepositoryException error setting up CqActions
      */
-    public AccessValidatorContext(ResourceResolverFactory resourceResolverFactory, ResourceResolver adminResolver)
-            throws RepositoryException {
+    public AccessValidatorContext(ResourceResolverFactory resourceResolverFactory, ResourceResolver adminResolver,
+            Replicator replicator) throws RepositoryException {
         this.resourceResolverFactory = resourceResolverFactory;
         this.adminResolver = adminResolver;
         this.adminSession = adminResolver.adaptTo(Session.class);
         this.cqActions = new CqActions(adminSession);
         this.adminPageManager = adminResolver.adaptTo(PageManager.class);
         this.adminUserManager = adminResolver.adaptTo(UserManager.class);
+        this.replicator = replicator;
     }
 
     /**
@@ -115,6 +119,15 @@ public class AccessValidatorContext {
      */
     public PageManager getAdminPageManager() {
         return adminPageManager;
+    }
+
+    /**
+     * Returns the replicator.
+     * 
+     * @return replicator
+     */
+    public Replicator getReplicator() {
+        return replicator;
     }
 
     /**

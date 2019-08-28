@@ -28,6 +28,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.replication.Replicator;
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
 import com.icfolson.aem.groovy.console.api.BindingVariable;
 import com.icfolson.aem.groovy.console.api.ScriptContext;
@@ -52,6 +53,8 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
     private ServiceResourceResolverService resourceResolverService;
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
+    @Reference
+    private Replicator replicator;
 
 
     @Override
@@ -59,7 +62,7 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
         Map<String, BindingVariable> variables = new HashMap<>();
         try {
             AecuBinding aecuBinding = new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(),
-                    resourceResolverService.getAdminResourceResolver(), resourceResolverFactory, context);
+                    resourceResolverService.getAdminResourceResolver(), resourceResolverFactory, replicator, context);
             BindingVariable aecuVar =
                     new BindingVariable(aecuBinding, AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
             variables.put("aecu", aecuVar);

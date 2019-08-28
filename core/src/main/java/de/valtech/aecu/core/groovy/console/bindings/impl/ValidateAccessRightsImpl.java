@@ -35,6 +35,9 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.replication.ReplicationActionType;
+import com.day.cq.replication.Replicator;
+
 import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessRightValidatorComparator;
@@ -43,6 +46,7 @@ import de.valtech.aecu.core.groovy.console.bindings.accessrights.ValidateAccessR
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.CreatePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.DeletePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ReadPageAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ReplicatePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.CreateAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.DeleteAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.ModifyAccessValidator;
@@ -71,13 +75,15 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     /**
      * Constructor
      * 
-     * @param resolver resource resolver
+     * @param resourceResolverFactory resolver factory
+     * @param resolver                resource resolver
+     * @param replicator              replicator
      * @throws RepositoryException error setting up context
      */
-    public ValidateAccessRightsImpl(ResourceResolverFactory resourceResolverFactory, ResourceResolver resolver)
-            throws RepositoryException {
+    public ValidateAccessRightsImpl(ResourceResolverFactory resourceResolverFactory, ResourceResolver resolver,
+            Replicator replicator) throws RepositoryException {
         this.resolver = resolver;
-        context = new AccessValidatorContext(resourceResolverFactory, resolver);
+        context = new AccessValidatorContext(resourceResolverFactory, resolver, replicator);
     }
 
     @Override
@@ -251,6 +257,34 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     public ValidateAccessRights cannotDeletePage() {
         addValidators((authorizable, resource, checkAccessGranted) -> new DeletePageAccessValidator(authorizable, resource,
                 context, checkAccessGranted), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canReplicatePage(ReplicationActionType type) {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReplicatePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted, type), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canReplicatePage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReplicatePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted, ReplicationActionType.ACTIVATE), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotReplicatePage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReplicatePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted, ReplicationActionType.ACTIVATE), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotReplicatePage(ReplicationActionType type) {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ReplicatePageAccessValidator(authorizable, resource,
+                context, checkAccessGranted, type), false);
         return this;
     }
 
