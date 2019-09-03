@@ -206,7 +206,6 @@ public interface ValidateAccessRights {
     /**
      * Checks if replicate access to pages is NOT granted (type ACTIVATE).
      * 
-     * @param type perform and activation or deactivation
      * @return access right validation builder
      */
     ValidateAccessRights cannotReplicatePage();
@@ -214,15 +213,13 @@ public interface ValidateAccessRights {
     /**
      * Checks if replicate access to pages is NOT granted.
      * 
-     * @param type perform and activation or deactivation
+     * @param isActivate activation or deactivation
      * @return access right validation builder
      */
     ValidateAccessRights cannotReplicatePage(ReplicationActionType isActivate);
 
     /**
      * Checks if the specified rights are correctly set.
-     * 
-     * @return access right validation builder
      */
     void validate();
 
@@ -230,7 +227,6 @@ public interface ValidateAccessRights {
      * Checks if the specified rights are correctly set.
      * 
      * @param simulate specifies if actions should also be simulated
-     * @return access right validation builder
      * @see ValidateAccessRights#simulate()
      */
     void validate(boolean simulate);
@@ -238,8 +234,6 @@ public interface ValidateAccessRights {
     /**
      * Checks if the specified rights are correctly set AND performs actions that cannot be undone
      * (e.g. page replication).
-     * 
-     * @return access right validation builder
      */
     void simulate();
 
