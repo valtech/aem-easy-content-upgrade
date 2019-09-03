@@ -107,7 +107,8 @@ public abstract class BaseAccessRightsValidator implements AccessRightValidator 
             Collection<String> allowedActions = actions.getAllowedActions(resource.getPath(), context.getPrincipals(group));
             boolean granted = allowedActions.contains(action);
             boolean failed = checkAccessGranted ? !granted : granted;
-            return new ValidationResult(failed, false, null);
+            String message = failed ? "Wrong permissions" : null;
+            return new ValidationResult(failed, false, message);
         } catch (RepositoryException e) {
             LOG.error("Unable to check actions", e);
             return new ValidationResult(true, false, e.getMessage());

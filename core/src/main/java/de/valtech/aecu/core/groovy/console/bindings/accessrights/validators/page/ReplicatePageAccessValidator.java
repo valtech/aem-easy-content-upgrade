@@ -87,7 +87,7 @@ public class ReplicatePageAccessValidator extends ReplicateAccessValidator {
     /**
      * Checks if page can be deleted with user rights.
      * 
-     * @return can read page
+     * @return can replicate page
      */
     private boolean canReplicatePageWithUser(boolean simulate) {
         TestUser testUser = getContext().getTestUserForGroup(group);

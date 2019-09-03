@@ -26,8 +26,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.ValidationResult;
+import de.vandermeer.asciitable.AT_Row;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
+import de.vandermeer.asciithemes.TA_GridConfig;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 /**
  * Table that contains the results of an access right check.
@@ -37,6 +40,7 @@ import de.vandermeer.asciitable.CWC_LongestLine;
 public class ValidateAccessRightsTable {
 
     private List<TableRow> rows = new ArrayList<>();
+    private List<ErrorRow> errorRows = new ArrayList<>();
 
     /**
      * Adds the result of an validator.
@@ -60,6 +64,13 @@ public class ValidateAccessRightsTable {
             rows.add(lastRow);
         }
         lastRow.addResult(validator.getLabel(), result);
+        if (result.hasErrors()) {
+            String errorMessage = result.getMessage();
+            if (errorMessage == null) {
+                errorMessage = StringUtils.EMPTY;
+            }
+            errorRows.add(new ErrorRow(authorizable, path, validator.getLabel() + ": " + errorMessage));
+        }
     }
 
     /**
@@ -71,14 +82,27 @@ public class ValidateAccessRightsTable {
         AsciiTable table = new AsciiTable();
         CWC_LongestLine cwc = new CWC_LongestLine();
         table.getRenderer().setCWC(cwc);
+        table.getContext().getGrid().addCharacterMap(TA_GridConfig.RULESET_STRONG, ' ', '═', ' ', '═', '═', '═', '═', '═', '═',
+                '═', '═', '═');
         table.addRule();
-        table.addRow("User/Group", "Path", "Rights");
+        table.addRow("Group", "Path", "Rights");
         table.addRule();
         for (TableRow row : rows) {
             if (row == null) {
                 table.addRule();
             } else {
                 table.addRow(row.getAuthorizable(), row.getPath(), row.getCheckResultsText());
+            }
+        }
+        if (!errorRows.isEmpty()) {
+            table.addStrongRule();
+            AT_Row detailsRow = table.addRow(null, null, "Issue details");
+            detailsRow.setTextAlignment(TextAlignment.CENTER);
+            table.addStrongRule();
+            table.addRow("Group", "Path", "Issue");
+            for (ErrorRow row : errorRows) {
+                table.addRule();
+                table.addRow(row.getGroup(), row.getPath(), row.getMessage());
             }
         }
         table.addRule();
@@ -102,7 +126,7 @@ public class ValidateAccessRightsTable {
         /**
          * Constructor
          * 
-         * @param authorizable user/group name
+         * @param authorizable group name
          * @param path         path
          */
         public TableRow(String authorizable, String path, TableRow lastRow) {
@@ -180,6 +204,61 @@ public class ValidateAccessRightsTable {
         public String getPath() {
             return path;
         }
+
+    }
+
+    /**
+     * Represents an error row.
+     * 
+     * @author Roland Gruber
+     */
+    private static class ErrorRow {
+
+        private String group;
+        private String path;
+        private String message;
+
+        /**
+         * Constructor
+         * 
+         * @param group   group name
+         * @param path    path
+         * @param message error message
+         */
+        public ErrorRow(String group, String path, String message) {
+            this.group = group;
+            this.path = path;
+            this.message = message;
+        }
+
+        /**
+         * Returns the group name.
+         * 
+         * @return group name
+         */
+        public String getGroup() {
+            return group;
+        }
+
+        /**
+         * Returns the checked path.
+         * 
+         * @return path
+         */
+        public String getPath() {
+            return path;
+        }
+
+        /**
+         * Returns the error message
+         * 
+         * @return message
+         */
+        public String getMessage() {
+            return message;
+        }
+
+
 
     }
 
