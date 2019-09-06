@@ -51,6 +51,7 @@ public class ReplicatePageAccessValidator extends ReplicateAccessValidator {
      * 
      * @param group              group
      * @param resource           page to check
+     * @param context            context
      * @param checkAccessGranted checks if the access is granted or denied
      * @param type               action type
      */

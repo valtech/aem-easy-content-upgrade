@@ -82,7 +82,7 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
      * @param resourceResolverFactory resolver factory
      * @param resolver                resource resolver
      * @param replicator              replicator
-     * @param scriptContext
+     * @param scriptContext           context
      * @throws RepositoryException error setting up context
      */
     public ValidateAccessRightsImpl(ResourceResolverFactory resourceResolverFactory, ResourceResolver resolver,

@@ -41,6 +41,7 @@ public class ReadPageAccessValidator extends ReadAccessValidator {
      * 
      * @param group              group
      * @param resource           page to check
+     * @param context            context
      * @param checkAccessGranted checks if the access is granted or denied
      */
     public ReadPageAccessValidator(Group group, Resource resource, AccessValidatorContext context, boolean checkAccessGranted) {

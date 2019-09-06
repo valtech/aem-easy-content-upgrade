@@ -53,6 +53,7 @@ public class AecuBindingImpl implements AecuBinding {
      * @param resourceResolver        resolver resolver with migration user
      * @param adminResourceResolver   resolver with admin user
      * @param resourceResolverFactory resource resolver factory
+     * @param replicator              page replicator
      * @param scriptContext           Groovy context
      */
     public AecuBindingImpl(ResourceResolver resourceResolver, ResourceResolver adminResourceResolver,

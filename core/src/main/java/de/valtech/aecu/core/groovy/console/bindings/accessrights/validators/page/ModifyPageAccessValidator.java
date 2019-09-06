@@ -48,8 +48,8 @@ public class ModifyPageAccessValidator extends ModifyAccessValidator {
      * 
      * @param group              group
      * @param resource           page to check
+     * @param context            context
      * @param checkAccessGranted checks if the access is granted or denied
-     * @param type               action type
      */
     public ModifyPageAccessValidator(Group group, Resource resource, AccessValidatorContext context, boolean checkAccessGranted) {
         super(group, resource, context, checkAccessGranted);

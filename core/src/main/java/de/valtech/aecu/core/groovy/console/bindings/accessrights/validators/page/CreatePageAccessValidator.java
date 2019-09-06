@@ -45,6 +45,7 @@ public class CreatePageAccessValidator extends CreateAccessValidator {
      * 
      * @param group              group
      * @param resource           page to check
+     * @param context            context
      * @param checkAccessGranted checks if the access is granted or denied
      * @param templatePath       template path
      */
