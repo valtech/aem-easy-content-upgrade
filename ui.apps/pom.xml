@@ -80,6 +80,7 @@
                     <properties>
                         <acHandling>merge_preserve</acHandling>
                         <installPathRegex>/apps/valtech/aecu/(config|install)/.*</installPathRegex>
+                        <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
                     </properties>
                     <embeddeds>
                         <embedded>
