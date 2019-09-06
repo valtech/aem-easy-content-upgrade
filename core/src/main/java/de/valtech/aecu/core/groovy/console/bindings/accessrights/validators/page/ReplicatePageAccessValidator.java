@@ -69,9 +69,7 @@ public class ReplicatePageAccessValidator extends ReplicateAccessValidator {
         if (!pageExists()) {
             return new ValidationResult(false, true, "Page not found");
         }
-        boolean deleteAccess = canReplicatePageWithUser(simulate);
-        boolean failed = getCheckAccessGranted() ? !deleteAccess : deleteAccess;
-        return new ValidationResult(failed, false, null);
+        return canReplicatePageWithUser(simulate);
     }
 
     /**
@@ -87,32 +85,32 @@ public class ReplicatePageAccessValidator extends ReplicateAccessValidator {
     /**
      * Checks if page can be deleted with user rights.
      * 
-     * @return can replicate page
+     * @return validation result
      */
-    private boolean canReplicatePageWithUser(boolean simulate) {
+    private ValidationResult canReplicatePageWithUser(boolean simulate) {
         TestUser testUser = getContext().getTestUserForGroup(group);
         if (testUser == null) {
-            return false;
+            return new ValidationResult(true, false, "Unable to create test user");
         }
         PageManager userPageManager = testUser.getResolver().adaptTo(PageManager.class);
         Page page = userPageManager.getPage(getResource().getPath());
         if (page == null) {
-            return false;
+            return new ValidationResult(getCheckAccessGranted(), false, "Cannot read page");
         }
         if (!simulate) {
-            return true;
+            return new ValidationResult(!getCheckAccessGranted(), false, "Wrong permissions");
         }
         try {
             Session session = testUser.getResolver().adaptTo(Session.class);
             getContext().getReplicator().replicate(session, type, page.getPath());
         } catch (ReplicationException e) {
             LOG.error("Unable to perform replictaion", e);
-            return false;
+            return new ValidationResult(getCheckAccessGranted(), false, e.getMessage());
         } finally {
             testUser.getResolver().revert();
             testUser.getResolver().refresh();
         }
-        return true;
+        return new ValidationResult(!getCheckAccessGranted(), false, "Cannot replicate page");
     }
 
     @Override

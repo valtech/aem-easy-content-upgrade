@@ -57,9 +57,7 @@ public class DeletePageAccessValidator extends DeleteAccessValidator {
         if (!pageExists()) {
             return new ValidationResult(false, true, "Page not found");
         }
-        boolean deleteAccess = canDeletePageWithUser();
-        boolean failed = getCheckAccessGranted() ? !deleteAccess : deleteAccess;
-        return new ValidationResult(failed, false, null);
+        return canDeletePageWithUser();
     }
 
     /**
@@ -75,24 +73,24 @@ public class DeletePageAccessValidator extends DeleteAccessValidator {
     /**
      * Checks if page can be deleted with user rights.
      * 
-     * @return can read page
+     * @return validation result
      */
-    private boolean canDeletePageWithUser() {
+    private ValidationResult canDeletePageWithUser() {
         TestUser testUser = getContext().getTestUserForGroup(group);
         if (testUser == null) {
-            return false;
+            return new ValidationResult(true, false, "Unable to create test user");
         }
         PageManager userPageManager = testUser.getResolver().adaptTo(PageManager.class);
         Page page = userPageManager.getPage(getResource().getPath());
         try {
             userPageManager.delete(page, false, false);
         } catch (WCMException e) {
-            return false;
+            return new ValidationResult(getCheckAccessGranted(), false, e.getMessage());
         } finally {
             testUser.getResolver().revert();
             testUser.getResolver().refresh();
         }
-        return true;
+        return new ValidationResult(!getCheckAccessGranted(), false, "Wrong permissions");
     }
 
     @Override

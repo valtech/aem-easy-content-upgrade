@@ -57,7 +57,7 @@ public class CreatePageAccessValidator extends CreateAccessValidator {
     @Override
     public ValidationResult validate(boolean simulate) {
         ValidationResult resourceResult = super.validate(simulate);
-        // stop if no delete access and check for granted permission
+        // stop if no access and check for granted permission
         // otherwise, check also template later
         if (!resourceResult.isSuccessful() && getCheckAccessGranted()) {
             return resourceResult;
@@ -65,9 +65,7 @@ public class CreatePageAccessValidator extends CreateAccessValidator {
         if (!pageExists()) {
             return new ValidationResult(false, true, "Page not found");
         }
-        boolean access = canCreatePageWithUser();
-        boolean failed = getCheckAccessGranted() ? !access : access;
-        return new ValidationResult(failed, false, null);
+        return canCreatePageWithUser();
     }
 
     /**
@@ -83,12 +81,12 @@ public class CreatePageAccessValidator extends CreateAccessValidator {
     /**
      * Checks if page can be deleted with user rights.
      * 
-     * @return can read page
+     * @return validation result
      */
-    private boolean canCreatePageWithUser() {
+    private ValidationResult canCreatePageWithUser() {
         TestUser testUser = getContext().getTestUserForGroup(group);
         if (testUser == null) {
-            return false;
+            return new ValidationResult(true, false, "Unable to create test user");
         }
         PageManager userPageManager = testUser.getResolver().adaptTo(PageManager.class);
         Page page = userPageManager.getPage(getResource().getPath());
@@ -96,18 +94,18 @@ public class CreatePageAccessValidator extends CreateAccessValidator {
             Page subpage = userPageManager.create(page.getPath(), "aecu-testpage", templatePath, "AECU Test", false);
             Template template = subpage.getTemplate();
             if (template == null) {
-                return false;
+                return new ValidationResult(getCheckAccessGranted(), false, "Cannot read template");
             }
             if (!template.isAllowed(page.getPath())) {
-                return false;
+                return new ValidationResult(getCheckAccessGranted(), false, "Template not allowed at this location");
             }
         } catch (WCMException e) {
-            return false;
+            return new ValidationResult(getCheckAccessGranted(), false, e.getMessage());
         } finally {
             testUser.getResolver().revert();
             testUser.getResolver().refresh();
         }
-        return true;
+        return new ValidationResult(!getCheckAccessGranted(), false, "Wrong permissions");
     }
 
     @Override

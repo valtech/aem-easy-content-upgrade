@@ -56,9 +56,7 @@ public class ReadPageAccessValidator extends ReadAccessValidator {
         if (!pageExists()) {
             return new ValidationResult(false, true, "Page not found");
         }
-        boolean readAccess = canReadPageWithUser();
-        boolean failed = getCheckAccessGranted() ? !readAccess : readAccess;
-        return new ValidationResult(failed, false, null);
+        return canReadPageWithUser();
     }
 
     /**
@@ -74,16 +72,19 @@ public class ReadPageAccessValidator extends ReadAccessValidator {
     /**
      * Checks if page can be read with user rights.
      * 
-     * @return can read page
+     * @return validation result
      */
-    private boolean canReadPageWithUser() {
+    private ValidationResult canReadPageWithUser() {
         TestUser testUser = getContext().getTestUserForGroup(group);
         if (testUser == null) {
-            return false;
+            return new ValidationResult(true, false, "Unable to create test user");
         }
         PageManager userPageManager = testUser.getResolver().adaptTo(PageManager.class);
         Page page = userPageManager.getPage(getResource().getPath());
-        return page != null;
+        if (page == null) {
+            return new ValidationResult(getCheckAccessGranted(), false, "Page not visible for user");
+        }
+        return new ValidationResult(!getCheckAccessGranted(), false, "Wrong permissions");
     }
 
     @Override
