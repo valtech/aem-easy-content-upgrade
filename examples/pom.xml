@@ -47,9 +47,8 @@
             </plugin>
 
             <plugin>
-                <groupId>com.day.jcr.vault</groupId>
-                <artifactId>content-package-maven-plugin</artifactId>
-                <extensions>true</extensions>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                     <verbose>true</verbose>
@@ -59,6 +58,10 @@
                         <installhook.aecu.class>de.valtech.aecu.core.installhook.AecuInstallHook</installhook.aecu.class>
                     </properties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
             </plugin>
 
             <plugin>
