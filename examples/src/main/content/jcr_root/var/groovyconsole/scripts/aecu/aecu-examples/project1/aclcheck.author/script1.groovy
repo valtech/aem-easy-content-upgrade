@@ -3,6 +3,23 @@ println "Example for checking permissions"
 aecu
     .validateAccessRights()
     .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("administrators")
+    .canRead()
+    .canModify()
+    .canCreate()
+    .canDelete()
+    .canReadAcl()
+    .canWriteAcl()
+    .canReadPage()
+    .canDeletePage()
+    .validate()
+    
+println "Multiple paths and groups can be tested in one run"
+
+
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
     .forGroups("content-authors")
     .canRead()
     .canModify()
@@ -28,15 +45,6 @@ aecu
     .canReadPage()
     .cannotModifyPage()
     .cannotDeletePage()
-    .forGroups("administrators")
-    .canRead()
-    .canModify()
-    .canCreate()
-    .canDelete()
-    .canReadAcl()
-    .canWriteAcl()
-    .canReadPage()
-    .canDeletePage()
     .validate()
     
 println "Real replication will be tested only with simulate()"
