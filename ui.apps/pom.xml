@@ -16,11 +16,9 @@
     <build>
         <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
         <resources>
-            <!-- define the resources that will go into the package -->
             <resource>
                 <directory>${basedir}/src/main/content/jcr_root</directory>
                 <excludes>
-                    <!-- exclude .vlt control files in the package -->
                     <exclude>**/.vlt</exclude>
                     <exclude>**/.vltignore</exclude>
                     <exclude>**/.gitignore</exclude>
