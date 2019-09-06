@@ -233,6 +233,20 @@ public interface ValidateAccessRights {
     ValidateAccessRights cannotReplicatePage(ReplicationActionType isActivate);
 
     /**
+     * Fail whole script execution on error. Script will stop after current aecu block. Subsequent
+     * code will no longer be executed.
+     */
+    ValidateAccessRights failOnError();
+
+    /**
+     * Fail whole script execution on error. Script will stop after current aecu block. Subsequent
+     * code will no longer be executed.
+     * 
+     * @param fail if true fail script execution
+     */
+    ValidateAccessRights failOnError(boolean fail);
+
+    /**
      * Checks if the specified rights are correctly set.
      */
     void validate();

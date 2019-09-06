@@ -74,6 +74,7 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     private ResourceResolver resolver;
     private AccessValidatorContext context;
     private ScriptContext scriptContext;
+    private boolean failOnError = false;
 
     /**
      * Constructor
@@ -319,7 +320,11 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
             output.append(String.join("\n", warnings));
             output.append("\n");
             output.append(table.getText());
+            output.append("\n\n");
             scriptContext.getPrintStream().append(output.toString());
+            if (table.hasErrors() && failOnError) {
+                throw new IllegalStateException("Rights check failed");
+            }
         } finally {
             context.cleanup();
         }
@@ -333,6 +338,18 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     @Override
     public void simulate() {
         validate(true);
+    }
+
+    @Override
+    public ValidateAccessRights failOnError() {
+        failOnError(true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights failOnError(boolean fail) {
+        failOnError = fail;
+        return this;
     }
 
     /**

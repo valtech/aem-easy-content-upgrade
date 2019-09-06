@@ -41,6 +41,7 @@ public class ValidateAccessRightsTable {
 
     private List<TableRow> rows = new ArrayList<>();
     private List<ErrorRow> errorRows = new ArrayList<>();
+    private boolean hasErrors = false;
 
     /**
      * Adds the result of an validator.
@@ -95,6 +96,7 @@ public class ValidateAccessRightsTable {
             }
         }
         if (!errorRows.isEmpty()) {
+            hasErrors = true;
             table.addStrongRule();
             AT_Row detailsRow = table.addRow(null, null, "Issue details");
             detailsRow.setTextAlignment(TextAlignment.CENTER);
@@ -106,7 +108,16 @@ public class ValidateAccessRightsTable {
             }
         }
         table.addRule();
-        return table.render() + "\n\n";
+        return table.render();
+    }
+
+    /**
+     * Returns if the tests resulted in any errors.
+     * 
+     * @return errors occured
+     */
+    public boolean hasErrors() {
+        return hasErrors;
     }
 
     /**
