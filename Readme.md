@@ -27,10 +27,12 @@ Table of contents
     2. [Manual Execution](#manualExecution)
 5. [History of Past Runs](#history)
 6. [Extension to Groovy Console](#groovy)
-    1. [Collect Options](#binding_collect)
-    2. [Filter Options](#binding_filter)
-    3. [Execute Options](#binding_execute)
-    4. [Run Options](#binding_run)
+    1. [Content Upgrades](#content_upgrades)
+        1. [Collect Options](#binding_collect)
+        2. [Filter Options](#binding_filter)
+        3. [Execute Options](#binding_execute)
+        4. [Run Options](#binding_run)
+    2. [Rights and Roles Testing](#rights_and_roles_testing)
 7. [JMX Interface](#jmx)
 8. [Health Checks](#healthchecks)
 9. [API Documentation](#api)
@@ -202,13 +204,19 @@ Now you can enter a search term and will see the runs that contain this text. Cl
 
 # Extension to Groovy Console
 
-AECU adds its own binding to Groovy Console. You can reach it using "aecu" in your script. This provides methods to perform common tasks like property modification or node deletion.
+AECU adds its own binding to Groovy Console. You can reach it using "aecu" in your script.
+
+<a name="content_upgrades"></a>
+
+## Content Upgrades
+
+This part provides methods to perform common tasks like property modification or node deletion.
 
 It follows a collect, filter, execute process.
 
 <a name="binding_collect"></a>
 
-## Collect Options
+### Collect Options
 In the collect phase you define which nodes should be checked for a migration.
 
 * forResources(String[] paths): use the given paths without any subnodes
@@ -234,10 +242,10 @@ aecu.contentUpgradeBuilder()
 
 <a name="binding_filter"></a>
 
-## Filter Options
+### Filter Options
 These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
 
-### Filter by Properties
+#### Filter by Properties
 
 Filters the resources by property values.
 
@@ -275,7 +283,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Filter by Node Name
+#### Filter by Node Name
 
 You can also filter nodes by their name.
 
@@ -291,7 +299,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Filter by Node Path
+#### Filter by Node Path
 
 Nodes can also be filtered by their path using a regular expression.
 
@@ -306,7 +314,7 @@ aecu.contentUpgradeBuilder()
 ```
 
 
-### Combine Multiple Filters
+#### Combine Multiple Filters
 You can combine filters with AND and OR to build more complex filters.
 
 ```java
@@ -334,9 +342,9 @@ aecu.contentUpgradeBuilder()
 
 <a name="binding_execute"></a>
 
-## Execute Options
+### Execute Options
 
-### Update Single-value Properies
+#### Update Single-value Properies
 
 * doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
 * doDeleteProperty(String name): removes the property with the given name if existing.
@@ -352,7 +360,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Update Multi-value Properties
+#### Update Multi-value Properties
 
 * doAddValuesToMultiValueProperty(String name, String[] values): adds the list of values to a property. The property is created if it does not yet exist.
 * doRemoveValuesOfMultiValueProperty(String name, String[] values): removes the list of values from a given property. 
@@ -368,7 +376,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Copy and Move Properties
+#### Copy and Move Properties
 
 This will copy or move a property to a subnode. You can also change the property name.
 
@@ -384,7 +392,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Replace Property Content
+#### Replace Property Content
 You can replace the content of String properties. This also supports multi-value properties.
 
 * doReplaceValueInAllProperties(String oldValue, String newValue): replaces the substring "oldValue" with "newValue". Applies to all String properties
@@ -403,7 +411,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Copy and Move Nodes
+#### Copy and Move Nodes
 
 The matching nodes can be copied/moved to a new location. You can use ".." if you want to step back in path.
 
@@ -424,7 +432,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Delete Nodes
+#### Delete Nodes
 
 You can delete all nodes that match your collection and filter.
 
@@ -438,14 +446,14 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-#### Node (De)activation
+##### Node (De)activation
 
 Please note that this is for non-page resources such as commerce products. For page level (de)activation there are [separate methods](#binding_page_replication).
 
 * doActivateResource(): activates the current resource
 * doDeactivateResource(): deactivates the current resource
 
-### Page Actions
+#### Page Actions
 
 AECU can run actions on the page that contains a filtered resource. This is e.g. helpful if you filter by page resource type.
 
@@ -453,7 +461,7 @@ Please note that there is no check for duplicate actions. If you run a page acti
 
 <a name="binding_page_replication"></a>
 
-#### Page (De)activation
+##### Page (De)activation
 
 * doActivateContainingPage(): activates the page that contains the current resource
 * doDeactivateContainingPage(): deactivates the page that contains the current resource
@@ -471,7 +479,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-#### Page Deletion
+##### Page Deletion
 
 * doDeleteContainingPage(): deletes the page (incl. subpages) that contains the current resource
 
@@ -483,7 +491,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-#### Page Tagging
+##### Page Tagging
 
 Tags can be specified by Id (e.g. "properties:style/color") or path (e.g. "/etc/tags/properties/orientation/landscape").
 
@@ -501,7 +509,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-#### Validate Page Rendering
+##### Validate Page Rendering
 
 AECU can do some basic tests if pages render correctly. You can use this to verify a migration run.
 
@@ -521,7 +529,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Print Nodes and Properties
+#### Print Nodes and Properties
 
 Sometimes, you only want to print some information about the matched nodes.
 
@@ -539,7 +547,7 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-### Custom Actions
+#### Custom Actions
 
 You can also hook in custom code to perform actions on resources. For this "doCustomResourceBasedAction()" can take a Lambda expression.
 
@@ -564,7 +572,7 @@ aecu.contentUpgradeBuilder()
 
 <a name="binding_run"></a>
 
-## Run Options
+### Run Options
 
 At the end you can run all actions or perform a dry-run first. The dry-run will just provide output about modifications but not save any changes. The normal run saves the session, no additional "session.save()" is required.
 
@@ -572,6 +580,40 @@ At the end you can run all actions or perform a dry-run first. The dry-run will 
 * dryRun(): only prints actions but does not perform repository changes
 * run(boolean dryRun): the "dryRun" parameter defines if it should be a run or dry-run
 
+<a name="rights_and_roles_testing"></a>
+
+## Rights and Roles Testing
+
+AECU allows you to automate permission tests. This greatly speeds up your testing in this area since
+
+* test can be run by developers and testers
+* test scripts can be written by developers and testers
+* easy to read test summaries make it easy to identify open topics
+* test scripts can be executed during package install and fail the installation if needed
+
+Note: Testing is only be supported on group level. User level permissions are not supported as it is bad practice to assign permissions directly to users.
+
+<a name="defining_tests"></a>
+
+### Defining Tests
+
+Each test block starts with "aecu.validateAccessRights()". Then you define the paths and groups to check with "forPaths/forGroups".
+Next, the actions to check are listed (e.g. "canRead()"). For each action there is also a "cannot" test.
+Finally, you start the test with "validate/simulate".
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canRead()
+    .canModify()
+    .canDeletePage()
+    .validate()
+```
+
+
+<a name="jmx"></a>
 
 # JMX Interface
 
