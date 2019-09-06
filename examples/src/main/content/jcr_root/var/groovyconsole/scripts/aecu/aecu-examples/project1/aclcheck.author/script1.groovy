@@ -12,6 +12,7 @@ aecu
     .cannotReadAcl()
     .cannotWriteAcl()
     .canReadPage()
+    .canModifyPage()
     .canDeletePage()
     .forPaths("/content/we-retail/us/en/products")
     .canCreatePage("/conf/we-retail/settings/wcm/templates/content-page")
@@ -25,6 +26,7 @@ aecu
     .cannotReadAcl()
     .cannotWriteAcl()
     .canReadPage()
+    .cannotModifyPage()
     .cannotDeletePage()
     .forGroups("administrators")
     .canRead()
@@ -36,6 +38,8 @@ aecu
     .canReadPage()
     .canDeletePage()
     .validate()
+    
+println "Real replication will be tested only with simulate()"
     
     aecu
     .validateAccessRights()

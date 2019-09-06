@@ -46,6 +46,7 @@ import de.valtech.aecu.core.groovy.console.bindings.accessrights.AccessValidator
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.ValidateAccessRightsTable;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.CreatePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.DeletePageAccessValidator;
+import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ModifyPageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ReadPageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page.ReplicatePageAccessValidator;
 import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.resource.CreateAccessValidator;
@@ -247,6 +248,20 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
     public ValidateAccessRights cannotCreatePage(String templatePath) {
         addValidators((authorizable, resource, checkAccessGranted) -> new CreatePageAccessValidator(authorizable, resource,
                 context, checkAccessGranted, templatePath), false);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights canModifyPage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ModifyPageAccessValidator(authorizable, resource,
+                context, checkAccessGranted), true);
+        return this;
+    }
+
+    @Override
+    public ValidateAccessRights cannotModifyPage() {
+        addValidators((authorizable, resource, checkAccessGranted) -> new ModifyPageAccessValidator(authorizable, resource,
+                context, checkAccessGranted), false);
         return this;
     }
 

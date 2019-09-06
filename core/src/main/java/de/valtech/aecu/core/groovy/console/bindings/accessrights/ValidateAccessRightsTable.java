@@ -106,7 +106,7 @@ public class ValidateAccessRightsTable {
             }
         }
         table.addRule();
-        return table.render();
+        return table.render() + "\n\n";
     }
 
     /**

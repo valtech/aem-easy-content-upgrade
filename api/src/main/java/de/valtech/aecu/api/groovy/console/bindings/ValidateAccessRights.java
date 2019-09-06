@@ -159,6 +159,20 @@ public interface ValidateAccessRights {
     ValidateAccessRights cannotReadPage();
 
     /**
+     * Checks if modify access to pages is granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights canModifyPage();
+
+    /**
+     * Checks if modify access to pages is NOT granted.
+     * 
+     * @return access right validation builder
+     */
+    ValidateAccessRights cannotModifyPage();
+
+    /**
      * Checks if create access to pages is granted.
      * 
      * @param templatePath template path
