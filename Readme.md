@@ -33,6 +33,11 @@ Table of contents
         3. [Execute Options](#binding_execute)
         4. [Run Options](#binding_run)
     2. [Rights and Roles Testing](#rights_and_roles_testing)
+        1. [Defining Tests](#defining_tests)
+        2. [Path Specification](#test_path_spec)
+        3. [Group Specification](#test_group_spec)
+        4. [Tests](#test_list)
+        5. [Execute Tests](#test_execution)
 7. [JMX Interface](#jmx)
 8. [Health Checks](#healthchecks)
 9. [API Documentation](#api)
@@ -609,6 +614,201 @@ aecu
     .canRead()
     .canModify()
     .canDeletePage()
+    .validate()
+```
+
+You can call forPaths()/forGroups() multiple times. The can(not)* tests will always use the last one.
+E.g. this will test
+ * content-authors: read, modify, delete page
+ * content-readers: read, no-modify, no-delete page
+The paths are the same for both groups.
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canRead()
+    .canModify()
+    .canDeletePage()
+    .forGroups("content-readers")
+    .canRead()
+    .cannotModify()
+    .cannotDeletePage()
+    .validate()
+```
+
+<a name="test_path_spec"></a>
+
+#### Path Specification
+
+The list of paths to check is set via "forPaths()". Here you can simply set all paths needed.
+Please note that the tests take some time. Therefore, take some example paths but not each and every page.
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canRead()
+    .validate()
+```
+
+<a name="test_group_spec"></a>
+
+#### Group Specification
+
+The list of groups to check is set via "forGroups()". Here you can simply set all groups needed.
+If groups need different checks then use multiple "forGroups()" or multiple calls of "aecu.validateAccessRights()".
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men")
+    .forGroups("content-authors", "content-readers")
+    .canRead()
+    .validate()
+```
+
+<a name="test_list"></a>
+
+#### Tests
+
+##### Simple ACL Tests
+These are the basic tests to check e.g. for read/write access to a page/resource.
+
+ * canRead(): has read access to specified path
+ * cannotRead(): does not have read access to specified path
+ * canModify(): has write access to specified path
+ * cannotModify(): does not have write access to specified path
+ * canCreate(): can create new nodes (e.g. pages) in specified path
+ * cannotCreate(): cannot create new nodes (e.g. pages) in specified path
+ * canDelete(): has delete permission to specified path
+ * cannotDelete(): does not have delete permission to specified path
+ * canReplicate(): can (de)activate the specified path
+ * cannotReplicate(): cannot (de)activate the specified path
+ * canReadAcl(): can read the ACLs of the specified path
+ * cannotReadAcl(): cannot read the ACLs of the specified path
+ * canWriteAcl(): can change the ACLs of the specified path
+ * cannotWriteAcl(): cannot change the ACLs of the specified path
+ 
+ Example:
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-readers")
+    .canRead()
+    .cannotModify()
+    .cannotReplicate()
+    .validate()
+```
+
+##### Page Tests
+The following tests include additional checks for page nodes. Use them if you know the tested path is a page.
+As they inherit from the simple ACL tests (e.g. "canReadPage()" includes "canRead()") there is no need to call both.
+
+ * canReadPage(): page exists and is readable
+ * cannotReadPage(): page exists and is not readable
+ * canCreatePage(String templatePath): subpage with given template path can be created. The test fails if the template is not allowed at this position.
+ * cannotCreatePage(String templatePath): subpage with given template path cannot be created or template not allowed at this position.
+ * canModifyPage(): a test property can be set on the page content resource
+ * cannotModifyPage(): the test property cannot be set on the page content resource
+ * canDeletePage(): page can be removed
+ * cannotDeletePage(): page cannot be removed
+ 
+ Example:
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canReadPage()
+    .canModifyPage()
+    .canCreatePage("/conf/we-retail/settings/wcm/templates/content-page")
+    .validate()
+```
+
+The following replication tests require "simulate()":
+ 
+ * canReplicatePage(ReplicationActionType type): page can be replicated with given action (e.g. activate)
+ * canReplicatePage(): page can be activated
+ * cannotReplicatePage(): page cannot be activated
+ * cannotReplicatePage(ReplicationActionType type): page cannot be replicated with given action (e.g. activate)
+ 
+ Example:
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canReadPage()
+    .canModifyPage()
+    .canCreatePage("/conf/we-retail/settings/wcm/templates/content-page")
+    .canReplicatePage()
+    .canReplicatePage(ReplicationActionType.ACTIVATE)
+    .simulate()
+```
+
+
+<a name="test_execution"></a>
+
+#### Execute Tests
+
+The tests are executed with "validate()" or "simulate()". The call of "validate()" does not persist any changes.
+In contrast, "simulate()" will also perform actions that cannot be rolled-back. E.g. "simulate()" will do
+an actual page activation for "canReplicatePage()".
+
+If any test requires "simulate()" then it will be noted in its description.
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canRead()
+    .validate()
+
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .canReplicatePage()
+    .simulate()
+
+```
+
+Sample output:
+
+```
+┌───────────────┬────────────────────────────┬────────┐
+│Group          │Path                        │Rights  │
+├───────────────┼────────────────────────────┼────────┤
+│content-authors│/content/we-retail/de       │OK: Read│
+│               │/content/we-retail/fr       │OK: Read│
+│               │/content/we-retail/us/en/men│OK: Read│
+└───────────────┴────────────────────────────┴────────┘
+```
+
+##### Fail Script Execution
+You can stop the whole script execution when a test fails. This will mark the script run as failed.
+
+By default, script execution will not stop on test failures.
+
+ * failOnError(): stop execution on failed test
+ * failOnError(boolean fail): stop execution on failed test if "fail" is true
+ 
+
+```
+aecu
+    .validateAccessRights()
+    .forPaths("/content/we-retail/us/en/men", "/content/we-retail/de", "/content/we-retail/fr")
+    .forGroups("content-authors")
+    .cannotReadPage()
+    .failOnError()
     .validate()
 ```
 
