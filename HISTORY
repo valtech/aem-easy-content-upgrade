@@ -1,4 +1,5 @@
 ??? 2.1.0
+  - Update to Groovy Console 14.0.0
   - Groovy Console binding:
    - ACL testing allows to check rights of your groups
 
