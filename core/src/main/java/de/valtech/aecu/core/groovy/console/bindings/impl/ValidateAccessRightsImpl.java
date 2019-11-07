@@ -367,10 +367,10 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
                 if ((authorizable != null) && authorizable.isGroup()) {
                     authorizables.add((Group) authorizable);
                 } else {
-                    warnings.add("Unable to resolve " + groupName);
+                    warnings.add("Unable to resolve group " + groupName);
                 }
             } catch (RepositoryException e) {
-                String message = "Unable to resolve " + groupName;
+                String message = "Unable to resolve group " + groupName;
                 LOG.warn(message);
                 warnings.add(message);
             }
@@ -388,7 +388,7 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         for (String path : pathsToCheck) {
             Resource resource = resolver.getResource(path);
             if (resource == null) {
-                String message = "Unable to resolve " + path;
+                String message = "Unable to resolve path" + path;
                 LOG.warn(message);
                 warnings.add(message);
             } else {

@@ -64,7 +64,7 @@ public class ModifyPageAccessValidator extends ModifyAccessValidator {
         if (!pageExists()) {
             return new ValidationResult(false, true, "Page not found");
         }
-        return canModifyPageWithUser(simulate);
+        return canModifyPageWithUser();
     }
 
     /**
@@ -82,7 +82,7 @@ public class ModifyPageAccessValidator extends ModifyAccessValidator {
      * 
      * @return validation result
      */
-    private ValidationResult canModifyPageWithUser(boolean simulate) {
+    private ValidationResult canModifyPageWithUser() {
         TestUser testUser = getContext().getTestUserForGroup(group);
         if (testUser == null) {
             return new ValidationResult(true, false, "Unable to create test user");
