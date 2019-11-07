@@ -19,9 +19,9 @@
 
     <properties>
         <aem.host>localhost</aem.host>
-        <aem.port>5702</aem.port>
+        <aem.port>5704</aem.port>
         <aem.publish.host>localhost</aem.publish.host>
-        <aem.publish.port>5703</aem.publish.port>
+        <aem.publish.port>5705</aem.publish.port>
         <sling.user>admin</sling.user>
         <sling.password>admin</sling.password>
         <vault.user>admin</vault.user>
@@ -541,7 +541,7 @@
             <dependency>
                 <groupId>com.icfolson.aem.groovy.console</groupId>
                 <artifactId>aem-groovy-console</artifactId>
-                <version>13.0.0</version>
+                <version>14.0.0</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -554,7 +554,7 @@
             <dependency>
                 <groupId>com.icfolson.aem.groovy.console</groupId>
                 <artifactId>aem-groovy-console</artifactId>
-                <version>13.0.0</version>
+                <version>14.0.0</version>
                 <type>zip</type>
                 <!-- exclude dependencies -->
                 <exclusions>
