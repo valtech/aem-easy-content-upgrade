@@ -42,6 +42,7 @@
 						            </Embed-Dependency>
 						            <Import-Package>
 						              !antlr.*,
+                          javax.annotation;version=0.0.0,
 						              com.icfolson.aem.groovy.console.*;version="[13.0,15)",
 						              *
   					            </Import-Package>

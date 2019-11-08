@@ -33,7 +33,11 @@
                 <configuration>
                     <instructions>
                         <!-- Import any version of javax.inject, to allow running on multiple versions of AEM -->
-                        <Import-Package>javax.inject;version=0.0.0,*</Import-Package>
+                        <Import-Package>
+                          javax.inject;version=0.0.0,
+                          javax.annotation;version=0.0.0,
+                          *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
