@@ -66,4 +66,13 @@ public class ServiceResourceResolverServiceTest {
         assertEquals(resolver, serviceResolver);
     }
 
+    @Test
+    public void getAdminResourceResolver() throws LoginException {
+        when(resolverFactory.getServiceResourceResolver(Mockito.any())).thenReturn(resolver);
+
+        ResourceResolver serviceResolver = service.getAdminResourceResolver();
+
+        assertEquals(resolver, serviceResolver);
+    }
+
 }
