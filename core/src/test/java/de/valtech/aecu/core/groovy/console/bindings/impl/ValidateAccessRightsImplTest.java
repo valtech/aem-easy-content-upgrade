@@ -133,6 +133,21 @@ public class ValidateAccessRightsImplTest {
     }
 
     @Test
+    public void validate_failedCheck() {
+        validateRights.forPaths(new String[] {TESTPATH});
+        validateRights.forGroups(new String[] {TESTGROUP});
+        assertNotNull(validateRights.canRead());
+        validateRights.validate();
+
+        verify(stream).append("\n┌─────────┬─────┬───────────────────────┐\n" + "│Group    │Path │Rights                 │\n"
+                + "├─────────┼─────┼───────────────────────┤\n" + "│testgroup│/test│FAIL: Read             │\n"
+                + "═════════════════════════════════════════\n" + "│             Issue details             │\n"
+                + "═════════════════════════════════════════\n" + "│Group    │Path │Issue                  │\n"
+                + "├─────────┼─────┼───────────────────────┤\n" + "│testgroup│/test│Read: Wrong permissions│\n"
+                + "└─────────┴─────┴───────────────────────┘\n" + "\n");
+    }
+
+    @Test
     public void simulate() {
         assertNotNull(validateRights.cannotRead());
         validateRights.simulate();
