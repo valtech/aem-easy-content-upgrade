@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
+          jcr:primaryType="rep:SystemUser"
+          jcr:uuid="c0e3fa19-b550-3452-9b36-5412df84f053"
+          rep:authorizableId="aecu-admin"
+          rep:principalName="aecu-admin"
+/>

@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>2.0.2-SNAPSHOT</version>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
     
     <artifactId>aecu.core</artifactId>
@@ -31,6 +31,21 @@
                         <Sling-Model-Packages>
                             de.valtech.aecu.core
                         </Sling-Model-Packages>
+                        <Embed-Dependency>
+						              asciitable,
+						              ascii-utf-themes,
+						              skb-interfaces,
+						              char-translation,
+						              antlr-runtime,
+						              antlr4,
+						              stringtemplate
+						            </Embed-Dependency>
+						            <Import-Package>
+						              !antlr.*,
+                          javax.annotation;version=0.0.0,
+						              com.icfolson.aem.groovy.console.*;version="[13.0,15)",
+						              *
+  					            </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -118,6 +133,40 @@
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.models.api</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>asciitable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>ascii-utf-themes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>skb-interfaces</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>char-translation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>stringtemplate</artifactId>
+        </dependency>
+				<dependency>
+				    <groupId>javax.annotation</groupId>
+				    <artifactId>javax.annotation-api</artifactId>
+				</dependency>
+        
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
