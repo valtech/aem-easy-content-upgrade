@@ -715,7 +715,7 @@ As they inherit from the simple ACL tests (e.g. "canReadPage()" includes "canRea
  * cannotCreatePage(String templatePath): subpage with given template path cannot be created or template not allowed at this position.
  * canModifyPage(): a test property can be set on the page content resource
  * cannotModifyPage(): the test property cannot be set on the page content resource
- * canDeletePage(): page can be removed
+ * canDeletePage(): page can be removed (please note that this can take a lot of time if the page has lots of subpages, use canDelete() if you have issues)
  * cannotDeletePage(): page cannot be removed
  
  Example:
