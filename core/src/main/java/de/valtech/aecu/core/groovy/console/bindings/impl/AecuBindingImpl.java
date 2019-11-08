@@ -18,12 +18,19 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
-import org.apache.sling.api.resource.ResourceResolver;
+import javax.jcr.RepositoryException;
 
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.day.cq.replication.Replicator;
 import com.icfolson.aem.groovy.console.api.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
+import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
 
 /**
  * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
@@ -32,23 +39,45 @@ import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
  */
 public class AecuBindingImpl implements AecuBinding {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AecuBindingImpl.class);
+
     private ResourceResolver resourceResolver;
+    private ResourceResolver adminResourceResolver;
+    private ResourceResolverFactory resourceResolverFactory;
     private ScriptContext scriptContext;
+    private Replicator replicator;
 
     /**
      * Constructor
      * 
-     * @param resourceResolver resolver
-     * @param scriptContext    Groovy context
+     * @param resourceResolver        resolver resolver with migration user
+     * @param adminResourceResolver   resolver with admin user
+     * @param resourceResolverFactory resource resolver factory
+     * @param replicator              page replicator
+     * @param scriptContext           Groovy context
      */
-    public AecuBindingImpl(ResourceResolver resourceResolver, ScriptContext scriptContext) {
+    public AecuBindingImpl(ResourceResolver resourceResolver, ResourceResolver adminResourceResolver,
+            ResourceResolverFactory resourceResolverFactory, Replicator replicator, ScriptContext scriptContext) {
         this.resourceResolver = resourceResolver;
+        this.adminResourceResolver = adminResourceResolver;
+        this.resourceResolverFactory = resourceResolverFactory;
+        this.replicator = replicator;
         this.scriptContext = scriptContext;
     }
 
     @Override
     public ContentUpgrade contentUpgradeBuilder() {
         return new ContentUpgradeImpl(resourceResolver, scriptContext);
+    }
+
+    @Override
+    public ValidateAccessRights validateAccessRights() {
+        try {
+            return new ValidateAccessRightsImpl(resourceResolverFactory, adminResourceResolver, replicator, scriptContext);
+        } catch (RepositoryException e) {
+            LOG.error("Error setting up the access right validator", e);
+        }
+        return null;
     }
 
 }

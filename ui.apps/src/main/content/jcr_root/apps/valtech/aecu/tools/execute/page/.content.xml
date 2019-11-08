@@ -53,14 +53,14 @@
                                             jcr:primaryType="nt:unstructured"
                                             sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
                                             fieldLabel="Select the folder or script"
-                                            rootPath="/var/groovyconsole/scripts/aecu"
+                                            rootPath="/var/groovyconsole/scripts"
                                             required="{Boolean}true"
                                             filter="hierarchy"
                                             name="searchPath"/>
                                     <submit
                                             jcr:primaryType="nt:unstructured"
                                             sling:resourceType="granite/ui/components/foundation/form/submit"
-                                            text="Search"/>
+                                            text="Submit"/>
                                 </items>
                             </form>
                         </items>

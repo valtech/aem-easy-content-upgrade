@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>2.0.2-SNAPSHOT</version>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>aecu.ui.apps</artifactId>
@@ -16,11 +16,9 @@
     <build>
         <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
         <resources>
-            <!-- define the resources that will go into the package -->
             <resource>
                 <directory>${basedir}/src/main/content/jcr_root</directory>
                 <excludes>
-                    <!-- exclude .vlt control files in the package -->
                     <exclude>**/.vlt</exclude>
                     <exclude>**/.vltignore</exclude>
                     <exclude>**/.gitignore</exclude>
@@ -47,16 +45,42 @@
             </plugin>
 
             <plugin>
-                <groupId>com.day.jcr.vault</groupId>
-                <artifactId>content-package-maven-plugin</artifactId>
-                <extensions>true</extensions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-sling-install-hook</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.sling</groupId>
+                                    <artifactId>org.apache.sling.installer.provider.installhook</artifactId>
+                                    <version>1.0.4</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/vault-work/META-INF/vault/hooks</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>        
+        
+            <plugin>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
+                    <allowIndexDefinitions>true</allowIndexDefinitions>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
                     <group>Valtech</group>
                     <properties>
                         <acHandling>merge_preserve</acHandling>
+                        <installPathRegex>/apps/valtech/aecu/(config|install)/.*</installPathRegex>
+                        <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
                     </properties>
                     <embeddeds>
                         <embedded>
@@ -71,6 +95,10 @@
                         </embedded>
                     </embeddeds>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
             </plugin>
 
             <plugin>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -36,6 +36,7 @@ import org.osgi.service.component.annotations.Reference;
 public class ServiceResourceResolverService {
 
     private static final String SUBSERVICE_AECU = "aecu";
+    private static final String SUBSERVICE_AECU_ADMIN = "aecu-admin";
     private static final String SUBSERVICE_AECU_CONTENT_MIGRATION = "aecu-content-migrator";
 
     @Reference
@@ -62,6 +63,18 @@ public class ServiceResourceResolverService {
     public ResourceResolver getContentMigratorResourceResolver() throws LoginException {
         final Map<String, Object> authenticationInfo = new HashMap<>();
         authenticationInfo.put(ResourceResolverFactory.SUBSERVICE, SUBSERVICE_AECU_CONTENT_MIGRATION);
+        return resolverFactory.getServiceResourceResolver(authenticationInfo);
+    }
+
+    /**
+     * Returns a resource resolver of the AECU admin user.
+     *
+     * @return service resource resolver
+     * @throws LoginException error opening resource resolver
+     */
+    public ResourceResolver getAdminResourceResolver() throws LoginException {
+        final Map<String, Object> authenticationInfo = new HashMap<>();
+        authenticationInfo.put(ResourceResolverFactory.SUBSERVICE, SUBSERVICE_AECU_ADMIN);
         return resolverFactory.getServiceResourceResolver(authenticationInfo);
     }
 
