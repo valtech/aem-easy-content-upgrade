@@ -41,43 +41,40 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
  */
 public class PrintProperty implements Action {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PrintProperty.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PrintProperty.class);
 
-	private final String NOT_DEFINED = " not defined";
-	private final String ERROR_MESSAGE = "Cannot read value of [{}]. Reason [{}]";
+    private String propertyName;
 
-	private String propertyName;
+    public PrintProperty(String propertyName) {
+        this.propertyName = propertyName;
+    }
 
-	public PrintProperty(String propertyName) {
-		this.propertyName = propertyName;
-	}
+    @Override
+    public String doAction(@Nonnull Resource resource) {
+        Node node = resource.adaptTo(Node.class);
+        String output = propertyName + " = ";
+        try {
+            if (node.hasProperty(propertyName)) {
+                Property prop = node.getProperty(propertyName);
 
-	@Override
-	public String doAction(@Nonnull Resource resource) {
-		Node node = resource.adaptTo(Node.class);
-		String propertyValue = propertyName + " = ";
-		try {
-			if (node.hasProperty(propertyName)) {
-				Property prop = node.getProperty(propertyName);
+                // This check is necessary to ensure a multi-valued property
+                if (prop.isMultiple()) {
+                    Value[] values = prop.getValues();
+                    String[] valuesAsStrings = new String[values.length];
+                    for (int i = 0; i < values.length; i++) {
+                        valuesAsStrings[i] = values[i].getString();
+                    }
+                    output = output + Arrays.toString(valuesAsStrings);
+                } else {
+                    output = output + prop.getValue().getString();
+                }
 
-				// This check is necessary to ensure a multi-valued property
-				if (prop.isMultiple()) {
-					Value[] values = prop.getValues();
-					String[] valuesAsStrings = new String[values.length];
-					for (int i = 0; i < values.length; i++) {
-						valuesAsStrings[i] = values[i].getString();
-					}
-					propertyValue = propertyValue + Arrays.toString(valuesAsStrings);
-				} else {
-					propertyValue = propertyValue + prop.getValue().getString();
-				}
-
-				return propertyValue;
-			}
-			return propertyName + NOT_DEFINED;
-		} catch (RepositoryException e) {
-			LOG.debug(ERROR_MESSAGE, propertyName, e.getMessage());
-		}
-		return "";
-	}
+                return output;
+            }
+            return propertyName + " not defined";
+        } catch (RepositoryException e) {
+            LOG.debug("Cannot read value of [{}]. Reason [{}]", propertyName, e.getMessage());
+        }
+        return "";
+    }
 }
