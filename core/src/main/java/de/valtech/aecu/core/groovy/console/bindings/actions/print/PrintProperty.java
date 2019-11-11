@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2019 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,22 +19,31 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.actions.print;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
+import java.util.Arrays;
 
 import javax.annotation.Nonnull;
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+
+import org.apache.sling.api.resource.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * Action for printing the name and value of a given property.
  *
+ * @author sravan
  * @author Roxana Muresan
  */
 public class PrintProperty implements Action {
 
-    private String propertyName;
+    private static final Logger LOG = LoggerFactory.getLogger(PrintProperty.class);
 
+    private String propertyName;
 
     public PrintProperty(String propertyName) {
         this.propertyName = propertyName;
@@ -42,10 +51,30 @@ public class PrintProperty implements Action {
 
     @Override
     public String doAction(@Nonnull Resource resource) {
-        ValueMap properties = resource.getValueMap();
-        if (properties.containsKey(propertyName)) {
-            return propertyName + " = " + properties.get(propertyName);
+        Node node = resource.adaptTo(Node.class);
+        String output = propertyName + " = ";
+        try {
+            if (node.hasProperty(propertyName)) {
+                Property prop = node.getProperty(propertyName);
+
+                // This check is necessary to ensure a multi-valued property
+                if (prop.isMultiple()) {
+                    Value[] values = prop.getValues();
+                    String[] valuesAsStrings = new String[values.length];
+                    for (int i = 0; i < values.length; i++) {
+                        valuesAsStrings[i] = values[i].getString();
+                    }
+                    output = output + Arrays.toString(valuesAsStrings);
+                } else {
+                    output = output + prop.getValue().getString();
+                }
+
+                return output;
+            }
+            return propertyName + " not defined";
+        } catch (RepositoryException e) {
+            LOG.debug("Cannot read value of [{}]. Reason [{}]", propertyName, e.getMessage());
         }
-        return propertyName + " not defined";
+        return "";
     }
 }
