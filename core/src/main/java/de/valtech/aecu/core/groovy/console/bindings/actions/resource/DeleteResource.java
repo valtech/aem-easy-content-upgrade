@@ -18,29 +18,53 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
+ * This action is used to delete the child nodes of a given node.
+ * 
+ * @author sravan
  * @author Roxana Muresan
  */
 public class DeleteResource implements Action {
 
     private ResourceResolver resourceResolver;
+    private String[] children;
 
-    public DeleteResource(@Nonnull ResourceResolver resourceResolver) {
+    public DeleteResource(@Nonnull ResourceResolver resourceResolver, String... children) {
         this.resourceResolver = resourceResolver;
+        this.children = children;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
-        String path = resource.getPath();
-        resourceResolver.delete(resource);
-        return "Deleted resource " + path;
+        List<String> deletedResources = new ArrayList<>();
+        List<String> nonExistingResources = new ArrayList<>();
+        for (String child : children) {
+            Resource childResource = resourceResolver.getResource(resource, child);
+            if (null != childResource) {
+                resourceResolver.delete(childResource);
+                deletedResources.add(child);
+            } else {
+                nonExistingResources.add(child);
+            }
+        }
+        if (resourceResolver.hasChanges()) {
+            resourceResolver.commit();
+        }
+        return "Deleted child resource(s) - " + Arrays.toString(deletedResources.toArray())
+                + " and non-existing child resource(s) - " + Arrays.toString(nonExistingResources.toArray()) + " under parent "
+                + resource.getPath();
     }
+
 }
