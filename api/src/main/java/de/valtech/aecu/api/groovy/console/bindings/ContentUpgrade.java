@@ -87,7 +87,7 @@ public interface ContentUpgrade {
     /**
      * Filters by a single property.
      * 
-     * @param name property name
+     * @param name  property name
      * @param value property value
      * @return upgrade object
      */
@@ -97,7 +97,7 @@ public interface ContentUpgrade {
      * Filters by a single property using a regular expression for the value. This is intended for
      * single value properties.
      * 
-     * @param name property name
+     * @param name  property name
      * @param regex regular expression to match value
      * @return upgrade object
      */
@@ -123,7 +123,7 @@ public interface ContentUpgrade {
     /**
      * Filters by multi-value with the given name containing the given conditionValues
      *
-     * @param name name of the multi-value property
+     * @param name            name of the multi-value property
      * @param conditionValues values to search for
      * @return upgrade object
      */
@@ -164,7 +164,7 @@ public interface ContentUpgrade {
     /**
      * Sets a property value.
      * 
-     * @param name property name
+     * @param name  property name
      * @param value property value
      * @return upgrade object
      **/
@@ -190,8 +190,8 @@ public interface ContentUpgrade {
     /**
      * Copies a property to a relative path.
      * 
-     * @param name property name
-     * @param newName new property name
+     * @param name                 property name
+     * @param newName              new property name
      * @param relativeResourcePath relative path
      * @return upgrade object
      */
@@ -200,8 +200,8 @@ public interface ContentUpgrade {
     /**
      * Moves a property to a relative path.
      * 
-     * @param name property name
-     * @param newName new property name
+     * @param name                 property name
+     * @param newName              new property name
      * @param relativeResourcePath relative path
      * @return upgrade object
      */
@@ -210,7 +210,7 @@ public interface ContentUpgrade {
     /**
      * Adds values to a multivalue property.
      * 
-     * @param name property name
+     * @param name   property name
      * @param values values
      * @return upgrade object
      */
@@ -219,7 +219,7 @@ public interface ContentUpgrade {
     /**
      * Removes values of a multivalue property.
      * 
-     * @param name property name
+     * @param name   property name
      * @param values values to remove
      * @return upgrade object
      */
@@ -228,7 +228,7 @@ public interface ContentUpgrade {
     /**
      * Replaces values in a multivalue property.
      * 
-     * @param name property name
+     * @param name      property name
      * @param oldValues values to remove
      * @param newValues values to add
      * @return upgrade object
@@ -249,8 +249,8 @@ public interface ContentUpgrade {
      * Replaces a substring in specific properties of the matching resource. Only applies to String
      * properties.
      * 
-     * @param oldValue old value
-     * @param newValue new value
+     * @param oldValue      old value
+     * @param newValue      new value
      * @param propertyNames property names that should be checked
      * @return upgrade object
      */
@@ -270,8 +270,8 @@ public interface ContentUpgrade {
      * Replaces a substring in specific properties of the matching resource using a regular
      * expression. Only applies to String properties.
      * 
-     * @param searchRegex regex to match old value
-     * @param replacement new value, may contain matcher groups (e.g. $1)
+     * @param searchRegex   regex to match old value
+     * @param replacement   new value, may contain matcher groups (e.g. $1)
      * @param propertyNames property names that should be checked
      * @return upgrade object
      */
@@ -305,15 +305,15 @@ public interface ContentUpgrade {
      * Moves a resource if its path matches the pattern to the path obtained by applying the
      * replacement expression
      *
-     * @param matchPattern regular expression for matching the resource path
+     * @param matchPattern   regular expression for matching the resource path
      * @param targetPathExpr expression to calculate the target path, can contain matched group
-     * references $1, $2, ...
+     *                       references $1, $2, ...
      * @return upgrade object
      */
     ContentUpgrade doMoveResourceToPathRegex(String matchPattern, String targetPathExpr);
 
     /**
-     * Deletes the child resources if supplied or the resource itself in the context.
+     * Deletes the child resources if supplied. Otherwise deletes the resource itself in the context.
      * 
      * @return upgrade object
      */
@@ -429,7 +429,7 @@ public interface ContentUpgrade {
     /**
      * Checks if the containing page renders with status code 200 and (not) contains given text.
      * 
-     * @param textPresent page content must include this text (can be null)
+     * @param textPresent    page content must include this text (can be null)
      * @param textNotPresent page content must not include this text (can be null)
      * @return upgrade object
      */
@@ -461,7 +461,7 @@ public interface ContentUpgrade {
      * Saves all changes to repository.
      * 
      * @throws PersistenceException error during execution
-     * @throws AecuException other error
+     * @throws AecuException        other error
      */
     void run() throws PersistenceException, AecuException;
 
@@ -469,7 +469,7 @@ public interface ContentUpgrade {
      * Performs a dry-run. No changes are written to CRX.
      * 
      * @throws PersistenceException error doing dry-run
-     * @throws AecuException other error
+     * @throws AecuException        other error
      */
     void dryRun() throws PersistenceException, AecuException;
 
@@ -478,8 +478,9 @@ public interface ContentUpgrade {
      *
      * @param dryRun dryRun option
      * @throws PersistenceException error during execution
-     * @throws AecuException other error
+     * @throws AecuException        other error
      */
     void run(boolean dryRun) throws PersistenceException, AecuException;
 
 }
+
