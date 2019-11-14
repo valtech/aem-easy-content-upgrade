@@ -319,7 +319,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doDeleteResource(String... children) {
-        actions.add(new DeleteResource(context.getResolver()));
+        actions.add(new DeleteResource(context.getResolver(), children));
         return this;
     }
 

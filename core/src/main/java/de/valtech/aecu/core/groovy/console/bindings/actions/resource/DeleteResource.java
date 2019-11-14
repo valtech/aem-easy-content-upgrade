@@ -50,21 +50,26 @@ public class DeleteResource implements Action {
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
         List<String> deletedResources = new ArrayList<>();
         List<String> nonExistingResources = new ArrayList<>();
+        String resourcePath = resource.getPath();
+        // in case of no children, delete the resource itself
+        if (0 == children.length) {
+            resourceResolver.delete(resource);
+            return "Deleted resource - " + resourcePath;
+        }
+
         for (String child : children) {
             Resource childResource = resourceResolver.getResource(resource, child);
+            String childResourcePath = resourcePath + "/" + child;
             if (null != childResource) {
                 resourceResolver.delete(childResource);
-                deletedResources.add(child);
+                deletedResources.add(childResourcePath);
             } else {
-                nonExistingResources.add(child);
+                nonExistingResources.add(childResourcePath);
             }
         }
-        if (resourceResolver.hasChanges()) {
-            resourceResolver.commit();
-        }
-        return "Deleted child resource(s) - " + Arrays.toString(deletedResources.toArray())
-                + " and non-existing child resource(s) - " + Arrays.toString(nonExistingResources.toArray()) + " under parent "
-                + resource.getPath();
+
+        return "Deleted child resource(s) - " + Arrays.toString(deletedResources.toArray()) + ". Child resource(s) - "
+                + Arrays.toString(nonExistingResources.toArray()) + " were not found.";
     }
 
 }
