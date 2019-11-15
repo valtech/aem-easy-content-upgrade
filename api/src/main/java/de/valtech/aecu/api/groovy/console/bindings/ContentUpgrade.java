@@ -313,7 +313,8 @@ public interface ContentUpgrade {
     ContentUpgrade doMoveResourceToPathRegex(String matchPattern, String targetPathExpr);
 
     /**
-     * Deletes the child resources if supplied. Otherwise deletes the resource itself in the context.
+     * Deletes the child resources if supplied. If no children are specified it deletes the resource
+     * itself.
      * 
      * @return upgrade object
      */

@@ -46,7 +46,7 @@ public class DeleteResourceTest {
         doNothing().when(resourceResolver).delete(resource);
         String result = deleteResourceAction.doAction(resource);
         verify(resourceResolver, times(1)).delete(resource);
-        assertEquals(result, "Deleted resource - " + COMPONENT);
+        assertEquals(result, "Deleted resource " + COMPONENT);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class DeleteResourceTest {
         doNothing().when(resourceResolver).delete(any(Resource.class));
         DeleteResource deleteResourceAction = new DeleteResource(resourceResolver, CHILD1, CHILD2, CHILD3);
         String result = deleteResourceAction.doAction(resource);
-        String expectedResult = String.format("Deleted child resource(s) - [%s]. Child resource(s) - [%s] were not found.",
+        String expectedResult = String.format("Deleted child resource(s) [%s]. Child resource(s) [%s] were not found.",
                 COMPONENT + PATH_SEPARATOR + CHILD1 + ", " + COMPONENT + PATH_SEPARATOR + CHILD3,
                 COMPONENT + PATH_SEPARATOR + CHILD2);
         verify(resourceResolver, times(2)).delete(any(Resource.class));

@@ -31,7 +31,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
- * This action is used to delete the child nodes of a given node.
+ * This action is used to delete a given node or some of its child nodes.
  * 
  * @author sravan
  * @author Roxana Muresan
@@ -54,7 +54,7 @@ public class DeleteResource implements Action {
         // in case of no children, delete the resource itself
         if (0 == children.length) {
             resourceResolver.delete(resource);
-            return "Deleted resource - " + resourcePath;
+            return "Deleted resource " + resourcePath;
         }
 
         for (String child : children) {
@@ -67,9 +67,11 @@ public class DeleteResource implements Action {
                 nonExistingResources.add(childResourcePath);
             }
         }
-
-        return "Deleted child resource(s) - " + Arrays.toString(deletedResources.toArray()) + ". Child resource(s) - "
-                + Arrays.toString(nonExistingResources.toArray()) + " were not found.";
+        String message = "Deleted child resource(s) " + Arrays.toString(deletedResources.toArray()) + ".";
+        if (!nonExistingResources.isEmpty()) {
+            message += " Child resource(s) " + Arrays.toString(nonExistingResources.toArray()) + " were not found.";
+        }
+        return message;
     }
 
 }
