@@ -104,7 +104,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
      * Constructor
      * 
      * @param resourceResolver resolver
-     * @param scriptContext    Groovy context
+     * @param scriptContext Groovy context
      */
     public ContentUpgradeImpl(@Nonnull ResourceResolver resourceResolver, ScriptContext scriptContext) {
         this.context = new BindingContext(resourceResolver);
@@ -318,8 +318,8 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade doDeleteResource() {
-        actions.add(new DeleteResource(context.getResolver()));
+    public ContentUpgrade doDeleteResource(String... children) {
+        actions.add(new DeleteResource(context.getResolver(), children));
         return this;
     }
 

@@ -439,15 +439,17 @@ aecu.contentUpgradeBuilder()
 
 #### Delete Nodes
 
-You can delete all nodes that match your collection and filter.
+You can delete nodes that match your collection and filter.
 
-* doDeleteResource(): deletes the matching nodes
+* doDeleteResource(): deletes the resource that matched the collection and filter 
+* doDeleteResource(String... children): deletes the specified child nodes of the matching resource
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doDeleteResource()
+        .doDeleteResource("child1", "child2", "child3")
         .run()
 ```
 
