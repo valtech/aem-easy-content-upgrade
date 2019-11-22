@@ -1,3 +1,4 @@
 de.valtech.aecu.api.groovy.console.bindings
+de.valtech.aecu.api.groovy.console.bindings.accessrights
 de.valtech.aecu.api.groovy.console.bindings.filters
 de.valtech.aecu.api.service
