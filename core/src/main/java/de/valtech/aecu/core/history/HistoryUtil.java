@@ -347,8 +347,7 @@ public class HistoryUtil {
         ExecutionState state = ExecutionState.valueOf(values.get(ATTR_RUN_STATE, ExecutionState.FAILED.name()));
         String runResult = values.get(ATTR_RUN_RESULT, "");
         String path = values.get(ATTR_PATH, "");
-        ExecutionResult result = new ExecutionResult(state, time, runResult, output, fallback, path);
-        return result;
+        return new ExecutionResult(state, time, runResult, output, fallback, path);
     }
 
     private void saveExecutionResultInHistory(ExecutionResult result, String path, ResourceResolver resolver)

@@ -9,4 +9,8 @@
             jcr:primaryType="rep:GrantACE"
             rep:principalName="aecu-content-migrator"
             rep:privileges="{Name}[jcr:read]"/>
+    <allow
+        jcr:primaryType="rep:GrantACE"
+        rep:principalName="aecu-admin"
+        rep:privileges="{Name}[jcr:all]"/>
 </jcr:root>

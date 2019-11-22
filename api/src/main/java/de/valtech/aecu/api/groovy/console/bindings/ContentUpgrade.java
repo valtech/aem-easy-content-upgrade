@@ -313,11 +313,12 @@ public interface ContentUpgrade {
     ContentUpgrade doMoveResourceToPathRegex(String matchPattern, String targetPathExpr);
 
     /**
-     * Deletes the resource.
+     * Deletes the child resources if supplied. If no children are specified it deletes the resource
+     * itself.
      * 
      * @return upgrade object
      */
-    ContentUpgrade doDeleteResource();
+    ContentUpgrade doDeleteResource(String... children);
 
     /**
      * Activates the resource.
@@ -483,3 +484,4 @@ public interface ContentUpgrade {
     void run(boolean dryRun) throws PersistenceException, AecuException;
 
 }
+

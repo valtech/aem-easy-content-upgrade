@@ -341,7 +341,7 @@ public class GroovyConsoleRequest implements SlingHttpServletRequest {
     }
 
     @Override
-    public <AdapterType> AdapterType adaptTo(Class<AdapterType> arg0) {
+    public <T> T adaptTo(Class<T> arg0) {
         return null;
     }
 

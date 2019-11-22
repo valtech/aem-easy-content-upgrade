@@ -22,11 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.replication.Replicator;
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
 import com.icfolson.aem.groovy.console.api.BindingVariable;
 import com.icfolson.aem.groovy.console.api.ScriptContext;
@@ -49,19 +51,24 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
     private BindingExtensionProvider defaultBindingExtensionProvider;
     @Reference
     private ServiceResourceResolverService resourceResolverService;
+    @Reference
+    private ResourceResolverFactory resourceResolverFactory;
+    @Reference
+    private Replicator replicator;
 
 
     @Override
     public Map<String, BindingVariable> getBindingVariables(ScriptContext context) {
-        Map<String, BindingVariable> variables = new HashMap<String, BindingVariable>();
+        Map<String, BindingVariable> variables = new HashMap<>();
         try {
-            AecuBinding aecuBinding = new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(), context);
+            AecuBinding aecuBinding = new AecuBindingImpl(resourceResolverService.getContentMigratorResourceResolver(),
+                    resourceResolverService.getAdminResourceResolver(), resourceResolverFactory, replicator, context);
             BindingVariable aecuVar =
                     new BindingVariable(aecuBinding, AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
             variables.put("aecu", aecuVar);
         } catch (LoginException e) {
             LOG.error(
-                    "Failed to get resource resolver for aecu-content-migrator, make sure you all the configurations needed for this system user are deployed.");
+                    "Failed to get resource resolver for aecu-content-migrator or aecu-admin, make sure you all the configurations needed for this system user are deployed.");
         }
         return variables;
     }

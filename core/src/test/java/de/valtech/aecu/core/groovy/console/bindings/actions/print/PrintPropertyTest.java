@@ -19,6 +19,18 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.actions.print;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Before;
@@ -27,54 +39,79 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 /**
  * Tests PrintProperty
- *
+ * 
+ * @author sravan
  * @author Roxana Muresan
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PrintPropertyTest {
 
+    private final String NOT_DEFINED_PROPERTY = "notDefinedProperty";
+    private final String ANY_VALUE = "any_value";
+    private final String EXISTING_SINGLE_VALUE_PROPERTY = "existingSingleValueProperty";
+    private final String EXISTING_MULTI_VALUE_PROPERTY = "existingMultiValueProperty";
+
     @Mock
     private Resource resource;
     @Mock
     private ValueMap properties;
-
+    @Mock
+    private Node node;
+    @Mock
+    private Property singleValueProperty;
+    @Mock
+    private Property multiValueProperty;
 
     @Before
-    public void init() {
-        when(properties.containsKey("NotDefinedProperty")).thenReturn(false);
-
-        when(properties.containsKey("ExistingProperty")).thenReturn(true);
-        when(properties.get("ExistingProperty")).thenReturn("any_value");
-
-        when(resource.getValueMap()).thenReturn(properties);
+    public void init() throws RepositoryException {
+        Value value1 = mock(Value.class);
+        Value value2 = mock(Value.class);
+        Value[] values = {value1, value2};
+        when(value1.getString()).thenReturn(ANY_VALUE);
+        when(value2.getString()).thenReturn(ANY_VALUE);
+        when(resource.adaptTo(Node.class)).thenReturn(node);
+        when(node.hasProperty(NOT_DEFINED_PROPERTY)).thenReturn(false);
+        when(node.hasProperty(EXISTING_SINGLE_VALUE_PROPERTY)).thenReturn(true);
+        when(node.getProperty(EXISTING_SINGLE_VALUE_PROPERTY)).thenReturn(singleValueProperty);
+        when(node.hasProperty(EXISTING_MULTI_VALUE_PROPERTY)).thenReturn(true);
+        when(node.getProperty(EXISTING_MULTI_VALUE_PROPERTY)).thenReturn(multiValueProperty);
+        when(multiValueProperty.isMultiple()).thenReturn(true);
+        when(singleValueProperty.isMultiple()).thenReturn(false);
+        when(singleValueProperty.getValue()).thenReturn(value1);
+        when(singleValueProperty.getValue().getString()).thenReturn(ANY_VALUE);
+        when(multiValueProperty.getValues()).thenReturn(values);
     }
 
     @Test
-    public void test_doAction_noProperty() {
-        PrintProperty printPropertyAction = new PrintProperty("NotDefinedProperty");
+    public void test_doAction_noProperty() throws RepositoryException {
+        PrintProperty printPropertyAction = new PrintProperty(NOT_DEFINED_PROPERTY);
         String result = printPropertyAction.doAction(resource);
 
-        verify(properties, never()).get("NotDefinedProperty");
+        verify(singleValueProperty, never()).isMultiple();
 
-        assertTrue(result.contains("NotDefinedProperty not defined"));
+        assertTrue(result.contains(NOT_DEFINED_PROPERTY + " not defined"));
     }
 
     @Test
-    public void test_doAction_existingProperty() {
-        PrintProperty printPropertyAction = new PrintProperty("ExistingProperty");
+    public void test_doAction_existingSingleValueProperty() throws RepositoryException {
+        PrintProperty printPropertyAction = new PrintProperty(EXISTING_SINGLE_VALUE_PROPERTY);
         String result = printPropertyAction.doAction(resource);
 
-        verify(properties, times(1)).get("ExistingProperty");
+        verify(singleValueProperty, atLeastOnce()).isMultiple();
+        verify(singleValueProperty, atLeastOnce()).getValue();
+        assertTrue(result.contains(EXISTING_SINGLE_VALUE_PROPERTY + " = " + ANY_VALUE));
+    }
 
-        assertTrue(result.contains("ExistingProperty = any_value"));
+    @Test
+    public void test_doAction_existingMultiValueProperty() throws RepositoryException {
+        PrintProperty printPropertyAction = new PrintProperty(EXISTING_MULTI_VALUE_PROPERTY);
+        String result = printPropertyAction.doAction(resource);
+
+        verify(multiValueProperty, atLeastOnce()).isMultiple();
+        verify(multiValueProperty, atLeastOnce()).getValues();
+        assertTrue(result.contains(EXISTING_MULTI_VALUE_PROPERTY + " = [" + ANY_VALUE + ", " + ANY_VALUE + "]"));
     }
 
 }

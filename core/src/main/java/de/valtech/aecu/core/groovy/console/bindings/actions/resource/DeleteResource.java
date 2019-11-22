@@ -18,29 +18,60 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
+ * This action is used to delete a given node or some of its child nodes.
+ * 
+ * @author sravan
  * @author Roxana Muresan
  */
 public class DeleteResource implements Action {
 
     private ResourceResolver resourceResolver;
+    private String[] children;
 
-    public DeleteResource(@Nonnull ResourceResolver resourceResolver) {
+    public DeleteResource(@Nonnull ResourceResolver resourceResolver, String... children) {
         this.resourceResolver = resourceResolver;
+        this.children = children;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
-        String path = resource.getPath();
-        resourceResolver.delete(resource);
-        return "Deleted resource " + path;
+        List<String> deletedResources = new ArrayList<>();
+        List<String> nonExistingResources = new ArrayList<>();
+        String resourcePath = resource.getPath();
+        // in case of no children, delete the resource itself
+        if (0 == children.length) {
+            resourceResolver.delete(resource);
+            return "Deleted resource " + resourcePath;
+        }
+
+        for (String child : children) {
+            Resource childResource = resourceResolver.getResource(resource, child);
+            String childResourcePath = resourcePath + "/" + child;
+            if (null != childResource) {
+                resourceResolver.delete(childResource);
+                deletedResources.add(childResourcePath);
+            } else {
+                nonExistingResources.add(childResourcePath);
+            }
+        }
+        String message = "Deleted child resource(s) " + Arrays.toString(deletedResources.toArray()) + ".";
+        if (!nonExistingResources.isEmpty()) {
+            message += " Child resource(s) " + Arrays.toString(nonExistingResources.toArray()) + " were not found.";
+        }
+        return message;
     }
+
 }
