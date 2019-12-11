@@ -6,16 +6,22 @@
     <filter root="/var/groovyconsole/scripts/aecu" mode="merge"/>
     <filter root="/apps/settings/granite/operations/hc/aecu"/>
     <filter root="/apps/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge"/><!--removes the old location-->
-    <filter root="/conf/global/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge"/>
+    
+    <filter root="/conf/global/settings/granite" mode="merge"/> <!-- required for a bug in filevault-package-maven-plugin 1.0.4 JCRVLT-354 -->
+    <!-- <filter root="/conf/global/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge"/> readd with fix for JCRVLT-354 -->
+    
     <filter root="/etc/groovyconsole/scripts/aecu"/><!--removes the old location-->
     <filter root="/rep:policy" mode="merge"/>
     <filter root="/rep:repoPolicy" mode="merge"/>
     <filter root="/var/rep:policy" mode="merge"/>
-    <filter root="/var/aecu/rep:policy" mode="merge"/>
     <filter root="/content/rep:policy" mode="merge"/>
     <filter root="/conf/rep:policy" mode="merge"/>
     <filter root="/etc/rep:policy" mode="merge"/>
     <filter root="/apps/rep:policy" mode="merge"/>
-    <filter root="/var/aecu/oak:index/aecuHistory"/>
+
+    <filter root="/var/aecu" mode="merge"/> <!-- required for a bug in filevault-package-maven-plugin 1.0.4 JCRVLT-354 -->
+    <!-- <filter root="/var/aecu/oak:index/aecuHistory"/> readd with fix for JCRVLT-354 -->
+    <!-- <filter root="/var/aecu/rep:policy" mode="merge"/> readd with fix for JCRVLT-354 -->
+
     <filter root="/home/rep:policy" mode="merge"/>
 </workspaceFilter>
