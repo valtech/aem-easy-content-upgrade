@@ -460,6 +460,14 @@ Please note that this is for non-page resources such as commerce products. For p
 * doActivateResource(): activates the current resource
 * doDeactivateResource(): deactivates the current resource
 
+```java
+aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .doDeactivateResource()
+        .doActivateResource()
+        .run()
+```
+
 #### Page Actions
 
 AECU can run actions on the page that contains a filtered resource. This is e.g. helpful if you filter by page resource type.
