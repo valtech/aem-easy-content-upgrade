@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -68,6 +68,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePrope
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CreateResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
@@ -104,7 +105,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
      * Constructor
      * 
      * @param resourceResolver resolver
-     * @param scriptContext Groovy context
+     * @param scriptContext    Groovy context
      */
     public ContentUpgradeImpl(@Nonnull ResourceResolver resourceResolver, ScriptContext scriptContext) {
         this.context = new BindingContext(resourceResolver);
@@ -320,6 +321,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doDeleteResource(String... children) {
         actions.add(new DeleteResource(context.getResolver(), children));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, Map<String, Object> properties) {
+        actions.add(new CreateResource(name, properties, null, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, Map<String, Object> properties, String relativePath) {
+        actions.add(new CreateResource(name, properties, relativePath, context.getResolver()));
         return this;
     }
 
