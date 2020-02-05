@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,7 +25,11 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.WCMException;
+
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
 
 /**
  * Action class for moving resources via regex
@@ -60,7 +64,17 @@ public class MoveResourceToPathRegex implements Action {
             Resource destinationResource = resourceResolver.getResource(targetPath);
 
             if (destinationResource != null) {
-                resourceResolver.move(resourcePath, targetPath);
+                PageUtil pageUtil = new PageUtil();
+                if (pageUtil.isPageResource(resource)) {
+                    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+                    try {
+                        pageManager.move(resource, targetPath + "/" + resource.getName(), null, false, false, null);
+                    } catch (WCMException | IllegalArgumentException e) {
+                        throw new PersistenceException("Unable to move " + resourcePath + ": " + e.getMessage());
+                    }
+                } else {
+                    resourceResolver.move(resourcePath, targetPath);
+                }
 
                 return "Moved " + resourcePath + " to path " + targetPath;
             }

@@ -19,14 +19,6 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,6 +28,17 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
+
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ValueMap;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Tests MoveResourceToPathRegex
@@ -49,7 +52,15 @@ public class MoveResourceToPathRegexTest {
     private ResourceResolver resourceResolver;
     @Mock
     private Resource resource;
+    @Mock
+    private ValueMap valueMap;
 
+    @Before
+    public void setup() {
+        when(resource.getPath()).thenReturn("/content/project/something");
+        when(resource.getValueMap()).thenReturn(valueMap);
+        when(valueMap.get(JcrConstants.JCR_PRIMARYTYPE, String.class)).thenReturn(JcrConstants.NT_FOLDER);
+    }
 
     @Test
     public void testDoAction_noMatch() {
