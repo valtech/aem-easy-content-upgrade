@@ -323,21 +323,42 @@ public interface ContentUpgrade {
     /**
      * Creates a new resource under the current one.
      * 
-     * @param name       resource name
-     * @param properties properties incl. jcr:primaryTpye
+     * @param name        resource name
+     * @param primaryType jcr:primaryTpye
      * @return upgrade object
      */
-    ContentUpgrade doCreateResource(String name, Map<String, Object> properties);
+    ContentUpgrade doCreateResource(String name, String primaryType);
+
+    /**
+     * Creates a new resource under the current one.
+     * 
+     * @param name        resource name
+     * @param primaryType jcr:primaryTpye
+     * @param properties  properties excl. jcr:primaryTpye
+     * @return upgrade object
+     */
+    ContentUpgrade doCreateResource(String name, String primaryType, Map<String, Object> properties);
 
     /**
      * Creates a new resource under the current one.
      * 
      * @param name         resource name
+     * @param primaryType  jcr:primaryTpye
+     * @param relativePath relative path
+     * @return upgrade object
+     */
+    ContentUpgrade doCreateResource(String name, String primaryType, String relativePath);
+
+    /**
+     * Creates a new resource under the current one.
+     * 
+     * @param name         resource name
+     * @param primaryType  jcr:primaryTpye
      * @param properties   properties incl. jcr:primaryTpye
      * @param relativePath relative path
      * @return upgrade object
      */
-    ContentUpgrade doCreateResource(String name, Map<String, Object> properties, String relativePath);
+    ContentUpgrade doCreateResource(String name, String primaryType, Map<String, Object> properties, String relativePath);
 
     /**
      * Activates the resource.
