@@ -441,7 +441,7 @@ aecu.contentUpgradeBuilder()
 
 Sometimes a new node needs to be created e.g. to add or configure a component.
 
-* doCreateResource(String name, String primaryType, Map<String): creates a new node using the name and primary type
+* doCreateResource(String name, String primaryType): creates a new node using the name and primary type
 * doCreateResource(String name, String primaryType, Map<String, Object> properties): creates a new node using additional properties
 * doCreateResource(String name, String primaryType, String relativePath): same as above but creates the node under the relative path
 * doCreateResource(String name, String primaryType, Map<String, Object> properties, String relativePath): same as above but creates the node under the relative path
