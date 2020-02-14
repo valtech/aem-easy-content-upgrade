@@ -18,18 +18,20 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import java.util.Map;
-
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 /**
+ * Creates a new node
+ *
  * @author Roland Gruber
  */
 public class CreateResource implements Action {

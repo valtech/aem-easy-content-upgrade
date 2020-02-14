@@ -21,6 +21,7 @@ package de.valtech.aecu.core.groovy.console.bindings.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.jcr.query.Query;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
@@ -325,14 +327,34 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade doCreateResource(String name, Map<String, Object> properties) {
-        actions.add(new CreateResource(name, properties, null, context.getResolver()));
+    public ContentUpgrade doCreateResource(String name, String primaryType) {
+        Map<String, Object> propertyMap = new HashMap<>();
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, null, context.getResolver()));
         return this;
     }
 
     @Override
-    public ContentUpgrade doCreateResource(String name, Map<String, Object> properties, String relativePath) {
-        actions.add(new CreateResource(name, properties, relativePath, context.getResolver()));
+    public ContentUpgrade doCreateResource(String name, String primaryType, Map<String, Object> properties) {
+        Map<String, Object> propertyMap = (properties == null) ? new HashMap<>() : properties;
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, null, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, String primaryType, String relativePath) {
+        Map<String, Object> propertyMap = new HashMap<>();
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, relativePath, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, String primaryType, Map<String, Object> properties, String relativePath) {
+        Map<String, Object> propertyMap = (properties == null) ? new HashMap<>() : properties;
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, relativePath, context.getResolver()));
         return this;
     }
 
