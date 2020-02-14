@@ -437,6 +437,29 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Create Nodes
+
+Sometimes a new node needs to be created e.g. to add or configure a component.
+
+* doCreateResource(String name, String primaryType): creates a new node using the name and primary type
+* doCreateResource(String name, String primaryType, Map<String, Object> properties): creates a new node using additional properties
+* doCreateResource(String name, String primaryType, String relativePath): same as above but creates the node under the relative path
+* doCreateResource(String name, String primaryType, Map<String, Object> properties, String relativePath): same as above but creates the node under the relative path
+
+```java
+def map = [
+  "testval": "test"
+]
+
+aecu.contentUpgradeBuilder()
+        .forResources((String[]) ["/content/we-retail/jcr:content"])
+        .doCreateResource("mynode1", "nt:unstructured")
+        .doCreateResource("mynode2", "nt:unstructured", map)
+        .doCreateResource("mysubnode1", "nt:unstructured", "mynode1")
+        .doCreateResource("mysubnode2", "nt:unstructured", map, "mynode2")
+        .run()
+```
+
 #### Delete Nodes
 
 You can delete nodes that match your collection and filter.

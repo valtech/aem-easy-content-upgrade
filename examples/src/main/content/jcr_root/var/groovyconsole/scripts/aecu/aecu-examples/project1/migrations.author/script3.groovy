@@ -10,4 +10,4 @@ aecu.contentUpgradeBuilder()
     // actions
     .printPath()
     .doSetProperty("useFullWidth", false)
-    .run()
+    .dryRun()

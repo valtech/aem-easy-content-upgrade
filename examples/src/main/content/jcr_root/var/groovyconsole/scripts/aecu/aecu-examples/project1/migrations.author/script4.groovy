@@ -7,4 +7,4 @@ aecu.contentUpgradeBuilder()
     // actions
     .printPath()
     .doMoveResourceToRelativePath("../experience")
-    .run()
+    .dryRun()

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,6 +21,7 @@ package de.valtech.aecu.core.groovy.console.bindings.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.jcr.query.Query;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
@@ -68,6 +70,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePrope
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CreateResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
@@ -104,7 +107,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
      * Constructor
      * 
      * @param resourceResolver resolver
-     * @param scriptContext Groovy context
+     * @param scriptContext    Groovy context
      */
     public ContentUpgradeImpl(@Nonnull ResourceResolver resourceResolver, ScriptContext scriptContext) {
         this.context = new BindingContext(resourceResolver);
@@ -320,6 +323,38 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doDeleteResource(String... children) {
         actions.add(new DeleteResource(context.getResolver(), children));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, String primaryType) {
+        Map<String, Object> propertyMap = new HashMap<>();
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, null, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, String primaryType, Map<String, Object> properties) {
+        Map<String, Object> propertyMap = (properties == null) ? new HashMap<>() : properties;
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, null, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, String primaryType, String relativePath) {
+        Map<String, Object> propertyMap = new HashMap<>();
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, relativePath, context.getResolver()));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCreateResource(String name, String primaryType, Map<String, Object> properties, String relativePath) {
+        Map<String, Object> propertyMap = (properties == null) ? new HashMap<>() : properties;
+        propertyMap.put(JcrConstants.JCR_PRIMARYTYPE, primaryType);
+        actions.add(new CreateResource(name, propertyMap, relativePath, context.getResolver()));
         return this;
     }
 
