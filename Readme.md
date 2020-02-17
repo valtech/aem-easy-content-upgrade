@@ -122,7 +122,8 @@ The content of the scripts is plain Groovy code that can be run via [Groovy Cons
 
 There are just a few naming conventions:
 
-* Run modes: folders can contain run modes to limit the execution to a specific target environment. E.g. some scripts are for author only or for your local dev environment.
+* Run modes: folders can contain run modes to limit the execution to a specific target environment. E.g. some scripts are for author only or for your local dev environment. Multiple 
+run mode combinations can be separated with ";" (e.g. "folder.author.test;author.stage" will be executed on test+stage author but not on prod author).
 * Always selector: if a script name ends with ".always.groovy" then it will be executed by
 [install hook](#installHook) on each package installation. There will be no more check if this script
 was already executed before.
