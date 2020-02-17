@@ -29,6 +29,7 @@ import com.day.cq.wcm.api.WCMException;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * @author Roxana Muresan
@@ -37,10 +38,18 @@ public class MoveResourceToRelativePath implements Action {
 
     private String relativePath;
     private ResourceResolver resourceResolver;
+    private boolean dryRun;
 
-    public MoveResourceToRelativePath(@Nonnull String relativePath, @Nonnull ResourceResolver resourceResolver) {
+    /**
+     * Constructor
+     * 
+     * @param relativePath relative path
+     * @param context      binding context
+     */
+    public MoveResourceToRelativePath(@Nonnull String relativePath, @Nonnull BindingContext context) {
         this.relativePath = relativePath;
-        this.resourceResolver = resourceResolver;
+        this.resourceResolver = context.getResolver();
+        dryRun = context.isDryRun();
     }
 
     @Override
@@ -53,7 +62,9 @@ public class MoveResourceToRelativePath implements Action {
             if (pageUtil.isPageResource(resource)) {
                 PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
                 try {
-                    pageManager.move(resource, destinationAsPath + "/" + resource.getName(), null, false, false, null);
+                    if (!dryRun) {
+                        pageManager.move(resource, destinationAsPath + "/" + resource.getName(), null, false, false, null);
+                    }
                 } catch (WCMException | IllegalArgumentException e) {
                     throw new PersistenceException("Unable to move " + sourceAbsPAth + ": " + e.getMessage());
                 }

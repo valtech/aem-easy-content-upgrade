@@ -30,6 +30,7 @@ import com.day.cq.wcm.api.WCMException;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * Action class for moving resources via regex
@@ -39,19 +40,21 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
 public class MoveResourceToPathRegex implements Action {
 
     private ResourceResolver resourceResolver;
+    private boolean dryRun;
     private String matchPattern;
     private String targetPathExpr;
 
     /**
      * Constructor
      * 
-     * @param matchPattern     regex pattern
-     * @param targetPathExpr   target regex
-     * @param resourceResolver resolver
+     * @param matchPattern   regex pattern
+     * @param targetPathExpr target regex
+     * @param context        binding context
      */
     public MoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr,
-            @Nonnull ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
+            @Nonnull BindingContext context) {
+        this.resourceResolver = context.getResolver();
+        dryRun = context.isDryRun();
         this.matchPattern = matchPattern;
         this.targetPathExpr = targetPathExpr;
     }
@@ -68,7 +71,9 @@ public class MoveResourceToPathRegex implements Action {
                 if (pageUtil.isPageResource(resource)) {
                     PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
                     try {
-                        pageManager.move(resource, targetPath + "/" + resource.getName(), null, false, false, null);
+                        if (!dryRun) {
+                            pageManager.move(resource, targetPath + "/" + resource.getName(), null, false, false, null);
+                        }
                     } catch (WCMException | IllegalArgumentException e) {
                         throw new PersistenceException("Unable to move " + resourcePath + ": " + e.getMessage());
                     }

@@ -38,6 +38,12 @@ public class CopyResourceToRelativePath implements Action {
     private String relativePath;
     private ResourceResolver resourceResolver;
 
+    /**
+     * Constructor
+     * 
+     * @param relativePath     relative path
+     * @param resourceResolver resource resolver
+     */
     public CopyResourceToRelativePath(@Nonnull String relativePath, @Nonnull ResourceResolver resourceResolver) {
         this.relativePath = relativePath;
         this.resourceResolver = resourceResolver;
@@ -53,7 +59,7 @@ public class CopyResourceToRelativePath implements Action {
             if (pageUtil.isPageResource(resource)) {
                 PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
                 try {
-                    pageManager.copy(resource, destinationAsPath + "/" + resource.getName(), null, false, false);
+                    pageManager.copy(resource, destinationAsPath + "/" + resource.getName(), null, false, false, false);
                 } catch (WCMException | IllegalArgumentException e) {
                     throw new PersistenceException("Unable to copy " + sourceAbsPAth + ": " + e.getMessage());
                 }

@@ -310,13 +310,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doMoveResourceToRelativePath(@Nonnull String relativePath) {
-        actions.add(new MoveResourceToRelativePath(relativePath, context.getResolver()));
+        actions.add(new MoveResourceToRelativePath(relativePath, context));
         return this;
     }
 
     @Override
     public ContentUpgrade doMoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr) {
-        actions.add(new MoveResourceToPathRegex(matchPattern, targetPathExpr, context.getResolver()));
+        actions.add(new MoveResourceToPathRegex(matchPattern, targetPathExpr, context));
         return this;
     }
 

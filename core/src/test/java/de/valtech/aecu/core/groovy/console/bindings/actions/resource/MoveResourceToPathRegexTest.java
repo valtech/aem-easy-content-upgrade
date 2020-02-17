@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -39,6 +39,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * Tests MoveResourceToPathRegex
@@ -116,7 +118,8 @@ public class MoveResourceToPathRegexTest {
     }
 
     private MoveResourceToPathRegex createObjectUnderTest(String matchPattern, String replaceExpr) {
-        return new MoveResourceToPathRegex(matchPattern, replaceExpr, resourceResolver);
+        BindingContext context = new BindingContext(resourceResolver);
+        return new MoveResourceToPathRegex(matchPattern, replaceExpr, context);
     }
 
     private void mockWithValues(String resourcePath, String targetPath, boolean destinationExists) {
