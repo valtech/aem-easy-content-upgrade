@@ -39,8 +39,7 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
  */
 public class MoveResourceToPathRegex implements Action {
 
-    private ResourceResolver resourceResolver;
-    private boolean dryRun;
+    private BindingContext context;
     private String matchPattern;
     private String targetPathExpr;
 
@@ -53,14 +52,14 @@ public class MoveResourceToPathRegex implements Action {
      */
     public MoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr,
             @Nonnull BindingContext context) {
-        this.resourceResolver = context.getResolver();
-        dryRun = context.isDryRun();
+        this.context = context;
         this.matchPattern = matchPattern;
         this.targetPathExpr = targetPathExpr;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
+        ResourceResolver resourceResolver = context.getResolver();
         String resourcePath = resource.getPath();
         if (resourcePath.matches(matchPattern)) {
             String targetPath = resourcePath.replaceAll(matchPattern, targetPathExpr);
@@ -71,7 +70,7 @@ public class MoveResourceToPathRegex implements Action {
                 if (pageUtil.isPageResource(resource)) {
                     PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
                     try {
-                        if (!dryRun) {
+                        if (!context.isDryRun()) {
                             pageManager.move(resource, targetPath + "/" + resource.getName(), null, false, false, null);
                         }
                     } catch (WCMException | IllegalArgumentException e) {

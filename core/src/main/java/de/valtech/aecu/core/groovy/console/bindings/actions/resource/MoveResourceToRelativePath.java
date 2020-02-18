@@ -37,8 +37,7 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 public class MoveResourceToRelativePath implements Action {
 
     private String relativePath;
-    private ResourceResolver resourceResolver;
-    private boolean dryRun;
+    private BindingContext context;
 
     /**
      * Constructor
@@ -48,12 +47,12 @@ public class MoveResourceToRelativePath implements Action {
      */
     public MoveResourceToRelativePath(@Nonnull String relativePath, @Nonnull BindingContext context) {
         this.relativePath = relativePath;
-        this.resourceResolver = context.getResolver();
-        dryRun = context.isDryRun();
+        this.context = context;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
+        ResourceResolver resourceResolver = context.getResolver();
         Resource destinationResource = resourceResolver.getResource(resource, relativePath);
         if (destinationResource != null) {
             String sourceAbsPAth = resource.getPath();
@@ -62,7 +61,7 @@ public class MoveResourceToRelativePath implements Action {
             if (pageUtil.isPageResource(resource)) {
                 PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
                 try {
-                    if (!dryRun) {
+                    if (!context.isDryRun()) {
                         pageManager.move(resource, destinationAsPath + "/" + resource.getName(), null, false, false, null);
                     }
                 } catch (WCMException | IllegalArgumentException e) {
