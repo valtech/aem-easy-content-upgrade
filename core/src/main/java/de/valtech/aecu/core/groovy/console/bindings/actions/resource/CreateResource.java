@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,58 +18,48 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
+import java.util.Map;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
+import javax.annotation.Nonnull;
 
 /**
- * @author Roxana Muresan
+ * Creates a new node
+ *
+ * @author Roland Gruber
  */
-public class CopyResourceToRelativePath implements Action {
+public class CreateResource implements Action {
 
+    private String name;
+    private Map<String, Object> properties;
     private String relativePath;
     private ResourceResolver resourceResolver;
 
-    /**
-     * Constructor
-     * 
-     * @param relativePath     relative path
-     * @param resourceResolver resource resolver
-     */
-    public CopyResourceToRelativePath(@Nonnull String relativePath, @Nonnull ResourceResolver resourceResolver) {
+    public CreateResource(@Nonnull String name, @Nonnull Map<String, Object> properties, String relativePath,
+            @Nonnull ResourceResolver resourceResolver) {
+        this.name = name;
+        this.properties = properties;
         this.relativePath = relativePath;
         this.resourceResolver = resourceResolver;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
-        Resource destinationResource = resourceResolver.getResource(resource, relativePath);
-        if (destinationResource != null) {
-            String sourceAbsPAth = resource.getPath();
-            String destinationAsPath = destinationResource.getPath();
-            PageUtil pageUtil = new PageUtil();
-            if (pageUtil.isPageResource(resource)) {
-                PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
-                try {
-                    pageManager.copy(resource, destinationAsPath + "/" + resource.getName(), null, false, false, false);
-                } catch (WCMException | IllegalArgumentException e) {
-                    throw new PersistenceException("Unable to copy " + sourceAbsPAth + ": " + e.getMessage());
-                }
-            } else {
-                resourceResolver.copy(sourceAbsPAth, destinationAsPath);
-            }
-
-            return "Copied " + sourceAbsPAth + " to path " + destinationAsPath;
+        Resource destinationResource = resource;
+        if (StringUtils.isNotBlank(relativePath)) {
+            destinationResource = resourceResolver.getResource(resource, relativePath);
         }
-        return "WARNING: could not read copy destination resource " + relativePath;
+        if (destinationResource != null) {
+            Resource newResource = resourceResolver.create(destinationResource, name, properties);
+            return "Created " + newResource.getPath();
+        }
+        return "WARNING: could not read destination resource at " + relativePath;
     }
 
 }

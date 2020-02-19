@@ -52,11 +52,11 @@ Table of contents
 
 AECU requires Java 8 and AEM 6.4 or above. For AEM 6.3 please install the last 1.x version of AECU. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
-| AEM Version   | Groovy Console | AECU |
-| ------------- | -------------- | ---- |
-| 6.3           | 12.x           | 1.x  |
-| 6.4           | 13.x, 14.x     | 2.x  |
-| 6.5           | 13.x, 14.x     | 2.x  |
+| AEM Version   | Groovy Console | AECU      |
+| ------------- | -------------- | --------- |
+| 6.3           | 12.x           | 1.x       |
+| 6.4           | 14.x, 13.x     | 3.x, 2.x  |
+| 6.5           | 14.x, 13.x     | 3.x, 2.x  |
 
 <a name="installation"></a>
 
@@ -122,7 +122,8 @@ The content of the scripts is plain Groovy code that can be run via [Groovy Cons
 
 There are just a few naming conventions:
 
-* Run modes: folders can contain run modes to limit the execution to a specific target environment. E.g. some scripts are for author only or for your local dev environment.
+* Run modes: folders can contain run modes to limit the execution to a specific target environment. E.g. some scripts are for author only or for your local dev environment. Multiple 
+run mode combinations can be separated with ";" (e.g. "folder.author.test;author.stage" will be executed on test+stage author but not on prod author).
 * Always selector: if a script name ends with ".always.groovy" then it will be executed by
 [install hook](#installHook) on each package installation. There will be no more check if this script
 was already executed before.
@@ -432,8 +433,31 @@ aecu.contentUpgradeBuilder()
         .doRename("newNodeName")
         .doCopyResourceToRelativePath("subNode")
         .doCopyResourceToRelativePath("../subNode")
-        .doMoveResourceToRelativePath("subNode")
+        .doMoveResourceToRelativePath("../subNode")
         .doMoveResourceToPathRegex("/content/we-retail/(\\w+)/(\\w+)/(\\w+)", "/content/somewhere/\$1/and/\$2")
+        .run()
+```
+
+#### Create Nodes
+
+Sometimes a new node needs to be created e.g. to add or configure a component.
+
+* doCreateResource(String name, String primaryType): creates a new node using the name and primary type
+* doCreateResource(String name, String primaryType, Map<String, Object> properties): creates a new node using additional properties
+* doCreateResource(String name, String primaryType, String relativePath): same as above but creates the node under the relative path
+* doCreateResource(String name, String primaryType, Map<String, Object> properties, String relativePath): same as above but creates the node under the relative path
+
+```java
+def map = [
+  "testval": "test"
+]
+
+aecu.contentUpgradeBuilder()
+        .forResources((String[]) ["/content/we-retail/jcr:content"])
+        .doCreateResource("mynode1", "nt:unstructured")
+        .doCreateResource("mynode2", "nt:unstructured", map)
+        .doCreateResource("mysubnode1", "nt:unstructured", "mynode1")
+        .doCreateResource("mysubnode2", "nt:unstructured", map, "mynode2")
         .run()
 ```
 
@@ -459,6 +483,14 @@ Please note that this is for non-page resources such as commerce products. For p
 
 * doActivateResource(): activates the current resource
 * doDeactivateResource(): deactivates the current resource
+
+```java
+aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .doDeactivateResource()
+        .doActivateResource()
+        .run()
+```
 
 #### Page Actions
 

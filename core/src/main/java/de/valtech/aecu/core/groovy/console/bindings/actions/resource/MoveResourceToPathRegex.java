@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,7 +25,12 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.WCMException;
+
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
  * Action class for moving resources via regex
@@ -34,33 +39,46 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
  */
 public class MoveResourceToPathRegex implements Action {
 
-    private ResourceResolver resourceResolver;
+    private BindingContext context;
     private String matchPattern;
     private String targetPathExpr;
 
     /**
      * Constructor
      * 
-     * @param matchPattern     regex pattern
-     * @param targetPathExpr   target regex
-     * @param resourceResolver resolver
+     * @param matchPattern   regex pattern
+     * @param targetPathExpr target regex
+     * @param context        binding context
      */
     public MoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr,
-            @Nonnull ResourceResolver resourceResolver) {
-        this.resourceResolver = resourceResolver;
+            @Nonnull BindingContext context) {
+        this.context = context;
         this.matchPattern = matchPattern;
         this.targetPathExpr = targetPathExpr;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
+        ResourceResolver resourceResolver = context.getResolver();
         String resourcePath = resource.getPath();
         if (resourcePath.matches(matchPattern)) {
             String targetPath = resourcePath.replaceAll(matchPattern, targetPathExpr);
             Resource destinationResource = resourceResolver.getResource(targetPath);
 
             if (destinationResource != null) {
-                resourceResolver.move(resourcePath, targetPath);
+                PageUtil pageUtil = new PageUtil();
+                if (pageUtil.isPageResource(resource)) {
+                    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+                    try {
+                        if (!context.isDryRun()) {
+                            pageManager.move(resource, targetPath + "/" + resource.getName(), null, false, false, null);
+                        }
+                    } catch (WCMException | IllegalArgumentException e) {
+                        throw new PersistenceException("Unable to move " + resourcePath + ": " + e.getMessage());
+                    }
+                } else {
+                    resourceResolver.move(resourcePath, targetPath);
+                }
 
                 return "Moved " + resourcePath + " to path " + targetPath;
             }
