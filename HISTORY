@@ -1,3 +1,8 @@
+2020-02-14 3.1.0
+  - Allow node creation
+  - JDK 11 support
+  - Fixes issues when a page with version history is copied
+
 2019-12-11 3.0.1
   - Fixed installation issues on new instances
 

@@ -433,7 +433,7 @@ aecu.contentUpgradeBuilder()
         .doRename("newNodeName")
         .doCopyResourceToRelativePath("subNode")
         .doCopyResourceToRelativePath("../subNode")
-        .doMoveResourceToRelativePath("subNode")
+        .doMoveResourceToRelativePath("../subNode")
         .doMoveResourceToPathRegex("/content/we-retail/(\\w+)/(\\w+)/(\\w+)", "/content/somewhere/\$1/and/\$2")
         .run()
 ```
