@@ -862,6 +862,15 @@ This will execute the given script or folder. If a folder is specified then all 
 Parameters:
  * Path: file or folder to execute
 
+## ExecuteWithHistory
+
+Use this e.g. when you copied over content from production to development and need to rerun install hook scripts.
+
+This will execute the given script or folder. If a folder is specified then all files (incl. any subfolders) are executed. AECU will respect run modes and install hook history during execution. This means that scripts that were already executed by install hook are ignored. After execution the install hook history will be updated.
+
+Parameters:
+ * Path: file or folder to execute
+
 ## GetHistory
 
 Prints the history of the specified last runs. The entries are sorted by date and start with the last run.

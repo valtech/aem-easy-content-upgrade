@@ -20,8 +20,11 @@ package de.valtech.aecu.core.jmx;
 
 import java.util.List;
 
+import javax.jcr.Session;
 import javax.management.NotCompliantMBeanException;
 
+import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -31,13 +34,19 @@ import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
 import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.core.installhook.AecuTrackerListener;
+import de.valtech.aecu.core.installhook.HookExecutionHistory;
+import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 @Component(service = {AecuServiceMBean.class}, immediate = true,
         property = {"jmx.objectname=de.valtech:type=AECU", "pattern=/.*"})
 public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements AecuServiceMBean {
 
     @Reference
-    AecuService aecuService;
+    private AecuService aecuService;
+
+    @Reference
+    private ServiceResourceResolverService serviceResourceResolver;
 
     /**
      * Constructor
@@ -69,6 +78,33 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
             aecuService.storeExecutionInHistory(history, singleResult);
             result.append(singleResult.toString());
             result.append("\n\n");
+        }
+        aecuService.finishHistoryEntry(history);
+        return result.toString();
+    }
+
+    @Override
+    public String executeWithHistory(String path) throws AecuException {
+        HistoryEntry history = aecuService.createHistoryEntry();
+        List<String> files = aecuService.getFiles(path);
+        StringBuilder result = new StringBuilder("Found " + files.size() + " files to execute\n\n");
+        try (ResourceResolver resolver = serviceResourceResolver.getAdminResourceResolver()) {
+            Session session = resolver.adaptTo(Session.class);
+            for (String file : files) {
+                result.append(file + "\n");
+                HookExecutionHistory executionHistory = new HookExecutionHistory(session, file);
+                if (!file.endsWith(AecuTrackerListener.ALWAYS_SUFFIX) && executionHistory.hasBeenExecutedBefore()) {
+                    result.append("Skipped due to history\n\n");
+                    continue;
+                }
+                ExecutionResult singleResult = aecuService.execute(file);
+                executionHistory.setExecuted();
+                aecuService.storeExecutionInHistory(history, singleResult);
+                result.append(singleResult.toString());
+                result.append("\n\n");
+            }
+        } catch (LoginException e) {
+            throw new AecuException(e.getMessage(), e);
         }
         aecuService.finishHistoryEntry(history);
         return result.toString();

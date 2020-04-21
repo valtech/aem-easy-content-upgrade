@@ -56,8 +56,9 @@ public class HookExecutionHistory {
      */
     public HookExecutionHistory(Session session, String groovyScriptPath) throws AecuException {
         try {
-            hookHistory = JcrUtils.getOrCreateByPath(HISTORY_BASE_PATH + groovyScriptPath, false, JcrConstants.NT_UNSTRUCTURED,
-                    JcrConstants.NT_UNSTRUCTURED, session, true);
+            String fullPath = HISTORY_BASE_PATH + groovyScriptPath;
+            hookHistory = JcrUtils.getOrCreateByPath(fullPath, false, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED,
+                    session, true);
         } catch (RepositoryException e) {
             throw new AecuException("Error getting or creating node at " + HISTORY_BASE_PATH + groovyScriptPath, e);
         }
