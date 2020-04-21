@@ -39,6 +39,8 @@ import de.valtech.aecu.api.service.AecuService;
  */
 public class AecuTrackerListener implements ProgressTrackerListener {
 
+    public static final String ALWAYS_SUFFIX = "always.groovy";
+
     private static final Set<String> ACTIONS = new HashSet<>(Arrays.asList("A", "M", "U"));
 
     private static final String ACTION_DELETE = "D";
@@ -89,7 +91,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
             return;
         }
 
-        if (StringUtils.endsWith(path, "always.groovy")) {
+        if (StringUtils.endsWith(path, ALWAYS_SUFFIX)) {
             logMessage(String.format("Adding %s due to having 'always' in name.", path));
             paths.add(path);
             return;
