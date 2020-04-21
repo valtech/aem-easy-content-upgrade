@@ -55,14 +55,25 @@ public interface AecuServiceMBean {
     List<String> getFiles(@Name("Path") @Description("File or folder") String path) throws AecuException;
 
     /**
-     * Executes the script at the given position.
+     * Executes the script(s) at the given position.
      *
-     * @param path path of script
+     * @param path path of script/folder
      * @return execution result
      * @throws AecuException error during execution
      */
     @Description("Executes a single file or all files of a folder structure")
     String execute(@Name("Path") @Description("Path to file/folder that should be executed") String path) throws AecuException;
+
+    /**
+     * Executes the script(s) at the given position and taking install hook history into account.
+     *
+     * @param path path of script/folder
+     * @return execution result
+     * @throws AecuException error during execution
+     */
+    @Description("Executes a single file or all files of a folder structure. Additionally, the install hook history will be checked if scripts need to be run. History will also be updated for executed scripts.")
+    String executeWithHistory(@Name("Path") @Description("Path to file/folder that should be executed") String path)
+            throws AecuException;
 
     /**
      * Returns history entries.

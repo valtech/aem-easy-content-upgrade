@@ -27,6 +27,12 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +45,7 @@ import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
 import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
  * Tests AecuServiceMBeanImpl
@@ -48,20 +55,37 @@ import de.valtech.aecu.api.service.HistoryEntry;
 @RunWith(MockitoJUnitRunner.class)
 public class AecuServiceMBeanImplTest {
 
-    private static final String FILE1 = "file1";
+    private static final String FILE1 = "/path/file1";
 
-    private static final String PATH = "path";
+    private static final String PATH = "/path";
 
     @Mock
     private AecuService service;
+
+    @Mock
+    private ServiceResourceResolverService serviceResourceResolverService;
+
+    @Mock
+    private ResourceResolver resolver;
+
+    @Mock
+    private Session session;
+
+    @Mock
+    private Node node;
 
     @InjectMocks
     private AecuServiceMBeanImpl bean;
 
     @Before
-    public void setup() throws AecuException {
+    public void setup() throws AecuException, LoginException, RepositoryException {
         when(service.getVersion()).thenReturn("1");
         when(service.getFiles(PATH)).thenReturn(Arrays.asList(FILE1));
+        when(serviceResourceResolverService.getAdminResourceResolver()).thenReturn(resolver);
+        when(resolver.adaptTo(Session.class)).thenReturn(session);
+        when(node.getSession()).thenReturn(session);
+        when(session.nodeExists("/var/aecu-installhook" + FILE1)).thenReturn(Boolean.TRUE);
+        when(session.getNode("/var/aecu-installhook" + FILE1)).thenReturn(node);
     }
 
     @Test
@@ -86,6 +110,21 @@ public class AecuServiceMBeanImplTest {
 
         String out = bean.execute(PATH);
 
+        verify(service, times(1)).getFiles(PATH);
+        verify(service, times(1)).createHistoryEntry();
+        verify(service, times(1)).execute(FILE1);
+        verify(service, times(1)).execute(FILE1);
+        verify(service, times(1)).finishHistoryEntry(Mockito.any());
+    }
+
+    @Test
+    public void executeWithHistory() throws AecuException, LoginException {
+        ExecutionResult result = mock(ExecutionResult.class);
+        when(service.execute(FILE1)).thenReturn(result);
+
+        String out = bean.executeWithHistory(PATH);
+
+        verify(serviceResourceResolverService, times(1)).getAdminResourceResolver();
         verify(service, times(1)).getFiles(PATH);
         verify(service, times(1)).createHistoryEntry();
         verify(service, times(1)).execute(FILE1);

@@ -1,3 +1,6 @@
+2020-04 3.1.1
+  - JMX: added executeWithHistory()
+
 2020-02-19 3.1.0
   - Allow node creation
   - JDK 11 support
