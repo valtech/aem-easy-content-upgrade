@@ -57,10 +57,10 @@ public class HistoryDataSource {
     private static final Logger LOG = LoggerFactory.getLogger(DataSource.class);
 
     @SlingObject
-    SlingHttpServletRequest request;
+    private SlingHttpServletRequest request;
 
     @OSGiService
-    AecuService aecuService;
+    private AecuService aecuService;
 
     @PostConstruct
     public void setup() {
