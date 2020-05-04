@@ -53,6 +53,9 @@ public class AccessValidationServiceTest {
     @Mock
     private UserManager userManager;
 
+    @Mock
+    private AccessValidationServiceConfiguration config;
+
     @Before
     public void setup() throws RepositoryException {
         service = new AccessValidationService();
@@ -71,6 +74,8 @@ public class AccessValidationServiceTest {
     public void canReadHistory_Admin() {
         when(principal.getName()).thenReturn(UserConstants.DEFAULT_ADMIN_ID);
 
+        service.activate(config);
+
         assertTrue(service.canReadHistory(request));
     }
 
@@ -78,13 +83,17 @@ public class AccessValidationServiceTest {
     public void canReadHistory_NotAllowedNoGroupConfigured() {
         when(principal.getName()).thenReturn("user");
 
+        service.activate(config);
+
         assertFalse(service.canReadHistory(request));
     }
 
     @Test
     public void canReadHistory_NotAllowedWrongGroup() {
         when(principal.getName()).thenReturn("user");
-        service.readers = new String[] {"group"};
+        when(config.readers()).thenReturn(new String[] {"group"});
+
+        service.activate(config);
 
         assertFalse(service.canReadHistory(request));
     }
@@ -92,7 +101,9 @@ public class AccessValidationServiceTest {
     @Test
     public void canReadHistory_AllowedValidGroup() {
         when(principal.getName()).thenReturn("user");
-        service.readers = new String[] {VALID_GROUP};
+        when(config.readers()).thenReturn(new String[] {VALID_GROUP});
+
+        service.activate(config);
 
         assertTrue(service.canReadHistory(request));
     }
@@ -101,6 +112,8 @@ public class AccessValidationServiceTest {
     public void canExecute_Admin() {
         when(principal.getName()).thenReturn(UserConstants.DEFAULT_ADMIN_ID);
 
+        service.activate(config);
+
         assertTrue(service.canExecute(request));
     }
 
@@ -108,13 +121,17 @@ public class AccessValidationServiceTest {
     public void canExecute_NotAllowedNoGroupConfigured() {
         when(principal.getName()).thenReturn("user");
 
+        service.activate(config);
+
         assertFalse(service.canExecute(request));
     }
 
     @Test
     public void canExecute_NotAllowedWrongGroup() {
         when(principal.getName()).thenReturn("user");
-        service.executers = new String[] {"group"};
+        when(config.executers()).thenReturn(new String[] {"group"});
+
+        service.activate(config);
 
         assertFalse(service.canExecute(request));
     }
@@ -122,7 +139,9 @@ public class AccessValidationServiceTest {
     @Test
     public void canExecute_AllowedValidGroup() {
         when(principal.getName()).thenReturn("user");
-        service.executers = new String[] {VALID_GROUP};
+        when(config.executers()).thenReturn(new String[] {VALID_GROUP});
+
+        service.activate(config);
 
         assertTrue(service.canExecute(request));
     }

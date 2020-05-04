@@ -47,14 +47,11 @@ public class AccessValidationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccessValidationService.class);
 
-    protected String[] readers;
-
-    protected String[] executers;
+    private AccessValidationServiceConfiguration config;
 
     @Activate
     public void activate(AccessValidationServiceConfiguration config) {
-        readers = config.readers();
-        executers = config.executers();
+        this.config = config;
     }
 
     /**
@@ -64,7 +61,7 @@ public class AccessValidationService {
      * @return read allowed
      */
     public boolean canReadHistory(SlingHttpServletRequest request) {
-        return isAdminOrInAllowedList(request, readers);
+        return isAdminOrInAllowedList(request, config.readers());
     }
 
     /**
@@ -74,7 +71,7 @@ public class AccessValidationService {
      * @return execute allowed
      */
     public boolean canExecute(SlingHttpServletRequest request) {
-        return isAdminOrInAllowedList(request, executers);
+        return isAdminOrInAllowedList(request, config.executers());
     }
 
     /**

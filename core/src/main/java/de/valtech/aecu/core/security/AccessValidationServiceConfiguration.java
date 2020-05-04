@@ -12,7 +12,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
  */
 @ObjectClassDefinition(name = "AECU Access Validation Service Configuration")
 @ProviderType
-public interface AccessValidationServiceConfiguration {
+public @interface AccessValidationServiceConfiguration {
 
     @AttributeDefinition(type = AttributeType.STRING, cardinality = 1000, name = "Read access",
             description = "The configured group and user names have read access to AECU. Admin user always has access.")
