@@ -1,0 +1,3 @@
+<sly data-sly-use.access="de.valtech.aecu.core.model.accessvalidation.AccessValidatorModel"/>
+<sly data-sly-test.allowed="${access.ableToReadHistory}">AEM Easy Content Upgrade - History</sly>
+<span data-sly-test="${!allowed}" class="aecu-access-error" >You are not allowed to read the history</span>
