@@ -28,6 +28,8 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface AecuBinding {
 
+    static final String BINDING_NAME="aecu";
+
     /**
      * Returns a content upgrade builder. This is the starting point for the migrations.
      * 
