@@ -21,6 +21,10 @@
                     sling:resourceType="granite/ui/components/foundation/includeclientlibs"
                     categories="[coralui3,granite.ui.coral.foundation,aecu.editor]"/>
         </head>
+        <title
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="valtech/aecu/components/content/execute/title"
+        />
         <rails jcr:primaryType="nt:unstructured">
             <search
                     granite:class="cq-rail-components-search"

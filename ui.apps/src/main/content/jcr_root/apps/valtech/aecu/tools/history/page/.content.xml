@@ -25,8 +25,7 @@
         </head>
         <title
                 jcr:primaryType="nt:unstructured"
-                text="AEM Easy Content Upgrade - History"
-                sling:resourceType="granite/ui/components/coral/foundation/text"
+                sling:resourceType="valtech/aecu/components/content/history/title"
         />
         <views jcr:primaryType="nt:unstructured">
 
