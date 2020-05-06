@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -38,6 +38,7 @@ import de.valtech.aecu.api.service.ExecutionResult;
 import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.core.security.AccessValidationService;
 
 /**
  * @author Bryan Chavez
@@ -53,15 +54,21 @@ public class ExecutionServlet extends BaseServlet {
             "ExecutionServlet :: Make sure your are sending the correct parameters.";
 
     @Reference
-    private AecuService aecuService;
+    private transient AecuService aecuService;
 
     @Reference
-    private HistoryUtil historyUtil;
+    private transient HistoryUtil historyUtil;
+
+    @Reference
+    private transient AccessValidationService accessValidationService;
 
 
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
             throws ServletException, IOException {
+        if (!accessValidationService.canExecute(request)) {
+            return;
+        }
 
         this.setNoCache(response);
 

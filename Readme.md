@@ -38,12 +38,13 @@ Table of contents
         3. [Group Specification](#test_group_spec)
         4. [Tests](#test_list)
         5. [Execute Tests](#test_execution)
-7. [JMX Interface](#jmx)
-8. [Health Checks](#healthchecks)
-9. [API Documentation](#api)
-10. [License](#license)
-11. [Changelog](#changelog)
-12. [Developers](#developers)
+7. [Limit Access to AECU](#limitAccess)
+8. [JMX Interface](#jmx)
+9. [Health Checks](#healthchecks)
+10. [API Documentation](#api)
+11. [License](#license)
+12. [Changelog](#changelog)
+13. [Developers](#developers)
 
 
 <a name="requirements"></a>
@@ -845,6 +846,19 @@ aecu
     .failOnError()
     .validate()
 ```
+
+
+<a name="limitAccess"></a>
+
+# Limit Access to AECU (since 3.2)
+For production systems it is recommended to limit the access to specific user groups.
+This can be done via OSGI configuration. Here you can specify groups for read and execute access.
+
+Please not that user "admin" always has full access. If no groups are specified then nobody except admin has access.
+
+PID for OSGI config: de.valtech.aecu.core.security.AccessValidationService
+
+<img src="docs/images/limitAccess.png">
 
 
 <a name="jmx"></a>
