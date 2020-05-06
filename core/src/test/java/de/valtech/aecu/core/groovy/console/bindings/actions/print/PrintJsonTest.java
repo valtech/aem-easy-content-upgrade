@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,7 +19,11 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.actions.print;
 
-import com.adobe.granite.rest.utils.ModifiableMappedValueMapDecorator;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -29,11 +33,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import com.adobe.granite.rest.utils.ModifiableMappedValueMapDecorator;
 
 /**
  * Tests PrintJson
@@ -64,7 +64,6 @@ public class PrintJsonTest {
     public void test_doAction() {
         PrintJson printJson = new PrintJson();
         String result = printJson.doAction(resource);
-        System.out.print(result);
 
         assertTrue(result.contains("\"sling:resourceType\": \"weretail/components/content/heroimage\""));
         assertTrue(result.contains("\"number\": 123"));

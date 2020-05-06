@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -42,6 +42,7 @@ import com.adobe.granite.ui.components.ds.ValueMapResource;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.core.security.AccessValidationService;
 
 /**
  * Datasource model for history overview page.
@@ -62,8 +63,14 @@ public class HistoryDataSource {
     @OSGiService
     private AecuService aecuService;
 
+    @OSGiService
+    private AccessValidationService accessValidationService;
+
     @PostConstruct
     public void setup() {
+        if (!accessValidationService.canReadHistory(request)) {
+            return;
+        }
         String[] selectors = request.getRequestPathInfo().getSelectors();
         int offset = 0;
         int limit = 50;
