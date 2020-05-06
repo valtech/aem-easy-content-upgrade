@@ -854,7 +854,7 @@ aecu
 For production systems it is recommended to limit the access to specific user groups.
 This can be done via OSGI configuration. Here you can specify groups for read and execute access.
 
-Please not that user "admin" always has full access.
+Please not that user "admin" always has full access. If no groups are specified then nobody except admin has access.
 
 PID for OSGI config: de.valtech.aecu.core.security.AccessValidationService
 
