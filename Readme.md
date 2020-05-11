@@ -383,6 +383,19 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Force Property Value regardless of its previous type
+
+* doForceProperty(String name, Object values): sets the value of a property. The property is created if it does not yet exist. The property's type is changed needed.
+
+```java
+aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doForceProperty("name", (String[])["value1", "value2"])
+        .doForceProperty("name", "value1")
+        .run()
+```
+
 #### Copy and Move Properties
 
 This will copy or move a property to a subnode. You can also change the property name.

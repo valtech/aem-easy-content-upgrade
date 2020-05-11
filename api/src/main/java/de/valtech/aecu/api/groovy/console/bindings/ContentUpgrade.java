@@ -163,12 +163,21 @@ public interface ContentUpgrade {
 
     /**
      * Sets a property value.
-     * 
+     *
      * @param name  property name
      * @param value property value
      * @return upgrade object
      **/
     ContentUpgrade doSetProperty(String name, Object value);
+
+    /**
+     * Sets a property value regardless of it's previous type.
+     *
+     * @param name  property name
+     * @param value property value
+     * @return upgrade object
+     **/
+    ContentUpgrade doForceProperty(String name, Object value);
 
     /**
      * Deletes a property if existing.
