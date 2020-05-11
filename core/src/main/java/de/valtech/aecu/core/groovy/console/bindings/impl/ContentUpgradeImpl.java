@@ -18,36 +18,74 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
-import com.icfolson.aem.groovy.console.api.ScriptContext;
-import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
-import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
-import de.valtech.aecu.api.groovy.console.bindings.filters.*;
-import de.valtech.aecu.api.service.AecuException;
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
-import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
-import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
-import de.valtech.aecu.core.groovy.console.bindings.actions.page.*;
-import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintJson;
-import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
-import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
-import de.valtech.aecu.core.groovy.console.bindings.actions.properties.*;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.*;
-import de.valtech.aecu.core.groovy.console.bindings.traversers.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.jcr.query.Query;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import com.icfolson.aem.groovy.console.api.ScriptContext;
+import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
+import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
+import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyRegex;
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.RemoveMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.ReplaceMultiValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.AddPageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.DeletePageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.RemovePageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.RenderPageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.ReplicatePageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.SetPageTagsAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.page.TreeActivatePageAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintJson;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CreateResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValuesRegex;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplicateResourceAction;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
+import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 
 /**
  * Implements the content upgrade API.
- *
+ * 
  * @author Roxana Muresan
  * @author Roland Gruber
  */
@@ -65,7 +103,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Constructor
-     *
+     * 
      * @param resourceResolver resolver
      * @param scriptContext    Groovy context
      */
@@ -166,7 +204,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Adds another filter. If there is already a filter then an AND filter will be created.
-     *
+     * 
      * @param filter filter
      */
     private void addFilter(@Nonnull FilterBy filter) {
@@ -207,14 +245,14 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName,
-                                                       @Nonnull String relativeResourcePath) {
+            @Nonnull String relativeResourcePath) {
         actions.add(new CopyPropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
     @Override
     public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName,
-                                                       @Nonnull String relativeResourcePath) {
+            @Nonnull String relativeResourcePath) {
         actions.add(new MovePropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
@@ -233,7 +271,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doReplaceValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] oldValues,
-                                                              @Nonnull String[] newValues) {
+            @Nonnull String[] newValues) {
         actions.add(new ReplaceMultiValues(name, oldValues, newValues));
         return this;
     }

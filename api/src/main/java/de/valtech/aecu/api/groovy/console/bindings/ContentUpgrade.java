@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
- *
+ * 
  * @author Roxana Muresan
  * @author Roland Gruber
  */
@@ -36,7 +36,7 @@ public interface ContentUpgrade {
 
     /**
      * Loops for given list of resources.
-     *
+     * 
      * @param paths list of paths
      * @return upgrade object
      **/
@@ -44,7 +44,7 @@ public interface ContentUpgrade {
 
     /**
      * Loops for all child resources of the given path. The path itself is not included.
-     *
+     * 
      * @param path path
      * @return upgrade object
      **/
@@ -69,7 +69,7 @@ public interface ContentUpgrade {
 
     /**
      * Loops over resources found by SQL2 query.
-     *
+     * 
      * @param query query string
      * @return upgrade object
      */
@@ -77,7 +77,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by existence of a single property.
-     *
+     * 
      * @param name property name
      * @return upgrade object
      */
@@ -85,7 +85,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by a single property.
-     *
+     * 
      * @param name  property name
      * @param value property value
      * @return upgrade object
@@ -95,7 +95,7 @@ public interface ContentUpgrade {
     /**
      * Filters by a single property using a regular expression for the value. This is intended for
      * single value properties.
-     *
+     * 
      * @param name  property name
      * @param regex regular expression to match value
      * @return upgrade object
@@ -105,7 +105,7 @@ public interface ContentUpgrade {
     /**
      * Filters by checking if any property matches the given regular expression for the value. This
      * is intended for single value properties.
-     *
+     * 
      * @param regex regular expression to match value
      * @return upgrade object
      */
@@ -113,7 +113,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by properties. Can be used also for Multi-value properties.
-     *
+     * 
      * @param conditionProperties properties to filter
      * @return upgrade object
      **/
@@ -130,7 +130,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by node name exact match.
-     *
+     * 
      * @param nodeName node name
      * @return upgrade object
      */
@@ -138,7 +138,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by node name using regular expression.
-     *
+     * 
      * @param regex regular expression (Java standard pattern)
      * @return upgrade object
      */
@@ -154,7 +154,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by using the given filter.
-     *
+     * 
      * @param filter filter
      * @return upgrade object
      */
@@ -162,7 +162,7 @@ public interface ContentUpgrade {
 
     /**
      * Sets a property value.
-     *
+     * 
      * @param name  property name
      * @param value property value
      * @return upgrade object
@@ -180,7 +180,7 @@ public interface ContentUpgrade {
 
     /**
      * Deletes a property if existing.
-     *
+     * 
      * @param name property name
      * @return upgrade object
      */
@@ -188,7 +188,7 @@ public interface ContentUpgrade {
 
     /**
      * Renames a property if existing.
-     *
+     * 
      * @param oldName old property name
      * @param newName new property name
      * @return upgrade object
@@ -197,7 +197,7 @@ public interface ContentUpgrade {
 
     /**
      * Copies a property to a relative path.
-     *
+     * 
      * @param name                 property name
      * @param newName              new property name
      * @param relativeResourcePath relative path
@@ -207,7 +207,7 @@ public interface ContentUpgrade {
 
     /**
      * Moves a property to a relative path.
-     *
+     * 
      * @param name                 property name
      * @param newName              new property name
      * @param relativeResourcePath relative path
@@ -217,7 +217,7 @@ public interface ContentUpgrade {
 
     /**
      * Adds values to a multivalue property.
-     *
+     * 
      * @param name   property name
      * @param values values
      * @return upgrade object
@@ -226,7 +226,7 @@ public interface ContentUpgrade {
 
     /**
      * Removes values of a multivalue property.
-     *
+     * 
      * @param name   property name
      * @param values values to remove
      * @return upgrade object
@@ -235,7 +235,7 @@ public interface ContentUpgrade {
 
     /**
      * Replaces values in a multivalue property.
-     *
+     * 
      * @param name      property name
      * @param oldValues values to remove
      * @param newValues values to add
@@ -246,7 +246,7 @@ public interface ContentUpgrade {
     /**
      * Replaces a substring in all properties of the matching resource. Only applies to String
      * properties.
-     *
+     * 
      * @param oldValue old value
      * @param newValue new value
      * @return upgrade object
@@ -256,7 +256,7 @@ public interface ContentUpgrade {
     /**
      * Replaces a substring in specific properties of the matching resource. Only applies to String
      * properties.
-     *
+     * 
      * @param oldValue      old value
      * @param newValue      new value
      * @param propertyNames property names that should be checked
@@ -267,7 +267,7 @@ public interface ContentUpgrade {
     /**
      * Replaces a substring in all properties of the matching resource using a regular expression.
      * Only applies to String properties.
-     *
+     * 
      * @param searchRegex regex to match old value
      * @param replacement new value, may contain matcher groups (e.g. $1)
      * @return upgrade object
@@ -277,7 +277,7 @@ public interface ContentUpgrade {
     /**
      * Replaces a substring in specific properties of the matching resource using a regular
      * expression. Only applies to String properties.
-     *
+     * 
      * @param searchRegex   regex to match old value
      * @param replacement   new value, may contain matcher groups (e.g. $1)
      * @param propertyNames property names that should be checked
@@ -287,7 +287,7 @@ public interface ContentUpgrade {
 
     /**
      * Renames a resource to the given name.
-     *
+     * 
      * @param newName path
      * @return newName new name
      */
@@ -295,7 +295,7 @@ public interface ContentUpgrade {
 
     /**
      * Copies a resource to a relative path.
-     *
+     * 
      * @param relativePath path
      * @return upgrade object
      */
@@ -303,7 +303,7 @@ public interface ContentUpgrade {
 
     /**
      * Moves a resource to a relative path.
-     *
+     * 
      * @param relativePath path
      * @return upgrade object
      */
@@ -323,14 +323,14 @@ public interface ContentUpgrade {
     /**
      * Deletes the child resources if supplied. If no children are specified it deletes the resource
      * itself.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doDeleteResource(String... children);
 
     /**
      * Creates a new resource under the current one.
-     *
+     * 
      * @param name        resource name
      * @param primaryType jcr:primaryType
      * @return upgrade object
@@ -339,7 +339,7 @@ public interface ContentUpgrade {
 
     /**
      * Creates a new resource under the current one.
-     *
+     * 
      * @param name        resource name
      * @param primaryType jcr:primaryType
      * @param properties  properties excl. jcr:primaryType
@@ -349,7 +349,7 @@ public interface ContentUpgrade {
 
     /**
      * Creates a new resource under the current one.
-     *
+     * 
      * @param name         resource name
      * @param primaryType  jcr:primaryType
      * @param relativePath relative path
@@ -359,7 +359,7 @@ public interface ContentUpgrade {
 
     /**
      * Creates a new resource under the current one.
-     *
+     * 
      * @param name         resource name
      * @param primaryType  jcr:primaryType
      * @param properties   properties excl. jcr:primaryType
@@ -370,21 +370,21 @@ public interface ContentUpgrade {
 
     /**
      * Activates the resource.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doActivateResource();
 
     /**
      * Deactivates the resource.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doDeactivateResource();
 
     /**
      * Performs a custom action with providing a function.
-     *
+     * 
      * @param action action to perform on resource
      * @return upgrade object
      */
@@ -392,21 +392,21 @@ public interface ContentUpgrade {
 
     /**
      * Activates the page where the resource is located.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doActivateContainingPage();
 
     /**
      * Activates the page tree where the resource is located.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doTreeActivateContainingPage();
 
     /**
      * Activates the page tree where the resource is located.
-     *
+     * 
      * @param skipDeactivated skip pages that are deactivated
      * @return upgrade object
      */
@@ -414,7 +414,7 @@ public interface ContentUpgrade {
 
     /**
      * Deactivates the page where the resource is located.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doDeactivateContainingPage();
@@ -422,14 +422,14 @@ public interface ContentUpgrade {
     /**
      * Deletes the page where the resource is located. This will not work if called multiple times
      * for the same page.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doDeleteContainingPage();
 
     /**
      * Adds tags to the containing page of the matching resource.
-     *
+     * 
      * @param tags tag IDs or paths
      * @return upgrade object
      */
@@ -438,7 +438,7 @@ public interface ContentUpgrade {
     /**
      * Sets tags for the containing page of the matching resource. All existing tags are
      * overwritten.
-     *
+     * 
      * @param tags tag IDs or paths
      * @return upgrade object
      */
@@ -446,7 +446,7 @@ public interface ContentUpgrade {
 
     /**
      * Removes tags from the containing page of the matching resource.
-     *
+     * 
      * @param tags tag IDs or paths
      * @return upgrade object
      */
@@ -454,14 +454,14 @@ public interface ContentUpgrade {
 
     /**
      * Checks if the containing page renders with status code 200.
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade doCheckPageRendering();
 
     /**
      * Checks if the containing page renders with given status code.
-     *
+     * 
      * @param code status code
      * @return upgrade object
      */
@@ -469,7 +469,7 @@ public interface ContentUpgrade {
 
     /**
      * Checks if the containing page renders with status code 200 and contains given text.
-     *
+     * 
      * @param textPresent page content must include this text
      * @return upgrade object
      */
@@ -477,7 +477,7 @@ public interface ContentUpgrade {
 
     /**
      * Checks if the containing page renders with status code 200 and (not) contains given text.
-     *
+     * 
      * @param textPresent    page content must include this text (can be null)
      * @param textNotPresent page content must not include this text (can be null)
      * @return upgrade object
@@ -486,7 +486,7 @@ public interface ContentUpgrade {
 
     /**
      * Print path
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade printPath();
@@ -508,7 +508,7 @@ public interface ContentUpgrade {
 
     /**
      * Saves all changes to repository.
-     *
+     * 
      * @throws PersistenceException error during execution
      * @throws AecuException        other error
      */
@@ -516,7 +516,7 @@ public interface ContentUpgrade {
 
     /**
      * Performs a dry-run. No changes are written to CRX.
-     *
+     * 
      * @throws PersistenceException error doing dry-run
      * @throws AecuException        other error
      */
