@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
- * 
+ *
  * @author Roxana Muresan
  * @author Roland Gruber
  */
@@ -53,7 +53,7 @@ public interface ContentUpgrade {
 
     /**
      * Loops recursive for all child resources of the given path. The path itself is not included.
-     *
+     * 
      * @param path path
      * @return upgrade object
      **/
@@ -62,7 +62,7 @@ public interface ContentUpgrade {
 
     /**
      * Loops recursive over all resources contained in the subtree at the given path.
-     *
+     * 
      * @param path path
      * @return upgrade object
      */
@@ -122,7 +122,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by multi-value with the given name containing the given conditionValues
-     *
+     * 
      * @param name            name of the multi-value property
      * @param conditionValues values to search for
      * @return upgrade object
@@ -147,7 +147,7 @@ public interface ContentUpgrade {
 
     /**
      * Filters by node path using regular expression.
-     *
+     * 
      * @param regex regular expression (Java standard pattern)
      * @return upgrade object
      */
@@ -163,7 +163,7 @@ public interface ContentUpgrade {
 
     /**
      * Sets a property value.
-     *
+     * 
      * @param name  property name
      * @param value property value
      * @return upgrade object
@@ -172,7 +172,7 @@ public interface ContentUpgrade {
 
     /**
      * Sets a property value regardless of it's previous type.
-     *
+     * 
      * @param name  property name
      * @param value property value
      * @return upgrade object
@@ -313,7 +313,7 @@ public interface ContentUpgrade {
     /**
      * Moves a resource if its path matches the pattern to the path obtained by applying the
      * replacement expression
-     *
+     * 
      * @param matchPattern   regular expression for matching the resource path
      * @param targetPathExpr expression to calculate the target path, can contain matched group
      *                       references $1, $2, ...
@@ -494,7 +494,7 @@ public interface ContentUpgrade {
 
     /**
      * Print property
-     *
+     * 
      * @param property property name
      * @return upgrade object
      */
@@ -502,7 +502,7 @@ public interface ContentUpgrade {
 
     /**
      * Prints the properties json
-     *
+     * 
      * @return upgrade object
      */
     ContentUpgrade printJson();
@@ -525,7 +525,7 @@ public interface ContentUpgrade {
 
     /**
      * Executes a run or a dryRun depending on the dryRun parameter value.
-     *
+     * 
      * @param dryRun dryRun option
      * @throws PersistenceException error during execution
      * @throws AecuException        other error
