@@ -21,7 +21,6 @@ package de.valtech.aecu.api.groovy.console.bindings.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
@@ -54,7 +53,6 @@ public class AceAutocompleteServletTest {
 
     private AceAutocompleteServlet underTest = new AceAutocompleteServlet();
 
-
     @Test
     public void test_getPublicMethodsOfClass_ofAecuBinding() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method getPublicMethodsOfClass = AceAutocompleteServlet.class.getDeclaredMethod("getPublicMethodsOfClass", Class.class);
@@ -80,33 +78,23 @@ public class AceAutocompleteServletTest {
         String actualJsonContent = captor.getValue();
 
         assertNotNull(actualJsonContent);
-        JsonObject actualJson = new Gson().fromJson(actualJsonContent, JsonObject.class);
+        JsonArray actualJson = new Gson().fromJson(actualJsonContent, JsonArray.class);
         assertNotNull(actualJson);
-        JsonObject aecu = (JsonObject) actualJson.get("aecu");
-        assertNotNull(aecu);
-        JsonArray contentUpgradeBuilder = aecu.getAsJsonArray("contentUpgradeBuilder");
-        assertNotNull(contentUpgradeBuilder);
-        JsonArray validateAccessRights = aecu.getAsJsonArray("validateAccessRights");
-        assertNotNull(validateAccessRights);
-
-        assertTrue(contentUpgradeBuilder.size() > 50);
-        assertTrue(validateAccessRights.size() > 30);
-
-        assertTrue(contentUpgradeBuilder.contains(new JsonPrimitive("forDescendantResourcesOf")));
-        assertTrue(contentUpgradeBuilder.contains(new JsonPrimitive("doRemoveValuesOfMultiValueProperty")));
-        assertTrue(contentUpgradeBuilder.contains(new JsonPrimitive("filterByPropertyRegex")));
-        assertTrue(contentUpgradeBuilder.contains(new JsonPrimitive("doDeactivateContainingPage")));
-        assertTrue(contentUpgradeBuilder.contains(new JsonPrimitive("printPath")));
-        assertTrue(contentUpgradeBuilder.contains(new JsonPrimitive("run")));
-
-        assertTrue(validateAccessRights.contains(new JsonPrimitive("forPaths")));
-        assertTrue(validateAccessRights.contains(new JsonPrimitive("forGroups")));
-        assertTrue(validateAccessRights.contains(new JsonPrimitive("canModifyPage")));
-        assertTrue(validateAccessRights.contains(new JsonPrimitive("cannotRead")));
-        assertTrue(validateAccessRights.contains(new JsonPrimitive("failOnError")));
-        assertTrue(validateAccessRights.contains(new JsonPrimitive("validate")));
+        assertTrue(actualJson.size() > 5);
+        assertTrue(actualJson.contains(new JsonPrimitive("aecu")));
+        assertTrue(actualJson.contains(new JsonPrimitive("contentUpgradeBuilder")));
+        assertTrue(actualJson.contains(new JsonPrimitive("forDescendantResourcesOf")));
+        assertTrue(actualJson.contains(new JsonPrimitive("doRemoveValuesOfMultiValueProperty")));
+        assertTrue(actualJson.contains(new JsonPrimitive("filterByPropertyRegex")));
+        assertTrue(actualJson.contains(new JsonPrimitive("doDeactivateContainingPage")));
+        assertTrue(actualJson.contains(new JsonPrimitive("printPath")));
+        assertTrue(actualJson.contains(new JsonPrimitive("run")));
+        assertTrue(actualJson.contains(new JsonPrimitive("validateAccessRights")));
+        assertTrue(actualJson.contains(new JsonPrimitive("forPaths")));
+        assertTrue(actualJson.contains(new JsonPrimitive("forGroups")));
+        assertTrue(actualJson.contains(new JsonPrimitive("canModifyPage")));
+        assertTrue(actualJson.contains(new JsonPrimitive("cannotRead")));
+        assertTrue(actualJson.contains(new JsonPrimitive("failOnError")));
+        assertTrue(actualJson.contains(new JsonPrimitive("validate")));
     }
-
-
-
 }

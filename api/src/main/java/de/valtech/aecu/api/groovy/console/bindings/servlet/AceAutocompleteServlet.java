@@ -21,8 +21,6 @@ package de.valtech.aecu.api.groovy.console.bindings.servlet;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 
@@ -40,6 +38,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.servlet.Servlet;
@@ -59,27 +59,22 @@ public class AceAutocompleteServlet extends SlingAllMethodsServlet {
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
 
         try (PrintWriter responseWriter = response.getWriter()) {
-            JsonObject extensions = new JsonObject();
+            Set<String> methodsSet = new TreeSet<>();
+            methodsSet.add(AecuBinding.BINDING_NAME);
 
             List<Method> methods = getPublicMethodsOfClass(AecuBinding.class);
             for (Method method : methods) {
+                methodsSet.add(method.getName());
+
                 Class extensionClass = method.getReturnType();
                 List<Method> publicMethods = getPublicMethodsOfClass(extensionClass);
-
-                JsonArray methodsJson = new JsonArray(publicMethods.size());
-                publicMethods.stream().forEach(n -> methodsJson.add(n.getName()));
-                extensions.add(method.getName(), methodsJson);
+                publicMethods.stream().forEach(n -> methodsSet.add(n.getName()));
             }
 
-            JsonObject aecuRoot = new JsonObject();
-            aecuRoot.add(AecuBinding.BINDING_NAME, extensions);
-
-            String responseString = new Gson().toJson(aecuRoot);
-
+            String responseString = new Gson().toJson(methodsSet.toArray(new String[]{}));
             responseWriter.write(responseString);
             response.setStatus(HttpStatus.SC_OK);
         }
-
     }
 
     private List<Method> getPublicMethodsOfClass(Class clazz) {
