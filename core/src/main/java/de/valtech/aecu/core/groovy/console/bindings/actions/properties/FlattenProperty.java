@@ -65,7 +65,7 @@ public class FlattenProperty implements Action {
                 return "Flattening " + value.getClass().getSimpleName() + " property " + name + "=" + values[0] + " for resource " + resource.getPath();
             }
 
-            if (this.emptyValue != null) {
+            if (this.emptyValue == null) {
                 properties.remove(name);
                 return "Flattening " + value.getClass().getSimpleName() + " removing property " + name + " for resource " + resource.getPath();
             }

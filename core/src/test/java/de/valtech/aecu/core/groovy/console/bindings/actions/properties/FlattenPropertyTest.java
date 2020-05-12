@@ -60,6 +60,9 @@ public class FlattenPropertyTest {
     public void doAction() throws PersistenceException {
         FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
 
+        when(valueMap.containsKey(ATTR)).thenReturn(true);
+        when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1});
+
         action.doAction(resource);
 
         verify(valueMap, times(1)).remove(ATTR);
@@ -78,24 +81,11 @@ public class FlattenPropertyTest {
     }
 
     @Test
-    public void doActionReplaceArray() throws PersistenceException {
-        SetProperty setAction = new SetProperty(ATTR, new String[]{VAL1});
-        FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
-
-        setAction.doAction(resource);
-
-        action.doAction(resource);
-
-        verify(valueMap, times(1)).remove(ATTR);
-        verify(valueMap, times(1)).put(ATTR, VAL1);
-    }
-
-    @Test
     public void doActionReplaceArrayWithMultipleValues() throws PersistenceException {
-        SetProperty setAction = new SetProperty(ATTR, new String[]{VAL1, VAL1});
         FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
 
-        setAction.doAction(resource);
+        when(valueMap.containsKey(ATTR)).thenReturn(true);
+        when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1, VAL1});
 
         action.doAction(resource);
     }
@@ -105,21 +95,21 @@ public class FlattenPropertyTest {
         SetProperty setAction = new SetProperty(ATTR, new Boolean[]{});
         FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
 
-        setAction.doAction(resource);
+        when(valueMap.containsKey(ATTR)).thenReturn(true);
+        when(valueMap.get(ATTR)).thenReturn(new Boolean[]{});
 
         action.doAction(resource);
 
-        verify(valueMap, times(1)).put(ATTR, new Boolean[]{});
         verify(valueMap, times(1)).remove(ATTR);
         verify(valueMap, times(1)).put(ATTR, EMPTY_VALUE);
     }
 
     @Test
     public void doActionReplaceExistingFlat() throws PersistenceException {
-        SetProperty setAction = new SetProperty(ATTR, true);
         FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
 
-        setAction.doAction(resource);
+        when(valueMap.containsKey(ATTR)).thenReturn(true);
+        when(valueMap.get(ATTR)).thenReturn(10);
 
         action.doAction(resource);
 
