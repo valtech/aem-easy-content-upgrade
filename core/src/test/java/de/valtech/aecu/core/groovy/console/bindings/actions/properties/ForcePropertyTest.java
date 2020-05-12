@@ -56,34 +56,13 @@ public class ForcePropertyTest {
     }
 
     @Test
-    public void doActionWithExistingProperty() throws PersistenceException {
-        ForceProperty action = new ForceProperty(ATTR, VAL1);
-
-        action.doAction(resource);
-
-        verify(valueMap, times(1)).put(ATTR, VAL1);
-    }
-
-    @Test
-    public void doActionWithChangeType() throws PersistenceException {
-        SetProperty setAction = new SetProperty(ATTR, VAL1);
+    public void doAction() throws PersistenceException {
         ForceProperty action = new ForceProperty(ATTR, VAL_CHANGE_TYPE);
 
-        setAction.doAction(resource);
         action.doAction(resource);
 
-        verify(valueMap, times(1)).put(ATTR, VAL1);
         verify(valueMap, times(1)).remove(ATTR);
         verify(valueMap, times(1)).put(ATTR, VAL_CHANGE_TYPE);
-    }
-
-    @Test
-    public void doActionWithNewAttribute() throws PersistenceException {
-        ForceProperty action = new ForceProperty(ATTR, VAL1);
-
-        action.doAction(resource);
-
-        verify(valueMap, times(1)).put(ATTR, VAL1);
     }
 
 }

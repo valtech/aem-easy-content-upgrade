@@ -42,8 +42,8 @@ public class ForceProperty implements Action {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         if (properties != null) {
             properties.remove(name);
+            properties.put(name, value);
         }
-        properties.put(name, value);
         return "Forcing " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource " + resource.getPath();
     }
 }
