@@ -171,6 +171,15 @@ public interface ContentUpgrade {
     ContentUpgrade doSetProperty(String name, Object value);
 
     /**
+     * Sets a property value.
+     *
+     * @param name  property name
+     * @param value property value fall back for empty arrays. Use null to delete the property.
+     * @return upgrade object
+     **/
+    ContentUpgrade doFlattenProperty(String name, Object value);
+
+    /**
      * Deletes a property if existing.
      * 
      * @param name property name

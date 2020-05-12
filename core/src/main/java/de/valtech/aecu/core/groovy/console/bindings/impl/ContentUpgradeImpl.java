@@ -69,6 +69,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeletePro
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.FlattenProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CreateResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
@@ -224,6 +225,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
         actions.add(new SetProperty(name, value));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doFlattenProperty(@Nonnull String name, Object value) {
+        actions.add(new FlattenProperty(name, value));
         return this;
     }
 
