@@ -18,17 +18,22 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import javax.annotation.Nonnull;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.core.fs.FileSystem;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+
+import javax.annotation.Nonnull;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 /**
  * @author Roxana Muresan
@@ -36,38 +41,47 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
 public class CopyResourceToRelativePath implements Action {
 
     private String relativePath;
-    private ResourceResolver resourceResolver;
+    private String newName;
+    private BindingContext context;
 
     /**
      * Constructor
      * 
      * @param relativePath     relative path
-     * @param resourceResolver resource resolver
+     * @param context binding context
      */
-    public CopyResourceToRelativePath(@Nonnull String relativePath, @Nonnull ResourceResolver resourceResolver) {
+    public CopyResourceToRelativePath(@Nonnull String relativePath, String newName, @Nonnull BindingContext context) {
         this.relativePath = relativePath;
-        this.resourceResolver = resourceResolver;
+        this.newName = newName;
+        this.context = context;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) throws PersistenceException {
-        Resource destinationResource = resourceResolver.getResource(resource, relativePath);
-        if (destinationResource != null) {
-            String sourceAbsPAth = resource.getPath();
-            String destinationAsPath = destinationResource.getPath();
+        ResourceResolver resourceResolver = context.getResolver();
+        Resource destinationParentResource = resourceResolver.getResource(resource, relativePath);
+        if (destinationParentResource != null) {
+            String sourcePath = resource.getPath();
+            String destinationName = StringUtils.isNotEmpty(newName) ? newName : resource.getName();
+            String destinationPath = destinationParentResource.getPath() + FileSystem.SEPARATOR + destinationName;
+
             PageUtil pageUtil = new PageUtil();
             if (pageUtil.isPageResource(resource)) {
                 PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
                 try {
-                    pageManager.copy(resource, destinationAsPath + "/" + resource.getName(), null, false, false, false);
+                    pageManager.copy(resource, destinationPath, null, false, false, false);
                 } catch (WCMException | IllegalArgumentException e) {
-                    throw new PersistenceException("Unable to copy " + sourceAbsPAth + ": " + e.getMessage());
+                    throw new PersistenceException("Unable to copy " + sourcePath + " as " + destinationPath + ": " + e.getMessage());
                 }
-            } else {
-                resourceResolver.copy(sourceAbsPAth, destinationAsPath);
+            } else if (!context.isDryRun()){
+                try {
+                    Session session = resourceResolver.adaptTo(Session.class);
+                    session.getWorkspace().copy(sourcePath, destinationPath);
+                } catch (RepositoryException e) {
+                    throw new PersistenceException("Unable to copy " + sourcePath + " as " + destinationPath + ": " + e.getMessage());
+                }
             }
-
-            return "Copied " + sourceAbsPAth + " to path " + destinationAsPath;
+            return "Copied " + sourcePath + " to " + destinationPath;
         }
         return "WARNING: could not read copy destination resource " + relativePath;
     }

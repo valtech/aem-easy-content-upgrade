@@ -18,23 +18,6 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.jcr.query.Query;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.jackrabbit.JcrConstants;
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.icfolson.aem.groovy.console.api.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
@@ -84,6 +67,23 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantReso
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
+
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Implements the content upgrade API.
@@ -303,8 +303,8 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
-        actions.add(new CopyResourceToRelativePath(relativePath, context.getResolver()));
+    public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath, String newName) {
+        actions.add(new CopyResourceToRelativePath(relativePath, newName, context));
         return this;
     }
 
