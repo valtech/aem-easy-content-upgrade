@@ -303,6 +303,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
+        actions.add(new CopyResourceToRelativePath(relativePath, null, context));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath, String newName) {
         actions.add(new CopyResourceToRelativePath(relativePath, newName, context));
         return this;
