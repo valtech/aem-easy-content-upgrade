@@ -38,12 +38,13 @@ import static org.mockito.Mockito.when;
  * @author Roland Gruber
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FlattenPropertyTest {
+public class JoinPropertyTest {
 
     private static final String VAL1 = "val1";
     private static final String EMPTY_VALUE = "emptyValue";
 
     private static final String ATTR = "attr";
+    public static final String SEPARATOR = ";|;";
 
     @Mock
     private Resource resource;
@@ -58,11 +59,11 @@ public class FlattenPropertyTest {
 
     @Test
     public void doAction() throws PersistenceException {
-        FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
-
+        //setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
         when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1});
 
+        JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
 
         verify(valueMap, times(1)).remove(ATTR);
@@ -71,8 +72,9 @@ public class FlattenPropertyTest {
 
     @Test
     public void doActionNewProperty() throws PersistenceException {
-        FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
+        //empty resource: attribute is missing
 
+        JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
 
         // NOP
@@ -82,22 +84,21 @@ public class FlattenPropertyTest {
 
     @Test
     public void doActionReplaceArrayWithMultipleValues() throws PersistenceException {
-        FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
-
+        //setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
         when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1, VAL1});
 
+        JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
     }
 
     @Test
     public void doActionReplaceEmptyArray() throws PersistenceException {
-        SetProperty setAction = new SetProperty(ATTR, new Boolean[]{});
-        FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
-
+        //setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
         when(valueMap.get(ATTR)).thenReturn(new Boolean[]{});
 
+        JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
 
         verify(valueMap, times(1)).remove(ATTR);
@@ -105,12 +106,37 @@ public class FlattenPropertyTest {
     }
 
     @Test
-    public void doActionReplaceExistingFlat() throws PersistenceException {
-        FlattenProperty action = new FlattenProperty(ATTR, EMPTY_VALUE);
+    public void doActionNoArgs() throws PersistenceException {
+        //setup test resource
+        when(valueMap.containsKey(ATTR)).thenReturn(true);
+        when(valueMap.get(ATTR)).thenReturn(new Boolean[]{});
 
+        JoinProperty action = new JoinProperty(ATTR);
+        action.doAction(resource);
+
+        verify(valueMap, times(1)).remove(ATTR);
+    }
+
+    @Test
+    public void doActionCustomSeparator() throws PersistenceException {
+        //setup test resource
+        when(valueMap.containsKey(ATTR)).thenReturn(true);
+        when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1, VAL1});
+
+        JoinProperty action = new JoinProperty(ATTR, SEPARATOR, EMPTY_VALUE);
+        action.doAction(resource);
+
+        verify(valueMap, times(1)).remove(ATTR);
+        verify(valueMap, times(1)).put(ATTR, VAL1 + SEPARATOR + VAL1);
+    }
+
+    @Test
+    public void doActionReplaceExistingFlat() throws PersistenceException {
+        //setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
         when(valueMap.get(ATTR)).thenReturn(10);
 
+        JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
 
     }

@@ -28,13 +28,27 @@ import javax.annotation.Nonnull;
 /**
  * @author Yves De Bruyne
  */
-public class FlattenProperty implements Action {
+public class JoinProperty implements Action {
 
     protected String name;
+    protected String separator;
     protected Object emptyValue;
 
-    public FlattenProperty(@Nonnull String name, Object emptyValue) {
+    public JoinProperty(@Nonnull String name) {
         this.name = name;
+        this.separator = ",";
+        this.emptyValue = null;
+    }
+
+    public JoinProperty(@Nonnull String name, Object emptyValue) {
+        this.name = name;
+        this.separator = ",";
+        this.emptyValue = emptyValue;
+    }
+
+    public JoinProperty(@Nonnull String name, @Nonnull String separator, Object emptyValue) {
+        this.name = name;
+        this.separator = separator;
         this.emptyValue = emptyValue;
     }
 
@@ -55,14 +69,10 @@ public class FlattenProperty implements Action {
 
             Object[] values = (Object[]) value;
 
-            if (values.length > 1) {
-                return "WARNING: could not flatten value: Source array has too many values to choose from " + resource.getPath();
-            }
-
-            if (values.length == 1) {
+            if (values.length >= 1) {
                 properties.remove(name);
-                properties.put(name, values[0]);
-                return "Flattening " + value.getClass().getSimpleName() + " property " + name + "=" + values[0] + " for resource " + resource.getPath();
+                properties.put(name, StringUtils.join(values, separator));
+                return "Flattening " + value.getClass().getSimpleName() + " property " + name + " for resource " + resource.getPath();
             }
 
             if (this.emptyValue == null) {
@@ -70,6 +80,7 @@ public class FlattenProperty implements Action {
                 return "Flattening " + value.getClass().getSimpleName() + " removing property " + name + " for resource " + resource.getPath();
             }
 
+            //replace empty array with fallback
             properties.remove(name);
             properties.put(name, this.emptyValue);
             return "Flattening " + value.getClass().getSimpleName() + " property " + name + "=" + this.emptyValue + " for resource " + resource.getPath();
