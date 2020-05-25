@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -86,7 +89,29 @@ public class AceAutocompleteServlet extends SlingAllMethodsServlet {
      * @return completion value
      */
     private String getCompletion(Method method) {
-        return method.getName() + "(" + ")";
+        return method.getName() + "(" + getCompletionForArguments(method) + ")";
+    }
+
+    /**
+     * Returns the auto-completion data for the method arguments.
+     * 
+     * @param method method
+     * @return completion data
+     */
+    private String getCompletionForArguments(Method method) {
+        if (method.getParameterCount() == 0) {
+            return StringUtils.EMPTY;
+        }
+        Parameter[] parameters = method.getParameters();
+        List<String> parameterValues = new ArrayList<>();
+        for (Parameter parameter : parameters) {
+            if (parameter.isNamePresent()) {
+                parameterValues.add(parameter.getName() + " " + parameter.getType().getSimpleName());
+            } else {
+                parameterValues.add(parameter.getType().getSimpleName());
+            }
+        }
+        return String.join(", ", parameterValues);
     }
 
     /**

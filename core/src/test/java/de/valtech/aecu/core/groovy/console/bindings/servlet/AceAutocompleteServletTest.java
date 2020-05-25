@@ -84,9 +84,9 @@ public class AceAutocompleteServletTest {
         assertTrue(actualJson.size() > 5);
         assertTrue(actualJson.contains(new JsonPrimitive("aecu")));
         assertTrue(actualJson.contains(new JsonPrimitive("contentUpgradeBuilder()")));
-        assertTrue(actualJson.contains(new JsonPrimitive("forDescendantResourcesOf()")));
-        assertTrue(actualJson.contains(new JsonPrimitive("filterByPropertyRegex()")));
-        assertTrue(actualJson.contains(new JsonPrimitive("doDeactivateContainingPage()")));
+        assertTrue(actualJson.contains(new JsonPrimitive("forDescendantResourcesOf(String)")));
+        assertTrue(actualJson.contains(new JsonPrimitive("filterByPropertyRegex(String, String)")));
+        assertTrue(actualJson.contains(new JsonPrimitive("doRemoveValuesOfMultiValueProperty(String, String[])")));
         assertTrue(actualJson.contains(new JsonPrimitive("run()")));
     }
 }
