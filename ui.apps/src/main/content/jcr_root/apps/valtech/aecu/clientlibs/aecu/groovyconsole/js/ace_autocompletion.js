@@ -19,11 +19,9 @@
 
 $(document).ready(function(){
 
-    console.debug("ace_autocomplete.js");
     var langTools = ace.require("ace/ext/language_tools");
 
     $.get('/bin/public/valtech/aecu/ace_autocomplete.json', function(data) {
-        console.debug("GET ace_autocomplete.json " + data);
         if (data != null) {
             var namesJsonArray = JSON.parse(data)
             initAecuAutocomplete(namesJsonArray);
@@ -34,13 +32,11 @@ $(document).ready(function(){
         var aecuCompleter = {
             identifierRegexps: [/[^\.\s]+/],
             getCompletions: function(editor, session, pos, prefix, callback) {
-                console.debug("aecuCompleter pos=(" + pos.row + "," + pos.column + ") prefix=" + prefix);
                 callback(null, getOptions(namesJsonArray, prefix));
             }
         }
 
         function getOptions(namesJsonArray, prefix) {
-            console.debug("getOptions with prefix: " + prefix)
             return namesJsonArray.filter(entry=>{
                     return entry.includes(prefix);
                 }).map(entry=>{

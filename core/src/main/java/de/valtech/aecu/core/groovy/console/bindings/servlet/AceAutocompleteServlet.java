@@ -17,20 +17,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.valtech.aecu.api.groovy.console.bindings.servlet;
+package de.valtech.aecu.core.groovy.console.bindings.servlet;
 
-
-import com.google.gson.Gson;
-
-import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
-
-import org.apache.http.HttpStatus;
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.servlets.SlingAllMethodsServlet;
-import org.osgi.service.component.annotations.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -45,18 +33,32 @@ import java.util.stream.Collectors;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
-@Component(immediate = true,
-        service = { Servlet.class },
-        property = {
-                "sling.servlet.paths=/bin/public/valtech/aecu/ace_autocomplete",
-                "sling.servlet.extensions=json",
-                "sling.servlet.methods=GET" })
+import org.apache.http.HttpStatus;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.osgi.service.component.annotations.Component;
+
+import com.google.gson.Gson;
+
+import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
+
+/**
+ * Provides auto-complete suggestions for AECU.
+ * 
+ * @author Roxana Muresan
+ * @author Roland Gruber
+ */
+@Component(immediate = true, service = {Servlet.class},
+        property = {"sling.servlet.paths=/bin/public/valtech/aecu/ace_autocomplete", "sling.servlet.extensions=json",
+                "sling.servlet.methods=GET"})
 public class AceAutocompleteServlet extends SlingAllMethodsServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AceAutocompleteServlet.class);
+    private static final long serialVersionUID = 1L;
 
     @Override
-    protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
+            throws ServletException, IOException {
 
         try (PrintWriter responseWriter = response.getWriter()) {
             Set<String> methodsSet = new TreeSet<>();
@@ -64,20 +66,37 @@ public class AceAutocompleteServlet extends SlingAllMethodsServlet {
 
             List<Method> methods = getPublicMethodsOfClass(AecuBinding.class);
             for (Method method : methods) {
-                methodsSet.add(method.getName());
+                methodsSet.add(getCompletion(method));
 
                 Class extensionClass = method.getReturnType();
                 List<Method> publicMethods = getPublicMethodsOfClass(extensionClass);
-                publicMethods.stream().forEach(n -> methodsSet.add(n.getName()));
+                publicMethods.stream().forEach(n -> methodsSet.add(getCompletion(n)));
             }
 
-            String responseString = new Gson().toJson(methodsSet.toArray(new String[]{}));
+            String responseString = new Gson().toJson(methodsSet.toArray(new String[] {}));
             responseWriter.write(responseString);
             response.setStatus(HttpStatus.SC_OK);
         }
     }
 
-    private List<Method> getPublicMethodsOfClass(Class clazz) {
-        return Arrays.stream(clazz.getDeclaredMethods()).filter(m -> (m.getModifiers() & Modifier.PUBLIC) != 0).collect(Collectors.toList());
+    /**
+     * Returns the completion text for the method.
+     * 
+     * @param method method
+     * @return completion value
+     */
+    private String getCompletion(Method method) {
+        return method.getName() + "(" + ")";
+    }
+
+    /**
+     * Returns the public methods of the given class.
+     * 
+     * @param clazz class
+     * @return methods
+     */
+    protected List<Method> getPublicMethodsOfClass(Class clazz) {
+        return Arrays.stream(clazz.getDeclaredMethods()).filter(m -> (m.getModifiers() & Modifier.PUBLIC) != 0)
+                .collect(Collectors.toList());
     }
 }

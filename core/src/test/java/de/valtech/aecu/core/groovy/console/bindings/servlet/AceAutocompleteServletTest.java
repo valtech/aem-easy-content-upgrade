@@ -17,28 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.valtech.aecu.api.groovy.console.bindings.servlet;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonPrimitive;
-
-import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
-
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import javax.servlet.ServletException;
+package de.valtech.aecu.core.groovy.console.bindings.servlet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -48,16 +27,38 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import javax.servlet.ServletException;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
+
+import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
+
 @RunWith(MockitoJUnitRunner.class)
 public class AceAutocompleteServletTest {
 
+    @Spy
     private AceAutocompleteServlet underTest = new AceAutocompleteServlet();
 
     @Test
-    public void test_getPublicMethodsOfClass_ofAecuBinding() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getPublicMethodsOfClass = AceAutocompleteServlet.class.getDeclaredMethod("getPublicMethodsOfClass", Class.class);
-        getPublicMethodsOfClass.setAccessible(true);
-        List<Method> result = (List<Method>) getPublicMethodsOfClass.invoke(underTest, AecuBinding.class);
+    public void test_getPublicMethodsOfClass_ofAecuBinding()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        List<Method> result = underTest.getPublicMethodsOfClass(AecuBinding.class);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -82,19 +83,10 @@ public class AceAutocompleteServletTest {
         assertNotNull(actualJson);
         assertTrue(actualJson.size() > 5);
         assertTrue(actualJson.contains(new JsonPrimitive("aecu")));
-        assertTrue(actualJson.contains(new JsonPrimitive("contentUpgradeBuilder")));
-        assertTrue(actualJson.contains(new JsonPrimitive("forDescendantResourcesOf")));
-        assertTrue(actualJson.contains(new JsonPrimitive("doRemoveValuesOfMultiValueProperty")));
-        assertTrue(actualJson.contains(new JsonPrimitive("filterByPropertyRegex")));
-        assertTrue(actualJson.contains(new JsonPrimitive("doDeactivateContainingPage")));
-        assertTrue(actualJson.contains(new JsonPrimitive("printPath")));
-        assertTrue(actualJson.contains(new JsonPrimitive("run")));
-        assertTrue(actualJson.contains(new JsonPrimitive("validateAccessRights")));
-        assertTrue(actualJson.contains(new JsonPrimitive("forPaths")));
-        assertTrue(actualJson.contains(new JsonPrimitive("forGroups")));
-        assertTrue(actualJson.contains(new JsonPrimitive("canModifyPage")));
-        assertTrue(actualJson.contains(new JsonPrimitive("cannotRead")));
-        assertTrue(actualJson.contains(new JsonPrimitive("failOnError")));
-        assertTrue(actualJson.contains(new JsonPrimitive("validate")));
+        assertTrue(actualJson.contains(new JsonPrimitive("contentUpgradeBuilder()")));
+        assertTrue(actualJson.contains(new JsonPrimitive("forDescendantResourcesOf()")));
+        assertTrue(actualJson.contains(new JsonPrimitive("filterByPropertyRegex()")));
+        assertTrue(actualJson.contains(new JsonPrimitive("doDeactivateContainingPage()")));
+        assertTrue(actualJson.contains(new JsonPrimitive("run()")));
     }
 }
