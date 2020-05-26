@@ -18,12 +18,9 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
-
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
-import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+import javax.annotation.Nonnull;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.core.fs.FileSystem;
@@ -31,11 +28,16 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import javax.annotation.Nonnull;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.WCMException;
+
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import de.valtech.aecu.core.groovy.console.bindings.actions.util.PageUtil;
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
 /**
+ * Copies a resource to the given path.
+ * 
  * @author Roxana Muresan
  */
 public class CopyResourceToRelativePath implements Action {
@@ -47,8 +49,9 @@ public class CopyResourceToRelativePath implements Action {
     /**
      * Constructor
      * 
-     * @param relativePath     relative path
-     * @param context binding context
+     * @param relativePath relative path
+     * @param newName      new name
+     * @param context      binding context
      */
     public CopyResourceToRelativePath(@Nonnull String relativePath, String newName, @Nonnull BindingContext context) {
         this.relativePath = relativePath;
@@ -71,14 +74,16 @@ public class CopyResourceToRelativePath implements Action {
                 try {
                     pageManager.copy(resource, destinationPath, null, false, false, false);
                 } catch (WCMException | IllegalArgumentException e) {
-                    throw new PersistenceException("Unable to copy " + sourcePath + " as " + destinationPath + ": " + e.getMessage());
+                    throw new PersistenceException(
+                            "Unable to copy " + sourcePath + " as " + destinationPath + ": " + e.getMessage());
                 }
-            } else if (!context.isDryRun()){
+            } else if (!context.isDryRun()) {
                 try {
                     Session session = resourceResolver.adaptTo(Session.class);
                     session.getWorkspace().copy(sourcePath, destinationPath);
                 } catch (RepositoryException e) {
-                    throw new PersistenceException("Unable to copy " + sourcePath + " as " + destinationPath + ": " + e.getMessage());
+                    throw new PersistenceException(
+                            "Unable to copy " + sourcePath + " as " + destinationPath + ": " + e.getMessage());
                 }
             }
             return "Copied " + sourcePath + " to " + destinationPath;
