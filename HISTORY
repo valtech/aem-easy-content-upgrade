@@ -1,5 +1,7 @@
 2020 3.2
   - Allow to limit access to AECU via group permissions. Attention: This requires configuration for non-admin users.
+  - Autocomplete added, all AECU methods are listed.
+  - Added parameter "newName" to doCopyResourceToRelativePath action
 
 2020-04-21 3.1.1
   - JMX: added executeWithHistory()

@@ -321,6 +321,15 @@ public interface ContentUpgrade {
     ContentUpgrade doCopyResourceToRelativePath(String relativePath);
 
     /**
+     * Copies a resource to a relative path.
+     *
+     * @param relativePath path
+     * @param newName name for the new resource. If not provided the name of the source resource will be used.
+     * @return upgrade object
+     */
+    ContentUpgrade doCopyResourceToRelativePath(String relativePath, String newName);
+
+    /**
      * Moves a resource to a relative path.
      *
      * @param relativePath path

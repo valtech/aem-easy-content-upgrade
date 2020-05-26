@@ -83,6 +83,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Implements the content upgrade API.
  *
@@ -320,7 +337,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
-        actions.add(new CopyResourceToRelativePath(relativePath, context.getResolver()));
+        actions.add(new CopyResourceToRelativePath(relativePath, null, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath, String newName) {
+        actions.add(new CopyResourceToRelativePath(relativePath, newName, context));
         return this;
     }
 
