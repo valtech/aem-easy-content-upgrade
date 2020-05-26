@@ -29,6 +29,11 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface AecuBinding {
 
     /**
+     * AECU Groovy binding name.
+     */
+    public static final String BINDING_NAME = "aecu";
+
+    /**
      * Returns a content upgrade builder. This is the starting point for the migrations.
      * 
      * @return builder

@@ -65,7 +65,7 @@ public class AecuBindingExtensionProvider implements BindingExtensionProvider {
                     resourceResolverService.getAdminResourceResolver(), resourceResolverFactory, replicator, context);
             BindingVariable aecuVar =
                     new BindingVariable(aecuBinding, AecuBinding.class, "https://github.com/valtech/aem-easy-content-upgrade");
-            variables.put("aecu", aecuVar);
+            variables.put(AecuBinding.BINDING_NAME, aecuVar);
         } catch (LoginException e) {
             LOG.error(
                     "Failed to get resource resolver for aecu-content-migrator or aecu-admin, make sure you all the configurations needed for this system user are deployed.");
