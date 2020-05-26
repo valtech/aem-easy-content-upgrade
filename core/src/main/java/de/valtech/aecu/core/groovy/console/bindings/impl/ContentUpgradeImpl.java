@@ -19,7 +19,6 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
 import com.icfolson.aem.groovy.console.api.ScriptContext;
-
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;
 import de.valtech.aecu.api.groovy.console.bindings.CustomResourceAction;
 import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
@@ -49,6 +48,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.JoinProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
@@ -67,6 +67,21 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantReso
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForResources;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.jcr.query.Query;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
@@ -87,7 +102,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Implements the content upgrade API.
- * 
+ *
  * @author Roxana Muresan
  * @author Roland Gruber
  */
@@ -105,7 +120,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Constructor
-     * 
+     *
      * @param resourceResolver resolver
      * @param scriptContext    Groovy context
      */
@@ -206,7 +221,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Adds another filter. If there is already a filter then an AND filter will be created.
-     * 
+     *
      * @param filter filter
      */
     private void addFilter(@Nonnull FilterBy filter) {
@@ -224,6 +239,24 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
         actions.add(new SetProperty(name, value));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doJoinProperty(@Nonnull String name) {
+        actions.add(new JoinProperty(name));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doJoinProperty(@Nonnull String name, Object value) {
+        actions.add(new JoinProperty(name, value));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doJoinProperty(@Nonnull String name, String separator, Object value) {
+        actions.add(new JoinProperty(name, separator, value));
         return this;
     }
 

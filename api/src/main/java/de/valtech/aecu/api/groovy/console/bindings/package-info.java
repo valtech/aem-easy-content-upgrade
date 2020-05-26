@@ -19,7 +19,7 @@
 
 /**
  * Contains the classes for the Groovy binding "aecu".
- * 
+ *
  * @author Roxana Muresan
  */
 @Version("4.2.0")
