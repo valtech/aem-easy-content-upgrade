@@ -18,12 +18,13 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
-import de.valtech.aecu.api.service.AecuException;
+import java.util.Map;
+
 import org.apache.sling.api.resource.PersistenceException;
 import org.osgi.annotation.versioning.ProviderType;
 
-import java.util.Map;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
+import de.valtech.aecu.api.service.AecuException;
 
 /**
  * This class provides the builder methods to perform a content upgrade.
@@ -170,8 +171,8 @@ public interface ContentUpgrade {
     ContentUpgrade doSetProperty(String name, Object value);
 
     /**
-     * Joins a property value into a single value. Uses "," to join multiple values.
-     * Deletes properties with empty array values.
+     * Joins a property value into a single value. Uses "," to join multiple values. Deletes
+     * properties with empty array values.
      *
      * @param name property name
      * @return upgrade object
@@ -188,14 +189,14 @@ public interface ContentUpgrade {
     ContentUpgrade doJoinProperty(String name, Object value);
 
     /**
-     * Sets a property value.
+     * Joins a property value into a single value using the given separator.
      *
      * @param name  property name
-     * @param name  separator
      * @param value property value fall back for empty arrays. Use null to delete the property.
+     * @param name  separator (e.g. ",")
      * @return upgrade object
      **/
-    ContentUpgrade doJoinProperty(String name, String separator, Object value);
+    ContentUpgrade doJoinProperty(String name, Object value, String separator);
 
     /**
      * Deletes a property if existing.
@@ -324,7 +325,8 @@ public interface ContentUpgrade {
      * Copies a resource to a relative path.
      *
      * @param relativePath path
-     * @param newName name for the new resource. If not provided the name of the source resource will be used.
+     * @param newName      name for the new resource. If not provided the name of the source
+     *                     resource will be used.
      * @return upgrade object
      */
     ContentUpgrade doCopyResourceToRelativePath(String relativePath, String newName);

@@ -372,7 +372,9 @@ aecu.contentUpgradeBuilder()
 * doAddValuesToMultiValueProperty(String name, String[] values): adds the list of values to a property. The property is created if it does not yet exist.
 * doRemoveValuesOfMultiValueProperty(String name, String[] values): removes the list of values from a given property. 
 * doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues): removes the old values and adds the new values in a given property. 
-* doJoinProperty(String name, String separator, Object fallback): join values of a property into a single value. Use null as fallback to delete properties having an empty array as a value.
+* doJoinProperty(String name): joins values of a property into a single value. Uses "," to join multiple values. Deletes properties with empty array values.
+* doJoinProperty(String name, Object fallback): joins values of a property into a single value. Uses "," to join multiple values. Sets the fallback for properties having an empty array as a value.
+* doJoinProperty(String name, Object fallback, String separator): joins values of a property into a single value. Uses the given separator to join multiple values. Sets the fallback for properties having an empty array as a value.
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -381,7 +383,9 @@ aecu.contentUpgradeBuilder()
         .doAddValuesToMultiValueProperty("name", (String[])["value1", "value2"])
         .doRemoveValuesOfMultiValueProperty("name", (String[])["value1", "value2"])
         .doReplaceValuesOfMultiValueProperty("name", (String[])["old1", "old2"], (String[])["new1", "new2"])
-        .doJoinProperty("name", "," , "")
+        .doJoinProperty("name")
+        .doJoinProperty("name", ",")
+        .doJoinProperty("name", ",", "fallbackValue")
         .run()
 ```
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,6 +18,11 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -27,15 +32,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 /**
- * Tests SetProperty
+ * Tests JoinProperty
  *
- * @author Roland Gruber
+ * @author Yves De Bruyne
  */
 @RunWith(MockitoJUnitRunner.class)
 public class JoinPropertyTest {
@@ -59,9 +59,9 @@ public class JoinPropertyTest {
 
     @Test
     public void doAction() throws PersistenceException {
-        //setup test resource
+        // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
-        when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1});
+        when(valueMap.get(ATTR)).thenReturn(new String[] {VAL1});
 
         JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
@@ -72,7 +72,7 @@ public class JoinPropertyTest {
 
     @Test
     public void doActionNewProperty() throws PersistenceException {
-        //empty resource: attribute is missing
+        // empty resource: attribute is missing
 
         JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
@@ -84,9 +84,9 @@ public class JoinPropertyTest {
 
     @Test
     public void doActionReplaceArrayWithMultipleValues() throws PersistenceException {
-        //setup test resource
+        // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
-        when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1, VAL1});
+        when(valueMap.get(ATTR)).thenReturn(new String[] {VAL1, VAL1});
 
         JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
@@ -94,9 +94,9 @@ public class JoinPropertyTest {
 
     @Test
     public void doActionReplaceEmptyArray() throws PersistenceException {
-        //setup test resource
+        // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
-        when(valueMap.get(ATTR)).thenReturn(new Boolean[]{});
+        when(valueMap.get(ATTR)).thenReturn(new Boolean[] {});
 
         JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
@@ -107,9 +107,9 @@ public class JoinPropertyTest {
 
     @Test
     public void doActionNoArgs() throws PersistenceException {
-        //setup test resource
+        // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
-        when(valueMap.get(ATTR)).thenReturn(new Boolean[]{});
+        when(valueMap.get(ATTR)).thenReturn(new Boolean[] {});
 
         JoinProperty action = new JoinProperty(ATTR);
         action.doAction(resource);
@@ -119,11 +119,11 @@ public class JoinPropertyTest {
 
     @Test
     public void doActionCustomSeparator() throws PersistenceException {
-        //setup test resource
+        // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
-        when(valueMap.get(ATTR)).thenReturn(new String[]{VAL1, VAL1});
+        when(valueMap.get(ATTR)).thenReturn(new String[] {VAL1, VAL1});
 
-        JoinProperty action = new JoinProperty(ATTR, SEPARATOR, EMPTY_VALUE);
+        JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE, SEPARATOR);
         action.doAction(resource);
 
         verify(valueMap, times(1)).remove(ATTR);
@@ -132,7 +132,7 @@ public class JoinPropertyTest {
 
     @Test
     public void doActionReplaceExistingFlat() throws PersistenceException {
-        //setup test resource
+        // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
         when(valueMap.get(ATTR)).thenReturn(10);
 

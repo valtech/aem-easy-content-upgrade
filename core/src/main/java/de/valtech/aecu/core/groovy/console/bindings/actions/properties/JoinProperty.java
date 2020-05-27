@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,14 +18,17 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
+ * Joins a multi-value property to single values.
+ * 
  * @author Yves De Bruyne
  */
 public class JoinProperty implements Action {
@@ -34,19 +37,33 @@ public class JoinProperty implements Action {
     protected String separator;
     protected Object emptyValue;
 
+    /**
+     * Constructor
+     * 
+     * @param name property name
+     */
     public JoinProperty(@Nonnull String name) {
-        this.name = name;
-        this.separator = ",";
-        this.emptyValue = null;
+        this(name, null, ",");
     }
 
+    /**
+     * Constructor
+     * 
+     * @param name       property name
+     * @param emptyValue value to set for empty arrays
+     */
     public JoinProperty(@Nonnull String name, Object emptyValue) {
-        this.name = name;
-        this.separator = ",";
-        this.emptyValue = emptyValue;
+        this(name, emptyValue, ",");
     }
 
-    public JoinProperty(@Nonnull String name, @Nonnull String separator, Object emptyValue) {
+    /**
+     * Constructor
+     * 
+     * @param name       property name
+     * @param emptyValue value to set for empty arrays
+     * @param separator  separator text for joining
+     */
+    public JoinProperty(@Nonnull String name, Object emptyValue, @Nonnull String separator) {
         this.name = name;
         this.separator = separator;
         this.emptyValue = emptyValue;
@@ -55,36 +72,38 @@ public class JoinProperty implements Action {
     @Override
     public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-        if (properties != null) {
-
-            if (!properties.containsKey(name)) {
-                return StringUtils.EMPTY;
-            }
-
-            Object value = properties.get(name);
-
-            if (!value.getClass().isArray()) {
-                return StringUtils.EMPTY;
-            }
-
-            Object[] values = (Object[]) value;
-
-            if (values.length >= 1) {
-                properties.remove(name);
-                properties.put(name, StringUtils.join(values, separator));
-                return "Flattening " + value.getClass().getSimpleName() + " property " + name + " for resource " + resource.getPath();
-            }
-
-            if (this.emptyValue == null) {
-                properties.remove(name);
-                return "Flattening " + value.getClass().getSimpleName() + " removing property " + name + " for resource " + resource.getPath();
-            }
-
-            //replace empty array with fallback
-            properties.remove(name);
-            properties.put(name, this.emptyValue);
-            return "Flattening " + value.getClass().getSimpleName() + " property " + name + "=" + this.emptyValue + " for resource " + resource.getPath();
+        if (properties == null) {
+            return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
         }
-        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
+        if (!properties.containsKey(name)) {
+            return StringUtils.EMPTY;
+        }
+
+        Object value = properties.get(name);
+
+        if (!value.getClass().isArray()) {
+            return StringUtils.EMPTY;
+        }
+
+        Object[] values = (Object[]) value;
+
+        if (values.length > 0) {
+            properties.remove(name);
+            properties.put(name, StringUtils.join(values, separator));
+            return "Joined " + value.getClass().getSimpleName() + " property " + name + " for resource " + resource.getPath();
+        }
+
+        if (this.emptyValue == null) {
+            properties.remove(name);
+            return "Removed empty " + value.getClass().getSimpleName() + " property " + name + " for resource "
+                    + resource.getPath();
+        }
+
+        // replace empty array with fallback
+        properties.remove(name);
+        properties.put(name, this.emptyValue);
+        return "Replaced empty " + value.getClass().getSimpleName() + " property " + name + " with " + this.emptyValue
+                + " for resource " + resource.getPath();
     }
+
 }
