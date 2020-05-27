@@ -23,6 +23,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import javax.jcr.AccessDeniedException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.version.VersionException;
+
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -52,13 +62,22 @@ public class JoinPropertyTest {
     @Mock
     private ModifiableValueMap valueMap;
 
+    @Mock
+    private Node node;
+
+    @Mock
+    private Property property;
+
     @Before
-    public void setup() {
+    public void setup() throws PathNotFoundException, RepositoryException {
         when(resource.adaptTo(ModifiableValueMap.class)).thenReturn(valueMap);
+        when(resource.adaptTo(Node.class)).thenReturn(node);
+        when(node.getProperty(ATTR)).thenReturn(property);
     }
 
     @Test
-    public void doAction() throws PersistenceException {
+    public void doAction() throws PersistenceException, ValueFormatException, VersionException, LockException,
+            ConstraintViolationException, RepositoryException {
         // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
         when(valueMap.get(ATTR)).thenReturn(new String[] {VAL1});
@@ -66,8 +85,8 @@ public class JoinPropertyTest {
         JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
         action.doAction(resource);
 
-        verify(valueMap, times(1)).remove(ATTR);
-        verify(valueMap, times(1)).put(ATTR, VAL1);
+        verify(property, times(1)).remove();
+        verify(node, times(1)).setProperty(ATTR, VAL1);
     }
 
     @Test
@@ -118,7 +137,8 @@ public class JoinPropertyTest {
     }
 
     @Test
-    public void doActionCustomSeparator() throws PersistenceException {
+    public void doActionCustomSeparator() throws PersistenceException, AccessDeniedException, VersionException, LockException,
+            ConstraintViolationException, RepositoryException {
         // setup test resource
         when(valueMap.containsKey(ATTR)).thenReturn(true);
         when(valueMap.get(ATTR)).thenReturn(new String[] {VAL1, VAL1});
@@ -126,8 +146,8 @@ public class JoinPropertyTest {
         JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE, SEPARATOR);
         action.doAction(resource);
 
-        verify(valueMap, times(1)).remove(ATTR);
-        verify(valueMap, times(1)).put(ATTR, VAL1 + SEPARATOR + VAL1);
+        verify(property, times(1)).remove();
+        verify(node, times(1)).setProperty(ATTR, VAL1 + SEPARATOR + VAL1);
     }
 
     @Test

@@ -19,9 +19,12 @@
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import javax.annotation.Nonnull;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
@@ -70,7 +73,7 @@ public class JoinProperty implements Action {
     }
 
     @Override
-    public String doAction(@Nonnull Resource resource) {
+    public String doAction(@Nonnull Resource resource) throws PersistenceException {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         if (properties == null) {
             return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
@@ -88,8 +91,13 @@ public class JoinProperty implements Action {
         Object[] values = (Object[]) value;
 
         if (values.length > 0) {
-            properties.remove(name);
-            properties.put(name, StringUtils.join(values, separator));
+            Node node = resource.adaptTo(Node.class);
+            try {
+                node.getProperty(name).remove();
+                node.setProperty(name, StringUtils.join(values, separator));
+            } catch (RepositoryException e) {
+                throw new PersistenceException(e.getMessage(), e);
+            }
             return "Joined " + value.getClass().getSimpleName() + " property " + name + " for resource " + resource.getPath();
         }
 
