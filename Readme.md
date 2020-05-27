@@ -384,8 +384,8 @@ aecu.contentUpgradeBuilder()
         .doRemoveValuesOfMultiValueProperty("name", (String[])["value1", "value2"])
         .doReplaceValuesOfMultiValueProperty("name", (String[])["old1", "old2"], (String[])["new1", "new2"])
         .doJoinProperty("name")
-        .doJoinProperty("name", ",")
-        .doJoinProperty("name", ",", "fallbackValue")
+        .doJoinProperty("name", "fallbackValue")
+        .doJoinProperty("name", "fallbackValue", ",")
         .run()
 ```
 
