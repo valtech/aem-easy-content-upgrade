@@ -351,7 +351,7 @@ aecu.contentUpgradeBuilder()
 
 ### Execute Options
 
-#### Update Single-value Properies
+#### Update Single-value Properties
 
 * doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
 * doDeleteProperty(String name): removes the property with the given name if existing.
@@ -372,6 +372,9 @@ aecu.contentUpgradeBuilder()
 * doAddValuesToMultiValueProperty(String name, String[] values): adds the list of values to a property. The property is created if it does not yet exist.
 * doRemoveValuesOfMultiValueProperty(String name, String[] values): removes the list of values from a given property. 
 * doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues): removes the old values and adds the new values in a given property. 
+* doJoinProperty(String name): joins values of a property into a single value. Uses "," to join multiple values. Deletes properties with empty array values.
+* doJoinProperty(String name, Object fallback): joins values of a property into a single value. Uses "," to join multiple values. Sets the fallback for properties having an empty array as a value.
+* doJoinProperty(String name, Object fallback, String separator): joins values of a property into a single value. Uses the given separator to join multiple values. Sets the fallback for properties having an empty array as a value.
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -380,6 +383,9 @@ aecu.contentUpgradeBuilder()
         .doAddValuesToMultiValueProperty("name", (String[])["value1", "value2"])
         .doRemoveValuesOfMultiValueProperty("name", (String[])["value1", "value2"])
         .doReplaceValuesOfMultiValueProperty("name", (String[])["old1", "old2"], (String[])["new1", "new2"])
+        .doJoinProperty("name")
+        .doJoinProperty("name", "fallbackValue")
+        .doJoinProperty("name", "fallbackValue", ",")
         .run()
 ```
 
