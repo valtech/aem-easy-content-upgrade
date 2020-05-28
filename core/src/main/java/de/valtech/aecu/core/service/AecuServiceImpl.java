@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -40,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
+import com.icfolson.aem.groovy.console.api.context.ScriptContext;
+import com.icfolson.aem.groovy.console.api.impl.RequestScriptContext;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 
 import de.valtech.aecu.api.service.AecuException;
@@ -186,7 +188,8 @@ public class AecuServiceImpl implements AecuService {
         SlingHttpServletRequest slingRequest = new GroovyConsoleRequest(resolver);
         SlingHttpServletResponse slingResponse = new GroovyConsoleResponse();
         LOG.info("Executing script " + path);
-        RunScriptResponse response = groovyConsoleService.runScript(slingRequest, slingResponse, path);
+        ScriptContext scriptContext = new RequestScriptContext(slingRequest, slingResponse, null, null, path);
+        RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
             LOG.info("Executed script " + path + " with status OK");

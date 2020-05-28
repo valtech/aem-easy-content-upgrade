@@ -43,7 +43,7 @@
 						            <Import-Package>
 						              !antlr.*,
                           javax.annotation;version=0.0.0,
-						              com.icfolson.aem.groovy.console.*;version="[13.0,15)",
+						              com.icfolson.aem.groovy.console.*;version="[15.1,16)",
 						              *
   					            </Import-Package>
                     </instructions>

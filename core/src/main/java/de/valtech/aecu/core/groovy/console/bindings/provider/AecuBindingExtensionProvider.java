@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.replication.Replicator;
 import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
 import com.icfolson.aem.groovy.console.api.BindingVariable;
-import com.icfolson.aem.groovy.console.api.ScriptContext;
+import com.icfolson.aem.groovy.console.api.context.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 import de.valtech.aecu.core.groovy.console.bindings.impl.AecuBindingImpl;

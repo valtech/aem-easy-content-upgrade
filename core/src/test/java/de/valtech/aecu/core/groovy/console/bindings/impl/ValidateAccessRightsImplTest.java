@@ -32,7 +32,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.day.cq.replication.ReplicationActionType;
 import com.day.cq.replication.Replicator;
-import com.icfolson.aem.groovy.console.api.ScriptContext;
+import com.icfolson.aem.groovy.console.api.context.ScriptContext;
 
 /**
  * Tests ValidateAccessRightsImpl

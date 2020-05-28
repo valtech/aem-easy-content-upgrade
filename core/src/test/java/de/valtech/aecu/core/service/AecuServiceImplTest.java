@@ -50,7 +50,9 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
+import com.icfolson.aem.groovy.console.api.context.ScriptContext;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
+import com.icfolson.aem.groovy.console.response.impl.DefaultRunScriptResponse;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.HistoryEntry;
@@ -88,6 +90,9 @@ public class AecuServiceImplTest {
 
     @Mock
     private HistoryUtil historyUtil;
+
+    @Mock
+    private ScriptContext scriptContext = mock(ScriptContext.class);
 
     @Before
     public void setup() throws LoginException {
@@ -297,9 +302,10 @@ public class AecuServiceImplTest {
         Resource resource = mock(Resource.class);
         when(resolver.getResource(DIR)).thenReturn(resource);
         when(resource.getName()).thenReturn(FILE1);
+        when(scriptContext.getScript()).thenReturn(DIR);
 
-        RunScriptResponse response = new RunScriptResponse();
-        when(groovyConsoleService.runScript(Mockito.any(), Mockito.any(), Mockito.eq(DIR))).thenReturn(response);
+        RunScriptResponse response = DefaultRunScriptResponse.fromResult(scriptContext, null, null, null);
+        when(groovyConsoleService.runScript(Mockito.any())).thenReturn(response);
 
         service.execute(DIR);
     }
