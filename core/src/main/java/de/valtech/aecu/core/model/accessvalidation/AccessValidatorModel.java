@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,35 +16,45 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.api.groovy.console.bindings;
+package de.valtech.aecu.core.model.accessvalidation;
 
-import org.osgi.annotation.versioning.ProviderType;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+
+import de.valtech.aecu.core.security.AccessValidationService;
 
 /**
- * Groovy Console Bindings for AEM Simple Content Update. This provides the "aecu" binding variable.
- * 
- * @author Roxana Muresan
+ * Model for access validation.
+ *
+ * @author Roland Gruber
  */
-@ProviderType
-public interface AecuBinding {
+@Model(adaptables = SlingHttpServletRequest.class)
+public class AccessValidatorModel {
+
+    @SlingObject
+    private SlingHttpServletRequest request;
+
+    @OSGiService
+    private AccessValidationService accessValidationServce;
 
     /**
-     * AECU Groovy binding name.
-     */
-    public static final String BINDING_NAME = "aecu";
-
-    /**
-     * Returns a content upgrade builder. This is the starting point for the migrations.
+     * Returns if the current user may read the history.
      * 
-     * @return builder
+     * @return can read
      */
-    ContentUpgrade contentUpgradeBuilder();
+    public boolean isAbleToReadHistory() {
+        return accessValidationServce.canReadHistory(request);
+    }
 
     /**
-     * Returns an access right validator. This is the starting point for all access right checks.
+     * Returns if the current user may execute scripts.
      * 
-     * @return access right validator
+     * @return can execute
      */
-    ValidateAccessRights validateAccessRights();
+    public boolean isAbleToExecute() {
+        return accessValidationServce.canExecute(request);
+    }
 
 }

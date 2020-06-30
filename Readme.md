@@ -38,12 +38,13 @@ Table of contents
         3. [Group Specification](#test_group_spec)
         4. [Tests](#test_list)
         5. [Execute Tests](#test_execution)
-7. [JMX Interface](#jmx)
-8. [Health Checks](#healthchecks)
-9. [API Documentation](#api)
-10. [License](#license)
-11. [Changelog](#changelog)
-12. [Developers](#developers)
+7. [Limit Access to AECU](#limitAccess)
+8. [JMX Interface](#jmx)
+9. [Health Checks](#healthchecks)
+10. [API Documentation](#api)
+11. [License](#license)
+12. [Changelog](#changelog)
+13. [Developers](#developers)
 
 
 <a name="requirements"></a>
@@ -350,7 +351,7 @@ aecu.contentUpgradeBuilder()
 
 ### Execute Options
 
-#### Update Single-value Properies
+#### Update Single-value Properties
 
 * doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
 * doDeleteProperty(String name): removes the property with the given name if existing.
@@ -371,6 +372,9 @@ aecu.contentUpgradeBuilder()
 * doAddValuesToMultiValueProperty(String name, String[] values): adds the list of values to a property. The property is created if it does not yet exist.
 * doRemoveValuesOfMultiValueProperty(String name, String[] values): removes the list of values from a given property. 
 * doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues): removes the old values and adds the new values in a given property. 
+* doJoinProperty(String name): joins values of a property into a single value. Uses "," to join multiple values. Deletes properties with empty array values.
+* doJoinProperty(String name, Object fallback): joins values of a property into a single value. Uses "," to join multiple values. Sets the fallback for properties having an empty array as a value.
+* doJoinProperty(String name, Object fallback, String separator): joins values of a property into a single value. Uses the given separator to join multiple values. Sets the fallback for properties having an empty array as a value.
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -379,6 +383,9 @@ aecu.contentUpgradeBuilder()
         .doAddValuesToMultiValueProperty("name", (String[])["value1", "value2"])
         .doRemoveValuesOfMultiValueProperty("name", (String[])["value1", "value2"])
         .doReplaceValuesOfMultiValueProperty("name", (String[])["old1", "old2"], (String[])["new1", "new2"])
+        .doJoinProperty("name")
+        .doJoinProperty("name", "fallbackValue")
+        .doJoinProperty("name", "fallbackValue", ",")
         .run()
 ```
 
@@ -423,6 +430,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 
 * doRename(String newName): renames the resource to the given name
 * doCopyResourceToRelativePath(String relativePath): copies the node to the given target path
+* doCopyResourceToRelativePath(String relativePath, String newName): copies the node to the given target path under the new name
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
 * doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtained by applying the replacement expression. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 
@@ -432,7 +440,7 @@ aecu.contentUpgradeBuilder()
         .filterByNodeName("jcr:content")
         .doRename("newNodeName")
         .doCopyResourceToRelativePath("subNode")
-        .doCopyResourceToRelativePath("../subNode")
+        .doCopyResourceToRelativePath("../subNode", "newName")
         .doMoveResourceToRelativePath("../subNode")
         .doMoveResourceToPathRegex("/content/we-retail/(\\w+)/(\\w+)/(\\w+)", "/content/somewhere/\$1/and/\$2")
         .run()
@@ -845,6 +853,19 @@ aecu
     .failOnError()
     .validate()
 ```
+
+
+<a name="limitAccess"></a>
+
+# Limit Access to AECU (since 3.2)
+For production systems it is recommended to limit the access to specific user groups.
+This can be done via OSGI configuration. Here you can specify groups for read and execute access.
+
+Please not that user "admin" always has full access. If no groups are specified then nobody except admin has access.
+
+PID for OSGI config: de.valtech.aecu.core.security.AccessValidationService
+
+<img src="docs/images/limitAccess.png">
 
 
 <a name="jmx"></a>

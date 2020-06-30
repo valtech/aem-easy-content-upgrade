@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,61 +16,53 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package de.valtech.aecu.core.model.accessvalidation;
 
-package de.valtech.aecu.core.groovy.console.bindings.actions.print;
-
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.adobe.granite.rest.utils.ModifiableMappedValueMapDecorator;
+import de.valtech.aecu.core.security.AccessValidationService;
 
 /**
- * Tests PrintJson
- *
- * @author Roxana Muresan
+ * Tests AccessValidatorModel
+ * 
+ * @author Roland Gruber
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PrintJsonTest {
+public class AccessValidatorModelTest {
 
     @Mock
-    private Resource resource;
-    @Mock
-    private ValueMap properties;
+    private AccessValidationService accessValidatorService;
 
+    @Mock
+    private SlingHttpServletRequest request;
+
+    @InjectMocks
+    private AccessValidatorModel model;
 
     @Before
-    public void init() {
-        Map<String, Object> propertiesMap = new HashMap<>();
-        propertiesMap.put("sling:resourceType", "weretail/components/content/heroimage");
-        propertiesMap.put("multivalue", new String[] {"v1", "v2", "v3"});
-        propertiesMap.put("number", 123);
-        properties = new ModifiableMappedValueMapDecorator(propertiesMap);
-
-        when(resource.getValueMap()).thenReturn(properties);
+    public void setup() {
+        when(accessValidatorService.canExecute(request)).thenReturn(true);
+        when(accessValidatorService.canReadHistory(request)).thenReturn(false);
     }
 
     @Test
-    public void test_doAction() {
-        PrintJson printJson = new PrintJson();
-        String result = printJson.doAction(resource);
+    public void isAbleToReadHistory() {
+        assertFalse(model.isAbleToReadHistory());
+    }
 
-        assertTrue(result.contains("\"sling:resourceType\": \"weretail/components/content/heroimage\""));
-        assertTrue(result.contains("\"number\": 123"));
-        assertTrue(result.contains("\"multivalue\": ["));
-        assertTrue(result.contains("\"v1\","));
-        assertTrue(result.contains("\"v2\","));
-        assertTrue(result.contains("\"v3\""));
+    @Test
+    public void isAbleToExecute() {
+        assertTrue(model.isAbleToExecute());
     }
 
 }

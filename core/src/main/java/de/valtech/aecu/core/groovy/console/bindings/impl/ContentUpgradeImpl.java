@@ -66,6 +66,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintPath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.print.PrintProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.CopyPropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.DeleteProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.properties.JoinProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
@@ -87,7 +88,7 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
 
 /**
  * Implements the content upgrade API.
- * 
+ *
  * @author Roxana Muresan
  * @author Roland Gruber
  */
@@ -105,7 +106,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Constructor
-     * 
+     *
      * @param resourceResolver resolver
      * @param scriptContext    Groovy context
      */
@@ -206,7 +207,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Adds another filter. If there is already a filter then an AND filter will be created.
-     * 
+     *
      * @param filter filter
      */
     private void addFilter(@Nonnull FilterBy filter) {
@@ -224,6 +225,24 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
         actions.add(new SetProperty(name, value));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doJoinProperty(@Nonnull String name) {
+        actions.add(new JoinProperty(name));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doJoinProperty(@Nonnull String name, Object value) {
+        actions.add(new JoinProperty(name, value));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doJoinProperty(@Nonnull String name, Object value, String separator) {
+        actions.add(new JoinProperty(name, value, separator));
         return this;
     }
 
@@ -304,7 +323,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath) {
-        actions.add(new CopyResourceToRelativePath(relativePath, context.getResolver()));
+        actions.add(new CopyResourceToRelativePath(relativePath, null, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doCopyResourceToRelativePath(@Nonnull String relativePath, String newName) {
+        actions.add(new CopyResourceToRelativePath(relativePath, newName, context));
         return this;
     }
 

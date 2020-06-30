@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -43,6 +43,7 @@ import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
 import de.valtech.aecu.core.model.history.HistoryOverview.DonutData;
+import de.valtech.aecu.core.security.AccessValidationService;
 import de.valtech.aecu.core.service.HistoryEntryImpl;
 
 /**
@@ -70,12 +71,26 @@ public class HistoryOverviewTest {
     @Mock
     private SlingHttpServletRequest request;
 
+    @Mock
+    private AccessValidationService accessValidationService;
+
     @Before
     public void setup() {
         RequestParameter param = mock(RequestParameter.class);
         when(request.getRequestParameter("entry")).thenReturn(param);
         when(param.getString()).thenReturn(PATH);
         when(resolver.getResource(PATH)).thenReturn(historyResource);
+        when(accessValidationService.canReadHistory(request)).thenReturn(true);
+    }
+
+    @Test
+    public void getHistory_noAccess() {
+        when(accessValidationService.canReadHistory(request)).thenReturn(false);
+
+        overview.init();
+        HistoryEntry history = overview.getHistory();
+
+        assertNull(history);
     }
 
     @Test

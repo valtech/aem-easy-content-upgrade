@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -39,6 +39,7 @@ import de.valtech.aecu.api.service.ExecutionResult;
 import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.core.security.AccessValidationService;
 
 /**
  * Sling model for history overview area.
@@ -57,6 +58,9 @@ public class HistoryOverview {
     @OSGiService
     private HistoryUtil historyUtil;
 
+    @OSGiService
+    private AccessValidationService accessValidationService;
+
     private HistoryEntry historyEntry;
 
     private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -66,6 +70,9 @@ public class HistoryOverview {
      */
     @PostConstruct
     public void init() {
+        if (!accessValidationService.canReadHistory(request)) {
+            return;
+        }
         RequestParameter entryParam = request.getRequestParameter("entry");
         if (entryParam == null) {
             return;
