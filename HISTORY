@@ -1,4 +1,4 @@
-2020 3.2
+2020-06-30 3.2.0
   - Allow to limit access to AECU via group permissions. Attention: This requires configuration for non-admin users.
   - Autocomplete added, all AECU methods are listed.
   - Added parameter "newName" to doCopyResourceToRelativePath action
