@@ -219,7 +219,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         if (this.filter instanceof ANDFilter) {
             ((ANDFilter) this.filter).addFilter(filter);
         }
-        ANDFilter newFilter = new ANDFilter(Arrays.asList(this.filter, filter));
+        ANDFilter newFilter = new ANDFilter(new ArrayList<FilterBy>(Arrays.asList(this.filter, filter)));
         this.filter = newFilter;
     }
 
