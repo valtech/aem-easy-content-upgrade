@@ -1,21 +1,28 @@
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-
 import javax.annotation.Nonnull;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+
 /**
+ * Changes the jcr:primaryType of a node.
+ * 
  * @author Sajith
  */
-
 public class ChangePrimaryType implements Action {
 
     protected String newPrimaryType;
 
+    /**
+     * Constructor
+     * 
+     * @param newPrimaryType new type
+     */
     public ChangePrimaryType(@Nonnull String newPrimaryType) {
         this.newPrimaryType = newPrimaryType;
     }

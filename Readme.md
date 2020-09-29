@@ -412,6 +412,7 @@ You can replace the content of String properties. This also supports multi-value
 * doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames): replaces the substring "oldValue" with "newValue". Applies to all specified String properties
 * doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement): checks if the property value(s) match the search pattern and replaces it with "replacement". Applies to all String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 * doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames): checks if the property value(s) match the search pattern and replaces it with "replacement".  Applies to specified String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+* doChangePrimaryType(String newPrimaryType): changes primary type of the resource to the given primary type
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -421,6 +422,7 @@ aecu.contentUpgradeBuilder()
         .doReplaceValueInProperties("old", "new", (String[]) ["propertyName1", "propertyName2"])
         .doReplaceValueInAllPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2")
         .doReplaceValueInPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2", (String[]) ["propertyName1", "propertyName2"])
+        .doChangePrimaryType("nt:unstructured")
         .run()
 ```
 
@@ -433,7 +435,6 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 * doCopyResourceToRelativePath(String relativePath, String newName): copies the node to the given target path under the new name
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
 * doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtained by applying the replacement expression. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
-* doChangePrimaryType(String newPrimaryType): changes primary type of the resource to the given primary type
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -444,7 +445,6 @@ aecu.contentUpgradeBuilder()
         .doCopyResourceToRelativePath("../subNode", "newName")
         .doMoveResourceToRelativePath("../subNode")
         .doMoveResourceToPathRegex("/content/we-retail/(\\w+)/(\\w+)/(\\w+)", "/content/somewhere/\$1/and/\$2")
-        .doChangePrimaryType("nt:unstructured")
         .run()
 ```
 
