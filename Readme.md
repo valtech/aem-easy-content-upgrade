@@ -412,6 +412,7 @@ You can replace the content of String properties. This also supports multi-value
 * doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames): replaces the substring "oldValue" with "newValue". Applies to all specified String properties
 * doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement): checks if the property value(s) match the search pattern and replaces it with "replacement". Applies to all String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 * doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames): checks if the property value(s) match the search pattern and replaces it with "replacement".  Applies to specified String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+* doChangePrimaryType(String newPrimaryType): changes primary type of the resource to the given primary type
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -421,6 +422,7 @@ aecu.contentUpgradeBuilder()
         .doReplaceValueInProperties("old", "new", (String[]) ["propertyName1", "propertyName2"])
         .doReplaceValueInAllPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2")
         .doReplaceValueInPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2", (String[]) ["propertyName1", "propertyName2"])
+        .doChangePrimaryType("nt:unstructured")
         .run()
 ```
 
