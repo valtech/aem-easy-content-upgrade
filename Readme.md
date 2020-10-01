@@ -893,6 +893,12 @@ This will execute the given script or folder. If a folder is specified then all 
 
 Parameters:
  * Path: file or folder to execute
+ 
+Sample curl call:
+
+```
+curl -u admin:admin 'http://localhost:5902/system/console/jmx/de.valtech%3Atype%3DAECU/op/executeWithHistory/java.lang.String' --data-raw 'Path=/var/groovyconsole/scripts/aecu'
+```
 
 ## GetHistory
 
