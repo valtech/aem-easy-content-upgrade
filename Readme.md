@@ -40,7 +40,7 @@ Table of contents
         5. [Execute Tests](#test_execution)
 7. [Security](#security)
     1. [Limit Access to AECU](#limitAccess)
-    12 [Service Users](#serviceUsers)
+    2. [Service Users](#serviceUsers)
 8. [JMX Interface](#jmx)
 9. [Health Checks](#healthchecks)
 10. [API Documentation](#api)
