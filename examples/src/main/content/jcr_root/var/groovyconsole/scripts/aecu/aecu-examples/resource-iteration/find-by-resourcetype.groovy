@@ -1,0 +1,5 @@
+aecu.contentUpgradeBuilder()
+    .forDescendantResourcesOf("/content/we-retail/us/en")
+    .filterByProperty("sling:resourceType", "weretail/components/content/heroimage")
+    .printPath()
+    .run()
