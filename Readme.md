@@ -38,7 +38,9 @@ Table of contents
         3. [Group Specification](#test_group_spec)
         4. [Tests](#test_list)
         5. [Execute Tests](#test_execution)
-7. [Limit Access to AECU](#limitAccess)
+7. [Security](#security)
+    1. [Limit Access to AECU](#limitAccess)
+    12 [Service Users](#serviceUsers)
 8. [JMX Interface](#jmx)
 9. [Health Checks](#healthchecks)
 10. [API Documentation](#api)
@@ -857,9 +859,13 @@ aecu
 ```
 
 
+<a name="security"></a>
+
+# Security
+
 <a name="limitAccess"></a>
 
-# Limit Access to AECU (since 3.2)
+## Limit Access to AECU (since 3.2)
 For production systems it is recommended to limit the access to specific user groups.
 This can be done via OSGI configuration. Here you can specify groups for read and execute access.
 
@@ -868,6 +874,18 @@ Please not that user "admin" always has full access. If no groups are specified 
 PID for OSGI config: de.valtech.aecu.core.security.AccessValidationService
 
 <img src="docs/images/limitAccess.png">
+
+<a name="serviceUsers"></a>
+
+## Service Users
+The following service users are installed by AECU:
+
+| User          | Rights | Description |
+| ------------- | -------------- | --------- |
+| aecu-admin | /: jcr:all | Validation of access rights, JMX executeWithHistory() to store script history |
+| aecu-content-migrator | /: jcr:read <br /> /apps: jcr:all <br /> /conf: jcr:all <br /> /content: jcr:all <br /> /etc: jcr:all <br /> /home: jcr:all <br /> /var: jcr:all | Content changes using aecu binding  |
+| aecu-service | /: jcr:read <br /> /var/aecu: jcr:all | AECU execution history |
+
 
 
 <a name="jmx"></a>
