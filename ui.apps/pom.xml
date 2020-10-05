@@ -94,6 +94,13 @@
                             <target>/apps/valtech/aecu/install</target>
                         </embedded>
                     </embeddeds>
+                    <dependencies>
+                        <dependency>
+                            <group>ICF Next</group>
+                            <name>aem-groovy-console</name>
+                            <version>(13,15]</version>
+                        </dependency>
+                    </dependencies>
                 </configuration>
             </plugin>
             <plugin>
