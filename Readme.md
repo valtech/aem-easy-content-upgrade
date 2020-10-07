@@ -38,7 +38,9 @@ Table of contents
         3. [Group Specification](#test_group_spec)
         4. [Tests](#test_list)
         5. [Execute Tests](#test_execution)
-7. [Limit Access to AECU](#limitAccess)
+7. [Security](#security)
+    1. [Limit Access to AECU](#limitAccess)
+    2. [Service Users](#serviceUsers)
 8. [JMX Interface](#jmx)
 9. [Health Checks](#healthchecks)
 10. [API Documentation](#api)
@@ -63,7 +65,7 @@ AECU requires Java 8 and AEM 6.4 or above. For AEM 6.3 please install the last 1
 
 # Installation
 
-You can download the package from [Maven Central](http://repo1.maven.org/maven2/de/valtech/aecu/aecu.ui.apps/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.ui.apps package will install the AECU software. It requires that you installed [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) before.
+You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.ui.apps/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.ui.apps package will install the AECU software. It requires that you installed [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) before.
 
 ```xml
         <dependency>
@@ -80,7 +82,7 @@ You can download the package from [Maven Central](http://repo1.maven.org/maven2/
 ## Bundle Installation
 
 To simplify installation we provide a bundle package that already includes the Groovy Console. This makes sure there are no compatibility issues.
-The package is also available on [Maven Central](http://repo1.maven.org/maven2/de/valtech/aecu/aecu.bundle/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases).
+The package is also available on [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.bundle/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases).
 
 ```xml
         <dependency>
@@ -412,6 +414,7 @@ You can replace the content of String properties. This also supports multi-value
 * doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames): replaces the substring "oldValue" with "newValue". Applies to all specified String properties
 * doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement): checks if the property value(s) match the search pattern and replaces it with "replacement". Applies to all String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
 * doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames): checks if the property value(s) match the search pattern and replaces it with "replacement".  Applies to specified String properties. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+* doChangePrimaryType(String newPrimaryType) (since 3.3.0): changes primary type of the resource to the given primary type
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -421,6 +424,7 @@ aecu.contentUpgradeBuilder()
         .doReplaceValueInProperties("old", "new", (String[]) ["propertyName1", "propertyName2"])
         .doReplaceValueInAllPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2")
         .doReplaceValueInPropertiesRegex("/content/([^/]+)/(.*)", "/content/newSub/\$2", (String[]) ["propertyName1", "propertyName2"])
+        .doChangePrimaryType("nt:unstructured")
         .run()
 ```
 
@@ -855,9 +859,13 @@ aecu
 ```
 
 
+<a name="security"></a>
+
+# Security
+
 <a name="limitAccess"></a>
 
-# Limit Access to AECU (since 3.2)
+## Limit Access to AECU (since 3.2)
 For production systems it is recommended to limit the access to specific user groups.
 This can be done via OSGI configuration. Here you can specify groups for read and execute access.
 
@@ -866,6 +874,18 @@ Please not that user "admin" always has full access. If no groups are specified 
 PID for OSGI config: de.valtech.aecu.core.security.AccessValidationService
 
 <img src="docs/images/limitAccess.png">
+
+<a name="serviceUsers"></a>
+
+## Service Users
+The following service users are installed by AECU:
+
+| User          | Rights | Description |
+| ------------- | -------------- | --------- |
+| aecu-admin | /: jcr:all | Validation of access rights, JMX executeWithHistory() to store script history |
+| aecu-content-migrator | /: jcr:read <br /> /apps: jcr:all <br /> /conf: jcr:all <br /> /content: jcr:all <br /> /etc: jcr:all <br /> /home: jcr:all <br /> /var: jcr:all | Content changes using aecu binding  |
+| aecu-service | /: jcr:read <br /> /var/aecu: jcr:all | AECU execution history |
+
 
 
 <a name="jmx"></a>
@@ -891,6 +911,12 @@ This will execute the given script or folder. If a folder is specified then all 
 
 Parameters:
  * Path: file or folder to execute
+ 
+Sample curl call:
+
+```
+curl -u admin:admin 'http://localhost:5902/system/console/jmx/de.valtech%3Atype%3DAECU/op/executeWithHistory/java.lang.String' --data-raw 'Path=/var/groovyconsole/scripts/aecu'
+```
 
 ## GetHistory
 

@@ -70,6 +70,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.JoinPrope
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ChangePrimaryType;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CreateResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
@@ -218,7 +219,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         if (this.filter instanceof ANDFilter) {
             ((ANDFilter) this.filter).addFilter(filter);
         }
-        ANDFilter newFilter = new ANDFilter(Arrays.asList(this.filter, filter));
+        ANDFilter newFilter = new ANDFilter(new ArrayList<FilterBy>(Arrays.asList(this.filter, filter)));
         this.filter = newFilter;
     }
 
@@ -312,6 +313,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames) {
         actions.add(new ReplaceResourcePropertyValuesRegex(searchRegex, replacement, Arrays.asList(propertyNames)));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doChangePrimaryType(@Nonnull String newPrimaryType) {
+        actions.add(new ChangePrimaryType(newPrimaryType));
         return this;
     }
 
