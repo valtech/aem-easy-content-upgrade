@@ -306,6 +306,14 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValueInPropertiesRegex(String searchRegex, String replacement, String[] propertyNames);
 
     /**
+     * Changes jcr:primaryType.
+     *
+     * @param newPrimaryType jcr:primaryType value
+     * @return upgrade object
+     **/
+    ContentUpgrade doChangePrimaryType(String newPrimaryType);
+
+    /**
      * Renames a resource to the given name.
      *
      * @param newName path

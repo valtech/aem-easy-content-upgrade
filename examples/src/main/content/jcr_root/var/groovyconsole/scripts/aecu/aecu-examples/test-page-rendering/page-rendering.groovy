@@ -1,0 +1,5 @@
+aecu.contentUpgradeBuilder()
+    .forResourcesInSubtree("/content/we-retail/ca/en/experience")
+    .filterByProperty("sling:resourceType", "weretail/components/structure/page")
+    .doCheckPageRendering()
+    .run()

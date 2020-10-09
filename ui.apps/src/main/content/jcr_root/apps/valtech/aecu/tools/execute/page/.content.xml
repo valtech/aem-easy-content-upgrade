@@ -31,6 +31,7 @@
                     jcr:primaryType="nt:unstructured"
                     jcr:title="Search"
                     sling:resourceType="granite/ui/components/coral/foundation/panel/railpanel"
+                    active="{Boolean}true"
             >
                 <items jcr:primaryType="nt:unstructured">
                     <content
