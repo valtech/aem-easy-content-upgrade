@@ -60,6 +60,7 @@ AECU requires Java 8 and AEM 6.4 or above. For AEM 6.3 please install the last 1
 | 6.3           | 12.x           | 1.x       |
 | 6.4           | 14.x, 13.x     | 3.x, 2.x  |
 | 6.5           | 14.x, 13.x     | 3.x, 2.x  |
+| AEM Cloud     | 14.x           | 3.x  |
 
 <a name="installation"></a>
 
