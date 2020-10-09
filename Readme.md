@@ -345,6 +345,7 @@ def complexFilter =  new ORFilter(
 aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/ca/en", false)
         .filterWith(complexFilter)
+        .filterWith(new NOTFilter(new FilterByPathRegex(".*jcr:content.*")))
         .doSetProperty("name", "value")
         .run()        
 ```
