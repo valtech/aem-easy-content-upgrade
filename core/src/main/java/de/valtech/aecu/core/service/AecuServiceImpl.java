@@ -26,7 +26,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -41,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.api.context.ScriptContext;
-import com.icfolson.aem.groovy.console.api.impl.RequestScriptContext;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 
 import de.valtech.aecu.api.service.AecuException;
@@ -186,9 +184,8 @@ public class AecuServiceImpl implements AecuService {
      */
     private ExecutionResult executeScript(ResourceResolver resolver, String path) {
         SlingHttpServletRequest slingRequest = new GroovyConsoleRequest(resolver);
-        SlingHttpServletResponse slingResponse = new GroovyConsoleResponse();
         LOG.info("Executing script " + path);
-        ScriptContext scriptContext = new RequestScriptContext(slingRequest, slingResponse, null, null, path);
+        ScriptContext scriptContext = new AecuScriptContext(path, slingRequest.getResourceResolver(), slingRequest);
         RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {

@@ -544,7 +544,7 @@
             <dependency>
                 <groupId>com.icfolson.aem.groovy.console</groupId>
                 <artifactId>aem-groovy-console</artifactId>
-                <version>15.1.0</version>
+                <version>16.0.0</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -557,7 +557,7 @@
             <dependency>
                 <groupId>com.icfolson.aem.groovy.console</groupId>
                 <artifactId>aem-groovy-console</artifactId>
-                <version>15.1.0</version>
+                <version>16.0.0</version>
                 <type>zip</type>
                 <!-- exclude dependencies -->
                 <exclusions>
