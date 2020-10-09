@@ -33,10 +33,11 @@ public class ChangePrimaryType implements Action {
         try {
             if (null != node) {
                 node.setPrimaryType(newPrimaryType);
-                return "Updated jcr:primaryType to " + newPrimaryType;
+                return "Updated jcr:primaryType to " + newPrimaryType + " for resource " + resource.getPath();
             }
         } catch (RepositoryException e) {
-            throw new PersistenceException("ERROR: could not update jcr:primaryType to " + newPrimaryType, e);
+            throw new PersistenceException(
+                    "ERROR: could not update jcr:primaryType to " + newPrimaryType + " for resource " + resource.getPath(), e);
         }
         return "WARNING: could not update jcr:primaryType to " + newPrimaryType;
     }
