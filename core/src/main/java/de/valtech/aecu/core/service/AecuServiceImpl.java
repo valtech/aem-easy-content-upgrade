@@ -18,11 +18,19 @@
  */
 package de.valtech.aecu.core.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import javax.jcr.Binary;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -180,12 +188,13 @@ public class AecuServiceImpl implements AecuService {
      *
      * @param resolver resource resolver
      * @param path     path
-     * @return result
+     * @return result execution result
+     * @throws AecuException error running script
      */
-    private ExecutionResult executeScript(ResourceResolver resolver, String path) {
+    private ExecutionResult executeScript(ResourceResolver resolver, String path) throws AecuException {
         SlingHttpServletRequest slingRequest = new GroovyConsoleRequest(resolver);
         LOG.info("Executing script " + path);
-        ScriptContext scriptContext = new AecuScriptContext(path, slingRequest.getResourceResolver(), slingRequest);
+        ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver, slingRequest);
         RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
@@ -201,6 +210,28 @@ public class AecuServiceImpl implements AecuService {
         ExecutionState state = success ? ExecutionState.SUCCESS : ExecutionState.FAILED;
         return new ExecutionResult(state, response.getRunningTime(), result,
                 response.getOutput() + response.getExceptionStackTrace(), fallbackResult, path);
+    }
+
+    /**
+     * Read script.
+     * 
+     * @param path     path
+     * @param resolver resource resolver
+     * @return script content
+     * @throws AecuException error reading script
+     */
+    private String loadScript(String path, ResourceResolver resolver) throws AecuException {
+        Resource resource = resolver.getResource(path + "/" + JcrConstants.JCR_CONTENT);
+        Binary binary;
+        try {
+            binary = resource.adaptTo(Node.class).getProperty(JcrConstants.JCR_DATA).getBinary();
+            InputStream inputStream = binary.getStream();
+            String script = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+            binary.dispose();
+            return script;
+        } catch (RepositoryException | IOException e) {
+            throw new AecuException("Unable to read script", e);
+        }
     }
 
     /**

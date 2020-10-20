@@ -22,7 +22,7 @@ public class AecuScriptContext implements ScriptContext {
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuScriptContext.class);
 
-    private String scriptPath;
+    private String script;
     private ResourceResolver resolver;
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -31,12 +31,12 @@ public class AecuScriptContext implements ScriptContext {
     /**
      * Constructor
      * 
-     * @param scriptPath script path
-     * @param resolver   resolver
-     * @param request    request
+     * @param script   script content
+     * @param resolver resolver
+     * @param request  request
      */
-    public AecuScriptContext(String scriptPath, ResourceResolver resolver, SlingHttpServletRequest request) {
-        this.scriptPath = scriptPath;
+    public AecuScriptContext(String script, ResourceResolver resolver, SlingHttpServletRequest request) {
+        this.script = script;
         this.resolver = resolver;
         this.request = request;
     }
@@ -68,7 +68,7 @@ public class AecuScriptContext implements ScriptContext {
 
     @Override
     public String getScript() {
-        return scriptPath;
+        return script;
     }
 
     @Override
