@@ -1,4 +1,5 @@
-3.3.1
+4.0.0
+  - Update to Groovy Console 16 and require AEM 6.5
   - Fix for AEM Cloud in manual execution tool
 
 2020-10-07 3.3.0
