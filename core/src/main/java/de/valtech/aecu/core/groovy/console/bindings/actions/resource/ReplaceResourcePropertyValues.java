@@ -82,7 +82,7 @@ public class ReplaceResourcePropertyValues implements Action {
                 }
             }
         } catch (RepositoryException e) {
-            throw new PersistenceException("Rename failed", e);
+            throw new PersistenceException("Replace failed for " + resource.getPath(), e);
         }
         if (updated) {
             return "Updated values from " + oldValue + " to " + newValue + " in " + resource.getPath();
