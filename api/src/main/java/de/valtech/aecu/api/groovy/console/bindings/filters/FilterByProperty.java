@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
+import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
+
 /**
  * Filters resources by a given property. The filter only matches if the attribute exists and has
  * the exact given value.
@@ -42,7 +44,7 @@ public class FilterByProperty implements FilterBy {
      */
     public FilterByProperty(@Nonnull String name, Object value) {
         this.name = name;
-        this.value = value;
+        this.value = GStringConverter.convert(value);
     }
 
     @Override

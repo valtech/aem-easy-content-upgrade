@@ -29,15 +29,12 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import com.adobe.granite.rest.utils.ModifiableMappedValueMapDecorator;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
@@ -297,7 +294,7 @@ public class TestFilters {
     private Resource getMockResourceWithNameAndProperties(String name, Map<String, Object> proeprties) {
         Resource resourceMock = Mockito.mock(Resource.class);
         when(resourceMock.getName()).thenReturn(name);
-        when(resourceMock.adaptTo(ModifiableValueMap.class)).thenReturn(new ModifiableMappedValueMapDecorator(proeprties));
+        when(resourceMock.getValueMap()).thenReturn(new ValueMapDecorator(proeprties));
         when(resourceMock.adaptTo(ValueMap.class)).thenReturn(new ValueMapDecorator(proeprties));
         return resourceMock;
     }
