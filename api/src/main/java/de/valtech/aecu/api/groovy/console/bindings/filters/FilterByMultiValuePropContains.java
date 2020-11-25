@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,6 +25,8 @@ import javax.annotation.Nonnull;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
+import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
+
 /**
  * Filters resources by multi-value properties. It checks if the given values are contained in the
  * resource's multi-value field, no exact match.
@@ -44,12 +46,12 @@ public class FilterByMultiValuePropContains implements FilterBy {
      */
     public FilterByMultiValuePropContains(@Nonnull String name, @Nonnull Object[] values) {
         this.name = name;
-        this.values = values;
+        this.values = GStringConverter.convert(values);
     }
 
     @Override
     public boolean filter(@Nonnull Resource resource, StringBuilder output) {
-        ValueMap properties = resource.adaptTo(ValueMap.class);
+        ValueMap properties = resource.getValueMap();
         if (properties != null) {
             Object value = properties.get(name);
             if (value != null && value.getClass().isArray()) {

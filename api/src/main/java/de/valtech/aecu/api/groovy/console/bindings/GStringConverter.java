@@ -1,5 +1,6 @@
 package de.valtech.aecu.api.groovy.console.bindings;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +45,23 @@ public class GStringConverter {
             if (entry.getValue() instanceof GString) {
                 output.put(entry.getKey(), convert(entry.getValue()));
             }
+        }
+        return output;
+    }
+
+    /**
+     * Converts the input in case it is a GString.
+     * 
+     * @param input input
+     * @return converted value
+     */
+    public static Object[] convert(Object[] input) {
+        if (input == null) {
+            return input;
+        }
+        Object[] output = Arrays.copyOf(input, input.length);
+        for (int i = 0; i < output.length; i++) {
+            output[i] = convert(output[i]);
         }
         return output;
     }
