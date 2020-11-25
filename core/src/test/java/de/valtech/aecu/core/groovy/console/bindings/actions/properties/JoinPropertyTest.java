@@ -36,11 +36,14 @@ import javax.jcr.version.VersionException;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.codehaus.groovy.runtime.GStringImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import groovy.lang.GString;
 
 /**
  * Tests JoinProperty
@@ -52,6 +55,7 @@ public class JoinPropertyTest {
 
     private static final String VAL1 = "val1";
     private static final String EMPTY_VALUE = "emptyValue";
+    private static final GString EMPTY_VALUE_G = new GStringImpl(new Object[] {"Value"}, new String[] {"empty"});
 
     private static final String ATTR = "attr";
     public static final String SEPARATOR = ";|;";
@@ -118,6 +122,19 @@ public class JoinPropertyTest {
         when(valueMap.get(ATTR)).thenReturn(new Boolean[] {});
 
         JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE);
+        action.doAction(resource);
+
+        verify(valueMap, times(1)).remove(ATTR);
+        verify(valueMap, times(1)).put(ATTR, EMPTY_VALUE);
+    }
+
+    @Test
+    public void doActionReplaceEmptyArrayGString() throws PersistenceException {
+        // setup test resource
+        when(valueMap.containsKey(ATTR)).thenReturn(true);
+        when(valueMap.get(ATTR)).thenReturn(new Boolean[] {});
+
+        JoinProperty action = new JoinProperty(ATTR, EMPTY_VALUE_G);
         action.doAction(resource);
 
         verify(valueMap, times(1)).remove(ATTR);
