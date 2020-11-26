@@ -35,11 +35,14 @@ import javax.jcr.version.VersionException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.codehaus.groovy.runtime.GStringImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import groovy.lang.GString;
 
 /**
  * Tests CreateResource
@@ -48,6 +51,11 @@ import org.mockito.junit.MockitoJUnitRunner;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CreateResourceTest {
+
+    private static final String NT_UNSTRUCTURED = "nt:unstructured";
+    private static final GString NT_UNSTRUCTURED_G = new GStringImpl(new Object[] {"unstructured"}, new String[] {"nt:"});
+
+    private static final String JCR_PRIMARY_TYPE = "jcr:primaryType";
 
     private static final String INTERMEDIATE = "intermediate";
 
@@ -71,7 +79,7 @@ public class CreateResourceTest {
     public void setup() throws PersistenceException {
         when(newResource.getPath()).thenReturn("/parent/node/nodeNew");
         when(resolver.getResource(resource, INTERMEDIATE)).thenReturn(intermediateResource);
-        properties.put("jcr:primaryType", "nt:unstructured");
+        properties.put(JCR_PRIMARY_TYPE, NT_UNSTRUCTURED);
         when(resolver.create(resource, NEW_NAME, properties)).thenReturn(newResource);
         when(resolver.create(intermediateResource, NEW_NAME, properties)).thenReturn(newResource);
     }
@@ -94,6 +102,18 @@ public class CreateResourceTest {
         action.doAction(resource);
 
         verify(resolver, times(1)).create(intermediateResource, NEW_NAME, properties);
+    }
+
+    @Test
+    public void doAction_noRelativeGString() throws PersistenceException, ItemExistsException, PathNotFoundException,
+            VersionException, ConstraintViolationException, LockException, RepositoryException {
+        Map<String, Object> propertiesInput = new HashMap<>(properties);
+        propertiesInput.put(JCR_PRIMARY_TYPE, NT_UNSTRUCTURED_G);
+        CreateResource action = new CreateResource(NEW_NAME, propertiesInput, null, resolver);
+
+        action.doAction(resource);
+
+        verify(resolver, times(1)).create(resource, NEW_NAME, properties);
     }
 
 }

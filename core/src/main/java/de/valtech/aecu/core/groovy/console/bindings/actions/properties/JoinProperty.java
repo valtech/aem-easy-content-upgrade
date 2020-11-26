@@ -27,6 +27,7 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
+import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
@@ -69,7 +70,7 @@ public class JoinProperty implements Action {
     public JoinProperty(@Nonnull String name, Object emptyValue, @Nonnull String separator) {
         this.name = name;
         this.separator = separator;
-        this.emptyValue = emptyValue;
+        this.emptyValue = GStringConverter.convert(emptyValue);
     }
 
     @Override

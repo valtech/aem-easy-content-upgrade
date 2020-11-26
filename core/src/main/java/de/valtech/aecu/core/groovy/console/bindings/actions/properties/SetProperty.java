@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,12 +18,13 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * @author Roxana Muresan
@@ -35,7 +36,7 @@ public class SetProperty implements Action {
 
     public SetProperty(@Nonnull String name, Object value) {
         this.name = name;
-        this.value = value;
+        this.value = GStringConverter.convert(value);
     }
 
     @Override
@@ -43,7 +44,8 @@ public class SetProperty implements Action {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         if (properties != null) {
             properties.put(name, value);
-            return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource " + resource.getPath();
+            return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource "
+                    + resource.getPath();
         }
         return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
     }

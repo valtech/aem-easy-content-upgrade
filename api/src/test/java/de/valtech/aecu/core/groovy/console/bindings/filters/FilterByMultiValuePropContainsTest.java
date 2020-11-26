@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -31,20 +31,24 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
 import groovy.lang.GString;
 
 /**
- * Tests FilterByProperty
+ * Tests FilterByMultiValuePropContains
  * 
  * @author Roland Gruber
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FilterByPropertyTest {
+public class FilterByMultiValuePropContainsTest {
 
-    private static final String NAME = "name";
-    private static final String VALUE = "value";
-    private static final GString VALUE_G = new GStringImpl(new Object[] {3}, new String[] {"value"});
+    private static final String NAME1 = "name";
+    private static final String VALUE1 = "value";
+    private static final String NAME2 = "name2";
+    private static final String VALUE2 = "value2";
+    private static final String NAME3 = "name3";
+    private static final GString VALUE_G = new GStringImpl(new Object[] {2}, new String[] {"value"});
 
     @Mock
     private Resource resource;
@@ -55,44 +59,46 @@ public class FilterByPropertyTest {
     @Before
     public void setup() {
         when(resource.getValueMap()).thenReturn(values);
+        when(values.get(NAME1)).thenReturn(new Object[] {VALUE1, VALUE2});
+        when(values.get(NAME2)).thenReturn(new Object[] {VALUE2});
     }
 
     @Test
-    public void filterAttributeNullValueNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, null);
-        when(values.get(NAME)).thenReturn(null);
+    public void filterAttributeNull_filterValueEmpty() {
+        Object[] filterAttributes = new Object[0];
+        FilterByMultiValuePropContains filter = new FilterByMultiValuePropContains(NAME1, filterAttributes);
 
         assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
-    public void filterAttributeNullValueNonNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, VALUE);
-        when(values.get(NAME)).thenReturn(null);
+    public void filterAttributeNull_filterValueNonNull() {
+        Object[] filterAttributes = new Object[] {VALUE1};
+        FilterByMultiValuePropContains filter = new FilterByMultiValuePropContains(NAME3, filterAttributes);
 
         assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
-    public void filterAttributeNonNullValueNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, null);
-        when(values.get(NAME)).thenReturn(VALUE);
+    public void filterAttributeNonNull_filterValueNonNull() {
+        Object[] filterAttributes = new Object[] {VALUE1};
+        FilterByMultiValuePropContains filter = new FilterByMultiValuePropContains(NAME1, filterAttributes);
 
-        assertFalse(filter.filter(resource, new StringBuilder()));
+        assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
-    public void filterAttributeNonNullValueNonNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, VALUE);
-        when(values.get(NAME)).thenReturn(VALUE);
+    public void filterAttributeNonNull_filterValueMulti() {
+        Object[] filterAttributes = new Object[] {VALUE1, VALUE2};
+        FilterByMultiValuePropContains filter = new FilterByMultiValuePropContains(NAME1, filterAttributes);
 
         assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
     public void filterAttributeGString() {
-        FilterByProperty filter = new FilterByProperty(NAME, VALUE_G);
-        when(values.get(NAME)).thenReturn(VALUE + "3");
+        Object[] filterAttributes = new Object[] {VALUE_G};
+        FilterByMultiValuePropContains filter = new FilterByMultiValuePropContains(NAME2, filterAttributes);
 
         assertTrue(filter.filter(resource, new StringBuilder()));
     }

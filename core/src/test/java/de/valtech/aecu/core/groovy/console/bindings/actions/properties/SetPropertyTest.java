@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,11 +25,14 @@ import static org.mockito.Mockito.when;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.codehaus.groovy.runtime.GStringImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import groovy.lang.GString;
 
 /**
  * Tests SetProperty
@@ -42,6 +45,8 @@ public class SetPropertyTest {
     private static final String VAL1 = "val1";
 
     private static final String ATTR = "attr";
+
+    private static final GString VALUE_G = new GStringImpl(new Object[] {1}, new String[] {"val"});
 
     @Mock
     private Resource resource;
@@ -57,6 +62,15 @@ public class SetPropertyTest {
     @Test
     public void doAction() throws PersistenceException {
         SetProperty action = new SetProperty(ATTR, VAL1);
+
+        action.doAction(resource);
+
+        verify(valueMap, times(1)).put(ATTR, VAL1);
+    }
+
+    @Test
+    public void doAction_gString() throws PersistenceException {
+        SetProperty action = new SetProperty(ATTR, VALUE_G);
 
         action.doAction(resource);
 

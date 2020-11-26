@@ -24,8 +24,10 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+
+import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
 
 /**
  * Filters resources by properties. You can define multiple properties that all need an exact match.
@@ -43,12 +45,12 @@ public class FilterByProperties implements FilterBy {
      * @param conditionProperties list of properties to match (property name, property value)
      */
     public FilterByProperties(@Nonnull Map<String, Object> conditionProperties) {
-        this.conditionProperties.putAll(conditionProperties);
+        this.conditionProperties.putAll(GStringConverter.convert(conditionProperties));
     }
 
     @Override
     public boolean filter(@Nonnull Resource resource, StringBuilder output) {
-        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        ValueMap properties = resource.getValueMap();
         if (properties == null) {
             output.append("WARNING: Could not get ModifiableValueMap of resource " + resource.getPath());
             return false;

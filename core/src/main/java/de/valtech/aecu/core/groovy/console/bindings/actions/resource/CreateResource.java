@@ -18,16 +18,17 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import java.util.Map;
-
-import javax.annotation.Nonnull;
+import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * Creates a new node
@@ -44,7 +45,7 @@ public class CreateResource implements Action {
     public CreateResource(@Nonnull String name, @Nonnull Map<String, Object> properties, String relativePath,
             @Nonnull ResourceResolver resourceResolver) {
         this.name = name;
-        this.properties = properties;
+        this.properties = GStringConverter.convert(properties);
         this.relativePath = relativePath;
         this.resourceResolver = resourceResolver;
     }
