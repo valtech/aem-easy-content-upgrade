@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.valtech.aecu.api.groovy.console.bindings"},{"l":"de.valtech.aecu.api.groovy.console.bindings.accessrights"},{"l":"de.valtech.aecu.api.groovy.console.bindings.filters"},{"l":"de.valtech.aecu.api.service"}]
