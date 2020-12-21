@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2020 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,6 +22,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.codehaus.groovy.runtime.GStringImpl;
@@ -31,20 +34,23 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import groovy.lang.GString;
 
 /**
- * Tests FilterByProperty
+ * Tests FilterByProperties
  * 
  * @author Roland Gruber
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FilterByPropertyTest {
+public class FilterByPropertiesTest {
 
-    private static final String NAME = "name";
-    private static final String VALUE = "value";
-    private static final GString VALUE_G = new GStringImpl(new Object[] {3}, new String[] {"value"});
+    private static final String NAME1 = "name";
+    private static final String VALUE1 = "value";
+    private static final String NAME2 = "name2";
+    private static final String VALUE2 = "value2";
+    private static final String NAME3 = "name3";
+    private static final GString VALUE_G = new GStringImpl(new Object[] {2}, new String[] {"value"});
 
     @Mock
     private Resource resource;
@@ -55,44 +61,61 @@ public class FilterByPropertyTest {
     @Before
     public void setup() {
         when(resource.getValueMap()).thenReturn(values);
+        when(values.get(NAME1)).thenReturn(VALUE1);
+        when(values.get(NAME2)).thenReturn(VALUE2);
     }
 
     @Test
     public void filterAttributeNullValueNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, null);
-        when(values.get(NAME)).thenReturn(null);
+        Map<String, Object> filterMap = new HashMap<>();
+        filterMap.put(NAME3, null);
+        FilterByProperties filter = new FilterByProperties(filterMap);
 
         assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
     public void filterAttributeNullValueNonNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, VALUE);
-        when(values.get(NAME)).thenReturn(null);
+        Map<String, Object> filterMap = new HashMap<>();
+        filterMap.put(NAME1, null);
+        FilterByProperties filter = new FilterByProperties(filterMap);
 
         assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
     public void filterAttributeNonNullValueNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, null);
-        when(values.get(NAME)).thenReturn(VALUE);
+        Map<String, Object> filterMap = new HashMap<>();
+        filterMap.put(NAME3, VALUE1);
+        FilterByProperties filter = new FilterByProperties(filterMap);
 
         assertFalse(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
     public void filterAttributeNonNullValueNonNull() {
-        FilterByProperty filter = new FilterByProperty(NAME, VALUE);
-        when(values.get(NAME)).thenReturn(VALUE);
+        Map<String, Object> filterMap = new HashMap<>();
+        filterMap.put(NAME1, VALUE1);
+        FilterByProperties filter = new FilterByProperties(filterMap);
+
+        assertTrue(filter.filter(resource, new StringBuilder()));
+    }
+
+    @Test
+    public void filterAttributeNonNullValueMulti() {
+        Map<String, Object> filterMap = new HashMap<>();
+        filterMap.put(NAME1, VALUE1);
+        filterMap.put(NAME2, VALUE2);
+        FilterByProperties filter = new FilterByProperties(filterMap);
 
         assertTrue(filter.filter(resource, new StringBuilder()));
     }
 
     @Test
     public void filterAttributeGString() {
-        FilterByProperty filter = new FilterByProperty(NAME, VALUE_G);
-        when(values.get(NAME)).thenReturn(VALUE + "3");
+        Map<String, Object> filterMap = new HashMap<>();
+        filterMap.put(NAME2, VALUE_G);
+        FilterByProperties filter = new FilterByProperties(filterMap);
 
         assertTrue(filter.filter(resource, new StringBuilder()));
     }

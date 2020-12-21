@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>3.3.0</version>
+    <version>4.0.0</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -544,7 +544,7 @@
             <dependency>
                 <groupId>com.icfolson.aem.groovy.console</groupId>
                 <artifactId>aem-groovy-console</artifactId>
-                <version>14.0.0</version>
+                <version>16.0.0</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -557,7 +557,7 @@
             <dependency>
                 <groupId>com.icfolson.aem.groovy.console</groupId>
                 <artifactId>aem-groovy-console</artifactId>
-                <version>14.0.0</version>
+                <version>16.0.0</version>
                 <type>zip</type>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -612,7 +612,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

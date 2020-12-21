@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>3.3.0</version>
+        <version>4.0.0</version>
     </parent>
     
     <artifactId>aecu.core</artifactId>
@@ -43,7 +43,7 @@
 						            <Import-Package>
 						              !antlr.*,
                           javax.annotation;version=0.0.0,
-						              com.icfolson.aem.groovy.console.*;version="[13.0,15)",
+						              com.icfolson.aem.groovy.console.*;version="[15.1,17)",
 						              *
   					            </Import-Package>
                     </instructions>
