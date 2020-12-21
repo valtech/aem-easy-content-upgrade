@@ -1,6 +1,7 @@
-4.0.0
-  - Update to Groovy Console 16 and require AEM 6.5
+2020-12-21 4.0.0
+  - Update to Groovy Console 16 and require AEM 6.5 (#135)
   - Fix for AEM Cloud in manual execution tool
+  - Convert GString values in binding methods (#140)
 
 2020-10-07 3.3.0
   - Allow to change primary type
