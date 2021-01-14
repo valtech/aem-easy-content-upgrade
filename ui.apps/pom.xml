@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>aecu.ui.apps</artifactId>
@@ -14,36 +14,8 @@
     <description>UI apps package for AECU</description>
 
     <build>
-        <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>${basedir}/src/main/content/jcr_root</directory>
-                <excludes>
-                    <exclude>**/.vlt</exclude>
-                    <exclude>**/.vltignore</exclude>
-                    <exclude>**/.gitignore</exclude>
-                    <exclude>**/*.iml</exclude>
-                    <exclude>**/.classpath</exclude>
-                    <exclude>**/.project</exclude>
-                    <exclude>**/.settings</exclude>
-                    <exclude>**/.DS_Store</exclude>
-                    <exclude>**/target/**</exclude>
-                    <exclude>**/pom.xml</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/content/META-INF/vault/definition</directory>
-                <targetPath>../vault-work/META-INF/vault/definition</targetPath>
-            </resource>
-        </resources>
+        
         <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <includeEmptyDirs>true</includeEmptyDirs>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -74,11 +46,8 @@
                 <configuration>
                     <allowIndexDefinitions>true</allowIndexDefinitions>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
-                    <verbose>true</verbose>
-                    <failOnError>true</failOnError>
                     <group>Valtech</group>
                     <properties>
-                        <acHandling>merge_preserve</acHandling>
                         <installPathRegex>/apps/valtech/aecu/(config|install)/.*</installPathRegex>
                         <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
                     </properties>

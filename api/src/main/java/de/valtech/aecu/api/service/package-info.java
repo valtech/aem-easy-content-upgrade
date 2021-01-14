@@ -24,7 +24,7 @@
  * 
  * @author Roland Gruber
  */
-@Version("2.1.0")
+@Version("2.2.0")
 package de.valtech.aecu.api.service;
 
 import org.osgi.annotation.versioning.Version;
