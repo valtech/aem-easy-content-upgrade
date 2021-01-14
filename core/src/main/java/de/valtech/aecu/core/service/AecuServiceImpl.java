@@ -26,10 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import javax.jcr.Binary;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
@@ -222,14 +218,13 @@ public class AecuServiceImpl implements AecuService {
      */
     private String loadScript(String path, ResourceResolver resolver) throws AecuException {
         Resource resource = resolver.getResource(path + "/" + JcrConstants.JCR_CONTENT);
-        Binary binary;
-        try {
-            binary = resource.adaptTo(Node.class).getProperty(JcrConstants.JCR_DATA).getBinary();
-            InputStream inputStream = binary.getStream();
-            String script = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
-            binary.dispose();
-            return script;
-        } catch (RepositoryException | IOException e) {
+        // https://sling.apache.org/documentation/the-sling-engine/resources.html#binary-support
+        try (InputStream inputStream = resource.adaptTo(InputStream.class)){
+            if (inputStream == null) {
+                throw new IOException("Resource at '" + path +"' cannot be adapted to InputStream, it doesn't seem to contain binary data");
+            }
+            return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+        } catch (IOException e) {
             throw new AecuException("Unable to read script", e);
         }
     }
