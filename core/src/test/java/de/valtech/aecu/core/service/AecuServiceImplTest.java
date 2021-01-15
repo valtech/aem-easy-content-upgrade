@@ -35,9 +35,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.jcr.Binary;
-import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.jackrabbit.JcrConstants;
@@ -100,15 +97,6 @@ public class AecuServiceImplTest {
 
     @Mock
     private ScriptContext scriptContext = mock(ScriptContext.class);
-
-    @Mock
-    private Binary binary;
-
-    @Mock
-    private Node node;
-
-    @Mock
-    private Property property;
 
     @Before
     public void setup() throws LoginException {
