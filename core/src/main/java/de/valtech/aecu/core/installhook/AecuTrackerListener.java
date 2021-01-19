@@ -28,6 +28,8 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.vault.fs.api.ProgressTrackerListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.service.AecuService;
 
@@ -38,6 +40,8 @@ import de.valtech.aecu.api.service.AecuService;
  * @author Roland Gruber
  */
 public class AecuTrackerListener implements ProgressTrackerListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AecuTrackerListener.class);
 
     public static final String ALWAYS_SUFFIX = "always.groovy";
 
@@ -91,14 +95,14 @@ public class AecuTrackerListener implements ProgressTrackerListener {
             return;
         }
 
-        if (StringUtils.endsWith(path, ALWAYS_SUFFIX)) {
+        if (StringUtils.endsWith(path, ALWAYS_SUFFIX) && isValid(path)) {
             logMessage(String.format("Adding %s due to having 'always' in name.", path));
             paths.add(path);
             return;
         }
 
         if (!ACTIONS.contains(action) && isValid(path)) {
-            logMessage(String.format("Skipping %s due to non matching action '%s'", path, action));
+            LOG.debug(String.format("Skipping %s due to non matching action '%s'", path, action));
             return;
         }
 
