@@ -12,9 +12,6 @@
       <include pattern="/conf/global/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge(/.*)?" />
     </filter>
     <filter root="/etc/groovyconsole/scripts/aecu" type="cleanup"/><!--removes the old location-->
-    <filter root="/oak:index">
-      <include pattern="/oak:index" />
-      <include pattern="/oak:index/aecuHistory(/.*)?" />
-    </filter>
+    <filter root="/oak:index/aecuHistory-custom-1" />
 
 </workspaceFilter>
