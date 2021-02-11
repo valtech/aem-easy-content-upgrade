@@ -58,7 +58,7 @@ AECU requires Java 8 and AEM 6.5 or above. For AEM 6.3/6.4 please see below. Gro
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
 | AEM Cloud     | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
-| 6.5           | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
+| 6.5 (>=6.5.3) | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
 | 6.4           | 14.x, 13.x               | 3.x, 2.x          |
 | 6.3           | 12.x                     | 1.x               |
 
