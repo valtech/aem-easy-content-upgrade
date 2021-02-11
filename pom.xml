@@ -251,6 +251,34 @@
 		                <artifactId>filevault-package-maven-plugin</artifactId>
 		                <version>1.1.6</version>
                     <extensions>true</extensions>
+                    <configuration>
+                        <validatorsSettings>
+                            <jackrabbit-nodetypes>
+                                 <!-- only level WARN for now, as not working 100% reliable yet: https://issues.apache.org/jira/browse/JCRVLT-461, https://issues.apache.org/jira/browse/JCRVLT-463 -->
+                                 <defaultSeverity>warn</defaultSeverity>
+                                 <options>
+                                     <!-- use the nodetypes and namespaces from the aem-nodetypes.jar provided in the plugin dependencies -->
+                                     <cnds>tccl:aem.cnd</cnds>
+                                 </options>
+                             </jackrabbit-nodetypes>
+                             <netcentric-aem-cloud>
+                                  <!-- packages not fully compliant yet -->
+                                  <defaultSeverity>warn</defaultSeverity>
+                             </netcentric-aem-cloud>
+                         </validatorsSettings>
+                     </configuration>
+                     <dependencies>
+                         <dependency>
+                             <groupId>biz.netcentric.aem</groupId>
+                             <artifactId>aem-nodetypes</artifactId>
+                             <version>2020.11.0</version>
+                         </dependency>
+                         <dependency>
+                             <groupId>biz.netcentric.filevault.validator</groupId>
+                             <artifactId>aem-cloud-validator</artifactId>
+                             <version>1.1.0</version>
+                         </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
