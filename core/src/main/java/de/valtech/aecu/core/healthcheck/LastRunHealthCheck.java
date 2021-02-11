@@ -36,7 +36,7 @@ import de.valtech.aecu.api.service.HistoryEntry;
  * @author Roland Gruber
  */
 @Component(immediate = true, service = HealthCheck.class, property = {HealthCheck.TAGS + "=aecu",
-        HealthCheck.NAME + "=AECU Last Run", HealthCheck.MBEAN_NAME + "=aecuLastRunHCmBean"})
+        HealthCheck.TAGS + "=aecu-last-run", HealthCheck.NAME + "=AECU Last Run", HealthCheck.MBEAN_NAME + "=aecuLastRunHCmBean"})
 public class LastRunHealthCheck implements HealthCheck {
 
     @Reference
