@@ -2,7 +2,7 @@
 
 # AEM Easy Content Upgrade (AECU)
 
-AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/CID15/aem-groovy-console).
 
 
 Features:
@@ -100,26 +100,28 @@ The package is also available on [Maven Central](https://repo1.maven.org/maven2/
 ## Uninstallation
 
 The application can be removed by deleting the following paths:
-* /apps/valtech/aecu
-* /var/groovyconsole/scripts/aecu
-* /var/aecu
-* /var/aecu-installhook
+* `/apps/valtech/aecu`
+* `/var/groovyconsole/scripts/aecu`
+* `/conf/groovyconsole/scripts/aecu`
+* `/var/aecu`
+* `/var/aecu-installhook`
 
 Afterwards, you can delete the "aecu.bundle" and "aecu.ui.apps" packages in package manager.
 
 For Groovy Console delete:
 
-* /apps/groovyconsole
-* /etc/clientlibs/groovyconsole
-* /var/groovyconsole
+* `/apps/groovyconsole`
+* `/etc/clientlibs/groovyconsole`
+* `/var/groovyconsole`
 
-Then delete "aem-groovy-console" packages in package mananger.
+Then delete "aem-groovy-console" packages in package manager.
 
 
 # File and Folder Structure
 
-All migration scripts need to be located in /var/groovyconsole/scripts/aecu. There you can create
-an unlimited number of folders and files. E.g. organize your files by project or deployment.
+All migration scripts need to be located in `/var/groovyconsole/scripts/aecu` or `/conf/groovyconsole/scripts/aecu`. 
+The latter is recommended with AEM as a Cloud Service due to [restrictions with the `/var` repository location](https://experienceleague.adobe.com/docs/experience-manager-learn/cloud-service/debugging/debugging-aem-as-a-cloud-service/build-and-deployment.html?lang=en#including-%2Fvar-in-content-package).
+There you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
 <img src="docs/images/files.png">

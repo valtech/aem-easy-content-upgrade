@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.1.0-SNAPSHOT</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -224,7 +224,7 @@
                 <plugin>
                     <groupId>biz.aQute.bnd</groupId>
                     <artifactId>bnd-baseline-maven-plugin</artifactId>
-                    <version>4.1.0</version>
+                    <version>5.2.0</version>
                     <executions>
 				                <execution>
 				                    <id>baseline</id>
@@ -237,7 +237,7 @@
                 <plugin>
                     <groupId>com.day.jcr.vault</groupId>
                     <artifactId>content-package-maven-plugin</artifactId>
-                    <version>1.0.2</version>
+                    <version>1.0.4</version>
                     <configuration>
                         <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
                         <failOnError>true</failOnError>
@@ -249,8 +249,36 @@
                 <plugin>
 		                <groupId>org.apache.jackrabbit</groupId>
 		                <artifactId>filevault-package-maven-plugin</artifactId>
-		                <version>1.0.4</version>
+		                <version>1.1.6</version>
                     <extensions>true</extensions>
+                    <configuration>
+                        <validatorsSettings>
+                            <jackrabbit-nodetypes>
+                                 <!-- only level WARN for now, as not working 100% reliable yet: https://issues.apache.org/jira/browse/JCRVLT-461, https://issues.apache.org/jira/browse/JCRVLT-463 -->
+                                 <defaultSeverity>warn</defaultSeverity>
+                                 <options>
+                                     <!-- use the nodetypes and namespaces from the aem-nodetypes.jar provided in the plugin dependencies -->
+                                     <cnds>tccl:aem.cnd</cnds>
+                                 </options>
+                             </jackrabbit-nodetypes>
+                             <netcentric-aem-cloud>
+                                  <!-- packages not fully compliant yet -->
+                                  <defaultSeverity>warn</defaultSeverity>
+                             </netcentric-aem-cloud>
+                         </validatorsSettings>
+                     </configuration>
+                     <dependencies>
+                         <dependency>
+                             <groupId>biz.netcentric.aem</groupId>
+                             <artifactId>aem-nodetypes</artifactId>
+                             <version>2020.11.0</version>
+                         </dependency>
+                         <dependency>
+                             <groupId>biz.netcentric.filevault.validator</groupId>
+                             <artifactId>aem-cloud-validator</artifactId>
+                             <version>1.1.0</version>
+                         </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
