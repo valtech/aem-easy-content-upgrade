@@ -45,6 +45,7 @@ public interface AecuService {
 
     /**
      * Prefix in repository where AECU scripts are located.
+     * 
      * @deprecated Use either {@link #AECU_VAR_PATH_PREFIX} or {@link #AECU_CONF_PATH_PREFIX}
      */
     @Deprecated
@@ -58,8 +59,8 @@ public interface AecuService {
     /**
      * Prefix in repository where install hook AECU scripts are located.
      */
-    public static final String AECU_CONF_PATH_PREFIX = "/content/groovyconsole/scripts/aecu";
-    
+    public static final String AECU_CONF_PATH_PREFIX = "/conf/groovyconsole/scripts/aecu";
+
     /**
      * Returns the AECU version.
      *
