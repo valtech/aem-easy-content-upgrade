@@ -191,9 +191,9 @@ public interface ContentUpgrade {
     /**
      * Joins a property value into a single value using the given separator.
      *
-     * @param name  property name
-     * @param value property value fall back for empty arrays. Use null to delete the property.
-     * @param name  separator (e.g. ",")
+     * @param name      property name
+     * @param value     property value fall back for empty arrays. Use null to delete the property.
+     * @param separator separator (e.g. ",")
      * @return upgrade object
      **/
     ContentUpgrade doJoinProperty(String name, Object value, String separator);
@@ -362,6 +362,7 @@ public interface ContentUpgrade {
      * Deletes the child resources if supplied. If no children are specified it deletes the resource
      * itself.
      *
+     * @param children delete children (resource itself if empty)
      * @return upgrade object
      */
     ContentUpgrade doDeleteResource(String... children);
