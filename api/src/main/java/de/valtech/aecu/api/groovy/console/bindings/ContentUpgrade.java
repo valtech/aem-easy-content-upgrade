@@ -138,6 +138,22 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNodeName(String nodeName);
 
     /**
+     * Filters by node exist.
+     *
+     * @param path node path
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNode(String path);
+
+    /**
+     * Filters by node not exist.
+     *
+     * @param path node path
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNodeNotExist(String path);
+
+    /**
      * Filters by node name using regular expression.
      *
      * @param regex regular expression (Java standard pattern)
