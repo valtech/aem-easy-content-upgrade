@@ -19,7 +19,7 @@
 
     <properties>
         <aem.host>localhost</aem.host>
-        <aem.port>6002</aem.port>
+        <aem.port>5602</aem.port>
         <aem.publish.host>localhost</aem.publish.host>
         <aem.publish.port>5705</aem.publish.port>
         <sling.user>admin</sling.user>
