@@ -323,7 +323,29 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Filter by Node | NodeNotExist
 
+Filters resources by absolute or relative node path.
+
+* filterByNode(String path): process nodes if the given node or subnode exist in the repository 
+* filterByNodeNotExist(String path): process nodes if the given node or subnode do not exist in the repository
+
+Example filterByNode: 
+```java
+aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNode("jcr:content/meta")
+        .doSetProperty("name", "value")
+        .run()
+```
+Example filterByNodeNotExist: 
+```java
+aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeNotExist("climbing-on-island--greece/jcr:content")
+        .printPath()
+        .run()
+```
 #### Combine Multiple Filters
 You can combine filters with AND and OR to build more complex filters.
 
