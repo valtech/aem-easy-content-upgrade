@@ -20,6 +20,7 @@
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
+                    <packageType>content</packageType>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                     <group>Valtech</group>
                     <properties>

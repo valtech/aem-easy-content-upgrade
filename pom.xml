@@ -13,7 +13,7 @@
         <module>api</module>
         <module>core</module>
         <module>ui.apps</module>
-        <module>bundle</module>
+        <module>complete</module>
         <module>examples</module>
     </modules>
 

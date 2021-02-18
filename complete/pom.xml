@@ -8,10 +8,10 @@
         <version>4.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aecu.bundle</artifactId>
+    <artifactId>aecu.complete</artifactId>
     <packaging>content-package</packaging>
-    <name>AECU - Bundle</name>
-    <description>Bundle package for AECU that includes Groovy Console</description>
+    <name>AECU - Complete</name>
+    <description>Complete package for AECU that includes Groovy Console</description>
 
     <build>
         <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
@@ -23,10 +23,10 @@
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
                     <allowIndexDefinitions>true</allowIndexDefinitions>
-                    <embeddedTarget>/apps/valtech/aecu-bundle/install/</embeddedTarget>
+                    <embeddedTarget>/apps/valtech/aecu-complete/install/</embeddedTarget>
 					          <filters>
 					            <filter>
-					              <root>/apps/valtech/aecu-bundle</root>
+					              <root>/apps/valtech/aecu-complete</root>
 					            </filter>
 					          </filters>
                     <verbose>true</verbose>
