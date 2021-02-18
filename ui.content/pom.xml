@@ -8,10 +8,10 @@
         <version>4.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aecu.ui.apps</artifactId>
+    <artifactId>aecu.ui.content</artifactId>
     <packaging>content-package</packaging>
-    <name>AECU - UI apps</name>
-    <description>UI apps package for AECU</description>
+    <name>AECU - UI content</name>
+    <description>UI content package for AECU</description>
 
     <build>
         
@@ -20,23 +20,10 @@
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
-                    <packageType>application</packageType>
+                    <packageType>content</packageType>
+                    <allowIndexDefinitions>true</allowIndexDefinitions>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                     <group>Valtech</group>
-                    <validatorsSettings>
-                        <jackrabbit-filter>
-                            <options>
-                                <validRoots>/apps,/apps/valtech,/apps/cq/core/content/nav/tools,/apps/settings/granite/operations/hc</validRoots>
-                            </options>
-                        </jackrabbit-filter>
-                    </validatorsSettings>
-                    <dependencies>
-                        <dependency>
-                            <group>ICF Next</group>
-                            <name>aem-groovy-console</name>
-                            <version>(16,17]</version>
-                        </dependency>
-                    </dependencies>
                 </configuration>
             </plugin>
             <plugin>

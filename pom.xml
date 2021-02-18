@@ -13,6 +13,7 @@
         <module>api</module>
         <module>core</module>
         <module>ui.apps</module>
+        <module>ui.content</module>
         <module>complete</module>
         <module>examples</module>
     </modules>
