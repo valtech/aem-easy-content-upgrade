@@ -145,7 +145,8 @@ Then delete "aem-groovy-console" packages in package manager.
 # File and Folder Structure
 
 All migration scripts need to be located in `/conf/groovyconsole/scripts/aecu` (recommended) or `/var/groovyconsole/scripts/aecu`. 
-The latter is recommended with AEM as a Cloud Service due to [restrictions with the `/var` repository location](https://experienceleague.adobe.com/docs/experience-manager-learn/cloud-service/debugging/debugging-aem-as-a-cloud-service/build-and-deployment.html?lang=en#including-%2Fvar-in-content-package).
+
+The first is recommended with AEM as a Cloud Service due to [restrictions with the `/var` repository location](https://experienceleague.adobe.com/docs/experience-manager-learn/cloud-service/debugging/debugging-aem-as-a-cloud-service/build-and-deployment.html?lang=en#including-%2Fvar-in-content-package).
 There you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
