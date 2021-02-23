@@ -53,11 +53,14 @@ Table of contents
 
 # Requirements
 
-AECU requires Java 8 and AEM 6.5 or above. For AEM 6.3/6.4 please see below. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
+AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
+
+
+## Older AEM versions
+For AEM 6.3/6.4 please see below. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| AEM Cloud     | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
 | 6.5 (>=6.5.3) | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
 | 6.4           | 14.x, 13.x               | 3.x, 2.x          |
 | 6.3           | 12.x                     | 1.x               |
@@ -65,6 +68,25 @@ AECU requires Java 8 and AEM 6.5 or above. For AEM 6.3/6.4 please see below. Gro
 <a name="installation"></a>
 
 # Installation
+
+## AEM 6.5 and AEM Cloud
+
+AECU includes the [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) package. Please do not install
+Groovy Console manually. The API is not stable and using the included version makes sure AECU and Groovy Console
+are compatible.
+
+You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+
+```xml
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.complete</artifactId>
+            <version>LATEST</version>
+            <type>zip</type>
+        </dependency>
+```
+
+## Older AEM Versions (<6.5/Cloud)
 
 You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.ui.apps/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.ui.apps package will install the AECU software. It requires that you installed [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) before.
 
@@ -80,7 +102,7 @@ You can download the package from [Maven Central](https://repo1.maven.org/maven2
 
 <a name="bundleInstall"></a>
 
-## Bundle Installation
+### Bundle Installation
 
 To simplify installation we provide a bundle package that already includes the Groovy Console. This makes sure there are no compatibility issues.
 The package is also available on [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.bundle/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases).
@@ -95,8 +117,6 @@ The package is also available on [Maven Central](https://repo1.maven.org/maven2/
 ```
 
 
-<a name="structure"></a>
-
 ## Uninstallation
 
 The application can be removed by deleting the following paths:
@@ -106,7 +126,7 @@ The application can be removed by deleting the following paths:
 * `/var/aecu`
 * `/var/aecu-installhook`
 
-Afterwards, you can delete the "aecu.bundle" and "aecu.ui.apps" packages in package manager.
+Afterwards, you can delete the "aecu.*" packages in package manager.
 
 For Groovy Console delete:
 
@@ -116,6 +136,8 @@ For Groovy Console delete:
 
 Then delete "aem-groovy-console" packages in package manager.
 
+
+<a name="structure"></a>
 
 # File and Folder Structure
 
