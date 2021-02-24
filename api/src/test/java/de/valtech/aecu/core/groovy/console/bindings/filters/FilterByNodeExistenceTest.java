@@ -19,7 +19,9 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNode;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -29,15 +31,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeExistence;
 
 /**
  * @author Vugar Aghayev
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FilterByNodeTest {
+public class FilterByNodeExistenceTest {
 
     @Mock
     private ResourceResolver resolver;
@@ -60,78 +60,93 @@ public class FilterByNodeTest {
     @Test
     public void filterNodeExists_whenNodeNotFound_returnFalse() {
 
-        assertFalse(new FilterByNode("/content/we-retail/ca/climbing-on-kalymnos-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
+        assertFalse(new FilterByNodeExistence("/content/we-retail/ca/climbing-on-kalymnos-island--greece/jcr:content", true)
+                .filter(resource, new StringBuilder()));
 
-        assertFalse(new FilterByNode("climbing-on-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
+        assertFalse(
+                new FilterByNodeExistence("climbing-on-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
     }
 
     @Test
     public void filterNodeExists_whenSubNodeFound_returnTrue() {
 
-        assertTrue(new FilterByNode("climbing-on-kalymnos-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence("climbing-on-kalymnos-island--greece/jcr:content", true).filter(resource,
+                new StringBuilder()));
 
     }
 
     @Test
     public void filterNodeExists_whenAbsolutePathNodeFound_returnTrue() {
-        when(resource.getResourceResolver().getResource("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content")).thenReturn(absolutePathResource);
+        when(resource.getResourceResolver()
+                .getResource("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content"))
+                        .thenReturn(absolutePathResource);
 
-        assertTrue(new FilterByNode("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
+        assertTrue(
+                new FilterByNodeExistence("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content",
+                        true).filter(resource, new StringBuilder()));
 
     }
 
     @Test
     public void filterNodeExists_whenNodePathIsEmpty_returnTrue() {
 
-        assertTrue(new FilterByNode("", true).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence("", true).filter(resource, new StringBuilder()));
 
-        assertTrue(new FilterByNode("   ", true).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence("   ", true).filter(resource, new StringBuilder()));
 
     }
 
     @Test
     public void filterNodeExists_whenNodePathIsNull_returnTrue() {
 
-        assertTrue(new FilterByNode(null, true).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence(null, true).filter(resource, new StringBuilder()));
 
     }
 
     @Test
     public void filterNodeNotExist_whenNodeNotFound_returnTrue() {
 
-        assertTrue(new FilterByNode("/content/we-retail/ca/climbing-on-kalymnos-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence("/content/we-retail/ca/climbing-on-kalymnos-island--greece/jcr:content", false)
+                .filter(resource, new StringBuilder()));
 
-        assertTrue(new FilterByNode("climbing-on-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+        assertTrue(
+                new FilterByNodeExistence("climbing-on-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
     }
 
     @Test
     public void filterNodeNotExist_whenSubNodeFound_returnFalse() {
 
-        assertFalse(new FilterByNode("climbing-on-kalymnos-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+        assertFalse(new FilterByNodeExistence("climbing-on-kalymnos-island--greece/jcr:content", false).filter(resource,
+                new StringBuilder()));
 
     }
 
     @Test
     public void filterNodeNotExist_whenAbsolutePathNodeFound_returnFalse() {
-        when(resource.getResourceResolver().getResource("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content")).thenReturn(absolutePathResource);
+        when(resource.getResourceResolver()
+                .getResource("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content"))
+                        .thenReturn(absolutePathResource);
 
-        assertFalse(new FilterByNode("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+        assertFalse(
+                new FilterByNodeExistence("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content",
+                        false).filter(resource, new StringBuilder()));
 
     }
 
     @Test
     public void filterNodeNotExist_whenNodePathIsEmpty_returnTrue() {
 
-        assertTrue(new FilterByNode("", false).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence("", false).filter(resource, new StringBuilder()));
 
-        assertTrue(new FilterByNode("   ", false).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence("   ", false).filter(resource, new StringBuilder()));
 
     }
 
     @Test
     public void filterNodeNotExist_whenNodePathIsNull_returnTrue() {
 
-        assertTrue(new FilterByNode(null, false).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNodeExistence(null, false).filter(resource, new StringBuilder()));
 
     }
+
 }

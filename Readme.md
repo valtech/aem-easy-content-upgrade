@@ -323,18 +323,18 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
-#### Filter by Node
+#### Filter by Node Existence
 
-Filters resources by absolute or relative node path.
+Filters resources by the (non-)existence of relative or absolute node path.
 
-* filterByNode(String path, boolean nodeExists): process nodes if the given node or subnode exist/not exist in the repository. 
-When “nodeExists” is set to true then filter will return true if the given node path found in the repository, otherwise false. When “nodeExists” is set to false then filter will return true if the given node path not found in the repository, otherwise false.
+* filterByNodeExists(String path): process if the given subnode or absolute node exists
+* filterByNodeNotExists(String path): process if the given subnode or absolute node does not exist
 
-Example filterByNode: 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
-        .filterByNode("jcr:content/meta",true)
+        .filterByNodeExists("jcr:content/meta")
+        .filterByNodeNotExists("jcr:content/meta")
         .doSetProperty("name", "value")
         .run()
 ```

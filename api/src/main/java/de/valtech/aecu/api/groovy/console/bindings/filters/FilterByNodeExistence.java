@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2021 Valtech GmbH
+ * Copyright 2021 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,11 +26,12 @@ import org.apache.sling.api.resource.Resource;
 
 
 /**
- * Filters resources by absolute or relative node path. Only resources that exist in the repository are accepted.
+ * Filters resources by absolute or relative node path. Only resources that (not) exist in the
+ * repository are accepted.
  *
  * @author Vugar Aghayev
  */
-public class FilterByNode implements FilterBy {
+public class FilterByNodeExistence implements FilterBy {
 
     private String path;
     private boolean nodeExists;
@@ -41,7 +42,7 @@ public class FilterByNode implements FilterBy {
      * @param path       absolute or relative resource path
      * @param nodeExists node exists option
      */
-    public FilterByNode(@Nonnull String path, boolean nodeExists) {
+    public FilterByNodeExistence(@Nonnull String path, boolean nodeExists) {
         this.path = path;
         this.nodeExists = nodeExists;
     }
@@ -53,7 +54,8 @@ public class FilterByNode implements FilterBy {
         }
 
         if (isAbsolutePath(path)) {
-            return (nodeExists && null != resource.getResourceResolver().getResource(path)) || (!nodeExists && null == resource.getResourceResolver().getResource(path));
+            return (nodeExists && null != resource.getResourceResolver().getResource(path))
+                    || (!nodeExists && null == resource.getResourceResolver().getResource(path));
         } else {
             return (nodeExists && null != resource.getChild(path)) || (!nodeExists && null == resource.getChild(path));
         }
@@ -68,4 +70,5 @@ public class FilterByNode implements FilterBy {
     private boolean isAbsolutePath(String path) {
         return path.startsWith("/");
     }
+
 }

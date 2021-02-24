@@ -43,8 +43,8 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.ANDFilter;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByHasProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByMultiValuePropContains;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeExistence;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeName;
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNode;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
@@ -190,8 +190,14 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade filterByNode(@Nonnull String path, boolean nodeExists) {
-        addFilter(new FilterByNode(path, nodeExists));
+    public ContentUpgrade filterByNodeExists(@Nonnull String path) {
+        addFilter(new FilterByNodeExistence(path, true));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByNodeNotExists(@Nonnull String path) {
+        addFilter(new FilterByNodeExistence(path, false));
         return this;
     }
 
@@ -268,14 +274,14 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName,
-                                                       @Nonnull String relativeResourcePath) {
+            @Nonnull String relativeResourcePath) {
         actions.add(new CopyPropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
     @Override
     public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName,
-                                                       @Nonnull String relativeResourcePath) {
+            @Nonnull String relativeResourcePath) {
         actions.add(new MovePropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
@@ -294,7 +300,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doReplaceValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] oldValues,
-                                                              @Nonnull String[] newValues) {
+            @Nonnull String[] newValues) {
         actions.add(new ReplaceMultiValues(name, oldValues, newValues));
         return this;
     }

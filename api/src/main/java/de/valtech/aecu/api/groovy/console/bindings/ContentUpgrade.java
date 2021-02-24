@@ -94,7 +94,8 @@ public interface ContentUpgrade {
     ContentUpgrade filterByProperty(String name, Object value);
 
     /**
-     * Filters by a single property using a regular expression for the value. This is intended for single value properties.
+     * Filters by a single property using a regular expression for the value. This is intended for
+     * single value properties.
      *
      * @param name  property name
      * @param regex regular expression to match value
@@ -103,8 +104,8 @@ public interface ContentUpgrade {
     ContentUpgrade filterByPropertyRegex(String name, String regex);
 
     /**
-     * Filters by checking if any property matches the given regular expression for the value. This is intended for single value
-     * properties.
+     * Filters by checking if any property matches the given regular expression for the value. This
+     * is intended for single value properties.
      *
      * @param regex regular expression to match value
      * @return upgrade object
@@ -137,13 +138,20 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNodeName(String nodeName);
 
     /**
-     * Filters by node/subNode (not) exists.
+     * Filters by node/subNode exists.
      *
-     * @param path       absolute or relative resource path
-     * @param nodeExists node exists option
+     * @param path absolute or relative resource path
      * @return upgrade object
      */
-    ContentUpgrade filterByNode(String path, boolean nodeExists);
+    ContentUpgrade filterByNodeExists(String path);
+
+    /**
+     * Filters by node/subNode not exists.
+     *
+     * @param path absolute or relative resource path
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNodeNotExists(String path);
 
     /**
      * Filters by node name using regular expression.
@@ -179,7 +187,8 @@ public interface ContentUpgrade {
     ContentUpgrade doSetProperty(String name, Object value);
 
     /**
-     * Joins a property value into a single value. Uses "," to join multiple values. Deletes properties with empty array values.
+     * Joins a property value into a single value. Uses "," to join multiple values. Deletes
+     * properties with empty array values.
      *
      * @param name property name
      * @return upgrade object
@@ -271,7 +280,8 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValuesOfMultiValueProperty(String name, String[] oldValues, String[] newValues);
 
     /**
-     * Replaces a substring in all properties of the matching resource. Only applies to String properties.
+     * Replaces a substring in all properties of the matching resource. Only applies to String
+     * properties.
      *
      * @param oldValue old value
      * @param newValue new value
@@ -280,7 +290,8 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValueInAllProperties(String oldValue, String newValue);
 
     /**
-     * Replaces a substring in specific properties of the matching resource. Only applies to String properties.
+     * Replaces a substring in specific properties of the matching resource. Only applies to String
+     * properties.
      *
      * @param oldValue      old value
      * @param newValue      new value
@@ -290,8 +301,8 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValueInProperties(String oldValue, String newValue, String[] propertyNames);
 
     /**
-     * Replaces a substring in all properties of the matching resource using a regular expression. Only applies to String
-     * properties.
+     * Replaces a substring in all properties of the matching resource using a regular expression.
+     * Only applies to String properties.
      *
      * @param searchRegex regex to match old value
      * @param replacement new value, may contain matcher groups (e.g. $1)
@@ -300,8 +311,8 @@ public interface ContentUpgrade {
     ContentUpgrade doReplaceValueInAllPropertiesRegex(String searchRegex, String replacement);
 
     /**
-     * Replaces a substring in specific properties of the matching resource using a regular expression. Only applies to String
-     * properties.
+     * Replaces a substring in specific properties of the matching resource using a regular
+     * expression. Only applies to String properties.
      *
      * @param searchRegex   regex to match old value
      * @param replacement   new value, may contain matcher groups (e.g. $1)
@@ -338,7 +349,8 @@ public interface ContentUpgrade {
      * Copies a resource to a relative path.
      *
      * @param relativePath path
-     * @param newName      name for the new resource. If not provided the name of the source resource will be used.
+     * @param newName      name for the new resource. If not provided the name of the source
+     *                     resource will be used.
      * @return upgrade object
      */
     ContentUpgrade doCopyResourceToRelativePath(String relativePath, String newName);
@@ -352,16 +364,19 @@ public interface ContentUpgrade {
     ContentUpgrade doMoveResourceToRelativePath(String relativePath);
 
     /**
-     * Moves a resource if its path matches the pattern to the path obtained by applying the replacement expression
+     * Moves a resource if its path matches the pattern to the path obtained by applying the
+     * replacement expression
      *
      * @param matchPattern   regular expression for matching the resource path
-     * @param targetPathExpr expression to calculate the target path, can contain matched group references $1, $2, ...
+     * @param targetPathExpr expression to calculate the target path, can contain matched group
+     *                       references $1, $2, ...
      * @return upgrade object
      */
     ContentUpgrade doMoveResourceToPathRegex(String matchPattern, String targetPathExpr);
 
     /**
-     * Deletes the child resources if supplied. If no children are specified it deletes the resource itself.
+     * Deletes the child resources if supplied. If no children are specified it deletes the resource
+     * itself.
      *
      * @return upgrade object
      */
@@ -459,7 +474,8 @@ public interface ContentUpgrade {
     ContentUpgrade doDeactivateContainingPage();
 
     /**
-     * Deletes the page where the resource is located. This will not work if called multiple times for the same page.
+     * Deletes the page where the resource is located. This will not work if called multiple times
+     * for the same page.
      *
      * @return upgrade object
      */
@@ -474,7 +490,8 @@ public interface ContentUpgrade {
     ContentUpgrade doAddTagsToContainingPage(String... tags);
 
     /**
-     * Sets tags for the containing page of the matching resource. All existing tags are overwritten.
+     * Sets tags for the containing page of the matching resource. All existing tags are
+     * overwritten.
      *
      * @param tags tag IDs or paths
      * @return upgrade object
