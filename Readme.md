@@ -334,7 +334,9 @@ Filters resources by the (non-)existence of relative or absolute node path.
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeExists("jcr:content/meta")
+        .filterByNodeExists("/content")
         .filterByNodeNotExists("jcr:content/meta")
+        .filterByNodeNotExists("/content")
         .doSetProperty("name", "value")
         .run()
 ```
