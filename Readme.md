@@ -323,6 +323,23 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Filter by Node Existence
+
+Filters resources by the (non-)existence of relative or absolute node path.
+
+* filterByNodeExists(String path): process if the given subnode or absolute node exists
+* filterByNodeNotExists(String path): process if the given subnode or absolute node does not exist
+
+```java
+aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeExists("jcr:content/meta")
+        .filterByNodeExists("/content")
+        .filterByNodeNotExists("jcr:content/meta")
+        .filterByNodeNotExists("/content")
+        .doSetProperty("name", "value")
+        .run()
+```
 
 #### Combine Multiple Filters
 You can combine filters with AND and OR to build more complex filters.
