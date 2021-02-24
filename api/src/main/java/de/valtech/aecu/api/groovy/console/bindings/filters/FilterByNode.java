@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2019 Valtech GmbH
+ * Copyright 2018 - 2021 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -33,34 +33,37 @@ import org.apache.sling.api.resource.Resource;
 public class FilterByNode implements FilterBy {
 
     private String path;
+    private boolean nodeExists;
 
     /**
      * Constructor
      *
-     * @param path node path
+     * @param path       absolute or relative resource path
+     * @param nodeExists node exists option
      */
-    public FilterByNode(@Nonnull String path) {
+    public FilterByNode(@Nonnull String path, boolean nodeExists) {
         this.path = path;
+        this.nodeExists = nodeExists;
     }
 
     @Override
     public boolean filter(@Nonnull Resource resource, StringBuilder output) {
-        if(StringUtils.isBlank(path))
+        if (StringUtils.isBlank(path)) {
             return true;
+        }
 
-        if(isAbsolutePath(path)) {
-            return (null != resource.getResourceResolver().getResource(path));
+        if (isAbsolutePath(path)) {
+            return (nodeExists && null != resource.getResourceResolver().getResource(path)) || (!nodeExists && null == resource.getResourceResolver().getResource(path));
         } else {
-            return (null != resource.getChild(path));
+            return (nodeExists && null != resource.getChild(path)) || (!nodeExists && null == resource.getChild(path));
         }
     }
 
     /**
      * checks whether given path is absolute or not.
      *
-     * @param path  jcr path
-     * @return true if the given path is the absolute path. Otherwise
-     *         false.
+     * @param path jcr path
+     * @return true if the given path is the absolute path. Otherwise false.
      */
     private boolean isAbsolutePath(String path) {
         return path.startsWith("/");

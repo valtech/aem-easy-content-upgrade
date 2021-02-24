@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2021 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,6 +20,7 @@
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNode;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.junit.Before;
@@ -57,40 +58,80 @@ public class FilterByNodeTest {
     }
 
     @Test
-    public void test_whenNodeNotFound_returnFalse() {
+    public void filterNodeExists_whenNodeNotFound_returnFalse() {
 
-        assertFalse(new FilterByNode("/content/we-retail/ca/climbing-on-kalymnos-island--greece/jcr:content").filter(resource, new StringBuilder()));
+        assertFalse(new FilterByNode("/content/we-retail/ca/climbing-on-kalymnos-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
 
-        assertFalse(new FilterByNode("climbing-on-island--greece/jcr:content").filter(resource, new StringBuilder()));
+        assertFalse(new FilterByNode("climbing-on-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
     }
 
     @Test
-    public void test_whenSubNodeFound_returnTrue() {
+    public void filterNodeExists_whenSubNodeFound_returnTrue() {
 
-        assertTrue(new FilterByNode("climbing-on-kalymnos-island--greece/jcr:content").filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNode("climbing-on-kalymnos-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
 
     }
 
     @Test
-    public void test_whenAbsolutePathNodeFound_returnTrue() {
+    public void filterNodeExists_whenAbsolutePathNodeFound_returnTrue() {
         when(resource.getResourceResolver().getResource("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content")).thenReturn(absolutePathResource);
 
-        assertTrue(new FilterByNode("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content").filter(resource, new StringBuilder()));
-
-    }
-    @Test
-    public void test_whenNodePathIsEmpty_returnTrue() {
-
-        assertTrue(new FilterByNode("").filter(resource, new StringBuilder()));
-
-        assertTrue(new FilterByNode("   ").filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNode("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content", true).filter(resource, new StringBuilder()));
 
     }
 
     @Test
-    public void test_whenNodePathIsNull_returnTrue() {
+    public void filterNodeExists_whenNodePathIsEmpty_returnTrue() {
 
-        assertTrue(new FilterByNode(null).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByNode("", true).filter(resource, new StringBuilder()));
+
+        assertTrue(new FilterByNode("   ", true).filter(resource, new StringBuilder()));
+
+    }
+
+    @Test
+    public void filterNodeExists_whenNodePathIsNull_returnTrue() {
+
+        assertTrue(new FilterByNode(null, true).filter(resource, new StringBuilder()));
+
+    }
+
+    @Test
+    public void filterNodeNotExist_whenNodeNotFound_returnTrue() {
+
+        assertTrue(new FilterByNode("/content/we-retail/ca/climbing-on-kalymnos-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+
+        assertTrue(new FilterByNode("climbing-on-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+    }
+
+    @Test
+    public void filterNodeNotExist_whenSubNodeFound_returnFalse() {
+
+        assertFalse(new FilterByNode("climbing-on-kalymnos-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+
+    }
+
+    @Test
+    public void filterNodeNotExist_whenAbsolutePathNodeFound_returnFalse() {
+        when(resource.getResourceResolver().getResource("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content")).thenReturn(absolutePathResource);
+
+        assertFalse(new FilterByNode("/content/we-retail/ca/en/experience/climbing-on-kalymnos-island--greece/jcr:content", false).filter(resource, new StringBuilder()));
+
+    }
+
+    @Test
+    public void filterNodeNotExist_whenNodePathIsEmpty_returnTrue() {
+
+        assertTrue(new FilterByNode("", false).filter(resource, new StringBuilder()));
+
+        assertTrue(new FilterByNode("   ", false).filter(resource, new StringBuilder()));
+
+    }
+
+    @Test
+    public void filterNodeNotExist_whenNodePathIsNull_returnTrue() {
+
+        assertTrue(new FilterByNode(null, false).filter(resource, new StringBuilder()));
 
     }
 }
