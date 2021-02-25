@@ -4,7 +4,6 @@
   - New location for install hook scripts: /conf/groovyconsole/scripts/aecu (/var/groovyconsole/scripts/aecu still supported) 
   - New filter methods: filterByNodeExists() and filterByNodeNotExists()
 
-
 2020-12-21 4.0.0
   - Update to Groovy Console 16 and require AEM 6.5 (#135)
   - Fix for AEM Cloud in manual execution tool
