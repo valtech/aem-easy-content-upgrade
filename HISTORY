@@ -1,4 +1,7 @@
 ??? 5.0.0
+  - AEM Cloud compatibility improvements
+  - Changed packages: no more bundle package, install always "complete" package (includes Groovy Console)
+  - New location for install hook scripts: /conf/groovyconsole/scripts/aecu (/var/groovyconsole/scripts/aecu still supported) 
   - New filter methods: filterByNodeExists() and filterByNodeNotExists()
 
 
