@@ -23,6 +23,9 @@
                     <packageType>application</packageType>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                     <group>Valtech</group>
+                    <properties>
+                        <cloudManagerTarget>none</cloudManagerTarget>
+                    </properties>
                     <validatorsSettings>
                         <jackrabbit-filter>
                             <options>

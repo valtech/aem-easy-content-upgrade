@@ -24,6 +24,9 @@
                     <allowIndexDefinitions>true</allowIndexDefinitions>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                     <group>Valtech</group>
+                    <properties>
+                        <cloudManagerTarget>none</cloudManagerTarget>
+                    </properties>
                 </configuration>
             </plugin>
             <plugin>
