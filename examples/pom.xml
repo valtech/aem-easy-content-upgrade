@@ -25,6 +25,7 @@
                     <group>Valtech</group>
                     <properties>
                         <installhook.aecu.class>de.valtech.aecu.core.installhook.AecuInstallHook</installhook.aecu.class>
+                        <cloudManagerTarget>none</cloudManagerTarget>
                     </properties>
                 </configuration>
             </plugin>
