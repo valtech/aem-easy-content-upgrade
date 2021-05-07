@@ -12,6 +12,7 @@
     <modules>
         <module>api</module>
         <module>core</module>
+        <module>ui.apps.structure</module>
         <module>ui.apps</module>
         <module>bundle</module>
         <module>examples</module>
@@ -237,7 +238,7 @@
                 <plugin>
                     <groupId>com.day.jcr.vault</groupId>
                     <artifactId>content-package-maven-plugin</artifactId>
-                    <version>1.0.2</version>
+                    <version>1.0.4</version>
                     <configuration>
                         <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
                         <failOnError>true</failOnError>
@@ -249,7 +250,7 @@
                 <plugin>
 		                <groupId>org.apache.jackrabbit</groupId>
 		                <artifactId>filevault-package-maven-plugin</artifactId>
-		                <version>1.0.4</version>
+		                <version>1.1.6</version>
                     <extensions>true</extensions>
                 </plugin>
                 <plugin>
@@ -341,7 +342,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>5.2.4</version>
+                    <version>6.1.6</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
