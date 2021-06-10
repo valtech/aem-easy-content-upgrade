@@ -122,6 +122,8 @@ All migration scripts need to be located in /var/groovyconsole/scripts/aecu. The
 an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
+If your package containing the scripts is bundled in another package please make sure that this is done using "subPackages" in pom.xml.
+
 <img src="docs/images/files.png">
 
 There are just a few naming conventions:
