@@ -29,7 +29,6 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -188,9 +187,8 @@ public class AecuServiceImpl implements AecuService {
      * @throws AecuException error running script
      */
     private ExecutionResult executeScript(ResourceResolver resolver, String path) throws AecuException {
-        SlingHttpServletRequest slingRequest = new GroovyConsoleRequest(resolver);
         LOG.info("Executing script " + path);
-        ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver, slingRequest);
+        ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver);
         RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
@@ -219,9 +217,10 @@ public class AecuServiceImpl implements AecuService {
     private String loadScript(String path, ResourceResolver resolver) throws AecuException {
         Resource resource = resolver.getResource(path + "/" + JcrConstants.JCR_CONTENT);
         // https://sling.apache.org/documentation/the-sling-engine/resources.html#binary-support
-        try (InputStream inputStream = resource.adaptTo(InputStream.class)){
+        try (InputStream inputStream = resource.adaptTo(InputStream.class)) {
             if (inputStream == null) {
-                throw new IOException("Resource at '" + path +"' cannot be adapted to InputStream, it doesn't seem to contain binary data");
+                throw new IOException(
+                        "Resource at '" + path + "' cannot be adapted to InputStream, it doesn't seem to contain binary data");
             }
             return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {

@@ -1,6 +1,6 @@
-??? 5.0.0
+2021-06-11 4.1.0
   - New filter methods: filterByNodeExists() and filterByNodeNotExists()
-
+  - Fixed Sonar issues (#156)
 
 2020-12-21 4.0.0
   - Update to Groovy Console 16 and require AEM 6.5 (#135)
