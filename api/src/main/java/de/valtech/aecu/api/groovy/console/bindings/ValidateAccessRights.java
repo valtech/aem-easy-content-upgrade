@@ -235,6 +235,8 @@ public interface ValidateAccessRights {
     /**
      * Fail whole script execution on error. Script will stop after current aecu block. Subsequent
      * code will no longer be executed.
+     * 
+     * @return access right validation builder
      */
     ValidateAccessRights failOnError();
 
@@ -243,6 +245,7 @@ public interface ValidateAccessRights {
      * code will no longer be executed.
      * 
      * @param fail if true fail script execution
+     * @return access right validation builder
      */
     ValidateAccessRights failOnError(boolean fail);
 
