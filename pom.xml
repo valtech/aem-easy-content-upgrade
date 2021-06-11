@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -12,6 +12,7 @@
     <modules>
         <module>api</module>
         <module>core</module>
+        <module>ui.apps.structure</module>
         <module>ui.apps</module>
         <module>bundle</module>
         <module>examples</module>
@@ -128,7 +129,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <source>8</source>
+                    </configuration>
                 </plugin>
                 <plugin>
 								    <groupId>org.apache.maven.plugins</groupId>
@@ -237,7 +241,7 @@
                 <plugin>
                     <groupId>com.day.jcr.vault</groupId>
                     <artifactId>content-package-maven-plugin</artifactId>
-                    <version>1.0.2</version>
+                    <version>1.0.4</version>
                     <configuration>
                         <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
                         <failOnError>true</failOnError>
@@ -249,7 +253,7 @@
                 <plugin>
 		                <groupId>org.apache.jackrabbit</groupId>
 		                <artifactId>filevault-package-maven-plugin</artifactId>
-		                <version>1.0.4</version>
+		                <version>1.1.6</version>
                     <extensions>true</extensions>
                 </plugin>
                 <plugin>
@@ -341,7 +345,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>5.2.4</version>
+                    <version>6.1.6</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
@@ -501,7 +505,7 @@
             <dependency>
                 <groupId>com.adobe.aem</groupId>
                 <artifactId>uber-jar</artifactId>
-                <version>6.4.3</version>
+                <version>6.5.3</version>
                 <classifier>apis</classifier>
                 <scope>provided</scope>
             </dependency>
@@ -714,12 +718,12 @@
         <repository>
             <id>adobe</id>
             <name>Adobe Public Repository</name>
-            <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+            <url>https://repo.adobe.com/nexus/content/groups/public/</url>
             <layout>default</layout>
         </repository>
 		    <repository>
 			      <id>central</id>
-			      <url>http://repo1.maven.org/maven2</url>
+			      <url>https://repo1.maven.org/maven2</url>
             <layout>default</layout>
             <snapshots>
                 <enabled>false</enabled>
@@ -730,7 +734,7 @@
         <pluginRepository>
             <id>adobe</id>
             <name>Adobe Public Repository</name>
-            <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+            <url>https://repo.adobe.com/nexus/content/groups/public/</url>
             <layout>default</layout>
         </pluginRepository>
 		</pluginRepositories>

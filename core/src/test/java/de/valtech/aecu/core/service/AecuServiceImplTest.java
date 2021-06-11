@@ -29,14 +29,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.jcr.Binary;
-import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.jackrabbit.JcrConstants;
@@ -99,15 +97,6 @@ public class AecuServiceImplTest {
 
     @Mock
     private ScriptContext scriptContext = mock(ScriptContext.class);
-
-    @Mock
-    private Binary binary;
-
-    @Mock
-    private Node node;
-
-    @Mock
-    private Property property;
 
     @Before
     public void setup() throws LoginException {
@@ -320,10 +309,7 @@ public class AecuServiceImplTest {
         when(resource.getName()).thenReturn(FILE1);
         when(scriptContext.getScript()).thenReturn(DIR);
         ByteArrayInputStream stream = new ByteArrayInputStream("test".getBytes());
-        when(binary.getStream()).thenReturn(stream);
-        when(resource.adaptTo(Node.class)).thenReturn(node);
-        when(node.getProperty(JcrConstants.JCR_DATA)).thenReturn(property);
-        when(property.getBinary()).thenReturn(binary);
+        when(resource.adaptTo(InputStream.class)).thenReturn(stream);
 
         RunScriptResponse response = DefaultRunScriptResponse.fromResult(scriptContext, null, null, null);
         when(groovyConsoleService.runScript(Mockito.any())).thenReturn(response);

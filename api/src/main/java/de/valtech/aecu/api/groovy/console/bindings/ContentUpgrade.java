@@ -138,6 +138,22 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNodeName(String nodeName);
 
     /**
+     * Filters by node/subNode exists.
+     *
+     * @param path absolute or relative resource path
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNodeExists(String path);
+
+    /**
+     * Filters by node/subNode not exists.
+     *
+     * @param path absolute or relative resource path
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNodeNotExists(String path);
+
+    /**
      * Filters by node name using regular expression.
      *
      * @param regex regular expression (Java standard pattern)
@@ -191,9 +207,9 @@ public interface ContentUpgrade {
     /**
      * Joins a property value into a single value using the given separator.
      *
-     * @param name  property name
-     * @param value property value fall back for empty arrays. Use null to delete the property.
-     * @param name  separator (e.g. ",")
+     * @param name      property name
+     * @param value     property value fall back for empty arrays. Use null to delete the property.
+     * @param separator separator (e.g. ",")
      * @return upgrade object
      **/
     ContentUpgrade doJoinProperty(String name, Object value, String separator);
@@ -362,6 +378,7 @@ public interface ContentUpgrade {
      * Deletes the child resources if supplied. If no children are specified it deletes the resource
      * itself.
      *
+     * @param children names of child nodes
      * @return upgrade object
      */
     ContentUpgrade doDeleteResource(String... children);

@@ -62,8 +62,9 @@ public class AceAutocompleteServletTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals("contentUpgradeBuilder", result.get(0).getName());
-        assertEquals("validateAccessRights", result.get(1).getName());
+        for (Method method : result) {
+            assertTrue("contentUpgradeBuilder".equals(method.getName()) || "validateAccessRights".equals(method.getName()));
+        }
     }
 
     @Test

@@ -120,9 +120,14 @@ public abstract class TraversData {
     private void runActions(@Nonnull StringBuilder output, @Nonnull Resource resource, @Nonnull List<Action> actions)
             throws PersistenceException, AecuException {
         for (Action action : actions) {
-            String actionOutput = action.doAction(resource);
-            if (StringUtils.isNotBlank(actionOutput)) {
-                output.append(actionOutput + "\n");
+            try {
+                String actionOutput = action.doAction(resource);
+                if (StringUtils.isNotBlank(actionOutput)) {
+                    output.append(actionOutput + "\n");
+                }
+            } catch (RuntimeException e) {
+                // wrap runtime exception to add the resource path (see also https://issues.apache.org/jira/browse/SLING-10063)
+                throw new AecuException("RuntimeException while performing action on resource '" + resource.getPath() + "'", e);
             }
         }
     }
