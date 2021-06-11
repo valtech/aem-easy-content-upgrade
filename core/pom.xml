@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>4.1.0-rc-SNAPSHOT</version>
+        <version>4.1.0</version>
     </parent>
     
     <artifactId>aecu.core</artifactId>
