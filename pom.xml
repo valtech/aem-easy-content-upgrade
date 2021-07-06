@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.2.0-SNAPSHOT</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -12,6 +12,7 @@
     <modules>
         <module>api</module>
         <module>core</module>
+        <module>ui.apps.structure</module>
         <module>ui.apps</module>
         <module>ui.content</module>
         <module>complete</module>
@@ -129,7 +130,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <source>8</source>
+                    </configuration>
                 </plugin>
                 <plugin>
 								    <groupId>org.apache.maven.plugins</groupId>
@@ -370,7 +374,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>5.2.4</version>
+                    <version>6.1.6</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
