@@ -19,30 +19,6 @@
         <plugins>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-sling-install-hook</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.apache.sling</groupId>
-                                    <artifactId>org.apache.sling.installer.provider.installhook</artifactId>
-                                    <version>1.1.0</version>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${project.build.directory}/vault-work/META-INF/vault/hooks</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>        
-        
-            <plugin>
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
@@ -52,40 +28,52 @@
                     <failOnError>true</failOnError>
                     <group>Valtech</group>
                     <packageType>container</packageType>
-                    <properties>
-                        <installPathRegex>/apps/valtech/aecu-complete/(config|install)/.*</installPathRegex>
-                        <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
-                    </properties>
-                    <subPackages>
-                        <subPackage>
-                            <groupId>com.icfolson.aem.groovy.console</groupId>
-                            <artifactId>aem-groovy-console</artifactId>
-                            <filter>true</filter>
-                        </subPackage>
-                        <subPackage>
-								            <groupId>de.valtech.aecu</groupId>
-								            <artifactId>aecu.ui.apps</artifactId>
-                            <filter>true</filter>
-                        </subPackage>
-                        <subPackage>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.ui.content</artifactId>
-                            <filter>true</filter>
-                        </subPackage>
-                    </subPackages>
-                    <embeddeds>
-                        <embedded>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.api</artifactId>
-                            <target>/apps/valtech/aecu-complete/install</target>
-                        </embedded>
-                        <embedded>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.core</artifactId>
-                            <target>/apps/valtech/aecu-complete/install</target>
-                        </embedded>
-                    </embeddeds>
+                    <skipSubPackageValidation>true</skipSubPackageValidation>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>aem-classic</id>
+                        <goals>
+                            <goal>generate-metadata</goal>
+                        </goals>
+                        <configuration>
+				                    <properties>
+				                        <installPathRegex>/apps/valtech/aecu-complete/(config|install)/.*</installPathRegex>
+				                        <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
+				                    </properties>
+				                    <subPackages>
+				                        <subPackage>
+				                            <groupId>com.icfolson.aem.groovy.console</groupId>
+				                            <artifactId>aem-groovy-console</artifactId>
+				                            <filter>true</filter>
+				                        </subPackage>
+				                        <subPackage>
+				                            <groupId>de.valtech.aecu</groupId>
+				                            <artifactId>aecu.ui.apps</artifactId>
+				                            <filter>true</filter>
+				                        </subPackage>
+				                        <subPackage>
+				                            <groupId>de.valtech.aecu</groupId>
+				                            <artifactId>aecu.ui.content</artifactId>
+				                            <filter>true</filter>
+				                        </subPackage>
+				                    </subPackages>
+				                    <embeddeds>
+				                        <embedded>
+				                            <groupId>de.valtech.aecu</groupId>
+				                            <artifactId>aecu.api</artifactId>
+				                            <target>/apps/valtech/aecu-complete/install</target>
+				                        </embedded>
+				                        <embedded>
+				                            <groupId>de.valtech.aecu</groupId>
+				                            <artifactId>aecu.core</artifactId>
+				                            <target>/apps/valtech/aecu-complete/install</target>
+				                        </embedded>
+				                    </embeddeds>
+				                    <installHooks>org.apache.sling:org.apache.sling.installer.provider.installhook:1.1.0</installHooks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>com.day.jcr.vault</groupId>
