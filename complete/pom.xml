@@ -45,6 +45,7 @@
 				                        <subPackage>
 				                            <groupId>com.icfolson.aem.groovy.console</groupId>
 				                            <artifactId>aem-groovy-console</artifactId>
+				                            <type>zip</type>
 				                            <filter>true</filter>
 				                        </subPackage>
 				                        <subPackage>
@@ -73,6 +74,62 @@
 				                    <installHooks>org.apache.sling:org.apache.sling.installer.provider.installhook:1.1.0</installHooks>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>aem-cloud</id>
+                        <goals>
+                            <goal>generate-metadata</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <installPathRegex>/apps/valtech/aecu-complete/(config|install)/.*</installPathRegex>
+                                <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
+                            </properties>
+                            <embeddeds>
+                                <embedded>
+                                    <groupId>de.valtech.aecu</groupId>
+                                    <artifactId>aecu.api</artifactId>
+                                    <target>/apps/valtech/aecu-complete/install</target>
+                                </embedded>
+                                <embedded>
+                                    <groupId>de.valtech.aecu</groupId>
+                                    <artifactId>aecu.core</artifactId>
+                                    <target>/apps/valtech/aecu-complete/install</target>
+                                </embedded>
+                                <embedded>
+                                    <groupId>com.icfolson.aem.groovy.console</groupId>
+                                    <artifactId>aem-groovy-console</artifactId>
+                                    <type>jar</type>
+                                </embedded>
+												        <embedded>
+												            <groupId>org.codehaus.groovy</groupId>
+												            <artifactId>groovy-all</artifactId>
+												        </embedded>
+												        <embedded>
+												            <groupId>com.icfolson.aem.groovy.extension</groupId>
+												            <artifactId>aem-groovy-extension-bundle</artifactId>
+												        </embedded>
+                                <embedded>
+                                    <groupId>de.valtech.aecu</groupId>
+                                    <artifactId>aecu.ui.apps</artifactId>
+                                </embedded>
+                                <embedded>
+                                    <groupId>de.valtech.aecu</groupId>
+                                    <artifactId>aecu.ui.content</artifactId>
+                                </embedded>
+                            </embeddeds>
+                            <classifier>cloud</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cloud-package</id>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>cloud</classifier>
+                            <failOnDuplicateEntries>false</failOnDuplicateEntries>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -91,7 +148,19 @@
         <dependency>
             <groupId>com.icfolson.aem.groovy.console</groupId>
             <artifactId>aem-groovy-console</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.icfolson.aem.groovy.console</groupId>
+            <artifactId>aem-groovy-console</artifactId>
             <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.icfolson.aem.groovy.extension</groupId>
+            <artifactId>aem-groovy-extension-bundle</artifactId>
         </dependency>
         <dependency>
             <groupId>de.valtech.aecu</groupId>
