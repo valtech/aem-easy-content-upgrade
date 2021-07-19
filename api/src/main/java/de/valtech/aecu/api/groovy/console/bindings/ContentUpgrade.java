@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2021 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -378,7 +378,7 @@ public interface ContentUpgrade {
      * Deletes the child resources if supplied. If no children are specified it deletes the resource
      * itself.
      *
-     * @param children names of child nodes
+     * @param children delete children (resource itself if empty)
      * @return upgrade object
      */
     ContentUpgrade doDeleteResource(String... children);

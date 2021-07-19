@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
-    <filter root="/etc/groovyconsole/scripts/aecu/aecu-examples"/>
-    <filter root="/var/groovyconsole/scripts/aecu/aecu-examples"/>
-    <filter root="/var/groovyconsole/scripts/aecu-acl-testing-examples.author"/>
+    <filter root="/conf/groovyconsole/scripts/aecu/aecu-examples"/>
+    <filter root="/conf/groovyconsole/scripts/aecu-acl-testing-examples.author"/>
+    <filter root="/etc/groovyconsole/scripts/aecu/aecu-examples" type="cleanup"/>
+    <filter root="/var/groovyconsole/scripts/aecu/aecu-examples" type="cleanup"/>
+    <filter root="/var/groovyconsole/scripts/aecu-acl-testing-examples.author" type="cleanup"/>
 </workspaceFilter>

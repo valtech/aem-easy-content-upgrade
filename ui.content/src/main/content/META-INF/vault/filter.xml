@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/conf/global/settings/granite/operations/maintenance/granite_weekly">
+      <include pattern="/conf/global/settings/granite/operations/maintenance/granite_weekly" />
+      <include pattern="/conf/global/settings/granite/operations/maintenance/granite_weekly/aecu_history_purge(/.*)?" />
+    </filter>
+    <filter root="/etc/groovyconsole/scripts/aecu" type="cleanup"/><!--removes the old location-->
+    <filter root="/oak:index/aecuHistory-custom-1" />
+
+</workspaceFilter>

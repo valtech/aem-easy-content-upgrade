@@ -109,12 +109,12 @@ public class ExecutionResult {
     }
 
     /**
-     * Returns the short script path.
+     * Returns the short script path (stripped by prefix) or the unmodified path in case the script path does not start with {@link AecuService#AECU_VAR_PATH_PREFIX}.
      *
      * @return short path
      */
     public String getShortPath() {
-        return path.replace(AecuService.AECU_PREFIX + "/", "");
+        return path.replace(AecuService.AECU_VAR_PATH_PREFIX + "/", "");
     }
 
     @Override
