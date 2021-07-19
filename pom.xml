@@ -16,6 +16,7 @@
         <module>ui.apps</module>
         <module>ui.content</module>
         <module>complete</module>
+        <module>complete-cloud</module>
         <module>examples</module>
     </modules>
 

@@ -8,10 +8,10 @@
         <version>4.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aecu.complete</artifactId>
+    <artifactId>aecu.complete.cloud</artifactId>
     <packaging>content-package</packaging>
-    <name>AECU - Complete</name>
-    <description>Complete package for AECU that includes Groovy Console</description>
+    <name>AECU - Complete Cloud</name>
+    <description>Complete package for AECU on AEM Cloud that includes Groovy Console</description>
 
     <build>
         <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
@@ -29,29 +29,6 @@
                     <group>Valtech</group>
                     <packageType>container</packageType>
                     <skipSubPackageValidation>true</skipSubPackageValidation>
-                    <properties>
-                        <cloudManagerTarget>none</cloudManagerTarget>
-                        <installPathRegex>/apps/valtech/aecu-complete/(config|install)/.*</installPathRegex>
-                        <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
-                    </properties>
-                    <subPackages>
-                        <subPackage>
-                            <groupId>com.icfolson.aem.groovy.console</groupId>
-                            <artifactId>aem-groovy-console</artifactId>
-                            <type>zip</type>
-                            <filter>true</filter>
-                        </subPackage>
-                        <subPackage>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.ui.apps</artifactId>
-                            <filter>true</filter>
-                        </subPackage>
-                        <subPackage>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.ui.content</artifactId>
-                            <filter>true</filter>
-                        </subPackage>
-                    </subPackages>
                     <embeddeds>
                         <embedded>
                             <groupId>de.valtech.aecu</groupId>
@@ -63,8 +40,28 @@
                             <artifactId>aecu.core</artifactId>
                             <target>/apps/valtech/aecu-complete/install</target>
                         </embedded>
+                        <embedded>
+                            <groupId>com.icfolson.aem.groovy.console</groupId>
+                            <artifactId>aem-groovy-console</artifactId>
+                            <type>jar</type>
+                        </embedded>
+                        <embedded>
+                            <groupId>org.codehaus.groovy</groupId>
+                            <artifactId>groovy-all</artifactId>
+                        </embedded>
+                        <embedded>
+                            <groupId>com.icfolson.aem.groovy.extension</groupId>
+                            <artifactId>aem-groovy-extension-bundle</artifactId>
+                        </embedded>
+                        <embedded>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.ui.apps</artifactId>
+                        </embedded>
+                        <embedded>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.ui.content</artifactId>
+                        </embedded>
                     </embeddeds>
-                    <installHooks>org.apache.sling:org.apache.sling.installer.provider.installhook:1.1.0</installHooks>
                 </configuration>
             </plugin>
             <plugin>
