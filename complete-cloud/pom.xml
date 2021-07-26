@@ -17,7 +17,7 @@
         <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
         
         <plugins>
-
+        
             <plugin>
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
@@ -59,6 +59,10 @@
                         </embedded>
                         <embedded>
                             <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.ui.apps.groovyconsole</artifactId>
+                        </embedded>
+                        <embedded>
+                            <groupId>de.valtech.aecu</groupId>
                             <artifactId>aecu.ui.content</artifactId>
                         </embedded>
                     </embeddeds>
@@ -97,6 +101,12 @@
         <dependency>
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.ui.apps</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.ui.apps.groovyconsole</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>

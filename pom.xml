@@ -14,6 +14,7 @@
         <module>core</module>
         <module>ui.apps.structure</module>
         <module>ui.apps</module>
+        <module>ui.apps.groovyconsole</module>
         <module>ui.content</module>
         <module>complete</module>
         <module>complete-cloud</module>
@@ -36,6 +37,11 @@
 
     <build>
         <plugins>
+						<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-dependency-plugin</artifactId>
+								<version>3.2.0</version>
+						</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -601,12 +607,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-		        <dependency>
-		            <groupId>org.codehaus.groovy</groupId>
-		            <artifactId>groovy-all</artifactId>
-		            <version>2.4.15</version>
-		            <scope>provided</scope>
-		        </dependency>
 		        <dependency>
 		            <groupId>com.icfolson.aem.groovy.extension</groupId>
 		            <artifactId>aem-groovy-extension-bundle</artifactId>
