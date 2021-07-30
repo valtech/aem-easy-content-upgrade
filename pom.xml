@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>4.1.0</version>
+    <version>5.0.0</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -14,7 +14,11 @@
         <module>core</module>
         <module>ui.apps.structure</module>
         <module>ui.apps</module>
-        <module>bundle</module>
+        <module>ui.apps.groovyconsole</module>
+        <module>ui.content</module>
+        <module>oak.index</module>
+        <module>complete</module>
+        <module>complete-cloud</module>
         <module>examples</module>
     </modules>
 
@@ -34,6 +38,11 @@
 
     <build>
         <plugins>
+						<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-dependency-plugin</artifactId>
+								<version>3.2.0</version>
+						</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -228,7 +237,7 @@
                 <plugin>
                     <groupId>biz.aQute.bnd</groupId>
                     <artifactId>bnd-baseline-maven-plugin</artifactId>
-                    <version>4.1.0</version>
+                    <version>5.2.0</version>
                     <executions>
 				                <execution>
 				                    <id>baseline</id>
@@ -253,8 +262,36 @@
                 <plugin>
 		                <groupId>org.apache.jackrabbit</groupId>
 		                <artifactId>filevault-package-maven-plugin</artifactId>
-		                <version>1.1.6</version>
+		                <version>1.1.8</version>
                     <extensions>true</extensions>
+                    <configuration>
+                        <validatorsSettings>
+                            <jackrabbit-nodetypes>
+                                 <!-- only level WARN for now, as not working 100% reliable yet: https://issues.apache.org/jira/browse/JCRVLT-461, https://issues.apache.org/jira/browse/JCRVLT-463 -->
+                                 <defaultSeverity>warn</defaultSeverity>
+                                 <options>
+                                     <!-- use the nodetypes and namespaces from the aem-nodetypes.jar provided in the plugin dependencies -->
+                                     <cnds>tccl:aem.cnd</cnds>
+                                 </options>
+                             </jackrabbit-nodetypes>
+                             <netcentric-aem-cloud>
+                                  <!-- packages not fully compliant yet -->
+                                  <defaultSeverity>warn</defaultSeverity>
+                             </netcentric-aem-cloud>
+                         </validatorsSettings>
+                     </configuration>
+                     <dependencies>
+                         <dependency>
+                             <groupId>biz.netcentric.aem</groupId>
+                             <artifactId>aem-nodetypes</artifactId>
+                             <version>2020.11.0</version>
+                         </dependency>
+                         <dependency>
+                             <groupId>biz.netcentric.filevault.validator</groupId>
+                             <artifactId>aem-cloud-validator</artifactId>
+                             <version>1.1.0</version>
+                         </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -571,6 +608,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+		        <dependency>
+		            <groupId>com.icfolson.aem.groovy.extension</groupId>
+		            <artifactId>aem-groovy-extension-bundle</artifactId>
+		            <version>7.0.0</version>
+		            <scope>provided</scope>
+		        </dependency>
             
             <dependency>
 							  <groupId>de.vandermeer</groupId>
