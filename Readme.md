@@ -228,7 +228,7 @@ You can click on any run to see the full details. This will show the status for 
 
 <img src="docs/images/historyDetails.png">
 
-## Search History
+## Search History (not on AEM Cloud)
 
 AECU maintains a full-text search index for the history entries. You can search for script names and their output.
 
@@ -293,8 +293,8 @@ Filters the resources by property values.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
-* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties.
-* filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties.
+* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 
 ```java
 filterByHasProperty(String name)
@@ -318,6 +318,7 @@ aecu.contentUpgradeBuilder()
         .filterByProperties(conditionMap)
         .filterByMultiValuePropContains("myAttribute", ["value"] as String[])
         .filterByPropertyRegex("myproperty", ".*test.*")
+        .filterByPropertyRegex("my_multiline_property", "(?s).*test.*")
         .filterByAnyPropertyRegex(".*test.*")
         .doSetProperty("name", "value")
         .run()

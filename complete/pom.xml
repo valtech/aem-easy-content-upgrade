@@ -51,6 +51,11 @@
                             <artifactId>aecu.ui.content</artifactId>
                             <filter>true</filter>
                         </subPackage>
+                        <subPackage>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.oak.index</artifactId>
+                            <filter>true</filter>
+                        </subPackage>
                     </subPackages>
                     <embeddeds>
                         <embedded>
@@ -106,6 +111,12 @@
         <dependency>
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.ui.content</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.oak.index</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
