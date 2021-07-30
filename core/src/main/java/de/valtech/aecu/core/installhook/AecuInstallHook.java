@@ -154,7 +154,7 @@ public class AecuInstallHook implements InstallHook {
      * @return not executed yet
      */
     private boolean wasNotExecuted(String path, HookExecutionHistory history) {
-        return !history.hasBeenExecutedBefore() && path.startsWith(AecuService.AECU_PREFIX);
+        return !history.hasBeenExecutedBefore() && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX));
     }
 
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)

@@ -58,7 +58,7 @@
                                             jcr:primaryType="nt:unstructured"
                                             sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
                                             fieldLabel="Select the folder or script"
-                                            rootPath="/var/groovyconsole/scripts"
+                                            rootPath="/"
                                             required="{Boolean}true"
                                             filter="hierarchy"
                                             name="searchPath"/>

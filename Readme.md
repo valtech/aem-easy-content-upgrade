@@ -1,8 +1,8 @@
-<img src="https://img.shields.io/github/release/valtech/aem-easy-content-upgrade.svg"> <img src="https://travis-ci.org/valtech/aem-easy-content-upgrade.svg?branch=develop"> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=aecu&metric=alert_status)](https://sonarcloud.io/dashboard?id=aecu)
+<img src="https://img.shields.io/github/release/valtech/aem-easy-content-upgrade.svg">
 
 # AEM Easy Content Upgrade (AECU)
 
-AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/CID15/aem-groovy-console).
 
 
 Features:
@@ -53,11 +53,17 @@ Table of contents
 
 # Requirements
 
-AECU requires Java 8 and AEM 6.5 or above. For AEM 6.3/6.4 please see below. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
+AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| AEM Cloud     | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
+| 6.5 (>=6.5.3)<br/>Cloud | included     | 5.x |
+
+## Older AEM versions
+For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
+
+| AEM Version   | Groovy Console | AECU      |
+| ------------- | -------------- | --------- |
 | 6.5 (>=6.5.3) | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
 | 6.4           | 14.x, 13.x               | 3.x, 2.x          |
 | 6.3           | 12.x                     | 1.x               |
@@ -65,6 +71,40 @@ AECU requires Java 8 and AEM 6.5 or above. For AEM 6.3/6.4 please see below. Gro
 <a name="installation"></a>
 
 # Installation
+
+## AEM 6.5 and AEM Cloud
+
+AECU includes the [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) package. Please do not install
+Groovy Console manually. The API is not stable and using the included version makes sure AECU and Groovy Console
+are compatible.
+
+### AEM 6.5
+
+You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+
+```xml
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.complete</artifactId>
+            <version>LATEST</version>
+            <type>zip</type>
+        </dependency>
+```
+
+### AEM Cloud
+
+You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete.cloud/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+
+```xml
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.complete.cloud</artifactId>
+            <version>LATEST</version>
+            <type>zip</type>
+        </dependency>
+```
+
+## Older AEM Versions (<6.5/Cloud)
 
 You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.ui.apps/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.ui.apps package will install the AECU software. It requires that you installed [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) before.
 
@@ -80,7 +120,7 @@ You can download the package from [Maven Central](https://repo1.maven.org/maven2
 
 <a name="bundleInstall"></a>
 
-## Bundle Installation
+### Bundle Installation
 
 To simplify installation we provide a bundle package that already includes the Groovy Console. This makes sure there are no compatibility issues.
 The package is also available on [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.bundle/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases).
@@ -95,31 +135,34 @@ The package is also available on [Maven Central](https://repo1.maven.org/maven2/
 ```
 
 
-<a name="structure"></a>
-
 ## Uninstallation
 
 The application can be removed by deleting the following paths:
-* /apps/valtech/aecu
-* /var/groovyconsole/scripts/aecu
-* /var/aecu
-* /var/aecu-installhook
+* `/apps/valtech/aecu`
+* `/var/groovyconsole/scripts/aecu`
+* `/conf/groovyconsole/scripts/aecu`
+* `/var/aecu`
+* `/var/aecu-installhook`
 
-Afterwards, you can delete the "aecu.bundle" and "aecu.ui.apps" packages in package manager.
+Afterwards, you can delete the "aecu.*" packages in package manager.
 
 For Groovy Console delete:
 
-* /apps/groovyconsole
-* /etc/clientlibs/groovyconsole
-* /var/groovyconsole
+* `/apps/groovyconsole`
+* `/etc/clientlibs/groovyconsole`
+* `/var/groovyconsole`
 
-Then delete "aem-groovy-console" packages in package mananger.
+Then delete "aem-groovy-console" packages in package manager.
 
+
+<a name="structure"></a>
 
 # File and Folder Structure
 
-All migration scripts need to be located in /var/groovyconsole/scripts/aecu. There you can create
-an unlimited number of folders and files. E.g. organize your files by project or deployment.
+All migration scripts need to be located in `/conf/groovyconsole/scripts/aecu` (recommended) or `/var/groovyconsole/scripts/aecu`. 
+
+The first is recommended with AEM as a Cloud Service due to [restrictions with the `/var` repository location](https://experienceleague.adobe.com/docs/experience-manager-learn/cloud-service/debugging/debugging-aem-as-a-cloud-service/build-and-deployment.html?lang=en#including-%2Fvar-in-content-package).
+There you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
 If your package containing the scripts is bundled in another package please make sure that this is done using "subPackages" in pom.xml.
@@ -200,7 +243,7 @@ You can click on any run to see the full details. This will show the status for 
 
 <img src="docs/images/historyDetails.png">
 
-## Search History
+## Search History (not on AEM Cloud)
 
 AECU maintains a full-text search index for the history entries. You can search for script names and their output.
 
@@ -265,8 +308,8 @@ Filters the resources by property values.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
-* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties.
-* filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties.
+* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 
 ```java
 filterByHasProperty(String name)
@@ -290,6 +333,7 @@ aecu.contentUpgradeBuilder()
         .filterByProperties(conditionMap)
         .filterByMultiValuePropContains("myAttribute", ["value"] as String[])
         .filterByPropertyRegex("myproperty", ".*test.*")
+        .filterByPropertyRegex("my_multiline_property", "(?s).*test.*")
         .filterByAnyPropertyRegex(".*test.*")
         .doSetProperty("name", "value")
         .run()
@@ -936,7 +980,7 @@ Parameters:
 Sample curl call:
 
 ```
-curl -u admin:admin 'http://localhost:5902/system/console/jmx/de.valtech%3Atype%3DAECU/op/executeWithHistory/java.lang.String' --data-raw 'Path=/var/groovyconsole/scripts/aecu'
+curl -u admin:admin 'http://localhost:5902/system/console/jmx/de.valtech%3Atype%3DAECU/op/executeWithHistory/java.lang.String' --data-raw 'Path=/conf/groovyconsole/scripts/aecu'
 ```
 
 ## GetHistory

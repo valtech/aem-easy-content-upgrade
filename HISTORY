@@ -1,3 +1,8 @@
+2021-07-30 5.0.0
+  - AEM Cloud compatibility improvements (separate package for AEM cloud!)
+  - Changed packages: no more bundle package, install always "complete" package (includes Groovy Console)
+  - New location for install hook scripts: /conf/groovyconsole/scripts/aecu (/var/groovyconsole/scripts/aecu still supported) 
+
 2021-06-11 4.1.0
   - New filter methods: filterByNodeExists() and filterByNodeNotExists()
   - Fixed Sonar issues (#156)

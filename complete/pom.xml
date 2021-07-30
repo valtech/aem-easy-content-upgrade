@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.valtech.aecu</groupId>
+        <artifactId>aecu</artifactId>
+        <version>4.2.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>aecu.complete</artifactId>
+    <packaging>content-package</packaging>
+    <name>AECU - Complete</name>
+    <description>Complete package for AECU that includes Groovy Console</description>
+
+    <build>
+        <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
+        
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
+                <configuration>
+                    <allowIndexDefinitions>true</allowIndexDefinitions>
+                    <embeddedTarget>/apps/valtech/aecu-complete/install/</embeddedTarget>
+                    <verbose>true</verbose>
+                    <failOnError>true</failOnError>
+                    <group>Valtech</group>
+                    <packageType>container</packageType>
+                    <skipSubPackageValidation>true</skipSubPackageValidation>
+                    <properties>
+                        <cloudManagerTarget>none</cloudManagerTarget>
+                        <installPathRegex>/apps/valtech/aecu-complete/(config|install)/.*</installPathRegex>
+                        <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
+                    </properties>
+                    <subPackages>
+                        <subPackage>
+                            <groupId>com.icfolson.aem.groovy.console</groupId>
+                            <artifactId>aem-groovy-console</artifactId>
+                            <type>zip</type>
+                            <filter>true</filter>
+                        </subPackage>
+                        <subPackage>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.ui.apps</artifactId>
+                            <filter>true</filter>
+                        </subPackage>
+                        <subPackage>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.ui.content</artifactId>
+                            <filter>true</filter>
+                        </subPackage>
+                        <subPackage>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.oak.index</artifactId>
+                            <filter>true</filter>
+                        </subPackage>
+                    </subPackages>
+                    <embeddeds>
+                        <embedded>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.api</artifactId>
+                            <target>/apps/valtech/aecu-complete/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.core</artifactId>
+                            <target>/apps/valtech/aecu-complete/install</target>
+                        </embedded>
+                    </embeddeds>
+                    <installHooks>org.apache.sling:org.apache.sling.installer.provider.installhook:1.1.0</installHooks>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>htl-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.icfolson.aem.groovy.console</groupId>
+            <artifactId>aem-groovy-console</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.icfolson.aem.groovy.console</groupId>
+            <artifactId>aem-groovy-console</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.icfolson.aem.groovy.extension</groupId>
+            <artifactId>aem-groovy-extension-bundle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.ui.apps</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.ui.content</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.oak.index</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>
