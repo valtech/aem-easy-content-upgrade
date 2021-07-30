@@ -78,12 +78,27 @@ AECU includes the [Groovy Console](https://github.com/OlsonDigital/aem-groovy-co
 Groovy Console manually. The API is not stable and using the included version makes sure AECU and Groovy Console
 are compatible.
 
+### AEM 6.5
+
 You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
 ```xml
         <dependency>
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.complete</artifactId>
+            <version>LATEST</version>
+            <type>zip</type>
+        </dependency>
+```
+
+### AEM Cloud
+
+You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete.cloud/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+
+```xml
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.complete.cloud</artifactId>
             <version>LATEST</version>
             <type>zip</type>
         </dependency>
