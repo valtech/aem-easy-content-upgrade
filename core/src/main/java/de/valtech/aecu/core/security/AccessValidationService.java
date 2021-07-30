@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 @Designate(ocd = AccessValidationServiceConfiguration.class)
 public class AccessValidationService {
 
+    protected static final String ADMINISTRATORS = "administrators";
+
     private static final Logger LOG = LoggerFactory.getLogger(AccessValidationService.class);
 
     private AccessValidationServiceConfiguration config;
@@ -86,10 +88,13 @@ public class AccessValidationService {
         if (isAdmin(userName)) {
             return true;
         }
+        List<String> userGroups = getUserGroupNames(request);
+        if (userGroups.contains(ADMINISTRATORS)) {
+            return true;
+        }
         if (groups == null) {
             return false;
         }
-        List<String> userGroups = getUserGroupNames(request);
         for (String group : groups) {
             if (userGroups.contains(group)) {
                 return true;

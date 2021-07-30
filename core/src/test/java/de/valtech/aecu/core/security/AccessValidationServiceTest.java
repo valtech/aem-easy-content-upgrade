@@ -80,6 +80,16 @@ public class AccessValidationServiceTest {
     }
 
     @Test
+    public void canReadHistory_Administrators() throws RepositoryException {
+        when(principal.getName()).thenReturn("user");
+        when(validGroup.getID()).thenReturn(AccessValidationService.ADMINISTRATORS);
+
+        service.activate(config);
+
+        assertTrue(service.canReadHistory(request));
+    }
+
+    @Test
     public void canReadHistory_NotAllowedNoGroupConfigured() {
         when(principal.getName()).thenReturn("user");
 
@@ -111,6 +121,16 @@ public class AccessValidationServiceTest {
     @Test
     public void canExecute_Admin() {
         when(principal.getName()).thenReturn(UserConstants.DEFAULT_ADMIN_ID);
+
+        service.activate(config);
+
+        assertTrue(service.canExecute(request));
+    }
+
+    @Test
+    public void canExecute_Administrators() throws RepositoryException {
+        when(principal.getName()).thenReturn("user");
+        when(validGroup.getID()).thenReturn(AccessValidationService.ADMINISTRATORS);
 
         service.activate(config);
 
