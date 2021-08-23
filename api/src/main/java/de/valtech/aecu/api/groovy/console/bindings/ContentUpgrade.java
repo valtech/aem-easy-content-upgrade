@@ -375,6 +375,15 @@ public interface ContentUpgrade {
     ContentUpgrade doMoveResourceToPathRegex(String matchPattern, String targetPathExpr);
 
     /**
+     * Reorders a resource.
+     *
+     * @param nameOfNodeToMove entry name to move
+     * @param newSuccessor     entry will be put before this node (null to move at the end)
+     * @return upgrade object
+     */
+    ContentUpgrade doReorderNode(String nameOfNodeToMove, String newSuccessor);
+
+    /**
      * Deletes the child resources if supplied. If no children are specified it deletes the resource
      * itself.
      *
