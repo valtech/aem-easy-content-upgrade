@@ -79,6 +79,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResou
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReorderNode;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValuesRegex;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplicateResourceAction;
@@ -362,6 +363,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doMoveResourceToPathRegex(@Nonnull String matchPattern, @Nonnull String targetPathExpr) {
         actions.add(new MoveResourceToPathRegex(matchPattern, targetPathExpr, context));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doReorderNode(String nameOfNodeToMove, String newSuccessor) {
+        actions.add(new ReorderNode(nameOfNodeToMove, newSuccessor, context));
         return this;
     }
 

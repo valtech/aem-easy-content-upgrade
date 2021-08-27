@@ -502,6 +502,7 @@ The matching nodes can be copied/moved to a new location. You can use ".." if yo
 * doCopyResourceToRelativePath(String relativePath, String newName): copies the node to the given target path under the new name
 * doMoveResourceToRelativePath(String relativePath): moves the node to the given target path
 * doMoveResourceToPathRegex(String matchPattern, String replacementExpr): moves a resource if its path matches the pattern to the target path obtained by applying the replacement expression. You can use group references such as $1 (hint: "$" needs to be escaped with "\" in Groovy).
+* doReorderNode(String nameOfNodeToMove, String newSuccessor) (since AECU 5.1.0): reorders subnode "nameOfNodeToMove" before subnode "newSuccessor". Set "newSuccessor" to null to order at the end.
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -512,6 +513,7 @@ aecu.contentUpgradeBuilder()
         .doCopyResourceToRelativePath("../subNode", "newName")
         .doMoveResourceToRelativePath("../subNode")
         .doMoveResourceToPathRegex("/content/we-retail/(\\w+)/(\\w+)/(\\w+)", "/content/somewhere/\$1/and/\$2")
+        .doReorderNode("toMove", "successor")
         .run()
 ```
 

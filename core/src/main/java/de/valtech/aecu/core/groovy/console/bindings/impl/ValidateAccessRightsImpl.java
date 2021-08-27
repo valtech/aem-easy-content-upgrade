@@ -388,7 +388,7 @@ public class ValidateAccessRightsImpl implements ValidateAccessRights {
         for (String path : pathsToCheck) {
             Resource resource = resolver.getResource(path);
             if (resource == null) {
-                String message = "Unable to resolve path" + path;
+                String message = "Unable to resolve path " + path;
                 LOG.warn(message);
                 warnings.add(message);
             } else {
