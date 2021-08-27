@@ -25,7 +25,9 @@ public class ReorderNode implements Action {
     /**
      * Constructor
      * 
-     * @param newPrimaryType new type
+     * @param nameOfNodeToMove node to move
+     * @param newSuccessor     new successor node name
+     * @param context          binding context
      */
     public ReorderNode(@Nonnull String nameOfNodeToMove, @Nullable String newSuccessor, @Nonnull BindingContext context) {
         this.nameOfNodeToMove = nameOfNodeToMove;
