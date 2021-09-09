@@ -44,9 +44,12 @@ public class ANDFilter implements FilterBy {
 
     @Override
     public boolean filter(@Nonnull Resource resource, StringBuilder output) {
-        boolean foundFalse = filters.parallelStream().filter(f -> f.filter(resource, output) == false).findAny().isPresent();
-        return !foundFalse;
-
+        for (FilterBy filter : filters) {
+            if (!filter.filter(resource, output)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
