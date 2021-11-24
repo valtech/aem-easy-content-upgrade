@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.jcr.query.Query;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -149,31 +150,45 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade forResourcesFastRetrievalByProperties(@Nonnull String path, Map<String, String> properties) {
-        String nodeType = "nt:base";
-        forResourcesFastRetrievalByProperties(nodeType, path, properties);
+    public ContentUpgrade forResourcesByPropertyQuery(@Nonnull String path, Map<String, String> properties) {
+        forResourcesByPropertyQuery(path, properties, JcrConstants.NT_BASE);
         return this;
     }
 
     @Override
-    public ContentUpgrade forResourcesFastRetrievalByProperties(@Nonnull String nodeType, @Nonnull String path, Map<String, String> properties) {
+    public ContentUpgrade forResourcesByPropertyQuery(@Nonnull String path, Map<String, String> properties,
+            @Nonnull String nodeType) {
         final StringBuilder sbQuery = new StringBuilder();
-        sbQuery.append("SELECT * FROM [").append(nodeType).append("] AS s ")
-            .append("WHERE ISDESCENDANTNODE(s,'").append(path).append("') ");
-
+        sbQuery.append(
+                "SELECT * FROM [" + escapeForSql2(nodeType) + "] AS s WHERE ISDESCENDANTNODE(s,'" + escapeForSql2(path) + "') ");
         if (properties != null) {
-            properties.forEach( (key, value) -> {
-                if (key == null || value == null || value.indexOf("'") != -1) return;
-                if (value.indexOf('%') == -1) {
-                    sbQuery.append(" AND [").append(key).append("] = '").append(value).append("'");
+            properties.forEach((key, value) -> {
+                if (key == null || value == null) {
+                    LOG.warn("Null key or value provided: Key: " + key + " Value: " + value);
+                    return;
+                }
+                if (value.contains("%")) {
+                    sbQuery.append(" AND [" + escapeForSql2(key) + "] LIKE '" + escapeForSql2(value) + "'");
                 } else {
-                    sbQuery.append(" AND [").append(key).append("] LIKE '").append(value).append("'");
+                    sbQuery.append(" AND [" + escapeForSql2(key) + "] = '" + escapeForSql2(value) + "'");
                 }
             });
         }
-
         forResourcesBySql2Query(sbQuery.toString());
         return this;
+    }
+
+    /**
+     * Escapes an argument for SQL2 queries.
+     * 
+     * @param input input value
+     * @return escaped output
+     */
+    private String escapeForSql2(String input) {
+        if (StringUtils.isEmpty(input)) {
+            return StringUtils.EMPTY;
+        }
+        return input.replaceAll("'", "''");
     }
 
     @Override
