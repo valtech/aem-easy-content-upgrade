@@ -149,6 +149,34 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade forResourcesFastRetrievalByProperties(@Nonnull String path, Map<String, String> properties) {
+        String nodeType = "nt:base";
+        forResourcesFastRetrievalByProperties(nodeType, path, properties);
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade forResourcesFastRetrievalByProperties(@Nonnull String nodeType, @Nonnull String path, Map<String, String> properties) {
+        final StringBuilder sbQuery = new StringBuilder();
+        sbQuery.append("SELECT * FROM [").append(nodeType).append("] AS s ")
+            .append("WHERE ISDESCENDANTNODE(s,'").append(path).append("') ");
+
+        if (properties != null) {
+            properties.forEach( (key, value) -> {
+                if (key == null || value == null || value.indexOf("'") != -1) return;
+                if (value.indexOf('%') == -1) {
+                    sbQuery.append(" AND [").append(key).append("] = '").append(value).append("'");
+                } else {
+                    sbQuery.append(" AND [").append(key).append("] LIKE '").append(value).append("'");
+                }
+            });
+        }
+
+        forResourcesBySql2Query(sbQuery.toString());
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         addFilter(new FilterByProperties(conditionProperties));
         return this;
