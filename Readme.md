@@ -279,6 +279,8 @@ In the collect phase you define which nodes should be checked for a migration.
 * forDescendantResourcesOf(String path): use the whole subtree under this path excluding the parent root node
 * forResourcesInSubtree(String path): use the whole subtree under this path including the parent root node
 * forResourcesBySql2Query(String query): executes the query and applies actions on found resources
+* forResourcesByPropertyQuery(String path, Map<String, String> conditionProperties): search in given path for the given list of property values (node type nt:base)
+* forResourcesByPropertyQuery(String path, Map<String, String> conditionProperties, String nodeType): search in given path for the given list of property values using a specific node type (e.g. "nt:base")
 
 You can call these methods multiple times and combine them. They will be merged together.
 
@@ -291,6 +293,8 @@ aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/us/en/experience")
         .forResourcesInSubtree("/content/we-retail/us/en/experience")
         .forResourcesBySql2Query("SELECT * FROM [cq:Page] AS s WHERE ISDESCENDANTNODE(s,'/content/we-retail/us/en/experience')")
+        .forResourcesByPropertyQuery("/content/we-retail/us", Collections.singletonMap("sling:resourceType", "weretail/components/content/heroimage"))
+        .forResourcesByPropertyQuery("/content/we-retail/us", Collections.singletonMap("sling:resourceType", "%/heroimage"), "nt:base")
         .doSetProperty("name", "value")
         .run()
 ```
