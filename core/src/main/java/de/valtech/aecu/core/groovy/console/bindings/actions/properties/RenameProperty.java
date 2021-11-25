@@ -18,15 +18,16 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * @author Roxana Muresan
+ * @author Roland Gruber
  */
 public class RenameProperty implements Action {
 
@@ -41,11 +42,14 @@ public class RenameProperty implements Action {
     @Override
     public String doAction(@Nonnull Resource resource) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
-        if (properties != null) {
-            Object value = properties.remove(oldName);
-            properties.put(newName, value);
-            return "Renaming property " + oldName + " to " + newName + " for resource " + resource.getPath();
+        if (properties == null) {
+            return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
         }
-        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
+        if (!properties.containsKey(oldName)) {
+            return "WARNING: property " + oldName + " does not exist on " + resource.getPath();
+        }
+        Object value = properties.remove(oldName);
+        properties.put(newName, value);
+        return "Renaming property " + oldName + " to " + newName + " for resource " + resource.getPath();
     }
 }

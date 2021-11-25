@@ -58,6 +58,7 @@ public class RenamePropertyTest {
 
     @Test
     public void doAction() throws PersistenceException {
+        when(valueMap.containsKey(ATTR_OLD)).thenReturn(true);
         when(valueMap.remove(ATTR_OLD)).thenReturn(VAL1);
         RenameProperty action = new RenameProperty(ATTR_OLD, ATTR_NEW);
 
