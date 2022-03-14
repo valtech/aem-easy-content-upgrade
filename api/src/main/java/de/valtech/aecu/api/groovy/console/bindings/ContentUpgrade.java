@@ -219,6 +219,17 @@ public interface ContentUpgrade {
     ContentUpgrade doSetProperty(String name, Object value, String pathToSubnode);
 
     /**
+     * Sets a property value on a subnode.
+     *
+     * @param name          property name
+     * @param value         property value
+     * @param pathToSubnode path to subnode where property will be set
+     * @param primaryType   primary type if subnode or intermediate nodes need to be created
+     * @return upgrade object
+     **/
+    ContentUpgrade doSetProperty(String name, Object value, String pathToSubnode, String primaryType);
+
+    /**
      * Joins a property value into a single value. Uses "," to join multiple values. Deletes
      * properties with empty array values.
      *

@@ -71,7 +71,7 @@ public class SetPropertyTest {
 
     @Test
     public void doAction() throws PersistenceException {
-        SetProperty action = new SetProperty(ATTR, VAL1, null);
+        SetProperty action = new SetProperty(ATTR, VAL1, null, "nt:unstructured");
 
         action.doAction(resource);
 
@@ -80,7 +80,7 @@ public class SetPropertyTest {
 
     @Test
     public void doAction_gString() throws PersistenceException {
-        SetProperty action = new SetProperty(ATTR, VALUE_G, null);
+        SetProperty action = new SetProperty(ATTR, VALUE_G, null, "nt:unstructured");
 
         action.doAction(resource);
 
@@ -89,7 +89,7 @@ public class SetPropertyTest {
 
     @Test
     public void doAction_subnode() throws PersistenceException {
-        SetProperty action = new SetProperty(ATTR, VAL1, SUBNODE_PATH);
+        SetProperty action = new SetProperty(ATTR, VAL1, SUBNODE_PATH, "nt:unstructured");
 
         action.doAction(resource);
 

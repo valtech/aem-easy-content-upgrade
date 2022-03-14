@@ -425,7 +425,8 @@ aecu.contentUpgradeBuilder()
 #### Update Single-value Properties
 
 * doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
-* doSetProperty(String name, Object value, String pathToSubnode): sets the given property in the subnode to the value. Any existing value is overwritten.
+* doSetProperty(String name, Object value, String pathToSubnode): sets the given property in the subnode to the value. If subnode does not exist it will be created as nt:unstructured (incl. missing intermediate nodes). Any existing value is overwritten.
+* doSetProperty(String name, Object value, String pathToSubnode, String primaryType): sets the given property in the subnode to the value. If subnode does not exist it will be created as given in primaryType (incl. missing intermediate nodes). Any existing value is overwritten.
 * doDeleteProperty(String name): removes the property with the given name if existing.
 * doRenameProperty(String oldName, String newName): renames the given property if existing. If the new property name already exists it will be overwritten.
 

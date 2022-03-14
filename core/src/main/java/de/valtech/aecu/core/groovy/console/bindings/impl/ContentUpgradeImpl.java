@@ -282,13 +282,19 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
-        actions.add(new SetProperty(name, value, null));
+        actions.add(new SetProperty(name, value, null, "nt:unstructured"));
         return this;
     }
 
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value, String pathToSubnode) {
-        actions.add(new SetProperty(name, value, pathToSubnode));
+        actions.add(new SetProperty(name, value, pathToSubnode, "nt:unstructured"));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doSetProperty(@Nonnull String name, Object value, String pathToSubnode, String primaryType) {
+        actions.add(new SetProperty(name, value, pathToSubnode, primaryType));
         return this;
     }
 

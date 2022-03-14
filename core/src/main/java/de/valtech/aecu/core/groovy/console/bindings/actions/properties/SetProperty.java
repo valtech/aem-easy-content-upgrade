@@ -19,9 +19,13 @@
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import javax.annotation.Nonnull;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+
+import com.day.cq.commons.jcr.JcrUtil;
 
 import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
@@ -35,11 +39,13 @@ public class SetProperty implements Action {
     protected String name;
     protected Object value;
     private String subNodePath;
+    private String primaryType;
 
-    public SetProperty(@Nonnull String name, Object value, String subNodePath) {
+    public SetProperty(@Nonnull String name, Object value, String subNodePath, String primaryType) {
         this.name = name;
         this.value = GStringConverter.convert(value);
         this.subNodePath = subNodePath;
+        this.primaryType = primaryType;
     }
 
     @Override
@@ -48,7 +54,14 @@ public class SetProperty implements Action {
         if (subNodePath != null) {
             operatingResource = resource.getChild(subNodePath);
             if (operatingResource == null) {
-                return "WARNING: no child resource " + subNodePath + " found for " + resource.getPath();
+                Session session = resource.getResourceResolver().adaptTo(Session.class);
+                String finalPath = resource.getPath() + "/" + subNodePath;
+                try {
+                    JcrUtil.createPath(finalPath, primaryType, session);
+                    operatingResource = resource.getResourceResolver().getResource(finalPath);
+                } catch (RepositoryException e) {
+                    return "Unable to create " + finalPath + ". " + e.getMessage();
+                }
             }
         }
         ModifiableValueMap properties = operatingResource.adaptTo(ModifiableValueMap.class);
@@ -59,4 +72,5 @@ public class SetProperty implements Action {
         }
         return "WARNING: could not get ModifiableValueMap for resource " + operatingResource.getPath();
     }
+
 }
