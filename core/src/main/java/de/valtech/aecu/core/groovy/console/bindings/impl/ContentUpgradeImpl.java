@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -282,7 +282,13 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
-        actions.add(new SetProperty(name, value));
+        actions.add(new SetProperty(name, value, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doSetProperty(@Nonnull String name, Object value, String pathToSubnode) {
+        actions.add(new SetProperty(name, value, pathToSubnode));
         return this;
     }
 

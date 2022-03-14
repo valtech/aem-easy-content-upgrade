@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,25 +28,35 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * @author Roxana Muresan
+ * @author Roland Gruber
  */
 public class SetProperty implements Action {
 
     protected String name;
     protected Object value;
+    private String subNodePath;
 
-    public SetProperty(@Nonnull String name, Object value) {
+    public SetProperty(@Nonnull String name, Object value, String subNodePath) {
         this.name = name;
         this.value = GStringConverter.convert(value);
+        this.subNodePath = subNodePath;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) {
-        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        Resource operatingResource = resource;
+        if (subNodePath != null) {
+            operatingResource = resource.getChild(subNodePath);
+            if (operatingResource == null) {
+                return "WARNING: no child resource " + subNodePath + " found for " + resource.getPath();
+            }
+        }
+        ModifiableValueMap properties = operatingResource.adaptTo(ModifiableValueMap.class);
         if (properties != null) {
             properties.put(name, value);
             return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource "
-                    + resource.getPath();
+                    + operatingResource.getPath();
         }
-        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
+        return "WARNING: could not get ModifiableValueMap for resource " + operatingResource.getPath();
     }
 }
