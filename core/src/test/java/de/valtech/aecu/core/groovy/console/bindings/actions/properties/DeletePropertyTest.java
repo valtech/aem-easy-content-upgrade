@@ -41,25 +41,45 @@ public class DeletePropertyTest {
 
     private static final String ATTR = "attr";
 
+    private static final String SUBNODE_PATH = "some/path";
+
     @Mock
     private Resource resource;
 
     @Mock
+    private Resource subNode;
+
+    @Mock
     private ModifiableValueMap valueMap;
+
+    @Mock
+    private ModifiableValueMap valueMapSubnode;
 
     @Before
     public void setup() {
         when(resource.adaptTo(ModifiableValueMap.class)).thenReturn(valueMap);
+        when(subNode.adaptTo(ModifiableValueMap.class)).thenReturn(valueMapSubnode);
+        when(resource.getChild(SUBNODE_PATH)).thenReturn(subNode);
     }
 
     @Test
     public void doAction() throws PersistenceException {
         when(valueMap.remove(ATTR)).thenReturn("val");
-        DeleteProperty action = new DeleteProperty(ATTR);
+        DeleteProperty action = new DeleteProperty(ATTR, null);
 
         action.doAction(resource);
 
         verify(valueMap, times(1)).remove(ATTR);
+    }
+
+    @Test
+    public void doAction_subnode() throws PersistenceException {
+        when(valueMapSubnode.remove(ATTR)).thenReturn("val");
+        DeleteProperty action = new DeleteProperty(ATTR, SUBNODE_PATH);
+
+        action.doAction(resource);
+
+        verify(valueMapSubnode, times(1)).remove(ATTR);
     }
 
 }

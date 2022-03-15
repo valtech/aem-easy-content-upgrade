@@ -428,7 +428,9 @@ aecu.contentUpgradeBuilder()
 * doSetProperty(String name, Object value, String pathToSubnode): sets the given property in the subnode to the value. If subnode does not exist it will be created as nt:unstructured (incl. missing intermediate nodes). Any existing value is overwritten.
 * doSetProperty(String name, Object value, String pathToSubnode, String primaryType): sets the given property in the subnode to the value. If subnode does not exist it will be created as given in primaryType (incl. missing intermediate nodes). Any existing value is overwritten.
 * doDeleteProperty(String name): removes the property with the given name if existing.
+* doDeleteProperty(String name, String pathToSubnode): removes the property on subnode pathToSubnode with the given name if existing.
 * doRenameProperty(String oldName, String newName): renames the given property if existing. If the new property name already exists it will be overwritten.
+* doRenameProperty(String oldName, String newName, String pathToSubnode): renames the given property on subnode pathToSubnode if existing. If the new property name already exists it will be overwritten.
 
 ```java
 aecu.contentUpgradeBuilder()
@@ -437,7 +439,9 @@ aecu.contentUpgradeBuilder()
         .doSetProperty("name", "value")
         .doSetProperty("name", "value", "root/breadCrumb")
         .doDeleteProperty("nameToDelete")
+        .doDeleteProperty("nameToDelete", "root/breadCrumb")
         .doRenameProperty("oldName", "newName")
+        .doRenameProperty("oldName", "newName", "root/breadCrumb")
         .run()
 ```
 

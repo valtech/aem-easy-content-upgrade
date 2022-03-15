@@ -318,13 +318,25 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doDeleteProperty(@Nonnull String name) {
-        actions.add(new DeleteProperty(name));
+        actions.add(new DeleteProperty(name, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeleteProperty(@Nonnull String name, String pathToSubnode) {
+        actions.add(new DeleteProperty(name, pathToSubnode));
         return this;
     }
 
     @Override
     public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName) {
-        actions.add(new RenameProperty(oldName, newName));
+        actions.add(new RenameProperty(oldName, newName, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName, String pathToSubnode) {
+        actions.add(new RenameProperty(oldName, newName, pathToSubnode));
         return this;
     }
 

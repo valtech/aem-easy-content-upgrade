@@ -266,6 +266,15 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteProperty(String name);
 
     /**
+     * Deletes a property if existing.
+     *
+     * @param name          property name
+     * @param pathToSubnode path to subnode where property will be set
+     * @return upgrade object
+     */
+    ContentUpgrade doDeleteProperty(String name, String pathToSubnode);
+
+    /**
      * Renames a property if existing.
      *
      * @param oldName old property name
@@ -273,6 +282,16 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade doRenameProperty(String oldName, String newName);
+
+    /**
+     * Renames a property if existing.
+     *
+     * @param oldName       old property name
+     * @param newName       new property name
+     * @param pathToSubnode path to subnode where property will be set
+     * @return upgrade object
+     */
+    ContentUpgrade doRenameProperty(String oldName, String newName, String pathToSubnode);
 
     /**
      * Copies a property to a relative path.

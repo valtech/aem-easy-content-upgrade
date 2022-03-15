@@ -1,6 +1,6 @@
 2021-??? 5.2.0
   - Added forResourcesByPropertyQuery() to binding
-  - added subNodepath parameter to doSetProperty()
+  - added subNodepath parameter to doSetProperty()/doDeleteProperty()/doRenameProperty()
 
 2021-08-27 5.1.0
   - Added doReorderNode() to binding
