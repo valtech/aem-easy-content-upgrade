@@ -45,27 +45,49 @@ public class RenamePropertyTest {
     private static final String ATTR_OLD = "attrOld";
     private static final String ATTR_NEW = "attrNew";
 
+    private static final String SUBNODE_PATH = "some/path";
+
     @Mock
     private Resource resource;
 
     @Mock
+    private Resource subNode;
+
+    @Mock
     private ModifiableValueMap valueMap;
+
+    @Mock
+    private ModifiableValueMap valueMapSubnode;
 
     @Before
     public void setup() {
         when(resource.adaptTo(ModifiableValueMap.class)).thenReturn(valueMap);
+        when(subNode.adaptTo(ModifiableValueMap.class)).thenReturn(valueMapSubnode);
+        when(resource.getChild(SUBNODE_PATH)).thenReturn(subNode);
     }
 
     @Test
     public void doAction() throws PersistenceException {
         when(valueMap.containsKey(ATTR_OLD)).thenReturn(true);
         when(valueMap.remove(ATTR_OLD)).thenReturn(VAL1);
-        RenameProperty action = new RenameProperty(ATTR_OLD, ATTR_NEW);
+        RenameProperty action = new RenameProperty(ATTR_OLD, ATTR_NEW, null);
 
         action.doAction(resource);
 
         verify(valueMap, times(1)).remove(ATTR_OLD);
         verify(valueMap, times(1)).put(ATTR_NEW, VAL1);
+    }
+
+    @Test
+    public void doAction_subnode() throws PersistenceException {
+        when(valueMapSubnode.containsKey(ATTR_OLD)).thenReturn(true);
+        when(valueMapSubnode.remove(ATTR_OLD)).thenReturn(VAL1);
+        RenameProperty action = new RenameProperty(ATTR_OLD, ATTR_NEW, SUBNODE_PATH);
+
+        action.doAction(resource);
+
+        verify(valueMapSubnode, times(1)).remove(ATTR_OLD);
+        verify(valueMapSubnode, times(1)).put(ATTR_NEW, VAL1);
     }
 
 }

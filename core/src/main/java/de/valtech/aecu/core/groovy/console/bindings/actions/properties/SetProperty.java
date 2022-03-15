@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,34 +19,58 @@
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
 import javax.annotation.Nonnull;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+
+import com.day.cq.commons.jcr.JcrUtil;
 
 import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * @author Roxana Muresan
+ * @author Roland Gruber
  */
 public class SetProperty implements Action {
 
     protected String name;
     protected Object value;
+    private String subNodePath;
+    private String primaryType;
 
-    public SetProperty(@Nonnull String name, Object value) {
+    public SetProperty(@Nonnull String name, Object value, String subNodePath, String primaryType) {
         this.name = name;
         this.value = GStringConverter.convert(value);
+        this.subNodePath = subNodePath;
+        this.primaryType = primaryType;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) {
-        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        Resource operatingResource = resource;
+        if (subNodePath != null) {
+            operatingResource = resource.getChild(subNodePath);
+            if (operatingResource == null) {
+                Session session = resource.getResourceResolver().adaptTo(Session.class);
+                String finalPath = resource.getPath() + "/" + subNodePath;
+                try {
+                    JcrUtil.createPath(finalPath, primaryType, session);
+                    operatingResource = resource.getResourceResolver().getResource(finalPath);
+                } catch (RepositoryException e) {
+                    return "Unable to create " + finalPath + ". " + e.getMessage();
+                }
+            }
+        }
+        ModifiableValueMap properties = operatingResource.adaptTo(ModifiableValueMap.class);
         if (properties != null) {
             properties.put(name, value);
             return "Setting " + value.getClass().getSimpleName() + " property " + name + "=" + value + " for resource "
-                    + resource.getPath();
+                    + operatingResource.getPath();
         }
-        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
+        return "WARNING: could not get ModifiableValueMap for resource " + operatingResource.getPath();
     }
+
 }

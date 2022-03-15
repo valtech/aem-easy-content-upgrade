@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -282,7 +282,19 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
-        actions.add(new SetProperty(name, value));
+        actions.add(new SetProperty(name, value, null, "nt:unstructured"));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doSetProperty(@Nonnull String name, Object value, String pathToSubnode) {
+        actions.add(new SetProperty(name, value, pathToSubnode, "nt:unstructured"));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doSetProperty(@Nonnull String name, Object value, String pathToSubnode, String primaryType) {
+        actions.add(new SetProperty(name, value, pathToSubnode, primaryType));
         return this;
     }
 
@@ -306,13 +318,25 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doDeleteProperty(@Nonnull String name) {
-        actions.add(new DeleteProperty(name));
+        actions.add(new DeleteProperty(name, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeleteProperty(@Nonnull String name, String pathToSubnode) {
+        actions.add(new DeleteProperty(name, pathToSubnode));
         return this;
     }
 
     @Override
     public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName) {
-        actions.add(new RenameProperty(oldName, newName));
+        actions.add(new RenameProperty(oldName, newName, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName, String pathToSubnode) {
+        actions.add(new RenameProperty(oldName, newName, pathToSubnode));
         return this;
     }
 

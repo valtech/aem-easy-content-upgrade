@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -48,20 +48,30 @@ public class SetPropertyTest {
 
     private static final GString VALUE_G = new GStringImpl(new Object[] {1}, new String[] {"val"});
 
+    private static final String SUBNODE_PATH = "some/path";
+
     @Mock
     private Resource resource;
 
     @Mock
+    private Resource subNode;
+
+    @Mock
     private ModifiableValueMap valueMap;
+
+    @Mock
+    private ModifiableValueMap valueMapSubnode;
 
     @Before
     public void setup() {
         when(resource.adaptTo(ModifiableValueMap.class)).thenReturn(valueMap);
+        when(subNode.adaptTo(ModifiableValueMap.class)).thenReturn(valueMapSubnode);
+        when(resource.getChild(SUBNODE_PATH)).thenReturn(subNode);
     }
 
     @Test
     public void doAction() throws PersistenceException {
-        SetProperty action = new SetProperty(ATTR, VAL1);
+        SetProperty action = new SetProperty(ATTR, VAL1, null, "nt:unstructured");
 
         action.doAction(resource);
 
@@ -70,11 +80,20 @@ public class SetPropertyTest {
 
     @Test
     public void doAction_gString() throws PersistenceException {
-        SetProperty action = new SetProperty(ATTR, VALUE_G);
+        SetProperty action = new SetProperty(ATTR, VALUE_G, null, "nt:unstructured");
 
         action.doAction(resource);
 
         verify(valueMap, times(1)).put(ATTR, VAL1);
+    }
+
+    @Test
+    public void doAction_subnode() throws PersistenceException {
+        SetProperty action = new SetProperty(ATTR, VAL1, SUBNODE_PATH, "nt:unstructured");
+
+        action.doAction(resource);
+
+        verify(valueMapSubnode, times(1)).put(ATTR, VAL1);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2021 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -209,6 +209,27 @@ public interface ContentUpgrade {
     ContentUpgrade doSetProperty(String name, Object value);
 
     /**
+     * Sets a property value on a subnode.
+     *
+     * @param name          property name
+     * @param value         property value
+     * @param pathToSubnode path to subnode where property will be set
+     * @return upgrade object
+     **/
+    ContentUpgrade doSetProperty(String name, Object value, String pathToSubnode);
+
+    /**
+     * Sets a property value on a subnode.
+     *
+     * @param name          property name
+     * @param value         property value
+     * @param pathToSubnode path to subnode where property will be set
+     * @param primaryType   primary type if subnode or intermediate nodes need to be created
+     * @return upgrade object
+     **/
+    ContentUpgrade doSetProperty(String name, Object value, String pathToSubnode, String primaryType);
+
+    /**
      * Joins a property value into a single value. Uses "," to join multiple values. Deletes
      * properties with empty array values.
      *
@@ -245,6 +266,15 @@ public interface ContentUpgrade {
     ContentUpgrade doDeleteProperty(String name);
 
     /**
+     * Deletes a property if existing.
+     *
+     * @param name          property name
+     * @param pathToSubnode path to subnode where property will be set
+     * @return upgrade object
+     */
+    ContentUpgrade doDeleteProperty(String name, String pathToSubnode);
+
+    /**
      * Renames a property if existing.
      *
      * @param oldName old property name
@@ -252,6 +282,16 @@ public interface ContentUpgrade {
      * @return upgrade object
      */
     ContentUpgrade doRenameProperty(String oldName, String newName);
+
+    /**
+     * Renames a property if existing.
+     *
+     * @param oldName       old property name
+     * @param newName       new property name
+     * @param pathToSubnode path to subnode where property will be set
+     * @return upgrade object
+     */
+    ContentUpgrade doRenameProperty(String oldName, String newName, String pathToSubnode);
 
     /**
      * Copies a property to a relative path.
