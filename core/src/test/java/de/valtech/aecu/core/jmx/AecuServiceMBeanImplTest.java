@@ -44,6 +44,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
@@ -108,7 +109,7 @@ public class AecuServiceMBeanImplTest {
         ExecutionResult result = mock(ExecutionResult.class);
         when(service.execute(FILE1)).thenReturn(result);
 
-        String out = bean.execute(PATH);
+        bean.execute(PATH);
 
         verify(service, times(1)).getFiles(PATH);
         verify(service, times(1)).createHistoryEntry();
@@ -120,9 +121,10 @@ public class AecuServiceMBeanImplTest {
     @Test
     public void executeWithHistory() throws AecuException, LoginException {
         ExecutionResult result = mock(ExecutionResult.class);
+        when(result.getState()).thenReturn(ExecutionState.SUCCESS);
         when(service.execute(FILE1)).thenReturn(result);
 
-        String out = bean.executeWithHistory(PATH);
+        bean.executeWithHistory(PATH);
 
         verify(serviceResourceResolverService, times(1)).getAdminResourceResolver();
         verify(service, times(1)).getFiles(PATH);
