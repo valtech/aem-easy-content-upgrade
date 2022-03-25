@@ -178,9 +178,12 @@ run mode combinations can be separated with ";" (e.g. "folder.author.test;author
 was already executed before.
 * Fallback selector: if a script name ends with ".fallback.groovy" then it will be executed only if
 the corresponding script failed with an exception. E.g. if there is "script.groovy" and "script.fallback.groovy" then the fallback script only gets executed if "script.groovy" fails.
+* Prechecks selector: if a script name ends with ".prechecks.groovy" then it will be executed before
+the corresponding script. If it fails with an exception then the corresponding script will be skipped. E.g. if there is "script.groovy" and "script.prechecks.groovy" then the "script.groovy" only gets executed if "script.prechecks.groovy" runs without exception.
 * Reserved file names
     * fallback.groovy: optional directory level fallback script. This will be executed if a script fails and no script specific fallback script is provided.
-
+    * prechecks.groovy: optional directory level prechecks script. This will be executed before a script runs and no script specific prechecks script is provided.
+    
 <a name="execution"></a>
 
 # Execution of Migration Scripts
