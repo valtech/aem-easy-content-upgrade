@@ -44,7 +44,11 @@ public class ORFilter implements FilterBy {
 
     @Override
     public boolean filter(@Nonnull Resource resource, StringBuilder output) {
-        boolean foundTrue = filters.parallelStream().filter(f -> f.filter(resource, output)).findAny().isPresent();
-        return foundTrue;
+        for (FilterBy filter : filters) {
+            if (filter.filter(resource, output)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

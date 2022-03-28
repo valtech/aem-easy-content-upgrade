@@ -154,7 +154,8 @@ public class AecuInstallHook implements InstallHook {
      * @return not executed yet
      */
     private boolean wasNotExecuted(String path, HookExecutionHistory history) {
-        return !history.hasBeenExecutedBefore() && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX));
+        return !history.hasBeenExecutedBefore()
+                && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX));
     }
 
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)
@@ -166,10 +167,11 @@ public class AecuInstallHook implements InstallHook {
             try {
                 if (!stopExecution) {
                     installationHistory = executeScript(aecuService, installationHistory, groovyScriptPath);
-                    hookExecutionHistory.setExecuted();
                     if (RESULT.FAILURE.equals(installationHistory.getResult())) {
                         // stop execution on first failed script run
                         stopExecution = true;
+                    } else {
+                        hookExecutionHistory.setExecuted();
                     }
                 } else {
                     installationHistory = skipScript(aecuService, installationHistory, groovyScriptPath);

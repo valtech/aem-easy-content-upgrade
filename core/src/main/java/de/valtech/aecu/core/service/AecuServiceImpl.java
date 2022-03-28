@@ -62,8 +62,11 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 @Component(service = AecuService.class)
 public class AecuServiceImpl implements AecuService {
 
+    private static final String PRECHECKS_SELECTOR = ".prechecks.";
+    private static final String FALLBACK_SELECTOR = ".fallback.";
     private static final String ERR_NO_RESOLVER = "Unable to get service resource resolver";
     protected static final String DIR_FALLBACK_SCRIPT = "fallback.groovy";
+    protected static final String DIR_PRECHECKS_SCRIPT = "prechecks.groovy";
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuServiceImpl.class);
 
@@ -159,7 +162,8 @@ public class AecuServiceImpl implements AecuService {
         if (!name.endsWith(".groovy")) {
             return false;
         }
-        return !name.contains(".fallback.") && !DIR_FALLBACK_SCRIPT.equals(name);
+        return !name.contains(FALLBACK_SELECTOR) && !DIR_FALLBACK_SCRIPT.equals(name) && !name.contains(PRECHECKS_SELECTOR)
+                && !DIR_PRECHECKS_SCRIPT.equals(name);
     }
 
     @Override
@@ -187,14 +191,23 @@ public class AecuServiceImpl implements AecuService {
      * @throws AecuException error running script
      */
     private ExecutionResult executeScript(ResourceResolver resolver, String path) throws AecuException {
-        LOG.info("Executing script " + path);
+        LOG.info("Executing script {}", path);
+        String prechecksScript = getPrechecksScript(resolver, path);
+        if (prechecksScript != null) {
+            ExecutionResult prechecksResult = executeScript(resolver, prechecksScript);
+            if (prechecksResult.getState() == ExecutionState.FAILED) {
+                LOG.info("Skipping {} as prechecks script failed", path);
+                return new ExecutionResult(ExecutionState.SKIPPED, prechecksResult.getTime(), prechecksResult.getResult(),
+                        prechecksResult.getOutput(), null, path);
+            }
+        }
         ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver);
         RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
-            LOG.info("Executed script " + path + " with status OK");
+            LOG.info("Executed script {} with status OK", path);
         } else {
-            LOG.error("Executed script " + path + " with status FAILED");
+            LOG.error("Executed script {} with status FAILED", path);
         }
         String result = response.getResult();
         ExecutionResult fallbackResult = null;
@@ -237,18 +250,43 @@ public class AecuServiceImpl implements AecuService {
      */
     protected String getFallbackScript(ResourceResolver resolver, String path) {
         String name = path.substring(path.lastIndexOf('/') + 1);
-        if (name.contains(".fallback.") || DIR_FALLBACK_SCRIPT.equals(name)) {
+        if (name.contains(FALLBACK_SELECTOR) || DIR_FALLBACK_SCRIPT.equals(name)) {
             // skip if script is a fallback script itself
             return null;
         }
         String baseName = name.substring(0, name.indexOf('.'));
-        String fallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + ".fallback.groovy";
+        String fallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + FALLBACK_SELECTOR + "groovy";
         if (resolver.getResource(fallbackPath) != null) {
             return fallbackPath;
         }
         String directoryFallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + DIR_FALLBACK_SCRIPT;
         if (resolver.getResource(directoryFallbackPath) != null) {
             return directoryFallbackPath;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the prechecks script name if any exists.
+     *
+     * @param resolver resource resolver
+     * @param path     original script path
+     * @return prechecks script path
+     */
+    protected String getPrechecksScript(ResourceResolver resolver, String path) {
+        String name = path.substring(path.lastIndexOf('/') + 1);
+        if (name.contains(PRECHECKS_SELECTOR) || DIR_PRECHECKS_SCRIPT.equals(name)) {
+            // skip if script is a prechecks script itself
+            return null;
+        }
+        String baseName = name.substring(0, name.indexOf('.'));
+        String prechecksPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + PRECHECKS_SELECTOR + "groovy";
+        if (resolver.getResource(prechecksPath) != null) {
+            return prechecksPath;
+        }
+        String directoryPrechecksPath = path.substring(0, path.lastIndexOf('/') + 1) + DIR_PRECHECKS_SCRIPT;
+        if (resolver.getResource(directoryPrechecksPath) != null) {
+            return directoryPrechecksPath;
         }
         return null;
     }

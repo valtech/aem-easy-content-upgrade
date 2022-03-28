@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.jcr.query.Query;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -149,6 +150,48 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade forResourcesByPropertyQuery(@Nonnull String path, Map<String, String> properties) {
+        forResourcesByPropertyQuery(path, properties, JcrConstants.NT_BASE);
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade forResourcesByPropertyQuery(@Nonnull String path, Map<String, String> properties,
+            @Nonnull String nodeType) {
+        final StringBuilder sbQuery = new StringBuilder();
+        sbQuery.append(
+                "SELECT * FROM [" + escapeForSql2(nodeType) + "] AS s WHERE ISDESCENDANTNODE(s,'" + escapeForSql2(path) + "') ");
+        if (properties != null) {
+            properties.forEach((key, value) -> {
+                if (key == null || value == null) {
+                    LOG.warn("Null key or value provided: Key: " + key + " Value: " + value);
+                    return;
+                }
+                if (value.contains("%")) {
+                    sbQuery.append(" AND [" + escapeForSql2(key) + "] LIKE '" + escapeForSql2(value) + "'");
+                } else {
+                    sbQuery.append(" AND [" + escapeForSql2(key) + "] = '" + escapeForSql2(value) + "'");
+                }
+            });
+        }
+        forResourcesBySql2Query(sbQuery.toString());
+        return this;
+    }
+
+    /**
+     * Escapes an argument for SQL2 queries.
+     * 
+     * @param input input value
+     * @return escaped output
+     */
+    private String escapeForSql2(String input) {
+        if (StringUtils.isEmpty(input)) {
+            return StringUtils.EMPTY;
+        }
+        return input.replaceAll("'", "''");
+    }
+
+    @Override
     public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         addFilter(new FilterByProperties(conditionProperties));
         return this;
@@ -239,7 +282,19 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doSetProperty(@Nonnull String name, Object value) {
-        actions.add(new SetProperty(name, value));
+        actions.add(new SetProperty(name, value, null, "nt:unstructured"));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doSetProperty(@Nonnull String name, Object value, String pathToSubnode) {
+        actions.add(new SetProperty(name, value, pathToSubnode, "nt:unstructured"));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doSetProperty(@Nonnull String name, Object value, String pathToSubnode, String primaryType) {
+        actions.add(new SetProperty(name, value, pathToSubnode, primaryType));
         return this;
     }
 
@@ -263,13 +318,25 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doDeleteProperty(@Nonnull String name) {
-        actions.add(new DeleteProperty(name));
+        actions.add(new DeleteProperty(name, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doDeleteProperty(@Nonnull String name, String pathToSubnode) {
+        actions.add(new DeleteProperty(name, pathToSubnode));
         return this;
     }
 
     @Override
     public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName) {
-        actions.add(new RenameProperty(oldName, newName));
+        actions.add(new RenameProperty(oldName, newName, null));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doRenameProperty(@Nonnull String oldName, @Nonnull String newName, String pathToSubnode) {
+        actions.add(new RenameProperty(oldName, newName, pathToSubnode));
         return this;
     }
 

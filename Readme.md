@@ -178,9 +178,12 @@ run mode combinations can be separated with ";" (e.g. "folder.author.test;author
 was already executed before.
 * Fallback selector: if a script name ends with ".fallback.groovy" then it will be executed only if
 the corresponding script failed with an exception. E.g. if there is "script.groovy" and "script.fallback.groovy" then the fallback script only gets executed if "script.groovy" fails.
+* Prechecks selector: if a script name ends with ".prechecks.groovy" then it will be executed before
+the corresponding script. If it fails with an exception then the corresponding script will be skipped. E.g. if there is "script.groovy" and "script.prechecks.groovy" then the "script.groovy" only gets executed if "script.prechecks.groovy" runs without exception.
 * Reserved file names
     * fallback.groovy: optional directory level fallback script. This will be executed if a script fails and no script specific fallback script is provided.
-
+    * prechecks.groovy: optional directory level prechecks script. This will be executed before a script runs and no script specific prechecks script is provided.
+    
 <a name="execution"></a>
 
 # Execution of Migration Scripts
@@ -279,6 +282,8 @@ In the collect phase you define which nodes should be checked for a migration.
 * forDescendantResourcesOf(String path): use the whole subtree under this path excluding the parent root node
 * forResourcesInSubtree(String path): use the whole subtree under this path including the parent root node
 * forResourcesBySql2Query(String query): executes the query and applies actions on found resources
+* forResourcesByPropertyQuery(String path, Map<String, String> conditionProperties): search in given path for the given list of property values (node type nt:base)
+* forResourcesByPropertyQuery(String path, Map<String, String> conditionProperties, String nodeType): search in given path for the given list of property values using a specific node type (e.g. "nt:base")
 
 You can call these methods multiple times and combine them. They will be merged together.
 
@@ -291,6 +296,8 @@ aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/us/en/experience")
         .forResourcesInSubtree("/content/we-retail/us/en/experience")
         .forResourcesBySql2Query("SELECT * FROM [cq:Page] AS s WHERE ISDESCENDANTNODE(s,'/content/we-retail/us/en/experience')")
+        .forResourcesByPropertyQuery("/content/we-retail/us", Collections.singletonMap("sling:resourceType", "weretail/components/content/heroimage"))
+        .forResourcesByPropertyQuery("/content/we-retail/us", Collections.singletonMap("sling:resourceType", "%/heroimage"), "nt:base")
         .doSetProperty("name", "value")
         .run()
 ```
@@ -421,16 +428,23 @@ aecu.contentUpgradeBuilder()
 #### Update Single-value Properties
 
 * doSetProperty(String name, Object value): sets the given property to the value. Any existing value is overwritten.
+* doSetProperty(String name, Object value, String pathToSubnode): sets the given property in the subnode to the value. If subnode does not exist it will be created as nt:unstructured (incl. missing intermediate nodes). Any existing value is overwritten.
+* doSetProperty(String name, Object value, String pathToSubnode, String primaryType): sets the given property in the subnode to the value. If subnode does not exist it will be created as given in primaryType (incl. missing intermediate nodes). Any existing value is overwritten.
 * doDeleteProperty(String name): removes the property with the given name if existing.
+* doDeleteProperty(String name, String pathToSubnode): removes the property on subnode pathToSubnode with the given name if existing.
 * doRenameProperty(String oldName, String newName): renames the given property if existing. If the new property name already exists it will be overwritten.
+* doRenameProperty(String oldName, String newName, String pathToSubnode): renames the given property on subnode pathToSubnode if existing. If the new property name already exists it will be overwritten.
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
         .doSetProperty("name", "value")
+        .doSetProperty("name", "value", "root/breadCrumb")
         .doDeleteProperty("nameToDelete")
+        .doDeleteProperty("nameToDelete", "root/breadCrumb")
         .doRenameProperty("oldName", "newName")
+        .doRenameProperty("oldName", "newName", "root/breadCrumb")
         .run()
 ```
 

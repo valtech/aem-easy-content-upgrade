@@ -153,6 +153,13 @@ public class AecuServiceImplTest {
     @Test
     public void isValidScriptName_fallback() {
         assertFalse(service.isValidScriptName("test.fallback.groovy"));
+        assertFalse(service.isValidScriptName("fallback.groovy"));
+    }
+
+    @Test
+    public void isValidScriptName_prechecks() {
+        assertFalse(service.isValidScriptName("test.prechecks.groovy"));
+        assertFalse(service.isValidScriptName("prechecks.groovy"));
     }
 
     @Test
@@ -192,6 +199,45 @@ public class AecuServiceImplTest {
         verify(resolver, never()).getResource("/path/to/fallback.groovy");
 
         assertNull(service.getFallbackScript(resolver, "/path/to/fallback.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_Exists() {
+        when(resolver.getResource("/path/to/script.prechecks.groovy")).thenReturn(mock(Resource.class));
+
+        assertEquals("/path/to/script.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script.always.groovy"));
+        assertEquals("/path/to/script.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_NotExists() {
+        assertNull(service.getPrechecksScript(resolver, "/path/to/script.always.groovy"));
+        assertNull(service.getPrechecksScript(resolver, "/path/to/script.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_Prechecks() {
+        verify(resolver, never()).getResource("/path/to/script.prechecks.groovy");
+
+        assertNull(service.getPrechecksScript(resolver, "/path/to/script.prechecks.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_DirectoryLevel() {
+        when(resolver.getResource("/path/to/script1.prechecks.groovy")).thenReturn(mock(Resource.class));
+        when(resolver.getResource("/path/to/prechecks.groovy")).thenReturn(mock(Resource.class));
+
+        assertEquals("/path/to/script1.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script1.always.groovy"));
+        assertEquals("/path/to/script1.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script1.groovy"));
+        assertEquals("/path/to/prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script2.always.groovy"));
+        assertEquals("/path/to/prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script2.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_DirectoryLevelPrechecks() {
+        verify(resolver, never()).getResource("/path/to/prechecks.groovy");
+
+        assertNull(service.getPrechecksScript(resolver, "/path/to/prechecks.groovy"));
     }
 
     @Test(expected = AecuException.class)
@@ -304,17 +350,17 @@ public class AecuServiceImplTest {
     @Test
     public void execute() throws AecuException, RepositoryException {
         Resource resource = mock(Resource.class);
-        when(resolver.getResource(DIR)).thenReturn(resource);
-        when(resolver.getResource(DIR + "/" + JcrConstants.JCR_CONTENT)).thenReturn(resource);
+        when(resolver.getResource(DIR + "/" + FILE1)).thenReturn(resource);
+        when(resolver.getResource(DIR + "/" + FILE1 + "/" + JcrConstants.JCR_CONTENT)).thenReturn(resource);
         when(resource.getName()).thenReturn(FILE1);
-        when(scriptContext.getScript()).thenReturn(DIR);
+        when(scriptContext.getScript()).thenReturn(DIR + "/" + FILE1);
         ByteArrayInputStream stream = new ByteArrayInputStream("test".getBytes());
         when(resource.adaptTo(InputStream.class)).thenReturn(stream);
 
         RunScriptResponse response = DefaultRunScriptResponse.fromResult(scriptContext, null, null, null);
         when(groovyConsoleService.runScript(Mockito.any())).thenReturn(response);
 
-        service.execute(DIR);
+        service.execute(DIR + "/" + FILE1);
     }
 
 }

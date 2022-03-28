@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,31 +18,43 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.properties;
 
-import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
+import javax.annotation.Nonnull;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
-import javax.annotation.Nonnull;
+import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 
 /**
  * @author Roxana Muresan
+ * @author Roland Gruber
  */
 public class DeleteProperty implements Action {
 
     private String name;
+    private String subNodePath;
 
-    public DeleteProperty(@Nonnull String name) {
+    public DeleteProperty(@Nonnull String name, String subNodePath) {
         this.name = name;
+        this.subNodePath = subNodePath;
     }
 
     @Override
     public String doAction(@Nonnull Resource resource) {
-        ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
+        Resource operatingResource = resource;
+        if (subNodePath != null) {
+            operatingResource = resource.getChild(subNodePath);
+            if (operatingResource == null) {
+                String finalPath = resource.getPath() + "/" + subNodePath;
+                return "WARNING: Resource " + finalPath + " not found.";
+            }
+        }
+        ModifiableValueMap properties = operatingResource.adaptTo(ModifiableValueMap.class);
         if (properties != null) {
             properties.remove(name);
-            return "Deleting property " + name + " for resource " + resource.getPath();
+            return "Deleting property " + name + " for resource " + operatingResource.getPath();
         }
-        return "WARNING: could not get ModifiableValueMap for resource " + resource.getPath();
+        return "WARNING: could not get ModifiableValueMap for resource " + operatingResource.getPath();
     }
+
 }

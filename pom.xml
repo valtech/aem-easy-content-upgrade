@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>5.1.0</version>
+    <version>5.2.0</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -382,7 +382,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>6.1.6</version>
+                    <version>7.0.0</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
@@ -654,7 +654,8 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.6</version>
+                <version>3.12.0</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

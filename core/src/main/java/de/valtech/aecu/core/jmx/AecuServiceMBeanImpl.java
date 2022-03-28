@@ -33,6 +33,7 @@ import com.adobe.granite.jmx.annotation.AnnotatedStandardMBean;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.core.installhook.AecuTrackerListener;
 import de.valtech.aecu.core.installhook.HookExecutionHistory;
@@ -90,6 +91,7 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
         StringBuilder result = new StringBuilder("Found " + files.size() + " files to execute\n\n");
         try (ResourceResolver resolver = serviceResourceResolver.getAdminResourceResolver()) {
             Session session = resolver.adaptTo(Session.class);
+            boolean stopExecution = false;
             for (String file : files) {
                 result.append(file + "\n");
                 HookExecutionHistory executionHistory = new HookExecutionHistory(session, file);
@@ -97,8 +99,17 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
                     result.append("Skipped due to history\n\n");
                     continue;
                 }
-                ExecutionResult singleResult = aecuService.execute(file);
-                executionHistory.setExecuted();
+                ExecutionResult singleResult;
+                if (!stopExecution) {
+                    singleResult = aecuService.execute(file);
+                } else {
+                    singleResult = new ExecutionResult(ExecutionState.SKIPPED, null, null, null, null, file);
+                }
+                if (singleResult.getState() == ExecutionState.SUCCESS) {
+                    executionHistory.setExecuted();
+                } else if (singleResult.getState() == ExecutionState.FAILED) {
+                    stopExecution = true;
+                }
                 aecuService.storeExecutionInHistory(history, singleResult);
                 result.append(singleResult.toString());
                 result.append("\n\n");
