@@ -19,7 +19,7 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.actions.print;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -33,11 +33,13 @@ import javax.jcr.Value;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 /**
  * Tests PrintProperty
@@ -45,7 +47,8 @@ import org.mockito.junit.MockitoJUnitRunner;
  * @author sravan
  * @author Roxana Muresan
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class PrintPropertyTest {
 
     private final String NOT_DEFINED_PROPERTY = "notDefinedProperty";
@@ -64,7 +67,7 @@ public class PrintPropertyTest {
     @Mock
     private Property multiValueProperty;
 
-    @Before
+    @BeforeEach
     public void init() throws RepositoryException {
         Value value1 = mock(Value.class);
         Value value2 = mock(Value.class);

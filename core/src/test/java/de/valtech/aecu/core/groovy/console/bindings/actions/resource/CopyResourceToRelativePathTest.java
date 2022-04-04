@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Valtech GmbH
+ * Copyright 2020 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,27 +19,6 @@
 
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
-
-import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
-
-import org.apache.jackrabbit.JcrConstants;
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Workspace;
-
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -47,11 +26,36 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ValueMap;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+
+import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.WCMException;
+
+import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
+
 /**
  * Test CopyResourceToRelativePathTest
+ * 
  * @author Roxana Muresan
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class CopyResourceToRelativePathTest {
 
     private static final String SOURCE_PATH = "/content/source";
@@ -75,7 +79,7 @@ public class CopyResourceToRelativePathTest {
     @Mock
     private ValueMap valueMapMock;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(contextMock.getResolver()).thenReturn(resourceResolverMock);
         when(contextMock.isDryRun()).thenReturn(false);
@@ -96,7 +100,7 @@ public class CopyResourceToRelativePathTest {
 
     @Test
     public void testDoAction_copyResource_differentPath_noNewName() throws PersistenceException, RepositoryException {
-        testDoAction_onResource(null, DESTINATION_PARENT_PATH + "/" +  SOURCE_NAME);
+        testDoAction_onResource(null, DESTINATION_PARENT_PATH + "/" + SOURCE_NAME);
     }
 
     @Test
@@ -116,7 +120,8 @@ public class CopyResourceToRelativePathTest {
         verify(workspaceMock, never()).copy(anyString(), anyString());
     }
 
-    private void testDoAction_onResource(String newName, String expectedDestinationPath) throws PersistenceException, RepositoryException {
+    private void testDoAction_onResource(String newName, String expectedDestinationPath)
+            throws PersistenceException, RepositoryException {
         CopyResourceToRelativePath copyAction = new CopyResourceToRelativePath("to/relative", newName, contextMock);
         when(valueMapMock.get(JcrConstants.JCR_PRIMARYTYPE, String.class)).thenReturn(JcrConstants.NT_UNSTRUCTURED);
 
@@ -147,6 +152,7 @@ public class CopyResourceToRelativePathTest {
 
         copyAction.doAction(resourceMock);
 
-        verify(pageManagerMock, times(1)).copy(eq(resourceMock), eq(expectedDestinationPath), eq(null), eq(false), eq(false), eq(false));
+        verify(pageManagerMock, times(1)).copy(eq(resourceMock), eq(expectedDestinationPath), eq(null), eq(false), eq(false),
+                eq(false));
     }
 }

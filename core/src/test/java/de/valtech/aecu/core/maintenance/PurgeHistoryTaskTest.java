@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -31,14 +31,16 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext.ResultBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.core.history.HistoryUtil;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
@@ -48,7 +50,8 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
  *
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class PurgeHistoryTaskTest {
 
     @Mock
@@ -75,7 +78,7 @@ public class PurgeHistoryTaskTest {
     @InjectMocks
     private PurgeHistoryTask task = new PurgeHistoryTask();
 
-    @Before
+    @BeforeEach
     public void setup() throws LoginException {
         task.activate(config);
         when(resolverService.getServiceResourceResolver()).thenReturn(resolver);
