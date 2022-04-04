@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Valtech GmbH
+ * Copyright 2019 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,9 +18,9 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.page;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -31,13 +31,15 @@ import javax.jcr.RepositoryException;
 import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.security.util.CqActions;
 import com.day.cq.wcm.api.Page;
@@ -52,7 +54,8 @@ import de.valtech.aecu.core.groovy.console.bindings.accessrights.validators.Base
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class DeletePageAccessValidatorTest {
 
     @Mock
@@ -82,7 +85,7 @@ public class DeletePageAccessValidatorTest {
     @InjectMocks
     private DeletePageAccessValidator validator = new DeletePageAccessValidator(group, resource, context, true);
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(context.getCqActions()).thenReturn(cqActions);
         when(context.getAdminPageManager()).thenReturn(adminPageManager);
