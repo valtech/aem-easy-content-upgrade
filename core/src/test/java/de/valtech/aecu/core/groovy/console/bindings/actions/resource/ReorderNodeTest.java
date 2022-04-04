@@ -10,11 +10,13 @@ import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
 
@@ -23,7 +25,8 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ReorderNodeTest {
 
     private static final String NODE_TO_MOVE = "toMove";
@@ -39,7 +42,7 @@ public class ReorderNodeTest {
     @Mock
     private BindingContext context;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(resource.adaptTo(Node.class)).thenReturn(node);
     }

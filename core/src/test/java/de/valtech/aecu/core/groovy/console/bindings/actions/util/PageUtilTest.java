@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Valtech GmbH
+ * Copyright 2020 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,18 +18,20 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.util;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.wcm.api.NameConstants;
 
@@ -38,7 +40,8 @@ import com.day.cq.wcm.api.NameConstants;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class PageUtilTest {
 
     @Mock
@@ -47,7 +50,7 @@ public class PageUtilTest {
     @Mock
     private ValueMap valueMap;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(resource.getPath()).thenReturn("/content/project/something");
         when(resource.getValueMap()).thenReturn(valueMap);
