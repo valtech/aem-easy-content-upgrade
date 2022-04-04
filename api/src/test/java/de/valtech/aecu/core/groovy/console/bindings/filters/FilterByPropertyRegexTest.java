@@ -18,8 +18,8 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.filters;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Set;
@@ -27,11 +27,13 @@ import java.util.TreeSet;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyRegex;
 
@@ -40,7 +42,8 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyRegex
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class FilterByPropertyRegexTest {
 
     private static final String REGEX = ".*value.*";
@@ -57,7 +60,7 @@ public class FilterByPropertyRegexTest {
     @Mock
     ValueMap values;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(resource.getValueMap()).thenReturn(values);
         Set<String> keys = new TreeSet<>();
