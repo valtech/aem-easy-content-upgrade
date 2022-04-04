@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import javax.jcr.Session;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +54,8 @@ import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.core.installhook.AecuTrackerListener;
+import de.valtech.aecu.core.installhook.HookExecutionHistory;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
@@ -341,6 +345,50 @@ public class AecuServiceImpl implements AecuService {
         } catch (LoginException e) {
             throw new AecuException(ERR_NO_RESOLVER, e);
         }
+    }
+
+    @Override
+    public HistoryEntry executeWithInstallHookHistory(String path) throws AecuException {
+        HistoryEntry history = createHistoryEntry();
+        List<String> files = getFiles(path);
+        try (ResourceResolver resolver = resolverService.getAdminResourceResolver()) {
+            Session session = resolver.adaptTo(Session.class);
+            boolean stopExecution = false;
+            for (String file : files) {
+                HookExecutionHistory executionHistory = createHookExecutionHistory(session, file);
+                if (!file.endsWith(AecuTrackerListener.ALWAYS_SUFFIX) && executionHistory.hasBeenExecutedBefore()) {
+                    continue;
+                }
+                ExecutionResult singleResult;
+                if (!stopExecution) {
+                    singleResult = execute(file);
+                } else {
+                    singleResult = new ExecutionResult(ExecutionState.SKIPPED, null, null, null, null, file);
+                }
+                if (singleResult.getState() == ExecutionState.SUCCESS) {
+                    executionHistory.setExecuted();
+                } else if (singleResult.getState() == ExecutionState.FAILED) {
+                    stopExecution = true;
+                }
+                storeExecutionInHistory(history, singleResult);
+            }
+        } catch (LoginException e) {
+            throw new AecuException(e.getMessage(), e);
+        }
+        finishHistoryEntry(history);
+        return history;
+    }
+
+    /**
+     * Creates a hook history entry.
+     * 
+     * @param session session
+     * @param path    script path
+     * @return history
+     * @throws AecuException
+     */
+    protected HookExecutionHistory createHookExecutionHistory(Session session, String path) throws AecuException {
+        return new HookExecutionHistory(session, path);
     }
 
 }
