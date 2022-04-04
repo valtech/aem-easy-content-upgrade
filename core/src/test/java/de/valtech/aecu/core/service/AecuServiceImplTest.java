@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,10 +18,11 @@
  */
 package de.valtech.aecu.core.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -46,14 +47,16 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.apache.sling.settings.SlingSettingsService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.api.context.ScriptContext;
@@ -75,7 +78,8 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
  *
  * @author Roland Gruber
  */
-@RunWith(value = MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AecuServiceImplTest {
 
     private static final String DIR = AecuService.AECU_CONF_PATH_PREFIX + "/dir";
@@ -108,7 +112,7 @@ public class AecuServiceImplTest {
     private Session session;
 
 
-    @Before
+    @BeforeEach
     public void setup() throws LoginException {
         Set<String> runModes = new HashSet<>();
         runModes.add("author");
@@ -250,9 +254,9 @@ public class AecuServiceImplTest {
         assertNull(service.getPrechecksScript(resolver, "/path/to/prechecks.groovy"));
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void getFiles_invalidPath() throws AecuException {
-        service.getFiles(FILE1);
+        assertThrows(AecuException.class, () -> service.getFiles(FILE1));
     }
 
     @Test
@@ -311,9 +315,9 @@ public class AecuServiceImplTest {
         assertEquals(1, entries.size());
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void storeExecutionInHistory_invalid() throws AecuException {
-        service.storeExecutionInHistory(null, null);
+        assertThrows(AecuException.class, () -> service.storeExecutionInHistory(null, null));
     }
 
     @Test
@@ -343,18 +347,18 @@ public class AecuServiceImplTest {
         verify(historyUtil, times(1)).createHistoryEntry(resolver);
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void execute_invalidResource() throws AecuException {
-        service.execute("invalid");
+        assertThrows(AecuException.class, () -> service.execute("invalid"));
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void execute_invalidFileName() throws AecuException {
         Resource resource = mock(Resource.class);
         when(resolver.getResource(DIR)).thenReturn(resource);
         when(resource.getName()).thenReturn("invalid");
 
-        service.execute(DIR);
+        assertThrows(AecuException.class, () -> service.execute(DIR));
     }
 
     @Test

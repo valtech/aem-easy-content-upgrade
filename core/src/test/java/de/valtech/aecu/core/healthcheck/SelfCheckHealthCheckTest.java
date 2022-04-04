@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,20 +18,22 @@
  */
 package de.valtech.aecu.core.healthcheck;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.hc.api.Result;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.core.history.HistoryUtil;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
@@ -42,7 +44,8 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
  * @author Roland Gruber
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class SelfCheckHealthCheckTest {
 
     @InjectMocks
@@ -60,7 +63,7 @@ public class SelfCheckHealthCheckTest {
     @Mock
     private Resource resource;
 
-    @Before
+    @BeforeEach
     public void setup() throws LoginException {
         when(resolverService.getServiceResourceResolver()).thenReturn(resolver);
         when(resolverService.getContentMigratorResourceResolver()).thenReturn(resolver);
