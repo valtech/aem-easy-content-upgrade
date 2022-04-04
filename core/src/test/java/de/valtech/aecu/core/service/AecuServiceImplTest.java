@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
@@ -59,9 +61,13 @@ import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 import com.icfolson.aem.groovy.console.response.impl.DefaultRunScriptResponse;
 
 import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.core.installhook.HookExecutionHistory;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
@@ -72,7 +78,7 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 @RunWith(value = MockitoJUnitRunner.class)
 public class AecuServiceImplTest {
 
-    private static final String DIR = "/dir";
+    private static final String DIR = AecuService.AECU_CONF_PATH_PREFIX + "/dir";
 
     private static final String FILE1 = "file1.groovy";
 
@@ -97,6 +103,10 @@ public class AecuServiceImplTest {
 
     @Mock
     private ScriptContext scriptContext = mock(ScriptContext.class);
+
+    @Mock
+    private Session session;
+
 
     @Before
     public void setup() throws LoginException {
@@ -360,7 +370,31 @@ public class AecuServiceImplTest {
         RunScriptResponse response = DefaultRunScriptResponse.fromResult(scriptContext, null, null, null);
         when(groovyConsoleService.runScript(Mockito.any())).thenReturn(response);
 
-        service.execute(DIR + "/" + FILE1);
+        ExecutionResult result = service.execute(DIR + "/" + FILE1);
+
+        assertEquals(ExecutionState.SUCCESS, result.getState());
+    }
+
+    @Test
+    public void executeWithInstallHookHistory() throws AecuException, LoginException {
+        ExecutionResult result = mock(ExecutionResult.class);
+        when(result.getState()).thenReturn(ExecutionState.SUCCESS);
+        doReturn(result).when(service).execute(DIR + "/" + FILE1);
+        when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
+        when(resolver.adaptTo(Session.class)).thenReturn(session);
+        doReturn(Arrays.asList(DIR + "/" + FILE1)).when(service).getFiles(DIR);
+        doReturn(mock(HookExecutionHistory.class)).when(service).createHookExecutionHistory(session, DIR + "/" + FILE1);
+        HistoryEntryImpl history = new HistoryEntryImpl();
+        history.setState(STATE.RUNNING);
+        when(historyUtil.createHistoryEntry(resolver)).thenReturn(history);
+
+        service.executeWithInstallHookHistory(DIR);
+
+        verify(resolverService, times(1)).getAdminResourceResolver();
+        verify(service, times(1)).getFiles(DIR);
+        verify(service, times(1)).createHistoryEntry();
+        verify(service, times(1)).execute(DIR + "/" + FILE1);
+        verify(service, times(1)).finishHistoryEntry(Mockito.any());
     }
 
 }
