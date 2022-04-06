@@ -107,7 +107,15 @@ public interface ContentUpgrade {
     ContentUpgrade filterByHasProperty(String name);
 
     /**
-     * Filters by a single property.
+     * Filters by non-existence of a single property.
+     *
+     * @param name property name
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNotHasProperty(String name);
+
+    /**
+     * Filters by matching a single property.
      *
      * @param name  property name
      * @param value property value
@@ -116,14 +124,33 @@ public interface ContentUpgrade {
     ContentUpgrade filterByProperty(String name, Object value);
 
     /**
-     * Filters by a single property using a regular expression for the value. This is intended for
-     * single value properties.
+     * Filters by not matching a single property.
+     *
+     * @param name  property name
+     * @param value property value
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNotProperty(String name, Object value);
+
+    /**
+     * Filters by matching a single property using a regular expression for the value. This is
+     * intended for single value properties.
      *
      * @param name  property name
      * @param regex regular expression to match value
      * @return upgrade object
      */
     ContentUpgrade filterByPropertyRegex(String name, String regex);
+
+    /**
+     * Filters by not matching a single property using a regular expression for the value. This is
+     * intended for single value properties.
+     *
+     * @param name  property name
+     * @param regex regular expression to match value
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNotPropertyRegex(String name, String regex);
 
     /**
      * Filters by checking if any property matches the given regular expression for the value. This
@@ -135,7 +162,16 @@ public interface ContentUpgrade {
     ContentUpgrade filterByAnyPropertyRegex(String regex);
 
     /**
-     * Filters by properties. Can be used also for Multi-value properties.
+     * Filters by checking if any property does not match the given regular expression for the
+     * value. This is intended for single value properties.
+     *
+     * @param regex regular expression to match value
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNoPropertyRegex(String regex);
+
+    /**
+     * Filters by matching multiple properties. Can be used also for Multi-value properties.
      *
      * @param conditionProperties properties to filter
      * @return upgrade object
@@ -143,7 +179,15 @@ public interface ContentUpgrade {
     ContentUpgrade filterByProperties(Map<String, Object> conditionProperties);
 
     /**
-     * Filters by multi-value with the given name containing the given conditionValues
+     * Filters by not matching multiple properties. Can be used also for Multi-value properties.
+     *
+     * @param conditionProperties properties to filter
+     * @return upgrade object
+     **/
+    ContentUpgrade filterByNotProperties(Map<String, Object> conditionProperties);
+
+    /**
+     * Filters by multi-value with the given name containing the given condition values.
      *
      * @param name            name of the multi-value property
      * @param conditionValues values to search for
@@ -152,12 +196,29 @@ public interface ContentUpgrade {
     ContentUpgrade filterByMultiValuePropContains(String name, Object[] conditionValues);
 
     /**
+     * Filters by multi-value with the given name not containing the given condition values.
+     *
+     * @param name            name of the multi-value property
+     * @param conditionValues values to search for
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNotMultiValuePropContains(String name, Object[] conditionValues);
+
+    /**
      * Filters by node name exact match.
      *
      * @param nodeName node name
      * @return upgrade object
      */
     ContentUpgrade filterByNodeName(String nodeName);
+
+    /**
+     * Filters by node name no exact match.
+     *
+     * @param nodeName node name
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNotNodeName(String nodeName);
 
     /**
      * Filters by node/subNode exists.
@@ -176,7 +237,7 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNodeNotExists(String path);
 
     /**
-     * Filters by node name using regular expression.
+     * Filters by matching node name using regular expression.
      *
      * @param regex regular expression (Java standard pattern)
      * @return upgrade object
@@ -184,7 +245,15 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNodeNameRegex(String regex);
 
     /**
-     * Filters by node path using regular expression.
+     * Filters by not matching node name using regular expression.
+     *
+     * @param regex regular expression (Java standard pattern)
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNotNodeNameRegex(String regex);
+
+    /**
+     * Filters by matching node path using regular expression.
      *
      * @param regex regular expression (Java standard pattern)
      * @return upgrade object
@@ -192,12 +261,28 @@ public interface ContentUpgrade {
     ContentUpgrade filterByPathRegex(String regex);
 
     /**
-     * Filters by using the given filter.
+     * Filters by not matching node path using regular expression.
+     *
+     * @param regex regular expression (Java standard pattern)
+     * @return upgrade object
+     */
+    ContentUpgrade filterByNotPathRegex(String regex);
+
+    /**
+     * Filters by matching the given filter.
      *
      * @param filter filter
      * @return upgrade object
      */
     ContentUpgrade filterWith(FilterBy filter);
+
+    /**
+     * Filters by not matching the given filter.
+     *
+     * @param filter filter
+     * @return upgrade object
+     */
+    ContentUpgrade filterNotWith(FilterBy filter);
 
     /**
      * Sets a property value.

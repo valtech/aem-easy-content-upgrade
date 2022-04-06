@@ -312,19 +312,31 @@ These methods can be used to filter the nodes that were collected above. Multipl
 Filters the resources by property values.
 
 * filterByHasProperty: matches all nodes that have the given property. The value of the property is not relevant.
+* filterByNotHasProperty: matches all nodes that do not have the given property. The value of the property is not relevant.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
+* filterByNotProperty: matches all nodes that do not have the given attribute value. Filter matches if attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
+* filterByNotProperties: use this to filter by a list of property values (e.g. sling:resourceType) is not matching. If any property in the map does not match the filter matches. Filter matches if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
-* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNotMultiValuePropContains: checks if not all condition values are contained in the defined attribute. Filter matches if attribute does not exist.
+* filterByPropertyRegex: filters by a single property matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNotPropertyRegex: filters by a single property not matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 * filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNoPropertyRegex: filters by no property matching a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 
 ```java
 filterByHasProperty(String name)
+filterByNotHasProperty(String name)
 filterByProperty(String name, Object value)
+filterByNotProperty(String name, Object value)
 filterByProperties(Map<String, String> properties)
+filterByNotProperties(Map<String, Object> conditionProperties)
 filterByMultiValuePropContains(String name,  Object[] conditionValues)
+filterByNotMultiValuePropContains(String name, Object[] conditionValues)
 filterByPropertyRegex(String name, String regex)
+filterByNotPropertyRegex(String name, String regex)
 filterByAnyPropertyRegex(String regex)
+filterByNoPropertyRegex(String regex)
 ```
 
 Example:
@@ -351,13 +363,17 @@ aecu.contentUpgradeBuilder()
 You can also filter nodes by their name.
 
 * filterByNodeName(String name): process only nodes which have this exact name
+* filterByNotNodeName(String name): process only nodes which do not have this exact name
 * filterByNodeNameRegex(String regex): process nodes that have a name that matches the given regular expression
+* filterByNotNodeNameRegex(String regex): process nodes that have a name that does not match the given regular expression
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
+        .filterByNotNodeName("jcr:content")
         .filterByNodeNameRegex("jcr.*")
+        .filterByNotNodeNameRegex("jcr.*")
         .doSetProperty("name", "value")
         .run()
 ```
@@ -367,11 +383,13 @@ aecu.contentUpgradeBuilder()
 Nodes can also be filtered by their path using a regular expression.
 
 * filterByPathRegex(String regex): process nodes whose path matches the given regular expression
+* filterByNotPathRegex(String regex): process nodes whose path does not match the given regular expression
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByPathRegex(".*/jcr:content/.*")
+        .filterByNotPathRegex(".*/jcr:content/.*")
         .doSetProperty("name", "value")
         .run()
 ```
@@ -416,6 +434,7 @@ def complexFilter =  new ORFilter(
 aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/ca/en", false)
         .filterWith(complexFilter)
+        .filterNotWith(complexFilter)
         .filterWith(new NOTFilter(new FilterByPathRegex(".*jcr:content.*")))
         .doSetProperty("name", "value")
         .run()        
