@@ -62,6 +62,11 @@ public interface AecuService {
     public static final String AECU_CONF_PATH_PREFIX = "/conf/groovyconsole/scripts/aecu";
 
     /**
+     * Prefix in repository where install hook AECU scripts are located as part of the application for cloud.
+     */
+    public static final String AECU_APPS_PATH_PREFIX = "/apps/groovyconsole/scripts/aecu";
+
+    /**
      * Returns the AECU version.
      *
      * @return version

@@ -147,7 +147,8 @@ public class AecuInstallHook implements InstallHook {
     }
 
     /**
-     * Checks if the script was not yet executed at all by install hook.
+     * Checks if the script was not yet executed at all by install hook
+     * and is located in a correct AECU script folder.
      * 
      * @param path    script path
      * @param history history entry
@@ -155,7 +156,9 @@ public class AecuInstallHook implements InstallHook {
      */
     private boolean wasNotExecuted(String path, HookExecutionHistory history) {
         return !history.hasBeenExecutedBefore()
-                && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX));
+                && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX)
+                    || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX)
+                    || path.startsWith(AecuService.AECU_APPS_PATH_PREFIX));
     }
 
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)
