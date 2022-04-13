@@ -44,22 +44,20 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface AecuService {
 
     /**
-     * Prefix in repository where AECU scripts are located.
-     * 
-     * @deprecated Use either {@link #AECU_VAR_PATH_PREFIX} or {@link #AECU_CONF_PATH_PREFIX}
-     */
-    @Deprecated
-    public static final String AECU_PREFIX = "/var/groovyconsole/scripts/aecu";
-
-    /**
      * Prefix in repository where ad-hoc AECU scripts are located.
      */
+    @Deprecated
     public static final String AECU_VAR_PATH_PREFIX = "/var/groovyconsole/scripts/aecu";
 
     /**
      * Prefix in repository where install hook AECU scripts are located.
      */
     public static final String AECU_CONF_PATH_PREFIX = "/conf/groovyconsole/scripts/aecu";
+
+    /**
+     * Prefix in repository where install hook AECU scripts are located.
+     */
+    public static final String AECU_APPS_PATH_PREFIX = "/apps/aecu-scripts";
 
     /**
      * Returns the AECU version.
