@@ -1,6 +1,7 @@
 5.3.0
   - AecuService: added executeWithInstallHookHistory() method (172)
   - Binding: added "not" versions of all filters
+  - Fixed issue with long installation time on 6.5 (154)
 
 2022-03-28 5.2.0
   - Added forResourcesByPropertyQuery() to binding

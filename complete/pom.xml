@@ -32,7 +32,7 @@
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
                         <installPathRegex>/apps/valtech/aecu-complete/(config|install)/.*</installPathRegex>
-                        <waitForOsgiEventsQuietInSec>7</waitForOsgiEventsQuietInSec>
+                        <waitForOsgiEventsQuietInSec>4</waitForOsgiEventsQuietInSec>
                     </properties>
                     <subPackages>
                         <subPackage>
