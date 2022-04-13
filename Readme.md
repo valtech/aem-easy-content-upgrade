@@ -57,7 +57,7 @@ AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3)<br/>Cloud | included     | 5.x |
+| 6.5 (>=6.5.3)<br/>Cloud | included     | 6.x, 5.x |
 
 ## Older AEM versions
 For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
@@ -161,7 +161,7 @@ Then delete "aem-groovy-console" packages in package manager.
 
 All migration scripts need to be located in:
 
-* `/apps/aecu-scripts` (AEM Cloud automatic execution with startup hook)
+* `/apps/aecu-scripts` (AEM Cloud automatic execution with startup hook, since 6.0.0)
 * `/conf/groovyconsole/scripts/aecu` (AEM onprem manual and install hook execution, AEM Cloud manual execution)
 * `/var/groovyconsole/scripts/aecu` (deprecated)
 
