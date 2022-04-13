@@ -57,7 +57,7 @@ AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3)<br/>Cloud | included     | 5.x |
+| 6.5 (>=6.5.3)<br/>Cloud | included     | 6.x, 5.x |
 
 ## Older AEM versions
 For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
@@ -159,10 +159,15 @@ Then delete "aem-groovy-console" packages in package manager.
 
 # File and Folder Structure
 
-All migration scripts need to be located in `/conf/groovyconsole/scripts/aecu` (recommended) or `/var/groovyconsole/scripts/aecu`. 
+All migration scripts need to be located in:
 
-The first is recommended with AEM as a Cloud Service due to [restrictions with the `/var` repository location](https://experienceleague.adobe.com/docs/experience-manager-learn/cloud-service/debugging/debugging-aem-as-a-cloud-service/build-and-deployment.html?lang=en#including-%2Fvar-in-content-package).
-There you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
+* `/apps/aecu-scripts` (AEM Cloud automatic execution with startup hook, since 6.0.0)
+* `/conf/groovyconsole/scripts/aecu` (AEM onprem manual and install hook execution, AEM Cloud manual execution)
+* `/var/groovyconsole/scripts/aecu` (deprecated)
+
+AEM as a Cloud Service requires the scripts to be executed automatically in /apps to avoid issues with the startup hook. Manual scripts can still be located in /conf.
+
+In this folder you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
 If your package containing the scripts is bundled in another package please make sure that this is done using "subPackages" in pom.xml.

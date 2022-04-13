@@ -8,14 +8,14 @@
         <version>6.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aecu.ui.apps</artifactId>
+    <artifactId>aecu.examples-cloud</artifactId>
     <packaging>content-package</packaging>
-    <name>AECU - UI apps</name>
-    <description>UI apps package for AECU</description>
+    <name>AECU - Examples Cloud</name>
+    <description>Examples package for AECU on AEM Cloud</description>
 
     <build>
-        
         <plugins>
+
             <plugin>
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
@@ -26,13 +26,6 @@
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
                     </properties>
-                    <validatorsSettings>
-                        <jackrabbit-filter>
-                            <options>
-                                <validRoots>/apps,/apps/valtech,/apps/cq/core/content/nav/tools,/apps/settings/granite/operations/hc</validRoots>
-                            </options>
-                        </jackrabbit-filter>
-                    </validatorsSettings>
                 </configuration>
             </plugin>
             <plugin>
@@ -46,5 +39,28 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>installHook</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.jackrabbit</groupId>
+                        <artifactId>filevault-package-maven-plugin</artifactId>
+                        <configuration>
+                            <packageType>mixed</packageType>
+                            <properties>
+                                <installhook.aecu.class>de.valtech.aecu.core.installhook.AecuInstallHook</installhook.aecu.class>
+                            </properties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
