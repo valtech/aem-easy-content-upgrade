@@ -161,11 +161,11 @@ Then delete "aem-groovy-console" packages in package manager.
 
 All migration scripts need to be located in:
 
-* `/apps/aecu-scripts` (AEM Cloud)
-* `/conf/groovyconsole/scripts/aecu` (AEM onprem)
+* `/apps/aecu-scripts` (AEM Cloud automatic execution with startup hook)
+* `/conf/groovyconsole/scripts/aecu` (AEM onprem manual and install hook execution, AEM Cloud manual execution)
 * `/var/groovyconsole/scripts/aecu` (deprecated)
 
-AEM as a Cloud Service requires the scripts in /apps to avoid issues with the startup hook. Manual scripts can still be located in /conf.
+AEM as a Cloud Service requires the scripts to be executed automatically in /apps to avoid issues with the startup hook. Manual scripts can still be located in /conf.
 
 In this folder you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
