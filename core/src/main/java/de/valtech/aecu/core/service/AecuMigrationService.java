@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service that executes the AECU migration based on node store type
+ * Service that executes the AECU migration if the node store type is composite
  */
 @Component(
         service = AecuMigrationService.class,
