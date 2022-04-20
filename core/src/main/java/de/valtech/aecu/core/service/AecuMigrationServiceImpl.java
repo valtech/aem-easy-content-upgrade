@@ -1,15 +1,14 @@
 package de.valtech.aecu.core.service;
 
-import de.valtech.aecu.api.service.AecuMigrationService;
 import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuMigrationService;
 import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.core.util.runtime.RuntimeHelper;
-import java.util.Collections;
 import java.util.List;
 import javax.jcr.Session;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -27,12 +26,11 @@ import org.slf4j.LoggerFactory;
 public class AecuMigrationServiceImpl implements AecuMigrationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AecuMigrationServiceImpl.class);
-    private static final String AECU_TRIGGER_USER = "aecu-migration-trigger";
 
     @Reference
     private AecuService aecuService;
     @Reference
-    private ResourceResolverFactory resourceResolverFactory;
+    private ServiceResourceResolverService resourceResolverService;
 
     @Activate
     public void activate() {
@@ -81,8 +79,7 @@ public class AecuMigrationServiceImpl implements AecuMigrationService {
      */
     private ResourceResolver getResourceResolver() {
         try {
-            return resourceResolverFactory.getServiceResourceResolver(
-                    Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, AECU_TRIGGER_USER));
+            return resourceResolverService.getContentMigratorResourceResolver();
         } catch(LoginException le) {
             throw new RuntimeException("Error while logging in", le);
         }
