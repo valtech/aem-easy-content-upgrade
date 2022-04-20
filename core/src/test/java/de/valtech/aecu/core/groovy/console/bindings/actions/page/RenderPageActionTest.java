@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,8 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.page;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -31,12 +32,14 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.engine.SlingRequestProcessor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.contentsync.handler.util.RequestResponseFactory;
 import com.day.cq.wcm.api.Page;
@@ -51,7 +54,8 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class RenderPageActionTest {
 
     @Mock
@@ -83,7 +87,7 @@ public class RenderPageActionTest {
 
     private RenderPageAction actionSpy;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(context.getPageManager()).thenReturn(pageManager);
         when(context.getResolver()).thenReturn(resolver);
@@ -106,21 +110,22 @@ public class RenderPageActionTest {
         assertTrue(result.contains("Correct"));
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void doAction_noPage() throws PersistenceException, AecuException {
         when(pageManager.getContainingPage(resource)).thenReturn(null);
 
         RenderPageAction action = new RenderPageAction(context, 200, null, null);
-        action.doAction(resource);
+
+        assertThrows(AecuException.class, () -> action.doAction(resource));
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void doAction_wrongStatus() throws PersistenceException, AecuException {
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(500);
         when(actionSpy.createResponse()).thenReturn(response);
 
-        actionSpy.doAction(resource);
+        assertThrows(AecuException.class, () -> actionSpy.doAction(resource));
     }
 
     @Test
@@ -128,18 +133,18 @@ public class RenderPageActionTest {
         actionSpy.doAction(resource);
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void doAction_textPresentDoesNotMatch() throws AecuException, IOException {
         when(out.toString()).thenReturn("1111");
 
-        actionSpy.doAction(resource);
+        assertThrows(AecuException.class, () -> actionSpy.doAction(resource));
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void doAction_textNotPresentDoesNotMatch() throws AecuException, IOException {
         when(out.toString()).thenReturn("test789");
 
-        actionSpy.doAction(resource);
+        assertThrows(AecuException.class, () -> actionSpy.doAction(resource));
     }
 
 }

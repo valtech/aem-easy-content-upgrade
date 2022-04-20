@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Valtech GmbH
+ * Copyright 2020 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -37,11 +37,13 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.codehaus.groovy.runtime.GStringImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import groovy.lang.GString;
 
@@ -50,7 +52,8 @@ import groovy.lang.GString;
  *
  * @author Yves De Bruyne
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class JoinPropertyTest {
 
     private static final String VAL1 = "val1";
@@ -72,7 +75,7 @@ public class JoinPropertyTest {
     @Mock
     private Property property;
 
-    @Before
+    @BeforeEach
     public void setup() throws PathNotFoundException, RepositoryException {
         when(resource.adaptTo(ModifiableValueMap.class)).thenReturn(valueMap);
         when(resource.adaptTo(Node.class)).thenReturn(node);

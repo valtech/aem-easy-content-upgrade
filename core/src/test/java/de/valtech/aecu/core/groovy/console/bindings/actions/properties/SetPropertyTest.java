@@ -26,11 +26,13 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.codehaus.groovy.runtime.GStringImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import groovy.lang.GString;
 
@@ -39,7 +41,8 @@ import groovy.lang.GString;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class SetPropertyTest {
 
     private static final String VAL1 = "val1";
@@ -62,7 +65,7 @@ public class SetPropertyTest {
     @Mock
     private ModifiableValueMap valueMapSubnode;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(resource.adaptTo(ModifiableValueMap.class)).thenReturn(valueMap);
         when(subNode.adaptTo(ModifiableValueMap.class)).thenReturn(valueMapSubnode);

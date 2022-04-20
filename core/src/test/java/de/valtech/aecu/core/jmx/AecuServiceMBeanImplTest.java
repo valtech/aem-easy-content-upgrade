@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@
  */
 package de.valtech.aecu.core.jmx;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,33 +27,31 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.sling.api.resource.LoginException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.api.service.ExecutionResult;
-import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
-import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
  * Tests AecuServiceMBeanImpl
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AecuServiceMBeanImplTest {
 
     private static final String FILE1 = "/path/file1";
@@ -63,30 +61,13 @@ public class AecuServiceMBeanImplTest {
     @Mock
     private AecuService service;
 
-    @Mock
-    private ServiceResourceResolverService serviceResourceResolverService;
-
-    @Mock
-    private ResourceResolver resolver;
-
-    @Mock
-    private Session session;
-
-    @Mock
-    private Node node;
-
     @InjectMocks
     private AecuServiceMBeanImpl bean;
 
-    @Before
+    @BeforeEach
     public void setup() throws AecuException, LoginException, RepositoryException {
         when(service.getVersion()).thenReturn("1");
         when(service.getFiles(PATH)).thenReturn(Arrays.asList(FILE1));
-        when(serviceResourceResolverService.getAdminResourceResolver()).thenReturn(resolver);
-        when(resolver.adaptTo(Session.class)).thenReturn(session);
-        when(node.getSession()).thenReturn(session);
-        when(session.nodeExists("/var/aecu-installhook" + FILE1)).thenReturn(Boolean.TRUE);
-        when(session.getNode("/var/aecu-installhook" + FILE1)).thenReturn(node);
     }
 
     @Test
@@ -120,18 +101,14 @@ public class AecuServiceMBeanImplTest {
 
     @Test
     public void executeWithHistory() throws AecuException, LoginException {
-        ExecutionResult result = mock(ExecutionResult.class);
-        when(result.getState()).thenReturn(ExecutionState.SUCCESS);
-        when(service.execute(FILE1)).thenReturn(result);
+        HistoryEntry entry = mock(HistoryEntry.class);
+        when(entry.toString()).thenReturn(PATH);
+        when(service.executeWithInstallHookHistory(PATH)).thenReturn(entry);
 
-        bean.executeWithHistory(PATH);
+        String history = bean.executeWithHistory(PATH);
 
-        verify(serviceResourceResolverService, times(1)).getAdminResourceResolver();
-        verify(service, times(1)).getFiles(PATH);
-        verify(service, times(1)).createHistoryEntry();
-        verify(service, times(1)).execute(FILE1);
-        verify(service, times(1)).execute(FILE1);
-        verify(service, times(1)).finishHistoryEntry(Mockito.any());
+        verify(service, times(1)).executeWithInstallHookHistory(PATH);
+        assertEquals(PATH, history);
     }
 
     @Test

@@ -154,12 +154,12 @@ public class AecuInstallHook implements InstallHook {
      * @return not executed yet
      */
     private boolean wasNotExecuted(String path, HookExecutionHistory history) {
-        return !history.hasBeenExecutedBefore()
-                && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX));
+        return !history.hasBeenExecutedBefore() && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX)
+                || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX) || path.startsWith(AecuService.AECU_APPS_PATH_PREFIX));
     }
 
     private HistoryEntry executeScripts(List<String> scriptsForExecution, AecuService aecuService, InstallContext installContext)
-            throws AecuException, IOException {
+            throws AecuException {
         HistoryEntry installationHistory = aecuService.createHistoryEntry();
         boolean stopExecution = false;
         for (String groovyScriptPath : scriptsForExecution) {

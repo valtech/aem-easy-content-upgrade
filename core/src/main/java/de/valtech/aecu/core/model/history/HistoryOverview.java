@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -124,6 +124,9 @@ public class HistoryOverview {
      * @return duration
      */
     public String getDuration() {
+        if ((historyEntry.getStart() == null) || (historyEntry.getEnd() == null)) {
+            return "unknown";
+        }
         Duration duration = Duration.between(historyEntry.getStart().toInstant(), historyEntry.getEnd().toInstant());
         long seconds = duration.getSeconds();
         if (seconds > 0) {
