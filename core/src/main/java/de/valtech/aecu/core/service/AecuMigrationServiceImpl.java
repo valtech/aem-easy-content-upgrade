@@ -3,7 +3,6 @@ package de.valtech.aecu.core.service;
 import de.valtech.aecu.api.service.AecuMigrationService;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
-import de.valtech.aecu.core.jmx.AecuServiceMBean;
 import de.valtech.aecu.core.util.runtime.RuntimeHelper;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +30,7 @@ public class AecuMigrationServiceImpl implements AecuMigrationService {
     private static final String AECU_TRIGGER_USER = "aecu-migration-trigger";
 
     @Reference
-    private AecuServiceMBean aecuServiceMBean;
+    private AecuService aecuService;
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
 
@@ -52,7 +51,7 @@ public class AecuMigrationServiceImpl implements AecuMigrationService {
     void startAecuMigration(ResourceResolver resourceResolver) {
         try {
             LOGGER.info("AECU migration started");
-            List<String> migrationScripts = aecuServiceMBean.getFiles(AecuService.AECU_APPS_PATH_PREFIX);
+            List<String> migrationScripts = aecuService.getFiles(AecuService.AECU_APPS_PATH_PREFIX);
             if (!migrationScripts.isEmpty()) {
                 migrationScripts.forEach(this::executeScript);
                 LOGGER.info("AECU migration finished");
@@ -70,7 +69,7 @@ public class AecuMigrationServiceImpl implements AecuMigrationService {
      */
     private void executeScript(String scriptPath) {
         try {
-            aecuServiceMBean.executeWithHistory(scriptPath); //TODO: replace with aecuService.executeWithInstallHookHistory when new AECU version is released
+            aecuService.executeWithInstallHookHistory(scriptPath);
         } catch(AecuException ae) {
             LOGGER.error("Error when executing script " + scriptPath, ae);
         }
