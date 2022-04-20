@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Valtech GmbH
+ * Copyright 2019 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,8 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -30,11 +31,13 @@ import javax.jcr.Session;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.replication.ReplicationActionType;
 import com.day.cq.replication.ReplicationException;
@@ -47,7 +50,8 @@ import de.valtech.aecu.core.groovy.console.bindings.impl.BindingContext;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ReplicateResourceActionTest {
 
     private static final String PATH = "path";
@@ -69,7 +73,7 @@ public class ReplicateResourceActionTest {
 
     private ReplicateResourceAction action;
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(context.getReplicator()).thenReturn(replicator);
         when(context.getResolver()).thenReturn(resolver);
@@ -78,11 +82,11 @@ public class ReplicateResourceActionTest {
         when(resource.getPath()).thenReturn(PATH);
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void doAction_replicatorException() throws PersistenceException, ReplicationException {
         doThrow(ReplicationException.class).when(replicator).replicate(session, ReplicationActionType.ACTIVATE, PATH);
 
-        action.doAction(resource);
+        assertThrows(PersistenceException.class, () -> action.doAction(resource));
     }
 
     @Test

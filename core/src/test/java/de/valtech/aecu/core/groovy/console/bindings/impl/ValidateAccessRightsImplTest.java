@@ -1,6 +1,6 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,12 +23,14 @@ import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.replication.ReplicationActionType;
 import com.day.cq.replication.Replicator;
@@ -39,7 +41,8 @@ import com.icfolson.aem.groovy.console.api.context.ScriptContext;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ValidateAccessRightsImplTest {
 
     private static final String TESTPATH = "/test";
@@ -96,7 +99,7 @@ public class ValidateAccessRightsImplTest {
 
     private ValidateAccessRightsImpl validateRights;
 
-    @Before
+    @BeforeEach
     public void setup() throws RepositoryException {
         when(resolver.adaptTo(Session.class)).thenReturn(adminSession);
         when(adminSession.getAccessControlManager()).thenReturn(aclManager);

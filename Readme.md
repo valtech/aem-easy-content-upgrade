@@ -57,7 +57,7 @@ AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3)<br/>Cloud | included     | 5.x |
+| 6.5 (>=6.5.3)<br/>Cloud | included     | 6.x, 5.x |
 
 ## Older AEM versions
 For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
@@ -159,10 +159,15 @@ Then delete "aem-groovy-console" packages in package manager.
 
 # File and Folder Structure
 
-All migration scripts need to be located in `/conf/groovyconsole/scripts/aecu` (recommended) or `/var/groovyconsole/scripts/aecu`. 
+All migration scripts need to be located in:
 
-The first is recommended with AEM as a Cloud Service due to [restrictions with the `/var` repository location](https://experienceleague.adobe.com/docs/experience-manager-learn/cloud-service/debugging/debugging-aem-as-a-cloud-service/build-and-deployment.html?lang=en#including-%2Fvar-in-content-package).
-There you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
+* `/apps/aecu-scripts` (AEM Cloud automatic execution with startup hook, since 6.0.0)
+* `/conf/groovyconsole/scripts/aecu` (AEM onprem manual and install hook execution, AEM Cloud manual execution)
+* `/var/groovyconsole/scripts/aecu` (deprecated)
+
+AEM as a Cloud Service requires the scripts to be executed automatically in /apps to avoid issues with the startup hook. Manual scripts can still be located in /conf.
+
+In this folder you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
 If your package containing the scripts is bundled in another package please make sure that this is done using "subPackages" in pom.xml.
@@ -178,9 +183,12 @@ run mode combinations can be separated with ";" (e.g. "folder.author.test;author
 was already executed before.
 * Fallback selector: if a script name ends with ".fallback.groovy" then it will be executed only if
 the corresponding script failed with an exception. E.g. if there is "script.groovy" and "script.fallback.groovy" then the fallback script only gets executed if "script.groovy" fails.
+* Prechecks selector: if a script name ends with ".prechecks.groovy" then it will be executed before
+the corresponding script. If it fails with an exception then the corresponding script will be skipped. E.g. if there is "script.groovy" and "script.prechecks.groovy" then the "script.groovy" only gets executed if "script.prechecks.groovy" runs without exception.
 * Reserved file names
     * fallback.groovy: optional directory level fallback script. This will be executed if a script fails and no script specific fallback script is provided.
-
+    * prechecks.groovy: optional directory level prechecks script. This will be executed before a script runs and no script specific prechecks script is provided.
+    
 <a name="execution"></a>
 
 # Execution of Migration Scripts
@@ -309,19 +317,31 @@ These methods can be used to filter the nodes that were collected above. Multipl
 Filters the resources by property values.
 
 * filterByHasProperty: matches all nodes that have the given property. The value of the property is not relevant.
+* filterByNotHasProperty: matches all nodes that do not have the given property. The value of the property is not relevant.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
+* filterByNotProperty: matches all nodes that do not have the given attribute value. Filter matches if attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
+* filterByNotProperties: use this to filter by a list of property values (e.g. sling:resourceType) is not matching. If any property in the map does not match the filter matches. Filter matches if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
-* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNotMultiValuePropContains: checks if not all condition values are contained in the defined attribute. Filter matches if attribute does not exist.
+* filterByPropertyRegex: filters by a single property matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNotPropertyRegex: filters by a single property not matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 * filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNoPropertyRegex: filters by no property matching a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 
 ```java
 filterByHasProperty(String name)
+filterByNotHasProperty(String name)
 filterByProperty(String name, Object value)
+filterByNotProperty(String name, Object value)
 filterByProperties(Map<String, String> properties)
+filterByNotProperties(Map<String, Object> conditionProperties)
 filterByMultiValuePropContains(String name,  Object[] conditionValues)
+filterByNotMultiValuePropContains(String name, Object[] conditionValues)
 filterByPropertyRegex(String name, String regex)
+filterByNotPropertyRegex(String name, String regex)
 filterByAnyPropertyRegex(String regex)
+filterByNoPropertyRegex(String regex)
 ```
 
 Example:
@@ -348,13 +368,17 @@ aecu.contentUpgradeBuilder()
 You can also filter nodes by their name.
 
 * filterByNodeName(String name): process only nodes which have this exact name
+* filterByNotNodeName(String name): process only nodes which do not have this exact name
 * filterByNodeNameRegex(String regex): process nodes that have a name that matches the given regular expression
+* filterByNotNodeNameRegex(String regex): process nodes that have a name that does not match the given regular expression
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
+        .filterByNotNodeName("jcr:content")
         .filterByNodeNameRegex("jcr.*")
+        .filterByNotNodeNameRegex("jcr.*")
         .doSetProperty("name", "value")
         .run()
 ```
@@ -364,11 +388,13 @@ aecu.contentUpgradeBuilder()
 Nodes can also be filtered by their path using a regular expression.
 
 * filterByPathRegex(String regex): process nodes whose path matches the given regular expression
+* filterByNotPathRegex(String regex): process nodes whose path does not match the given regular expression
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByPathRegex(".*/jcr:content/.*")
+        .filterByNotPathRegex(".*/jcr:content/.*")
         .doSetProperty("name", "value")
         .run()
 ```
@@ -413,6 +439,7 @@ def complexFilter =  new ORFilter(
 aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/ca/en", false)
         .filterWith(complexFilter)
+        .filterNotWith(complexFilter)
         .filterWith(new NOTFilter(new FilterByPathRegex(".*jcr:content.*")))
         .doSetProperty("name", "value")
         .run()        

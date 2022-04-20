@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,10 +18,12 @@
  */
 package de.valtech.aecu.core.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -36,6 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
@@ -44,14 +47,16 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.apache.sling.settings.SlingSettingsService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.api.context.ScriptContext;
@@ -59,9 +64,13 @@ import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 import com.icfolson.aem.groovy.console.response.impl.DefaultRunScriptResponse;
 
 import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.ExecutionResult;
+import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.core.installhook.HookExecutionHistory;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
@@ -69,10 +78,11 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
  *
  * @author Roland Gruber
  */
-@RunWith(value = MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AecuServiceImplTest {
 
-    private static final String DIR = "/dir";
+    private static final String DIR = AecuService.AECU_CONF_PATH_PREFIX + "/dir";
 
     private static final String FILE1 = "file1.groovy";
 
@@ -98,7 +108,11 @@ public class AecuServiceImplTest {
     @Mock
     private ScriptContext scriptContext = mock(ScriptContext.class);
 
-    @Before
+    @Mock
+    private Session session;
+
+
+    @BeforeEach
     public void setup() throws LoginException {
         Set<String> runModes = new HashSet<>();
         runModes.add("author");
@@ -153,6 +167,13 @@ public class AecuServiceImplTest {
     @Test
     public void isValidScriptName_fallback() {
         assertFalse(service.isValidScriptName("test.fallback.groovy"));
+        assertFalse(service.isValidScriptName("fallback.groovy"));
+    }
+
+    @Test
+    public void isValidScriptName_prechecks() {
+        assertFalse(service.isValidScriptName("test.prechecks.groovy"));
+        assertFalse(service.isValidScriptName("prechecks.groovy"));
     }
 
     @Test
@@ -194,9 +215,48 @@ public class AecuServiceImplTest {
         assertNull(service.getFallbackScript(resolver, "/path/to/fallback.groovy"));
     }
 
-    @Test(expected = AecuException.class)
+    @Test
+    public void getPrechecksScript_Exists() {
+        when(resolver.getResource("/path/to/script.prechecks.groovy")).thenReturn(mock(Resource.class));
+
+        assertEquals("/path/to/script.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script.always.groovy"));
+        assertEquals("/path/to/script.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_NotExists() {
+        assertNull(service.getPrechecksScript(resolver, "/path/to/script.always.groovy"));
+        assertNull(service.getPrechecksScript(resolver, "/path/to/script.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_Prechecks() {
+        verify(resolver, never()).getResource("/path/to/script.prechecks.groovy");
+
+        assertNull(service.getPrechecksScript(resolver, "/path/to/script.prechecks.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_DirectoryLevel() {
+        when(resolver.getResource("/path/to/script1.prechecks.groovy")).thenReturn(mock(Resource.class));
+        when(resolver.getResource("/path/to/prechecks.groovy")).thenReturn(mock(Resource.class));
+
+        assertEquals("/path/to/script1.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script1.always.groovy"));
+        assertEquals("/path/to/script1.prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script1.groovy"));
+        assertEquals("/path/to/prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script2.always.groovy"));
+        assertEquals("/path/to/prechecks.groovy", service.getPrechecksScript(resolver, "/path/to/script2.groovy"));
+    }
+
+    @Test
+    public void getPrechecksScript_DirectoryLevelPrechecks() {
+        verify(resolver, never()).getResource("/path/to/prechecks.groovy");
+
+        assertNull(service.getPrechecksScript(resolver, "/path/to/prechecks.groovy"));
+    }
+
+    @Test
     public void getFiles_invalidPath() throws AecuException {
-        service.getFiles(FILE1);
+        assertThrows(AecuException.class, () -> service.getFiles(FILE1));
     }
 
     @Test
@@ -255,9 +315,9 @@ public class AecuServiceImplTest {
         assertEquals(1, entries.size());
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void storeExecutionInHistory_invalid() throws AecuException {
-        service.storeExecutionInHistory(null, null);
+        assertThrows(AecuException.class, () -> service.storeExecutionInHistory(null, null));
     }
 
     @Test
@@ -287,34 +347,58 @@ public class AecuServiceImplTest {
         verify(historyUtil, times(1)).createHistoryEntry(resolver);
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void execute_invalidResource() throws AecuException {
-        service.execute("invalid");
+        assertThrows(AecuException.class, () -> service.execute("invalid"));
     }
 
-    @Test(expected = AecuException.class)
+    @Test
     public void execute_invalidFileName() throws AecuException {
         Resource resource = mock(Resource.class);
         when(resolver.getResource(DIR)).thenReturn(resource);
         when(resource.getName()).thenReturn("invalid");
 
-        service.execute(DIR);
+        assertThrows(AecuException.class, () -> service.execute(DIR));
     }
 
     @Test
     public void execute() throws AecuException, RepositoryException {
         Resource resource = mock(Resource.class);
-        when(resolver.getResource(DIR)).thenReturn(resource);
-        when(resolver.getResource(DIR + "/" + JcrConstants.JCR_CONTENT)).thenReturn(resource);
+        when(resolver.getResource(DIR + "/" + FILE1)).thenReturn(resource);
+        when(resolver.getResource(DIR + "/" + FILE1 + "/" + JcrConstants.JCR_CONTENT)).thenReturn(resource);
         when(resource.getName()).thenReturn(FILE1);
-        when(scriptContext.getScript()).thenReturn(DIR);
+        when(scriptContext.getScript()).thenReturn(DIR + "/" + FILE1);
         ByteArrayInputStream stream = new ByteArrayInputStream("test".getBytes());
         when(resource.adaptTo(InputStream.class)).thenReturn(stream);
 
         RunScriptResponse response = DefaultRunScriptResponse.fromResult(scriptContext, null, null, null);
         when(groovyConsoleService.runScript(Mockito.any())).thenReturn(response);
 
-        service.execute(DIR);
+        ExecutionResult result = service.execute(DIR + "/" + FILE1);
+
+        assertEquals(ExecutionState.SUCCESS, result.getState());
+    }
+
+    @Test
+    public void executeWithInstallHookHistory() throws AecuException, LoginException {
+        ExecutionResult result = mock(ExecutionResult.class);
+        when(result.getState()).thenReturn(ExecutionState.SUCCESS);
+        doReturn(result).when(service).execute(DIR + "/" + FILE1);
+        when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
+        when(resolver.adaptTo(Session.class)).thenReturn(session);
+        doReturn(Arrays.asList(DIR + "/" + FILE1)).when(service).getFiles(DIR);
+        doReturn(mock(HookExecutionHistory.class)).when(service).createHookExecutionHistory(session, DIR + "/" + FILE1);
+        HistoryEntryImpl history = new HistoryEntryImpl();
+        history.setState(STATE.RUNNING);
+        when(historyUtil.createHistoryEntry(resolver)).thenReturn(history);
+
+        service.executeWithInstallHookHistory(DIR);
+
+        verify(resolverService, times(1)).getAdminResourceResolver();
+        verify(service, times(1)).getFiles(DIR);
+        verify(service, times(1)).createHistoryEntry();
+        verify(service, times(1)).execute(DIR + "/" + FILE1);
+        verify(service, times(1)).finishHistoryEntry(Mockito.any());
     }
 
 }

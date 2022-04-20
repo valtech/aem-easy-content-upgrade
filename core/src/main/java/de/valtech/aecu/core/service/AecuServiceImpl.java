@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import javax.jcr.Session;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +54,8 @@ import de.valtech.aecu.api.service.ExecutionState;
 import de.valtech.aecu.api.service.HistoryEntry;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.history.HistoryUtil;
+import de.valtech.aecu.core.installhook.AecuTrackerListener;
+import de.valtech.aecu.core.installhook.HookExecutionHistory;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 /**
@@ -62,8 +66,11 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 @Component(service = AecuService.class)
 public class AecuServiceImpl implements AecuService {
 
+    private static final String PRECHECKS_SELECTOR = ".prechecks.";
+    private static final String FALLBACK_SELECTOR = ".fallback.";
     private static final String ERR_NO_RESOLVER = "Unable to get service resource resolver";
     protected static final String DIR_FALLBACK_SCRIPT = "fallback.groovy";
+    protected static final String DIR_PRECHECKS_SCRIPT = "prechecks.groovy";
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuServiceImpl.class);
 
@@ -159,7 +166,8 @@ public class AecuServiceImpl implements AecuService {
         if (!name.endsWith(".groovy")) {
             return false;
         }
-        return !name.contains(".fallback.") && !DIR_FALLBACK_SCRIPT.equals(name);
+        return !name.contains(FALLBACK_SELECTOR) && !DIR_FALLBACK_SCRIPT.equals(name) && !name.contains(PRECHECKS_SELECTOR)
+                && !DIR_PRECHECKS_SCRIPT.equals(name);
     }
 
     @Override
@@ -187,14 +195,23 @@ public class AecuServiceImpl implements AecuService {
      * @throws AecuException error running script
      */
     private ExecutionResult executeScript(ResourceResolver resolver, String path) throws AecuException {
-        LOG.info("Executing script " + path);
+        LOG.info("Executing script {}", path);
+        String prechecksScript = getPrechecksScript(resolver, path);
+        if (prechecksScript != null) {
+            ExecutionResult prechecksResult = executeScript(resolver, prechecksScript);
+            if (prechecksResult.getState() == ExecutionState.FAILED) {
+                LOG.info("Skipping {} as prechecks script failed", path);
+                return new ExecutionResult(ExecutionState.SKIPPED, prechecksResult.getTime(), prechecksResult.getResult(),
+                        prechecksResult.getOutput(), null, path);
+            }
+        }
         ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver);
         RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
-            LOG.info("Executed script " + path + " with status OK");
+            LOG.info("Executed script {} with status OK", path);
         } else {
-            LOG.error("Executed script " + path + " with status FAILED");
+            LOG.error("Executed script {} with status FAILED", path);
         }
         String result = response.getResult();
         ExecutionResult fallbackResult = null;
@@ -237,18 +254,43 @@ public class AecuServiceImpl implements AecuService {
      */
     protected String getFallbackScript(ResourceResolver resolver, String path) {
         String name = path.substring(path.lastIndexOf('/') + 1);
-        if (name.contains(".fallback.") || DIR_FALLBACK_SCRIPT.equals(name)) {
+        if (name.contains(FALLBACK_SELECTOR) || DIR_FALLBACK_SCRIPT.equals(name)) {
             // skip if script is a fallback script itself
             return null;
         }
         String baseName = name.substring(0, name.indexOf('.'));
-        String fallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + ".fallback.groovy";
+        String fallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + FALLBACK_SELECTOR + "groovy";
         if (resolver.getResource(fallbackPath) != null) {
             return fallbackPath;
         }
         String directoryFallbackPath = path.substring(0, path.lastIndexOf('/') + 1) + DIR_FALLBACK_SCRIPT;
         if (resolver.getResource(directoryFallbackPath) != null) {
             return directoryFallbackPath;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the prechecks script name if any exists.
+     *
+     * @param resolver resource resolver
+     * @param path     original script path
+     * @return prechecks script path
+     */
+    protected String getPrechecksScript(ResourceResolver resolver, String path) {
+        String name = path.substring(path.lastIndexOf('/') + 1);
+        if (name.contains(PRECHECKS_SELECTOR) || DIR_PRECHECKS_SCRIPT.equals(name)) {
+            // skip if script is a prechecks script itself
+            return null;
+        }
+        String baseName = name.substring(0, name.indexOf('.'));
+        String prechecksPath = path.substring(0, path.lastIndexOf('/') + 1) + baseName + PRECHECKS_SELECTOR + "groovy";
+        if (resolver.getResource(prechecksPath) != null) {
+            return prechecksPath;
+        }
+        String directoryPrechecksPath = path.substring(0, path.lastIndexOf('/') + 1) + DIR_PRECHECKS_SCRIPT;
+        if (resolver.getResource(directoryPrechecksPath) != null) {
+            return directoryPrechecksPath;
         }
         return null;
     }
@@ -303,6 +345,50 @@ public class AecuServiceImpl implements AecuService {
         } catch (LoginException e) {
             throw new AecuException(ERR_NO_RESOLVER, e);
         }
+    }
+
+    @Override
+    public HistoryEntry executeWithInstallHookHistory(String path) throws AecuException {
+        HistoryEntry history = createHistoryEntry();
+        List<String> files = getFiles(path);
+        try (ResourceResolver resolver = resolverService.getAdminResourceResolver()) {
+            Session session = resolver.adaptTo(Session.class);
+            boolean stopExecution = false;
+            for (String file : files) {
+                HookExecutionHistory executionHistory = createHookExecutionHistory(session, file);
+                if (!file.endsWith(AecuTrackerListener.ALWAYS_SUFFIX) && executionHistory.hasBeenExecutedBefore()) {
+                    continue;
+                }
+                ExecutionResult singleResult;
+                if (!stopExecution) {
+                    singleResult = execute(file);
+                } else {
+                    singleResult = new ExecutionResult(ExecutionState.SKIPPED, null, null, null, null, file);
+                }
+                if (singleResult.getState() == ExecutionState.SUCCESS) {
+                    executionHistory.setExecuted();
+                } else if (singleResult.getState() == ExecutionState.FAILED) {
+                    stopExecution = true;
+                }
+                storeExecutionInHistory(history, singleResult);
+            }
+        } catch (LoginException e) {
+            throw new AecuException(e.getMessage(), e);
+        }
+        finishHistoryEntry(history);
+        return history;
+    }
+
+    /**
+     * Creates a hook history entry.
+     * 
+     * @param session session
+     * @param path    script path
+     * @return history
+     * @throws AecuException
+     */
+    protected HookExecutionHistory createHookExecutionHistory(Session session, String path) throws AecuException {
+        return new HookExecutionHistory(session, path);
     }
 
 }
