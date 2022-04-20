@@ -52,7 +52,7 @@ public class AecuMigrationServiceImpl implements AecuMigrationService {
     void startAecuMigration(ResourceResolver resourceResolver) {
         try {
             LOGGER.info("AECU migration started");
-            List<String> migrationScripts = aecuServiceMBean.getFiles(AecuService.AECU_CONF_PATH_PREFIX);
+            List<String> migrationScripts = aecuServiceMBean.getFiles(AecuService.AECU_APPS_PATH_PREFIX);
             if (!migrationScripts.isEmpty()) {
                 migrationScripts.forEach(this::executeScript);
                 LOGGER.info("AECU migration finished");
