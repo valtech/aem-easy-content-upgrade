@@ -61,7 +61,7 @@ public class AecuMigrationServiceImpl implements AecuMigrationService {
      */
     private ResourceResolver getResourceResolver() {
         try {
-            return resourceResolverService.getContentMigratorResourceResolver();
+            return resourceResolverService.getAdminResourceResolver();
         } catch(LoginException le) {
             throw new RuntimeException("Error while logging in", le);
         }
