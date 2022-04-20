@@ -5,7 +5,6 @@ import de.valtech.aecu.api.service.AecuMigrationService;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.core.util.runtime.RuntimeHelper;
-import java.util.List;
 import javax.jcr.Session;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -49,27 +48,10 @@ public class AecuMigrationServiceImpl implements AecuMigrationService {
     void startAecuMigration(ResourceResolver resourceResolver) {
         try {
             LOGGER.info("AECU migration started");
-            List<String> migrationScripts = aecuService.getFiles(AecuService.AECU_APPS_PATH_PREFIX);
-            if (!migrationScripts.isEmpty()) {
-                migrationScripts.forEach(this::executeScript);
-                LOGGER.info("AECU migration finished");
-            } else {
-                LOGGER.info("No AECU groovy scripts to execute");
-            }
+            aecuService.executeWithInstallHookHistory(AecuService.AECU_APPS_PATH_PREFIX);
+            LOGGER.info("AECU migration finished");
         } catch(AecuException ae) {
             LOGGER.error("Error while executing AECU migration", ae);
-        }
-    }
-
-    /**
-     * Executes a script cleanly (handles possible exception)
-     * @param scriptPath the path to the script to execute
-     */
-    private void executeScript(String scriptPath) {
-        try {
-            aecuService.executeWithInstallHookHistory(scriptPath);
-        } catch(AecuException ae) {
-            LOGGER.error("Error when executing script " + scriptPath, ae);
         }
     }
 
