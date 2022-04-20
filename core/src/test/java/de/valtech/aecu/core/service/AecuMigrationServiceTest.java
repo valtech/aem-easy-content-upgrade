@@ -24,11 +24,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class AecuMigrationServiceImplTest {
-
-    @InjectMocks
-    @Spy
-    private AecuMigrationServiceImpl aecuMigrationService;
+public class AecuMigrationServiceTest {
 
     @Mock
     private AecuService aecuService;
@@ -42,10 +38,14 @@ public class AecuMigrationServiceImplTest {
     @Mock
     private Session session;
 
+    @InjectMocks
+    @Spy
+    private AecuMigrationService aecuMigrationService;
+
     @BeforeEach
     public void setUp() throws Exception {
         when(resolverService.getServiceResourceResolver()).thenReturn(resolver);
-        when(resolverService.getContentMigratorResourceResolver()).thenReturn(resolver);
+        when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
         when(resolver.adaptTo(Session.class)).thenReturn(session);
     }
 

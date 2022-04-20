@@ -1,7 +1,6 @@
 package de.valtech.aecu.core.service;
 
 import de.valtech.aecu.api.service.AecuException;
-import de.valtech.aecu.api.service.AecuMigrationService;
 import de.valtech.aecu.api.service.AecuService;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.core.util.runtime.RuntimeHelper;
@@ -15,16 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link de.valtech.aecu.api.service.AecuMigrationService} impl that executes the AECU migration based on node store type
+ * Service that executes the AECU migration based on node store type
  */
 @Component(
         service = AecuMigrationService.class,
         immediate = true,
         name = "AECU migration service"
 )
-public class AecuMigrationServiceImpl implements AecuMigrationService {
+public class AecuMigrationService  {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AecuMigrationServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AecuMigrationService.class);
 
     @Reference
     private AecuService aecuService;
