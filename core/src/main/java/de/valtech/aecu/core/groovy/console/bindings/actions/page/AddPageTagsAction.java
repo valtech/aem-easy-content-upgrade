@@ -52,7 +52,7 @@ public class AddPageTagsAction implements Action {
      */
     public AddPageTagsAction(BindingContext context, String... tags) {
         this.context = context;
-        this.tags = tags;
+        this.tags = tags.clone();
     }
 
     @Override

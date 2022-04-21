@@ -23,7 +23,8 @@ Table of contents
 2. [Installation](#installation)
 3. [File and Folder Structure](#structure)
 4. [Execution of Migration Scripts](#execution)
-    1. [Install Hook](#installHook)
+    1. [Startup Hook](#startupHook)
+    2. [Install Hook](#installHook)
     2. [Manual Execution](#manualExecution)
 5. [History of Past Runs](#history)
 6. [Extension to Groovy Console](#groovy)
@@ -193,13 +194,27 @@ the corresponding script. If it fails with an exception then the corresponding s
 
 # Execution of Migration Scripts
 
+<a name="startupHook"></a>
+
+## Startup Hook (since 6.0.0)
+
+This is the preferred method to execute your scripts on AEM Cloud installations. It allows to run them without any user interaction. Just package them with a content package and do a regular deployment.
+
+The startup hook automatically runs on AEM Cloud (detecting the composite node store). It executes all scripts in /apps/aecu-scripts when the server is started during deploy.
+Please note that changes to /apps or /libs are not possible as the startup hook does not run during build phase of the images.
+
+Please note that scripts will not be executed on a local development instance of AEM Cloud (no composite node store). Here you can activate the execution via install hook. See pom.xml of examples-cloud package how to activate the install hook via profile. Install hooks must not be activated for AEM Cloud environments hosted by Adobe.
+
+As multiple AEM instances share the same repository scripts might be executed multiple times during the same deployment. Please make sure your scripts can handle this.
+Scripts with "always" selector might be executed at random times as cloud instances can be added/removed dynamically based on load.
+
 <a name="installHook"></a>
 
 ## Install Hook
 
-This is the preferred method to execute your scripts. It allows to run them without any user interaction. Just package them with a content package and do a regular deployment.
+This is the preferred method to execute your scripts on non-AEM-Cloud installations. It allows to run them without any user interaction. Just package them with a content package and do a regular deployment.
 
-You can add the install hook by adding de.valtech.aecu.core.installhook.AecuInstallHook as a hook to your package properties. The AECU package and Groovy Console need to be installed beforehand.
+You can add the install hook by adding de.valtech.aecu.core.installhook.AecuInstallHook as a hook to your package properties. The AECU package needs to be installed beforehand.
 
 ```xml
 <plugin>

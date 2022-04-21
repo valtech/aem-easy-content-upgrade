@@ -326,7 +326,7 @@ public class AecuServiceImpl implements AecuService {
         if ((history == null) || !STATE.RUNNING.equals(history.getState())) {
             throw new AecuException("Invalid history entry.");
         }
-        history.getSingleResults().add(result);
+        ((HistoryEntryImpl) history).addSingleResult(result);
         try (ResourceResolver resolver = resolverService.getServiceResourceResolver()) {
             historyUtil.storeExecutionInHistory(history, result, resolver);
             resolver.commit();

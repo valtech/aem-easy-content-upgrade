@@ -49,8 +49,6 @@ import de.valtech.aecu.core.security.AccessValidationService;
 public class ExecuteDataSource {
 
     private static final String ITEM_TYPE = "valtech/aecu/tools/execute/dataitem";
-    private static final String ALLOWED_PATH_VAR = "/var/groovyconsole/scripts";
-    private static final String ALLOWED_PATH_CONF = "/conf/groovyconsole/scripts";
 
     @SlingObject
     SlingHttpServletRequest request;
@@ -70,7 +68,8 @@ public class ExecuteDataSource {
         String path = request.getParameter("searchPath");
         List<Resource> entries = new ArrayList<>();
 
-        if (path != null && StringUtils.isNotEmpty(path) && (path.startsWith(ALLOWED_PATH_VAR) || path.startsWith(ALLOWED_PATH_CONF))) {
+        if (path != null && StringUtils.isNotEmpty(path) && (path.startsWith(AecuService.AECU_CONF_PATH_PREFIX)
+                || path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_APPS_PATH_PREFIX))) {
             List<String> allowedScripts = aecuService.getFiles(path);
             ResourceResolver resourceResolver = request.getResourceResolver();
             for (String scriptPath : allowedScripts) {

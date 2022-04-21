@@ -42,7 +42,7 @@ import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
  *
  * @author Roxana Muresan
  */
-@Component(immediate = true)
+@Component(immediate = true, service = {BindingExtensionProvider.class, AecuBindingExtensionProvider.class})
 public class AecuBindingExtensionProvider implements BindingExtensionProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(AecuBindingExtensionProvider.class);
