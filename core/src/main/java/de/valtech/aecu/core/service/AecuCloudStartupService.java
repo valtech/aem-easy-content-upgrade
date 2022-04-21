@@ -30,13 +30,15 @@ import org.slf4j.LoggerFactory;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.core.groovy.console.bindings.provider.AecuBindingExtensionProvider;
+import de.valtech.aecu.core.groovy.console.bindings.provider.AecuStarImportExtensionProvider;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.core.util.runtime.RuntimeHelper;
 
 /**
  * Service that executes the AECU migration if the node store type is composite (AEM Cloud).
  */
-@Component(service = AecuCloudStartupService.class, immediate = true, name = "AECU migration service")
+@Component(service = AecuCloudStartupService.class, immediate = true, name = "AECU cloud startup hook")
 public class AecuCloudStartupService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AecuCloudStartupService.class);
@@ -45,6 +47,12 @@ public class AecuCloudStartupService {
     private AecuService aecuService;
     @Reference
     private ServiceResourceResolverService resourceResolverService;
+
+    // dependencies to avoid scripts are executed before Groovy extension is loaded
+    @Reference
+    private AecuBindingExtensionProvider dependency1;
+    @Reference
+    private AecuStarImportExtensionProvider dependency2;
 
     @Activate
     public void activate() {

@@ -40,7 +40,9 @@
                 if (parts[0] == 'aecuScriptPath') {
                     var name = parts[1];
                     var item = $("coral-accordion-item[data-path='" + name + "']");
-                    item[0].selected = true;
+                    if (item[0]) {
+                      item[0].selected = true;
+                    }
                 }
             }
         }
@@ -49,8 +51,10 @@
     /**
      * Initial actions
      */
-    Coral.commons.ready(function () {
-        AECU.History.selectAccordion();
+    $(document).ready(function() {
+      Coral.commons.ready(function () {
+          AECU.History.selectAccordion();
+      });
     });
 
 })(window.jQuery, Granite.author, jQuery(document), this);
