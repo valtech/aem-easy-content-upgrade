@@ -1,43 +1,57 @@
+/*
+ * Copyright 2022 Bart Senn and Valtech GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package de.valtech.aecu.core.util.runtime;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.day.cq.commons.jcr.JcrConstants;
 
 /**
- * CLASS IS BASED ON RuntimeHelper from ACTOOL.  Used their way of determining if a composite node store is being used.
- * */
+ * Checks if a composite node store is in place (using approach from AC Tool).
+ */
 public final class RuntimeHelper {
-    public static final Logger LOG = LoggerFactory.getLogger(RuntimeHelper.class);
 
-    private RuntimeHelper(){
-        //static methods only
+    private static final String LIBS = "/libs";
+
+    private RuntimeHelper() {
+        // static methods only
     }
 
     /**
-     * If a user has permissions on "/" but still does not have the capability to create nodes under "/apps",
-     * it is assumed to be a composite node store.
-     * @param session
-     * @return
+     * If a user has permissions on "/" but does not have the capability to create nodes under
+     * "/libs" then it is assumed to be a composite node store.
+     * 
+     * @param session session
+     * @return is composite node store
+     * @see https://issues.apache.org/jira/browse/OAK-6563
      */
     public static boolean isCompositeNodeStore(Session session) {
         try {
-            String pathToCheck = "/apps";
-            Node appsNode = session.getNode(pathToCheck);
-
+            Node readOnlyCandidate = session.getNode(LIBS);
             boolean hasPermission = session.hasPermission("/", Session.ACTION_SET_PROPERTY);
-            if(!hasPermission) {
-                // this can be ok for multitenancy cases that run with user of package installation (via install hook)
-                LOG.info("Running with a session (userID: "+session.getUserID()+") that does not have permissions '"+ Session.ACTION_SET_PROPERTY+"' at "+pathToCheck);
+            if (!hasPermission) {
+                return false;
             }
-
-            // see https://issues.apache.org/jira/browse/OAK-6563
-            boolean hasCapability = session.hasCapability("addNode", appsNode, new Object[] { "nt:folder" });
-
-            return hasPermission && !hasCapability;
-        } catch(Exception e) {
-            throw new IllegalStateException("Could not check if session is connected to a composite node store: "+e, e);
+            return !session.hasCapability("addNode", readOnlyCandidate, new String[] {JcrConstants.NT_FOLDER});
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to check if session is uses a composite node store", e);
         }
     }
 
