@@ -41,17 +41,26 @@ public class HistoryEntryImpl implements HistoryEntry {
 
     @Override
     public Date getStart() {
-        return start;
+        return (Date) start.clone();
     }
 
     @Override
     public Date getEnd() {
-        return end;
+        return (Date) end.clone();
     }
 
     @Override
     public List<ExecutionResult> getSingleResults() {
-        return singleResults;
+        return new ArrayList<>(singleResults);
+    }
+
+    /**
+     * Adds a single result.
+     * 
+     * @param result result
+     */
+    public void addSingleResult(ExecutionResult result) {
+        singleResults.add(result);
     }
 
     @Override
@@ -85,7 +94,7 @@ public class HistoryEntryImpl implements HistoryEntry {
      * @param start start date
      */
     public void setStart(Date start) {
-        this.start = start;
+        this.start = (Date) start.clone();
     }
 
     /**
@@ -94,7 +103,7 @@ public class HistoryEntryImpl implements HistoryEntry {
      * @param end end date
      */
     public void setEnd(Date end) {
-        this.end = end;
+        this.end = (Date) end.clone();
     }
 
     /**

@@ -176,10 +176,10 @@ public class HistoryOverviewTest {
     @Test
     public void getDonutData() {
         HistoryEntryImpl entry = new HistoryEntryImpl();
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.SKIPPED, "5s", "", null, null, "path"));
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.FAILED, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.SKIPPED, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.FAILED, "5s", "", null, null, "path"));
         Date now = new Date();
         entry.setStart(now);
         entry.setEnd(now);

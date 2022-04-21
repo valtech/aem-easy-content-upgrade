@@ -87,7 +87,7 @@ public class LastRunHealthCheckTest {
         HistoryEntryImpl entry = new HistoryEntryImpl();
         entry.setState(STATE.FINISHED);
         ExecutionResult singleResult = new ExecutionResult(ExecutionState.SUCCESS, "", "", "", null, "");
-        entry.getSingleResults().add(singleResult);
+        entry.addSingleResult(singleResult);
         history.add(entry);
 
         Result result = check.execute();
@@ -100,7 +100,7 @@ public class LastRunHealthCheckTest {
         HistoryEntryImpl entry = new HistoryEntryImpl();
         entry.setState(STATE.FINISHED);
         ExecutionResult singleResult = new ExecutionResult(ExecutionState.FAILED, "", "", "", null, "");
-        entry.getSingleResults().add(singleResult);
+        entry.addSingleResult(singleResult);
         history.add(entry);
 
         Result result = check.execute();

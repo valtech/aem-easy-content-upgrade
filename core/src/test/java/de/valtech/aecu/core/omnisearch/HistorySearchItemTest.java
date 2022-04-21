@@ -70,7 +70,7 @@ public class HistorySearchItemTest {
         ExecutionResult fallback = new ExecutionResult(ExecutionState.SUCCESS, "2018", FALLBACK_TEXT, "", null, "");
         ExecutionResult singleResult =
                 new ExecutionResult(ExecutionState.SUCCESS, "2018", RESULT_TEXT, OUTPUT_TEXT, fallback, PATH_TEXT);
-        history.getSingleResults().add(singleResult);
+        history.addSingleResult(singleResult);
         doReturn(history).when(item).readHistory();
         doReturn(singleResult).when(item).readSingleResult();
         item.setup();
