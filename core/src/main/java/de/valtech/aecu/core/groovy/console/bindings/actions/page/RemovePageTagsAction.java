@@ -51,7 +51,7 @@ public class RemovePageTagsAction implements Action {
      */
     public RemovePageTagsAction(BindingContext context, String... tags) {
         this.context = context;
-        this.tags = tags;
+        this.tags = tags.clone();
     }
 
     @Override

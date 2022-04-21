@@ -49,7 +49,7 @@ public class SetPageTagsAction implements Action {
      */
     public SetPageTagsAction(BindingContext context, String... tags) {
         this.context = context;
-        this.tags = tags;
+        this.tags = tags.clone();
     }
 
     @Override

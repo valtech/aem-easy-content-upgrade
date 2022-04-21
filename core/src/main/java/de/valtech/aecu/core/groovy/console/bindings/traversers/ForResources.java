@@ -39,7 +39,7 @@ public class ForResources extends TraversData {
     private String[] paths;
 
     public ForResources(@Nonnull String[] paths) {
-        this.paths = paths;
+        this.paths = paths.clone();
     }
 
     @Override

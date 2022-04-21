@@ -43,7 +43,7 @@ public class DeleteResource implements Action {
 
     public DeleteResource(@Nonnull ResourceResolver resourceResolver, String... children) {
         this.resourceResolver = resourceResolver;
-        this.children = children;
+        this.children = children.clone();
     }
 
     @Override
