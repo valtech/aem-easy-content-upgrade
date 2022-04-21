@@ -29,6 +29,9 @@ import static org.mockito.Mockito.when;
 import javax.jcr.Session;
 
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.discovery.DiscoveryService;
+import org.apache.sling.discovery.InstanceDescription;
+import org.apache.sling.discovery.TopologyView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,6 +61,15 @@ public class AecuCloudStartupServiceTest {
     @Mock
     private Session session;
 
+    @Mock
+    private DiscoveryService discoveryService;
+
+    @Mock
+    private TopologyView topology;
+
+    @Mock
+    private InstanceDescription instance;
+
     @InjectMocks
     @Spy
     private AecuCloudStartupService startupService;
@@ -68,6 +80,9 @@ public class AecuCloudStartupServiceTest {
         when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
         when(resolver.adaptTo(Session.class)).thenReturn(session);
         doReturn(true).when(session).hasPermission(anyString(), anyString());
+        when(discoveryService.getTopology()).thenReturn(topology);
+        when(topology.getLocalInstance()).thenReturn(instance);
+        when(instance.isLeader()).thenReturn(true);
     }
 
     @Test
@@ -82,6 +97,16 @@ public class AecuCloudStartupServiceTest {
     @Test
     public void testMigration_noCompositeNodeStore() throws Exception {
         doReturn(true).when(session).hasCapability(anyString(), any(), any());
+
+        startupService.activate();
+
+        verify(aecuService, never()).executeWithInstallHookHistory(AecuService.AECU_APPS_PATH_PREFIX);
+    }
+
+    @Test
+    public void testMigration_noLeader() throws Exception {
+        doReturn(false).when(session).hasCapability(anyString(), any(), any());
+        when(instance.isLeader()).thenReturn(false);
 
         startupService.activate();
 

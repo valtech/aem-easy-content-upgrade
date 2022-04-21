@@ -205,6 +205,8 @@ Please note that changes to /apps or /libs are not possible as the startup hook 
 
 Please note that scripts will not be executed on a local development instance of AEM Cloud (no composite node store). Here you can activate the execution via install hook. See pom.xml of examples-cloud package how to activate the install hook via profile. Install hooks must not be activated for AEM Cloud environments hosted by Adobe.
 
+Scripts with "always" selector might be executed at random times as cloud instances can be added/removed dynamically based on load.
+
 <a name="installHook"></a>
 
 ## Install Hook

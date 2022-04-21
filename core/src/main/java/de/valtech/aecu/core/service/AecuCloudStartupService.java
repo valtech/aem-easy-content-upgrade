@@ -22,6 +22,7 @@ import javax.jcr.Session;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.discovery.DiscoveryService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -47,6 +48,8 @@ public class AecuCloudStartupService {
     private AecuService aecuService;
     @Reference
     private ServiceResourceResolverService resourceResolverService;
+    @Reference
+    private DiscoveryService discoveryService;
 
     // dependencies to avoid scripts are executed before Groovy extension is loaded
     @Reference
@@ -58,8 +61,7 @@ public class AecuCloudStartupService {
     public void activate() {
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
-        boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
-        if (isCompositeNodeStore) {
+        if (RuntimeHelper.isCompositeNodeStore(session) && RuntimeHelper.isLeader(discoveryService)) {
             startAecuMigration();
         }
     }

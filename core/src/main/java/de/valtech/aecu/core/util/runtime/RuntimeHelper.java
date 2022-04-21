@@ -21,10 +21,17 @@ package de.valtech.aecu.core.util.runtime;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
+import org.apache.sling.discovery.DiscoveryService;
+import org.apache.sling.discovery.InstanceDescription;
+import org.apache.sling.discovery.TopologyView;
+
 import com.day.cq.commons.jcr.JcrConstants;
 
 /**
  * Checks if a composite node store is in place (using approach from AC Tool).
+ * 
+ * @author Bart Senn
+ * @author Roland Gruber
  */
 public final class RuntimeHelper {
 
@@ -53,6 +60,18 @@ public final class RuntimeHelper {
         } catch (Exception e) {
             throw new IllegalStateException("Unable to check if session is uses a composite node store", e);
         }
+    }
+
+    /**
+     * Checks if the current instance is the cluster leader.
+     * 
+     * @param discoveryService
+     * @return is leader
+     */
+    public static boolean isLeader(DiscoveryService discoveryService) {
+        TopologyView topology = discoveryService.getTopology();
+        InstanceDescription instance = topology.getLocalInstance();
+        return instance.isLeader();
     }
 
 }
