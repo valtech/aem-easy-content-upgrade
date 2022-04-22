@@ -37,6 +37,7 @@ public class DeleteAccessValidator extends BaseAccessRightsValidator {
      * 
      * @param group              group
      * @param resource           resource to check
+     * @param context            context
      * @param checkAccessGranted checks if the access is granted or denied
      */
     public DeleteAccessValidator(Group group, Resource resource, AccessValidatorContext context, boolean checkAccessGranted) {

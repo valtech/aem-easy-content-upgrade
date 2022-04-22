@@ -385,7 +385,7 @@ public class AecuServiceImpl implements AecuService {
      * @param session session
      * @param path    script path
      * @return history
-     * @throws AecuException
+     * @throws AecuException error creating the history node
      */
     protected HookExecutionHistory createHookExecutionHistory(Session session, String path) throws AecuException {
         return new HookExecutionHistory(session, path);
