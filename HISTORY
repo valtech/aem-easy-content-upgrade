@@ -1,4 +1,4 @@
-5.3.0
+2022-04-22 6.0.0
   - Added startup hook for automatic script execution on AEM Cloud (171)
   - AecuService: added executeWithInstallHookHistory() method (172)
   - Binding: added "not" versions of all filters
