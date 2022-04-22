@@ -28,7 +28,7 @@ import com.icfolson.aem.groovy.console.api.StarImportExtensionProvider;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 
-@Component(immediate = true)
+@Component(immediate = true, service = {StarImportExtensionProvider.class, AecuStarImportExtensionProvider.class})
 public class AecuStarImportExtensionProvider implements StarImportExtensionProvider {
 
     @Override

@@ -18,6 +18,7 @@
  */
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -39,7 +40,7 @@ public class ORFilter implements FilterBy {
      * @param filters list of filters that should be chained with OR
      */
     public ORFilter(List<FilterBy> filters) {
-        this.filters = filters;
+        this.filters = new ArrayList<>(filters);
     }
 
     @Override

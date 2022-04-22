@@ -324,7 +324,7 @@ public class HistoryUtil {
         }
         Iterable<Resource> children = resource.getChildren();
         for (Resource child : children) {
-            entry.getSingleResults().add(readHistorySingleResult(child));
+            entry.addSingleResult(readHistorySingleResult(child));
         }
         return entry;
     }

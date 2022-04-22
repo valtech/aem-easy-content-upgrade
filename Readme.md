@@ -23,7 +23,8 @@ Table of contents
 2. [Installation](#installation)
 3. [File and Folder Structure](#structure)
 4. [Execution of Migration Scripts](#execution)
-    1. [Install Hook](#installHook)
+    1. [Startup Hook](#startupHook)
+    2. [Install Hook](#installHook)
     2. [Manual Execution](#manualExecution)
 5. [History of Past Runs](#history)
 6. [Extension to Groovy Console](#groovy)
@@ -57,7 +58,7 @@ AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3)<br/>Cloud | included     | 5.x |
+| 6.5 (>=6.5.3)<br/>Cloud | included     | 6.x, 5.x |
 
 ## Older AEM versions
 For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
@@ -159,10 +160,15 @@ Then delete "aem-groovy-console" packages in package manager.
 
 # File and Folder Structure
 
-All migration scripts need to be located in `/conf/groovyconsole/scripts/aecu` (recommended) or `/var/groovyconsole/scripts/aecu`. 
+All migration scripts need to be located in:
 
-The first is recommended with AEM as a Cloud Service due to [restrictions with the `/var` repository location](https://experienceleague.adobe.com/docs/experience-manager-learn/cloud-service/debugging/debugging-aem-as-a-cloud-service/build-and-deployment.html?lang=en#including-%2Fvar-in-content-package).
-There you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
+* `/apps/aecu-scripts` (AEM Cloud automatic execution with startup hook, since 6.0.0)
+* `/conf/groovyconsole/scripts/aecu` (AEM onprem manual and install hook execution, AEM Cloud manual execution)
+* `/var/groovyconsole/scripts/aecu` (deprecated)
+
+AEM as a Cloud Service requires the scripts to be executed automatically in /apps to avoid issues with the startup hook. Manual scripts can still be located in /conf.
+
+In this folder you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
 The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
 
 If your package containing the scripts is bundled in another package please make sure that this is done using "subPackages" in pom.xml.
@@ -188,13 +194,27 @@ the corresponding script. If it fails with an exception then the corresponding s
 
 # Execution of Migration Scripts
 
+<a name="startupHook"></a>
+
+## Startup Hook (since 6.0.0)
+
+This is the preferred method to execute your scripts on AEM Cloud installations. It allows to run them without any user interaction. Just package them with a content package and do a regular deployment.
+
+The startup hook automatically runs on AEM Cloud (detecting the composite node store). It executes all scripts in /apps/aecu-scripts when the server is started during deploy.
+Please note that changes to /apps or /libs are not possible as the startup hook does not run during build phase of the images.
+
+Please note that scripts will not be executed on a local development instance of AEM Cloud (no composite node store). Here you can activate the execution via install hook. See pom.xml of examples-cloud package how to activate the install hook via profile. Install hooks must not be activated for AEM Cloud environments hosted by Adobe.
+
+As multiple AEM instances share the same repository scripts might be executed multiple times during the same deployment. Please make sure your scripts can handle this.
+Scripts with "always" selector might be executed at random times as cloud instances can be added/removed dynamically based on load.
+
 <a name="installHook"></a>
 
 ## Install Hook
 
-This is the preferred method to execute your scripts. It allows to run them without any user interaction. Just package them with a content package and do a regular deployment.
+This is the preferred method to execute your scripts on non-AEM-Cloud installations. It allows to run them without any user interaction. Just package them with a content package and do a regular deployment.
 
-You can add the install hook by adding de.valtech.aecu.core.installhook.AecuInstallHook as a hook to your package properties. The AECU package and Groovy Console need to be installed beforehand.
+You can add the install hook by adding de.valtech.aecu.core.installhook.AecuInstallHook as a hook to your package properties. The AECU package needs to be installed beforehand.
 
 ```xml
 <plugin>
@@ -312,19 +332,31 @@ These methods can be used to filter the nodes that were collected above. Multipl
 Filters the resources by property values.
 
 * filterByHasProperty: matches all nodes that have the given property. The value of the property is not relevant.
+* filterByNotHasProperty: matches all nodes that do not have the given property. The value of the property is not relevant.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
+* filterByNotProperty: matches all nodes that do not have the given attribute value. Filter matches if attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
+* filterByNotProperties: use this to filter by a list of property values (e.g. sling:resourceType) is not matching. If any property in the map does not match the filter matches. Filter matches if attribute does not exist.
 * filterByMultiValuePropContains: checks if all condition values are contained in the defined attribute. Filter does not match if attribute does not exist.
-* filterByPropertyRegex: filters by a single property using a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNotMultiValuePropContains: checks if not all condition values are contained in the defined attribute. Filter matches if attribute does not exist.
+* filterByPropertyRegex: filters by a single property matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNotPropertyRegex: filters by a single property not matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 * filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByNoPropertyRegex: filters by no property matching a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 
 ```java
 filterByHasProperty(String name)
+filterByNotHasProperty(String name)
 filterByProperty(String name, Object value)
+filterByNotProperty(String name, Object value)
 filterByProperties(Map<String, String> properties)
+filterByNotProperties(Map<String, Object> conditionProperties)
 filterByMultiValuePropContains(String name,  Object[] conditionValues)
+filterByNotMultiValuePropContains(String name, Object[] conditionValues)
 filterByPropertyRegex(String name, String regex)
+filterByNotPropertyRegex(String name, String regex)
 filterByAnyPropertyRegex(String regex)
+filterByNoPropertyRegex(String regex)
 ```
 
 Example:
@@ -351,13 +383,17 @@ aecu.contentUpgradeBuilder()
 You can also filter nodes by their name.
 
 * filterByNodeName(String name): process only nodes which have this exact name
+* filterByNotNodeName(String name): process only nodes which do not have this exact name
 * filterByNodeNameRegex(String regex): process nodes that have a name that matches the given regular expression
+* filterByNotNodeNameRegex(String regex): process nodes that have a name that does not match the given regular expression
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByNodeName("jcr:content")
+        .filterByNotNodeName("jcr:content")
         .filterByNodeNameRegex("jcr.*")
+        .filterByNotNodeNameRegex("jcr.*")
         .doSetProperty("name", "value")
         .run()
 ```
@@ -367,11 +403,13 @@ aecu.contentUpgradeBuilder()
 Nodes can also be filtered by their path using a regular expression.
 
 * filterByPathRegex(String regex): process nodes whose path matches the given regular expression
+* filterByNotPathRegex(String regex): process nodes whose path does not match the given regular expression
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByPathRegex(".*/jcr:content/.*")
+        .filterByNotPathRegex(".*/jcr:content/.*")
         .doSetProperty("name", "value")
         .run()
 ```
@@ -416,6 +454,7 @@ def complexFilter =  new ORFilter(
 aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/ca/en", false)
         .filterWith(complexFilter)
+        .filterNotWith(complexFilter)
         .filterWith(new NOTFilter(new FilterByPathRegex(".*jcr:content.*")))
         .doSetProperty("name", "value")
         .run()        

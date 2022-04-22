@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2020 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,9 +18,9 @@
  */
 package de.valtech.aecu.core.model.history;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,12 +31,14 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.request.RequestParameter;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.api.service.ExecutionResult;
 import de.valtech.aecu.api.service.ExecutionState;
@@ -51,7 +53,8 @@ import de.valtech.aecu.core.service.HistoryEntryImpl;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class HistoryOverviewTest {
 
     private static final String PATH = "path";
@@ -74,7 +77,7 @@ public class HistoryOverviewTest {
     @Mock
     private AccessValidationService accessValidationService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         RequestParameter param = mock(RequestParameter.class);
         when(request.getRequestParameter("entry")).thenReturn(param);
@@ -173,10 +176,10 @@ public class HistoryOverviewTest {
     @Test
     public void getDonutData() {
         HistoryEntryImpl entry = new HistoryEntryImpl();
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.SKIPPED, "5s", "", null, null, "path"));
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
-        entry.getSingleResults().add(new ExecutionResult(ExecutionState.FAILED, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.SKIPPED, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.SUCCESS, "5s", "", null, null, "path"));
+        entry.addSingleResult(new ExecutionResult(ExecutionState.FAILED, "5s", "", null, null, "path"));
         Date now = new Date();
         entry.setStart(now);
         entry.setEnd(now);

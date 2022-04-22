@@ -35,10 +35,10 @@ public interface HistoryEntry {
      * Execution state (e.g. running)
      */
     public enum STATE {
-    /** Execution ongoing */
-    RUNNING("Running"),
-    /** Execution finished */
-    FINISHED("Finished");
+        /** Execution ongoing */
+        RUNNING("Running"),
+        /** Execution finished */
+        FINISHED("Finished");
 
         private String label;
 

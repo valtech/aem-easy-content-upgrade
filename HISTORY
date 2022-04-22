@@ -1,3 +1,9 @@
+2022-04-22 6.0.0
+  - Added startup hook for automatic script execution on AEM Cloud (171)
+  - AecuService: added executeWithInstallHookHistory() method (172)
+  - Binding: added "not" versions of all filters
+  - Fixed issue with long installation time on 6.5 (154)
+
 2022-03-28 5.2.0
   - Added forResourcesByPropertyQuery() to binding
   - added subNodepath parameter to doSetProperty()/doDeleteProperty()/doRenameProperty() (142)

@@ -18,6 +18,7 @@
  */
 package de.valtech.aecu.core.groovy.console.bindings.actions.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -57,7 +58,7 @@ public class ReplaceResourcePropertyValues implements Action {
             @Nonnull List<String> propertyNames) {
         this.oldValue = oldValue;
         this.newValue = newValue;
-        this.propertyNames = propertyNames;
+        this.propertyNames = new ArrayList<>(propertyNames);
     }
 
     @Override

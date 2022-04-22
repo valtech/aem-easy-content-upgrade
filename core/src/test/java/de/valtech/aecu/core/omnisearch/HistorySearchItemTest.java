@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,21 +18,23 @@
  */
 package de.valtech.aecu.core.omnisearch;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.xss.XSSAPI;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.api.service.ExecutionResult;
 import de.valtech.aecu.api.service.ExecutionState;
@@ -43,7 +45,8 @@ import de.valtech.aecu.core.service.HistoryEntryImpl;
  * 
  * @author Roland Gruber
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class HistorySearchItemTest {
 
     @Mock
@@ -61,13 +64,13 @@ public class HistorySearchItemTest {
     private static final String PATH_TEXT = "path_text_sometextsometext111sometextsometextsometext_endofpath";
     private static final String FALLBACK_TEXT = "fallback_<b>text_sometextsometext111sometextsometextsometext_endofpath";
 
-    @Before
+    @BeforeEach
     public void setup() {
         HistoryEntryImpl history = new HistoryEntryImpl();
         ExecutionResult fallback = new ExecutionResult(ExecutionState.SUCCESS, "2018", FALLBACK_TEXT, "", null, "");
         ExecutionResult singleResult =
                 new ExecutionResult(ExecutionState.SUCCESS, "2018", RESULT_TEXT, OUTPUT_TEXT, fallback, PATH_TEXT);
-        history.getSingleResults().add(singleResult);
+        history.addSingleResult(singleResult);
         doReturn(history).when(item).readHistory();
         doReturn(singleResult).when(item).readSingleResult();
         item.setup();

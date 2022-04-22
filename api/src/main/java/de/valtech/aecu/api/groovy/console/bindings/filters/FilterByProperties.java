@@ -51,11 +51,6 @@ public class FilterByProperties implements FilterBy {
     @Override
     public boolean filter(@Nonnull Resource resource, StringBuilder output) {
         ValueMap properties = resource.getValueMap();
-        if (properties == null) {
-            output.append("WARNING: Could not get ModifiableValueMap of resource " + resource.getPath());
-            return false;
-        }
-
         for (String key : conditionProperties.keySet()) {
             Object conditionValue = conditionProperties.get(key);
             Object propertiesValue = properties.get(key);
@@ -75,5 +70,6 @@ public class FilterByProperties implements FilterBy {
         }
         return true;
     }
+
 }
 

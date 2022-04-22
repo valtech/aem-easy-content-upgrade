@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Valtech GmbH
+ * Copyright 2018 - 2022 Valtech GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,7 +24,7 @@
  * 
  * @author Roland Gruber
  */
-@Version("2.2.0")
+@Version("3.0.0")
 package de.valtech.aecu.api.service;
 
 import org.osgi.annotation.versioning.Version;

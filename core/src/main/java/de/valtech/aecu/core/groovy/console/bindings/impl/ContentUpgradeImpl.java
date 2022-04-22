@@ -51,6 +51,7 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyRegex;
+import de.valtech.aecu.api.groovy.console.bindings.filters.NOTFilter;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
 import de.valtech.aecu.core.groovy.console.bindings.actions.multivalue.AddMultiValues;
@@ -98,7 +99,7 @@ import de.valtech.aecu.core.groovy.console.bindings.traversers.TraversData;
  */
 public class ContentUpgradeImpl implements ContentUpgrade {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContentUpgrade.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContentUpgradeImpl.class);
 
     private BindingContext context = null;
     private ScriptContext scriptContext;
@@ -188,12 +189,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         if (StringUtils.isEmpty(input)) {
             return StringUtils.EMPTY;
         }
-        return input.replaceAll("'", "''");
+        return input.replace("'", "''");
     }
 
     @Override
     public ContentUpgrade filterByProperties(@Nonnull Map<String, Object> conditionProperties) {
         addFilter(new FilterByProperties(conditionProperties));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByNotProperties(Map<String, Object> conditionProperties) {
+        addNotFilter(new FilterByProperties(conditionProperties));
         return this;
     }
 
@@ -204,8 +211,20 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade filterByNotProperty(String name, Object value) {
+        addNotFilter(new FilterByProperty(name, value));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterByPropertyRegex(String name, String regex) {
         addFilter(new FilterByPropertyRegex(name, regex));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByNotPropertyRegex(String name, String regex) {
+        addNotFilter(new FilterByPropertyRegex(name, regex));
         return this;
     }
 
@@ -216,8 +235,20 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade filterByNoPropertyRegex(String regex) {
+        addNotFilter(new FilterByPropertyRegex(null, regex));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterByHasProperty(@Nonnull String name) {
         addFilter(new FilterByHasProperty(name));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByNotHasProperty(String name) {
+        addNotFilter(new FilterByHasProperty(name));
         return this;
     }
 
@@ -228,8 +259,20 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade filterByNotMultiValuePropContains(String name, Object[] conditionValues) {
+        addNotFilter(new FilterByMultiValuePropContains(name, conditionValues));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterByNodeName(@Nonnull String nodeName) {
         addFilter(new FilterByNodeName(nodeName));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByNotNodeName(String nodeName) {
+        addNotFilter(new FilterByNodeName(nodeName));
         return this;
     }
 
@@ -252,14 +295,32 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade filterByNotNodeNameRegex(String regex) {
+        addNotFilter(new FilterByNodeNameRegex(regex));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterByPathRegex(@Nonnull String regex) {
         addFilter(new FilterByPathRegex(regex));
         return this;
     }
 
     @Override
+    public ContentUpgrade filterByNotPathRegex(String regex) {
+        addNotFilter(new FilterByPathRegex(regex));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterWith(@Nonnull FilterBy filter) {
         addFilter(filter);
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterNotWith(FilterBy filter) {
+        addNotFilter(filter);
         return this;
     }
 
@@ -276,8 +337,17 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         if (this.filter instanceof ANDFilter) {
             ((ANDFilter) this.filter).addFilter(filter);
         }
-        ANDFilter newFilter = new ANDFilter(new ArrayList<FilterBy>(Arrays.asList(this.filter, filter)));
+        ANDFilter newFilter = new ANDFilter(new ArrayList<>(Arrays.asList(this.filter, filter)));
         this.filter = newFilter;
+    }
+
+    /**
+     * Adds a new NOTFilter based on the given filter.
+     * 
+     * @param filter filter to negate
+     */
+    private void addNotFilter(@Nonnull FilterBy filter) {
+        addFilter(new NOTFilter(filter));
     }
 
     @Override
