@@ -40,7 +40,7 @@ public final class RuntimeHelper {
      * 
      * @param session session
      * @return is composite node store
-     * @see https://issues.apache.org/jira/browse/OAK-6563
+     * @see <a href="https://issues.apache.org/jira/browse/OAK-6563">OAK-6563</a>
      */
     public static boolean isCompositeNodeStore(Session session) {
         try {
