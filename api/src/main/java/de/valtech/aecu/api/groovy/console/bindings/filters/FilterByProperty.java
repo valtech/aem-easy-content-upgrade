@@ -51,7 +51,7 @@ public class FilterByProperty implements FilterBy {
     public boolean filter(@Nonnull Resource resource, StringBuilder output) {
         ValueMap properties = resource.getValueMap();
         Object attrValue = properties.get(name);
-        return (value == null) && (attrValue == null) || ((value != null) && value.equals(attrValue));
+        return ((value == null) && (attrValue == null)) || ((value != null) && value.equals(attrValue));
     }
 }
 

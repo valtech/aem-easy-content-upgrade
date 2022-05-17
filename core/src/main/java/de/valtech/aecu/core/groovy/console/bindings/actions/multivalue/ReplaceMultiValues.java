@@ -59,8 +59,8 @@ public class ReplaceMultiValues implements Action {
             }
 
             String warning = (oldValues.length != newValues.length)
-                    ? "WARNING: old values and new values length mismatch (old: " + Arrays.toString(oldValues) + " , new: "
-                            + Arrays.toString(newValues) + ")" + " -> the smaller length will be considered\n"
+                    ? ("WARNING: old values and new values length mismatch (old: " + Arrays.toString(oldValues) + " , new: "
+                            + Arrays.toString(newValues) + ")" + " -> the smaller length will be considered\n")
                     : "";
 
             for (int i = 0; i < oldValues.length && i < newValues.length; i++) {

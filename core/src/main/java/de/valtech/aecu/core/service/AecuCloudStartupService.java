@@ -67,7 +67,7 @@ public class AecuCloudStartupService {
     private ServiceComponentRuntime serviceComponentRuntime;
 
     @Activate
-    public void activate() {
+    public void activate() throws InterruptedException {
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
         boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
@@ -76,12 +76,7 @@ public class AecuCloudStartupService {
                 LOGGER.error("Groovy extension services seem to be not bound");
                 throw new IllegalStateException("Groovy extension services seem to be not bound");
             }
-            try {
-                Thread.sleep(1000L * WAIT_PERIOD);
-            } catch (InterruptedException e) {
-                LOGGER.error(e.getMessage());
-                Thread.currentThread().interrupt();
-            }
+            Thread.sleep(1000L * WAIT_PERIOD);
             startAecuMigration();
         }
     }
@@ -90,18 +85,14 @@ public class AecuCloudStartupService {
      * Waits till Groovy Console took up our services.
      * 
      * @return services are ok
+     * @throws InterruptedException sleep failed
      */
-    protected boolean waitForServices() {
+    protected boolean waitForServices() throws InterruptedException {
         for (int i = 0; i < WAIT_INTERVALS; i++) {
             if (servicesAreOk()) {
                 return true;
             }
-            try {
-                Thread.sleep(1000L * WAIT_PERIOD);
-            } catch (InterruptedException e) {
-                LOGGER.error(e.getMessage());
-                Thread.currentThread().interrupt();
-            }
+            Thread.sleep(1000L * WAIT_PERIOD);
             LOGGER.debug("Services not yet injected, waiting");
         }
         return false;
