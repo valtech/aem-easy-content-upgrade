@@ -18,20 +18,28 @@
  */
 package de.valtech.aecu.core.service;
 
+import java.util.Collection;
+
 import javax.jcr.Session;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.runtime.ServiceComponentRuntime;
+import org.osgi.service.component.runtime.dto.ComponentConfigurationDTO;
+import org.osgi.service.component.runtime.dto.ComponentDescriptionDTO;
+import org.osgi.service.component.runtime.dto.SatisfiedReferenceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
+
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
-import de.valtech.aecu.core.groovy.console.bindings.provider.AecuBindingExtensionProvider;
-import de.valtech.aecu.core.groovy.console.bindings.provider.AecuStarImportExtensionProvider;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 import de.valtech.aecu.core.util.runtime.RuntimeHelper;
 
@@ -41,18 +49,22 @@ import de.valtech.aecu.core.util.runtime.RuntimeHelper;
 @Component(service = AecuCloudStartupService.class, immediate = true, name = "AECU cloud startup hook")
 public class AecuCloudStartupService {
 
+    private static final String STAR_IMPORT_EXTENSION_PROVIDER = "StarImportExtensionProvider";
+    private static final String BINDING_EXTENSION_PROVIDER = "BindingExtensionProvider";
+    private static final String DEFAULT_EXTENSION_SERVICE =
+            "com.icfolson.aem.groovy.console.extension.impl.DefaultExtensionService";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AecuCloudStartupService.class);
+
+    private static final int WAIT_PERIOD = 10;
+    private static final int WAIT_INTERVALS = 30;
 
     @Reference
     private AecuService aecuService;
     @Reference
     private ServiceResourceResolverService resourceResolverService;
-
-    // dependencies to avoid scripts are executed before Groovy extension is loaded
     @Reference
-    private AecuBindingExtensionProvider dependency1;
-    @Reference
-    private AecuStarImportExtensionProvider dependency2;
+    private ServiceComponentRuntime serviceComponentRuntime;
 
     @Activate
     public void activate() {
@@ -60,8 +72,64 @@ public class AecuCloudStartupService {
         Session session = resourceResolver.adaptTo(Session.class);
         boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
         if (isCompositeNodeStore) {
+            if (!waitForServices()) {
+                LOGGER.error("Groovy extension services seem to be not bound");
+                throw new IllegalStateException("Groovy extension services seem to be not bound");
+            }
+            try {
+                Thread.sleep(1000L * WAIT_PERIOD);
+            } catch (InterruptedException e) {
+                LOGGER.error(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
             startAecuMigration();
         }
+    }
+
+    /**
+     * Waits till Groovy Console took up our services.
+     * 
+     * @return services are ok
+     */
+    protected boolean waitForServices() {
+        for (int i = 0; i < WAIT_INTERVALS; i++) {
+            if (servicesAreOk()) {
+                return true;
+            }
+            try {
+                Thread.sleep(1000L * WAIT_PERIOD);
+            } catch (InterruptedException e) {
+                LOGGER.error(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+            LOGGER.debug("Services not yet injected, waiting");
+        }
+        return false;
+    }
+
+    /**
+     * Checks if our services are already injected.
+     */
+    private boolean servicesAreOk() {
+        Bundle bundle = FrameworkUtil.getBundle(BindingExtensionProvider.class);
+        ComponentDescriptionDTO componentDescription =
+                serviceComponentRuntime.getComponentDescriptionDTO(bundle, DEFAULT_EXTENSION_SERVICE);
+        if ((componentDescription == null) || !serviceComponentRuntime.isComponentEnabled(componentDescription)) {
+            return false;
+        }
+        Collection<ComponentConfigurationDTO> componentConfigurations =
+                serviceComponentRuntime.getComponentConfigurationDTOs(componentDescription);
+        int satisfied = 0;
+        for (ComponentConfigurationDTO componentConfiguration : componentConfigurations) {
+            for (SatisfiedReferenceDTO satisfiedReference : componentConfiguration.satisfiedReferences) {
+                if ((BINDING_EXTENSION_PROVIDER.equals(satisfiedReference.name)
+                        || STAR_IMPORT_EXTENSION_PROVIDER.equals(satisfiedReference.name))
+                        && (satisfiedReference.boundServices.length >= 2)) {
+                    satisfied++;
+                }
+            }
+        }
+        return satisfied == 2;
     }
 
     /**

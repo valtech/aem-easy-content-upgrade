@@ -18,6 +18,7 @@
  */
 package de.valtech.aecu.core.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -68,6 +69,7 @@ public class AecuCloudStartupServiceTest {
         when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
         when(resolver.adaptTo(Session.class)).thenReturn(session);
         doReturn(true).when(session).hasPermission(anyString(), anyString());
+        doReturn(true).when(startupService).waitForServices();
     }
 
     @Test
@@ -77,6 +79,14 @@ public class AecuCloudStartupServiceTest {
         startupService.activate();
 
         verify(aecuService, times(1)).executeWithInstallHookHistory(AecuService.AECU_APPS_PATH_PREFIX);
+    }
+
+    @Test
+    public void testMigration_compositeNodeStoreButServicesNotOk() throws Exception {
+        doReturn(false).when(session).hasCapability(anyString(), any(), any());
+        doReturn(false).when(startupService).waitForServices();
+
+        assertThrows(IllegalStateException.class, () -> startupService.activate());
     }
 
     @Test
