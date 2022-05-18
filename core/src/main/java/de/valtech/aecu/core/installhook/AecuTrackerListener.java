@@ -67,7 +67,11 @@ public class AecuTrackerListener implements ProgressTrackerListener {
         this.originalListener = originalListener;
         this.aecuService = aecuService;
         this.paths = new HashSet<>();
-        logMessage("Starting install hook...");
+        if (originalListener == null) {
+            logMessage("No progress tracker listener given, stopping AECU hook.");
+        } else {
+            logMessage("Starting install hook...");
+        }
     }
 
     /**
@@ -83,6 +87,9 @@ public class AecuTrackerListener implements ProgressTrackerListener {
 
     @Override
     public void onMessage(Mode mode, String action, String path) {
+        if (originalListener == null) {
+            return;
+        }
         originalListener.onMessage(mode, action, path);
 
         if (StringUtils.length(action) != VALID_ACTION_LENGTH) {
