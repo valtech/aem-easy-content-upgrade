@@ -80,7 +80,7 @@ public class AecuInstallHook implements InstallHook {
 
     @Override
     public void execute(InstallContext installContext) throws PackageException {
-        LOG.info("Executing in phase {}", installContext.getPhase());
+        LOG.info("Executing in phase {} for package {}", installContext.getPhase(), installContext.getPackage().getId());
         ServiceReference<AecuService> aecuServiceReference = osgiServiceProvider.getServiceReference(AecuService.class);
         AecuService aecuService = osgiServiceProvider.getService(aecuServiceReference);
 
