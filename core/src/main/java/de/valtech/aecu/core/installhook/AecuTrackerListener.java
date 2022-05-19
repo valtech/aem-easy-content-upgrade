@@ -67,7 +67,11 @@ public class AecuTrackerListener implements ProgressTrackerListener {
         this.originalListener = originalListener;
         this.aecuService = aecuService;
         this.paths = new HashSet<>();
-        logMessage("Starting install hook...");
+        if (originalListener == null) {
+            logMessage("No progress tracker listener given.");
+        } else {
+            logMessage("Starting install hook...");
+        }
     }
 
     /**
@@ -83,7 +87,9 @@ public class AecuTrackerListener implements ProgressTrackerListener {
 
     @Override
     public void onMessage(Mode mode, String action, String path) {
-        originalListener.onMessage(mode, action, path);
+        if (originalListener != null) {
+            originalListener.onMessage(mode, action, path);
+        }
 
         if (StringUtils.length(action) != VALID_ACTION_LENGTH) {
             // skip actions like 'Collecting import information... ', 'Package imported.' etc.
@@ -132,14 +138,21 @@ public class AecuTrackerListener implements ProgressTrackerListener {
 
     @Override
     public void onError(Mode mode, String action, Exception e) {
-        originalListener.onError(mode, action, e);
+        if (originalListener != null) {
+            originalListener.onError(mode, action, e);
+        }
     }
 
     public void logMessage(String message) {
-        onMessage(Mode.TEXT, LOG_PREFIX + message, "");
+        LOG.info(message);
+        if (originalListener != null) {
+            originalListener.onMessage(Mode.TEXT, LOG_PREFIX + message, "");
+        }
     }
 
     public void logError(String message, Exception e) {
+        LOG.error(message, e);
         onError(Mode.TEXT, LOG_PREFIX + message, e);
     }
+
 }

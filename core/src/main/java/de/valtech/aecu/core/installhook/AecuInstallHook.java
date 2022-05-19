@@ -80,7 +80,7 @@ public class AecuInstallHook implements InstallHook {
 
     @Override
     public void execute(InstallContext installContext) throws PackageException {
-        LOG.info("Executing in phase {}", installContext.getPhase());
+        LOG.info("Executing in phase {} for package {}", installContext.getPhase(), installContext.getPackage().getId());
         ServiceReference<AecuService> aecuServiceReference = osgiServiceProvider.getServiceReference(AecuService.class);
         AecuService aecuService = osgiServiceProvider.getService(aecuServiceReference);
 
@@ -92,7 +92,6 @@ public class AecuInstallHook implements InstallHook {
                     installContext.getOptions().setListener(listener);
                     break;
                 case INSTALLED:
-
                     Archive archive = installContext.getPackage().getArchive();
                     List<String> allValidScriptCandidatesInArchive = findCandidates("", archive.getJcrRoot(), aecuService);
                     List<String> scriptsForInstallation =
@@ -118,6 +117,9 @@ public class AecuInstallHook implements InstallHook {
 
     private List<String> getScriptsForExecution(List<String> allValidScriptCandidatesInArchive, InstallContext installContext) {
         List<String> scriptsForExecution = new ArrayList<>();
+        if (listener == null) {
+            return scriptsForExecution;
+        }
         List<String> modifiedOrAddedScriptPaths = listener.getModifiedOrAddedPaths();
         for (String groovyScriptPath : allValidScriptCandidatesInArchive) {
             try {
