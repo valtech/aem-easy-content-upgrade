@@ -1,4 +1,4 @@
-6.0.1
+2022-05-19 6.0.1
   - Fixed race condition on AEM Cloud startup hook (184)
 
 2022-04-22 6.0.0
