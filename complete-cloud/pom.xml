@@ -38,7 +38,7 @@
                         <embedded>
                             <groupId>de.valtech.aecu</groupId>
                             <artifactId>aecu.core</artifactId>
-                            <target>/apps/valtech/aecu-complete/install</target>
+                            <target>/apps/valtech/aecu-complete/install/27</target>
                         </embedded>
                         <embedded>
                             <groupId>com.icfolson.aem.groovy.console</groupId>
