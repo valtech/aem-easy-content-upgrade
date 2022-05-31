@@ -69,7 +69,7 @@ public class AecuCloudStartupService {
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
         boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
-        if (!isCompositeNodeStore) {
+        if (isCompositeNodeStore) {
             try {
                 if (!waitForServices()) {
                     LOGGER.error("Groovy extension services seem to be not bound");
