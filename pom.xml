@@ -383,7 +383,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>7.1.0</version>
+                    <version>7.0.4</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
@@ -543,8 +543,7 @@
             <dependency>
                 <groupId>com.adobe.aem</groupId>
                 <artifactId>uber-jar</artifactId>
-                <version>6.5.3</version>
-                <classifier>apis</classifier>
+                <version>6.5.13</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
