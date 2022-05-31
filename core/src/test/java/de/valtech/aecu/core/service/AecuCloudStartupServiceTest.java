@@ -76,7 +76,7 @@ public class AecuCloudStartupServiceTest {
     public void testMigration_compositeNodeStore() throws Exception {
         doReturn(false).when(session).hasCapability(anyString(), any(), any());
 
-        startupService.activate();
+        startupService.checkAndRunMigration();
 
         verify(aecuService, times(1)).executeWithInstallHookHistory(AecuService.AECU_APPS_PATH_PREFIX);
     }
@@ -86,14 +86,14 @@ public class AecuCloudStartupServiceTest {
         doReturn(false).when(session).hasCapability(anyString(), any(), any());
         doReturn(false).when(startupService).waitForServices();
 
-        assertThrows(IllegalStateException.class, () -> startupService.activate());
+        assertThrows(IllegalStateException.class, () -> startupService.checkAndRunMigration());
     }
 
     @Test
     public void testMigration_noCompositeNodeStore() throws Exception {
         doReturn(true).when(session).hasCapability(anyString(), any(), any());
 
-        startupService.activate();
+        startupService.checkAndRunMigration();
 
         verify(aecuService, never()).executeWithInstallHookHistory(AecuService.AECU_APPS_PATH_PREFIX);
     }

@@ -24,9 +24,10 @@ import javax.jcr.Session;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.launchpad.api.StartupListener;
+import org.apache.sling.launchpad.api.StartupMode;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.runtime.ServiceComponentRuntime;
@@ -46,8 +47,8 @@ import de.valtech.aecu.core.util.runtime.RuntimeHelper;
 /**
  * Service that executes the AECU migration if the node store type is composite (AEM Cloud).
  */
-@Component(service = AecuCloudStartupService.class, immediate = true, name = "AECU cloud startup hook")
-public class AecuCloudStartupService {
+@Component(service = StartupListener.class, immediate = true, name = "AECU cloud startup hook")
+public class AecuCloudStartupService implements StartupListener {
 
     private static final String STAR_IMPORT_EXTENSION_PROVIDER = "StarImportExtensionProvider";
     private static final String BINDING_EXTENSION_PROVIDER = "BindingExtensionProvider";
@@ -66,18 +67,22 @@ public class AecuCloudStartupService {
     @Reference
     private ServiceComponentRuntime serviceComponentRuntime;
 
-    @Activate
-    public void activate() throws InterruptedException {
+    public void checkAndRunMigration() {
+        LOGGER.error("AECU START");
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
         boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
         if (isCompositeNodeStore) {
-            if (!waitForServices()) {
-                LOGGER.error("Groovy extension services seem to be not bound");
-                throw new IllegalStateException("Groovy extension services seem to be not bound");
+            try {
+                if (!waitForServices()) {
+                    LOGGER.error("Groovy extension services seem to be not bound");
+                    throw new IllegalStateException("Groovy extension services seem to be not bound");
+                }
+                Thread.sleep(1000L * WAIT_PERIOD);
+                startAecuMigration();
+            } catch (InterruptedException e) {
+                LOGGER.error("Interrupted", e);
             }
-            Thread.sleep(1000L * WAIT_PERIOD);
-            startAecuMigration();
         }
     }
 
@@ -147,6 +152,23 @@ public class AecuCloudStartupService {
         } catch (LoginException le) {
             throw new IllegalStateException("Error while logging in", le);
         }
+    }
+
+    @Override
+    public void inform(StartupMode mode, boolean finished) {
+        if (finished) {
+            checkAndRunMigration();
+        }
+    }
+
+    @Override
+    public void startupFinished(StartupMode mode) {
+        checkAndRunMigration();
+    }
+
+    @Override
+    public void startupProgress(float ratio) {
+        // no action
     }
 
 }
