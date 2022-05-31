@@ -16,7 +16,7 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.service;
+package de.valtech.aecu.startuphook;
 
 import java.util.Collection;
 
@@ -41,8 +41,6 @@ import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
-import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
-import de.valtech.aecu.core.util.runtime.RuntimeHelper;
 
 /**
  * Service that executes the AECU migration if the node store type is composite (AEM Cloud).
@@ -68,7 +66,6 @@ public class AecuCloudStartupService implements StartupListener {
     private ServiceComponentRuntime serviceComponentRuntime;
 
     public void checkAndRunMigration() {
-        LOGGER.error("AECU START");
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
         boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);

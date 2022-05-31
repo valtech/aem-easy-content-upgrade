@@ -16,7 +16,7 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.valtech.aecu.core.service;
+package de.valtech.aecu.startuphook;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +41,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import de.valtech.aecu.api.service.AecuService;
-import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -65,7 +64,6 @@ public class AecuCloudStartupServiceTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        when(resolverService.getServiceResourceResolver()).thenReturn(resolver);
         when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
         when(resolver.adaptTo(Session.class)).thenReturn(session);
         doReturn(true).when(session).hasPermission(anyString(), anyString());
