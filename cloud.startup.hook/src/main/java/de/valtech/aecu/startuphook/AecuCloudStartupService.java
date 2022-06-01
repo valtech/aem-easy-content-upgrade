@@ -19,6 +19,8 @@
 package de.valtech.aecu.startuphook;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import javax.jcr.Session;
 
@@ -40,6 +42,8 @@ import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.api.service.HistoryEntry.STATE;
 
 /**
  * Service that executes the AECU migration if the node store type is composite (AEM Cloud).
@@ -56,6 +60,8 @@ public class AecuCloudStartupService {
 
     private static final int WAIT_PERIOD = 10;
     private static final int WAIT_INTERVALS = 30;
+    // migration timeout in seconds
+    private static final int MIGRATION_TIMEOUT = 3600;
 
     @Reference
     private AecuService aecuService;
@@ -69,7 +75,7 @@ public class AecuCloudStartupService {
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
         boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
-        if (isCompositeNodeStore) {
+        if (isCompositeNodeStore && !isMigrationInProgress()) {
             try {
                 if (!waitForServices()) {
                     LOGGER.error("Groovy extension services seem to be not bound");
@@ -80,6 +86,27 @@ public class AecuCloudStartupService {
             } catch (InterruptedException e) {
                 LOGGER.error("Interrupted", e);
             }
+        }
+    }
+
+    /**
+     * Checks if an AECU migration is already in progress. If AECU history tells migration is in
+     * progress then wait max. for MIGRATION_TIMEOUT.
+     * 
+     * @return migration in progress
+     */
+    protected boolean isMigrationInProgress() {
+        try {
+            List<HistoryEntry> historyEntries = aecuService.getHistory(0, 1);
+            if (historyEntries.isEmpty() || (historyEntries.get(0).getState() == STATE.FINISHED)) {
+                return false;
+            }
+            Date startTime = historyEntries.get(0).getStart();
+            Date limitTime = new Date(System.currentTimeMillis() - (MIGRATION_TIMEOUT * 1000));
+            return limitTime.before(startTime);
+        } catch (AecuException e) {
+            LOGGER.error("Unable to read history");
+            return true;
         }
     }
 

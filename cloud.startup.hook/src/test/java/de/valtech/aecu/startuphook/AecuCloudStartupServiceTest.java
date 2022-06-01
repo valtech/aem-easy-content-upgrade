@@ -18,7 +18,9 @@
  */
 package de.valtech.aecu.startuphook;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -26,6 +28,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import javax.jcr.Session;
 
@@ -40,7 +47,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.api.service.HistoryEntry.STATE;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -57,6 +67,9 @@ public class AecuCloudStartupServiceTest {
 
     @Mock
     private Session session;
+
+    @Mock
+    private HistoryEntry historyEntry;
 
     @InjectMocks
     @Spy
@@ -94,6 +107,45 @@ public class AecuCloudStartupServiceTest {
         startupService.checkAndRunMigration();
 
         verify(aecuService, never()).executeWithInstallHookHistory(AecuService.AECU_APPS_PATH_PREFIX);
+    }
+
+    @Test
+    public void migrationInProgress_noHistory() throws AecuException {
+        when(aecuService.getHistory(0, 1)).thenReturn(Collections.emptyList());
+
+        assertFalse(startupService.isMigrationInProgress());
+    }
+
+    @Test
+    public void migrationInProgress_notRunning() throws AecuException {
+        when(historyEntry.getState()).thenReturn(STATE.FINISHED);
+        List<HistoryEntry> history = new ArrayList<>();
+        history.add(historyEntry);
+        when(aecuService.getHistory(0, 1)).thenReturn(history);
+
+        assertFalse(startupService.isMigrationInProgress());
+    }
+
+    @Test
+    public void migrationInProgress_runningOverLimit() throws AecuException {
+        when(historyEntry.getState()).thenReturn(STATE.RUNNING);
+        when(historyEntry.getStart()).thenReturn(new Date(System.currentTimeMillis() - (7200 * 1000)));
+        List<HistoryEntry> history = new ArrayList<>();
+        history.add(historyEntry);
+        when(aecuService.getHistory(0, 1)).thenReturn(history);
+
+        assertFalse(startupService.isMigrationInProgress());
+    }
+
+    @Test
+    public void migrationInProgress_runningNotOverLimit() throws AecuException {
+        when(historyEntry.getState()).thenReturn(STATE.RUNNING);
+        when(historyEntry.getStart()).thenReturn(new Date(System.currentTimeMillis() - (100 * 1000)));
+        List<HistoryEntry> history = new ArrayList<>();
+        history.add(historyEntry);
+        when(aecuService.getHistory(0, 1)).thenReturn(history);
+
+        assertTrue(startupService.isMigrationInProgress());
     }
 
 }
