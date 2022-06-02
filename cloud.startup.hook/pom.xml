@@ -28,17 +28,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Embed-Dependency>
-						              asciitable,
-						              ascii-utf-themes,
-						              skb-interfaces,
-						              char-translation,
-						              antlr-runtime,
-						              antlr4,
-						              stringtemplate
-						            </Embed-Dependency>
 						            <Import-Package>
-						              !antlr.*,
                           javax.annotation;version=0.0.0,
 						              com.icfolson.aem.groovy.console.*;version="[15.1,17)",
 						              *
@@ -128,34 +118,6 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.models.api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.vandermeer</groupId>
-            <artifactId>asciitable</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.vandermeer</groupId>
-            <artifactId>ascii-utf-themes</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.vandermeer</groupId>
-            <artifactId>skb-interfaces</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.vandermeer</groupId>
-            <artifactId>char-translation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>stringtemplate</artifactId>
         </dependency>
 				<dependency>
 				    <groupId>javax.annotation</groupId>
