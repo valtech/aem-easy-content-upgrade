@@ -61,7 +61,7 @@ public class AecuCloudStartupService {
     private static final int WAIT_PERIOD = 10;
     private static final int WAIT_INTERVALS = 30;
     // migration timeout in seconds
-    private static final int MIGRATION_TIMEOUT = 3600;
+    private static final int MIGRATION_TIMEOUT = 1800;
 
     @Reference
     private AecuService aecuService;
