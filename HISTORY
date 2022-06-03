@@ -1,4 +1,4 @@
-6.0.2
+2022-06-03 6.0.2
   - Improvements to cloud startup hook to avoid double execution and execution before Groovy Console is ready
 
 2022-05-19 6.0.1
