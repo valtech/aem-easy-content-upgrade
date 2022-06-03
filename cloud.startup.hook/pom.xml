@@ -7,20 +7,16 @@
         <version>6.0.2</version>
     </parent>
     
-    <artifactId>aecu.api</artifactId>
+    <artifactId>aecu.cloud.startup.hook</artifactId>
     <packaging>bundle</packaging>
-    <name>AECU - API</name>
-    <description>Api bundle for AECU</description>
+    <name>AECU - Cloud Startup Hook</name>
+    <description>Cloud startup hook for AECU</description>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>osgicheck-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-		            <groupId>biz.aQute.bnd</groupId>
-		            <artifactId>bnd-baseline-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.sling</groupId>
@@ -32,23 +28,61 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <!-- Import any version of javax.inject, to allow running on multiple versions of AEM -->
-                        <Import-Package>
-                          javax.inject;version=0.0.0,
+						            <Import-Package>
                           javax.annotation;version=0.0.0,
-                          *
-                        </Import-Package>
+						              com.icfolson.aem.groovy.console.*;version="[15.1,17)",
+						              *
+  					            </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+				          <execution>
+				            <id>prepare-agent</id>
+				            <goals>
+				              <goal>prepare-agent</goal>
+				            </goals>
+				          </execution>
+				          <execution>
+				            <id>report</id>
+				            <phase>prepare-package</phase>
+				            <goals>
+				              <goal>report</goal>
+				            </goals>
+				          </execution>
+				          <execution>
+				            <id>post-unit-test</id>
+				            <phase>test</phase>
+				            <goals>
+				              <goal>report</goal>
+				            </goals>
+				          </execution>
+				        </executions>
             </plugin>
+            <plugin>
+		            <groupId>org.owasp</groupId>
+		            <artifactId>dependency-check-maven</artifactId>
+            </plugin>            
         </plugins>
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.icfolson.aem.groovy.console</groupId>
+            <artifactId>aem-groovy-console</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
@@ -66,6 +100,10 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.jcr</groupId>
             <artifactId>jcr</artifactId>
         </dependency>
@@ -81,13 +119,14 @@
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.models.api</artifactId>
         </dependency>
+				<dependency>
+				    <groupId>javax.annotation</groupId>
+				    <artifactId>javax.annotation-api</artifactId>
+				</dependency>
+        
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.0.1</version>
+        <version>6.0.2</version>
     </parent>
 
     <artifactId>aecu.complete.cloud</artifactId>
@@ -39,6 +39,11 @@
                             <groupId>de.valtech.aecu</groupId>
                             <artifactId>aecu.core</artifactId>
                             <target>/apps/valtech/aecu-complete/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.cloud.startup.hook</artifactId>
+                            <target>/apps/valtech/aecu-complete/install/27</target>
                         </embedded>
                         <embedded>
                             <groupId>com.icfolson.aem.groovy.console</groupId>
@@ -124,6 +129,11 @@
         <dependency>
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.cloud.startup.hook</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
