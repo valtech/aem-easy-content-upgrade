@@ -58,8 +58,8 @@ public class AecuCloudStartupService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AecuCloudStartupService.class);
 
-    private static final int WAIT_PERIOD = 10;
-    private static final int WAIT_INTERVALS = 30;
+    private static final int WAIT_PERIOD = 30;
+    private static final int WAIT_INTERVALS = 10;
     // migration timeout in seconds
     private static final int MIGRATION_TIMEOUT = 1800;
 
@@ -71,7 +71,16 @@ public class AecuCloudStartupService {
     private ServiceComponentRuntime serviceComponentRuntime;
 
     @Activate
-    public void checkAndRunMigration() {
+    public void activate() {
+        Runnable runnable = this::checkAndRunMigration;
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
+
+    /**
+     * Checks if the components are ready and starts the migration process.
+     */
+    protected void checkAndRunMigration() {
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
         boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
@@ -81,7 +90,7 @@ public class AecuCloudStartupService {
                     LOGGER.error("Groovy extension services seem to be not bound");
                     throw new IllegalStateException("Groovy extension services seem to be not bound");
                 }
-                Thread.sleep(1000L * WAIT_PERIOD);
+                Thread.sleep(1000L * WAIT_PERIOD * 2);
                 startAecuMigration();
             } catch (InterruptedException e) {
                 LOGGER.error("Interrupted", e);
