@@ -1,4 +1,4 @@
 aecu.contentUpgradeBuilder()
   .forChildResourcesOf("/content/")
-  .printPath()
+  .printJson()
   .run()
