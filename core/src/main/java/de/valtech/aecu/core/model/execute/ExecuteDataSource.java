@@ -73,7 +73,7 @@ public class ExecuteDataSource {
             List<String> allowedScripts = aecuService.getFiles(path);
             ResourceResolver resourceResolver = request.getResourceResolver();
             for (String scriptPath : allowedScripts) {
-                entries.add(new ValueMapResource(resourceResolver, scriptPath, ITEM_TYPE, null));
+                entries.add(new ValueMapResource(resourceResolver, scriptPath, ITEM_TYPE));
             }
         }
 
