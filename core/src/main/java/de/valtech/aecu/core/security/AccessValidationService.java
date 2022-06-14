@@ -116,7 +116,7 @@ public class AccessValidationService {
     /**
      * Returns the AEM groups that belong to the user.
      * 
-     * @param user user
+     * @param request request
      * @return group names
      */
     private List<String> getUserGroupNames(SlingHttpServletRequest request) {
