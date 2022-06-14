@@ -5,3 +5,4 @@ queries:
 
 paths-ignore:
   - '**/ui.apps.groovyconsole/**/*.*'
+  - '**/target/**/*.*'
