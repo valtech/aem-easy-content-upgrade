@@ -159,7 +159,7 @@ public class TestFilters {
 
         Map<String, Object> properties_multiValue_same_int = new HashMap<>();
         properties_multiValue_same_int.put("testMultiValueInt", new Integer[] {1, 2, 3});
-        assertTrue(new FilterByProperties(properties_multiValue_same).filter(resource, new StringBuilder()));
+        assertTrue(new FilterByProperties(properties_multiValue_same_int).filter(resource, new StringBuilder()));
 
         Map<String, Object> properties_multiValue_2 = new HashMap<>();
         properties_multiValue_2.put("testMultiValue", new String[] {"val_1", "val_2"});

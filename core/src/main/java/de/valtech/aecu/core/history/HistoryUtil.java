@@ -418,7 +418,7 @@ public class HistoryUtil {
         Resource base = resolver.getResource(HISTORY_BASE);
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
-        LOG.debug("Starting purge with limit " + calendar.getTime().toString());
+        LOG.debug("Starting purge with limit {}", calendar.getTime());
         deleteRecursive(base.listChildren(), calendar, new int[] {Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH});
     }
 
@@ -437,7 +437,7 @@ public class HistoryUtil {
             String name = resource.getName();
             // skip extra nodes such as ACLs
             if (!StringUtils.isNumeric(name)) {
-                LOG.debug("Skipping purge of other node: " + resource.getPath());
+                LOG.debug("Skipping purge of other node: {}", resource.getPath());
                 continue;
             }
             int nodeValue = Integer.parseInt(name);
@@ -447,9 +447,9 @@ public class HistoryUtil {
                 limit++;
             }
             if (nodeValue > limit) {
-                LOG.debug("Skipping purge of too young node: " + resource.getPath());
+                LOG.debug("Skipping purge of too young node: {}", resource.getPath());
             } else if (nodeValue == limit) {
-                LOG.debug("Skipping purge of too young node: " + resource.getPath());
+                LOG.debug("Skipping purge of too young node: {}", resource.getPath());
                 // check next level
                 if (fields.length == 1) {
                     return;
@@ -458,7 +458,7 @@ public class HistoryUtil {
                 System.arraycopy(fields, 1, fieldsNew, 0, fieldsNew.length);
                 deleteRecursive(resource.listChildren(), calendar, fieldsNew);
             } else {
-                LOG.debug("Purging node: " + resource.getPath());
+                LOG.debug("Purging node: {}", resource.getPath());
                 BatchResourceRemover remover = ResourceUtil.getBatchResourceRemover(1000);
                 remover.delete(resource);
             }

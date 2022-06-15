@@ -108,7 +108,7 @@ public class AecuTrackerListener implements ProgressTrackerListener {
         }
 
         if (!ACTIONS.contains(action) && isValid(path)) {
-            LOG.debug(String.format("Skipping %s due to non matching action '%s'", path, action));
+            LOG.debug("Skipping {} due to non matching action '{}'", path, action);
             return;
         }
 

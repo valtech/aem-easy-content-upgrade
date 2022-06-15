@@ -165,7 +165,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         if (properties != null) {
             properties.forEach((key, value) -> {
                 if (key == null || value == null) {
-                    LOG.warn("Null key or value provided: Key: " + key + " Value: " + value);
+                    LOG.warn("Null key or value provided: Key: {} Value: {}", key, value);
                     return;
                 }
                 if (value.contains("%")) {

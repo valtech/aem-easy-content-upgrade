@@ -71,7 +71,6 @@ public class SetPageTagsAction implements Action {
     /**
      * Returns the tags that need to be added.
      * 
-     * @param oldTags list of existing tags
      * @return tags to add
      * @throws PersistenceException invalid tag found
      */

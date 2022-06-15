@@ -1,0 +1,8 @@
+name: "AECU CodeQL config"
+
+queries:
+  - uses: security-and-quality
+
+paths-ignore:
+  - '**/ui.apps.groovyconsole/**/*.*'
+  - '**/target/**/*.*'

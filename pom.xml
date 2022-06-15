@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>6.0.2</version>
+    <version>6.0.3</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -36,6 +36,9 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+			  <sonar.organization>valtech_aecu</sonar.organization>
+			  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
     </properties>
 
     <build>

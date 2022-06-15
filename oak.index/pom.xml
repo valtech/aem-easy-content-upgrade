@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.0.2</version>
+        <version>6.0.3</version>
     </parent>
 
     <artifactId>aecu.oak.index</artifactId>
