@@ -42,6 +42,11 @@
                         </embedded>
                         <embedded>
                             <groupId>de.valtech.aecu</groupId>
+                            <artifactId>aecu.oak.index</artifactId>
+                            <target>/apps/valtech/aecu-complete/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>de.valtech.aecu</groupId>
                             <artifactId>aecu.cloud.startup.hook</artifactId>
                             <target>/apps/valtech/aecu-complete/install/27</target>
                         </embedded>
@@ -130,6 +135,12 @@
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.valtech.aecu</groupId>
+            <artifactId>aecu.oak.index</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
         </dependency>
         <dependency>
             <groupId>de.valtech.aecu</groupId>

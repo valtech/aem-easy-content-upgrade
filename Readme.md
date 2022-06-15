@@ -266,7 +266,7 @@ You can click on any run to see the full details. This will show the status for 
 
 <img src="docs/images/historyDetails.png">
 
-## Search History (not on AEM Cloud)
+## Search History
 
 AECU maintains a full-text search index for the history entries. You can search for script names and their output.
 

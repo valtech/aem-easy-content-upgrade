@@ -267,10 +267,15 @@
                 <plugin>
 		                <groupId>org.apache.jackrabbit</groupId>
 		                <artifactId>filevault-package-maven-plugin</artifactId>
-		                <version>1.1.8</version>
+		                <version>1.3.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <validatorsSettings>
+                            <jackrabbit-packagetype>
+                                <options>
+														        <immutableRootNodeNames>apps,libs,oak:index</immutableRootNodeNames>
+														    </options>
+                            </jackrabbit-packagetype>
                             <jackrabbit-nodetypes>
                                  <!-- only level WARN for now, as not working 100% reliable yet: https://issues.apache.org/jira/browse/JCRVLT-461, https://issues.apache.org/jira/browse/JCRVLT-463 -->
                                  <defaultSeverity>warn</defaultSeverity>
