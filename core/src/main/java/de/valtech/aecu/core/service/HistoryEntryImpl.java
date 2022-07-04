@@ -41,12 +41,18 @@ public class HistoryEntryImpl implements HistoryEntry {
 
     @Override
     public Date getStart() {
-        return (Date) start.clone();
+        if (start != null) {
+            return (Date) start.clone();
+        }
+        return null;
     }
 
     @Override
     public Date getEnd() {
-        return (Date) end.clone();
+        if (end != null) {
+            return (Date) end.clone();
+        }
+        return null;
     }
 
     @Override
