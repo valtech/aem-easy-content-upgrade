@@ -160,7 +160,7 @@ Then delete "aem-groovy-console" packages in package manager.
 
 # File and Folder Structure
 
-All migration scripts need to be located in:
+All migration scripts need to be located in paths starting with:
 
 * `/apps/aecu-scripts` (AEM Cloud automatic execution with startup hook, since 6.0.0)
 * `/conf/groovyconsole/scripts/aecu` (AEM onprem manual and install hook execution, AEM Cloud manual execution)
