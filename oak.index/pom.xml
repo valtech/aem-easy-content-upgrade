@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.0.3</version>
+        <version>6.1.0</version>
     </parent>
 
     <artifactId>aecu.oak.index</artifactId>
@@ -20,13 +20,21 @@
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
-                    <packageType>content</packageType>
+                    <packageType>application</packageType>
                     <allowIndexDefinitions>true</allowIndexDefinitions>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                     <group>Valtech</group>
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
+                        <noIntermediateSaves>true</noIntermediateSaves>
                     </properties>
+                    <validatorsSettings>
+		                    <jackrabbit-filter>
+		                        <options>
+		                            <validRoots>/oak:index</validRoots>
+		                        </options>
+		                    </jackrabbit-filter>
+                    </validatorsSettings>
                 </configuration>
             </plugin>
             <plugin>
