@@ -132,8 +132,8 @@ public class AecuTrackerListener implements ProgressTrackerListener {
      */
     private boolean isValid(String path) {
         return StringUtils.isNotBlank(path) && aecuService.isValidScriptName(path)
-                && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX)
-                        || path.startsWith(AecuService.AECU_APPS_PATH_PREFIX));
+                && (path.startsWith(AecuService.AECU_VAR_PATH_PREFIX + "/") || path.startsWith(AecuService.AECU_CONF_PATH_PREFIX + "/")
+                        || path.startsWith(AecuService.AECU_APPS_PATH_PREFIX + "/"));
     }
 
     @Override
