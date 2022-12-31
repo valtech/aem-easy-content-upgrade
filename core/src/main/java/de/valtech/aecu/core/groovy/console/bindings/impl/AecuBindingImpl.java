@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.replication.Replicator;
-import com.icfolson.aem.groovy.console.api.context.ScriptContext;
+import be.orbinson.aem.groovy.console.api.context.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 import de.valtech.aecu.api.groovy.console.bindings.ContentUpgrade;

@@ -58,10 +58,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import com.icfolson.aem.groovy.console.GroovyConsoleService;
-import com.icfolson.aem.groovy.console.api.context.ScriptContext;
-import com.icfolson.aem.groovy.console.response.RunScriptResponse;
-import com.icfolson.aem.groovy.console.response.impl.DefaultRunScriptResponse;
+import be.orbinson.aem.groovy.console.GroovyConsoleService;
+import be.orbinson.aem.groovy.console.api.context.ScriptContext;
+import be.orbinson.aem.groovy.console.response.RunScriptResponse;
+import be.orbinson.aem.groovy.console.response.impl.DefaultRunScriptResponse;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
