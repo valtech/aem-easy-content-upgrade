@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
-import com.icfolson.aem.groovy.console.api.context.ScriptContext;
+import be.orbinson.aem.groovy.console.api.context.ScriptContext;
 
 /**
  * Script context to run Groovy Console scripts.

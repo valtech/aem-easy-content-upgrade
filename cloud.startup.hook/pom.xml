@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
         <version>6.1.1-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>aecu.cloud.startup.hook</artifactId>
     <packaging>bundle</packaging>
     <name>AECU - Cloud Startup Hook</name>
@@ -28,11 +29,11 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-						            <Import-Package>
-                          javax.annotation;version=0.0.0,
-						              com.icfolson.aem.groovy.console.*;version="[15.1,17)",
-						              *
-  					            </Import-Package>
+                        <Import-Package>
+                            javax.annotation;version=0.0.0,
+                            be.orbinson.aem.groovy.console.*;version="[15.1,19)",
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -40,32 +41,32 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
-				          <execution>
-				            <id>prepare-agent</id>
-				            <goals>
-				              <goal>prepare-agent</goal>
-				            </goals>
-				          </execution>
-				          <execution>
-				            <id>report</id>
-				            <phase>prepare-package</phase>
-				            <goals>
-				              <goal>report</goal>
-				            </goals>
-				          </execution>
-				          <execution>
-				            <id>post-unit-test</id>
-				            <phase>test</phase>
-				            <goals>
-				              <goal>report</goal>
-				            </goals>
-				          </execution>
-				        </executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
-		            <groupId>org.owasp</groupId>
-		            <artifactId>dependency-check-maven</artifactId>
-            </plugin>            
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -80,8 +81,8 @@
             <artifactId>groovy-all</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.icfolson.aem.groovy.console</groupId>
-            <artifactId>aem-groovy-console</artifactId>
+            <groupId>be.orbinson.aem</groupId>
+            <artifactId>aem-groovy-console-bundle</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -119,11 +120,11 @@
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.models.api</artifactId>
         </dependency>
-				<dependency>
-				    <groupId>javax.annotation</groupId>
-				    <artifactId>javax.annotation-api</artifactId>
-				</dependency>
-        
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

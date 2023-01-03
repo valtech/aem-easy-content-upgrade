@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.replication.ReplicationActionType;
 import com.day.cq.replication.Replicator;
-import com.icfolson.aem.groovy.console.api.context.ScriptContext;
+import be.orbinson.aem.groovy.console.api.context.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.ValidateAccessRights;
 import de.valtech.aecu.api.groovy.console.bindings.accessrights.AccessRightValidator;
