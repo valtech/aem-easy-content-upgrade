@@ -391,7 +391,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>7.3.2</version>
+                    <version>7.4.3</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
@@ -536,7 +536,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-bundle</artifactId>
-                <version>18.0.0</version>
+                <version>18.0.1</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -549,7 +549,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-all</artifactId>
-                <version>18.0.0</version>
+                <version>18.0.1</version>
                 <type>zip</type>
                 <!-- exclude dependencies -->
                 <exclusions>
