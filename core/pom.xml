@@ -95,7 +95,7 @@
         </dependency>
         <dependency>
             <groupId>be.orbinson.aem</groupId>
-            <artifactId>aem-groovy-console-bundle</artifactId>
+            <artifactId>aem-groovy-console-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
