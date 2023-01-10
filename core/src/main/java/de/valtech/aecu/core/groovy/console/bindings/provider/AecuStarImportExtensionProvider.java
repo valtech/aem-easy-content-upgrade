@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 
-import com.icfolson.aem.groovy.console.api.StarImport;
-import com.icfolson.aem.groovy.console.api.StarImportExtensionProvider;
+import be.orbinson.aem.groovy.console.api.StarImport;
+import be.orbinson.aem.groovy.console.api.StarImportExtensionProvider;
 
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterBy;
 

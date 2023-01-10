@@ -38,7 +38,7 @@ import org.osgi.service.component.runtime.dto.SatisfiedReferenceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
+import be.orbinson.aem.groovy.console.api.BindingExtensionProvider;
 
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.api.service.AecuService;
@@ -54,7 +54,7 @@ public class AecuCloudStartupService {
     private static final String STAR_IMPORT_EXTENSION_PROVIDER = "StarImportExtensionProvider";
     private static final String BINDING_EXTENSION_PROVIDER = "BindingExtensionProvider";
     private static final String DEFAULT_EXTENSION_SERVICE =
-            "com.icfolson.aem.groovy.console.extension.impl.DefaultExtensionService";
+            "be.orbinson.aem.groovy.console.extension.impl.DefaultExtensionService";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AecuCloudStartupService.class);
 
@@ -188,4 +188,3 @@ public class AecuCloudStartupService {
     }
 
 }
-

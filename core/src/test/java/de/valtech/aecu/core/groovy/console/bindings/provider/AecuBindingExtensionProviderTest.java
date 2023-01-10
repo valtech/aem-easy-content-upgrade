@@ -33,9 +33,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import com.day.cq.replication.Replicator;
-import com.icfolson.aem.groovy.console.api.BindingExtensionProvider;
-import com.icfolson.aem.groovy.console.api.BindingVariable;
-import com.icfolson.aem.groovy.console.api.context.ScriptContext;
+import be.orbinson.aem.groovy.console.api.BindingExtensionProvider;
+import be.orbinson.aem.groovy.console.api.BindingVariable;
+import be.orbinson.aem.groovy.console.api.context.ScriptContext;
 
 import de.valtech.aecu.api.groovy.console.bindings.AecuBinding;
 import de.valtech.aecu.core.serviceuser.ServiceResourceResolverService;

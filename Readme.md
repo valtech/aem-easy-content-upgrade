@@ -2,7 +2,7 @@
 
 # AEM Easy Content Upgrade (AECU)
 
-AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/CID15/aem-groovy-console).
+AECU simplifies content migrations by executing migration scripts during package installation. It is built on top of [Groovy Console](https://github.com/orbinson/aem-groovy-console).
 
 
 Features:
@@ -75,13 +75,13 @@ For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can
 
 ## AEM 6.5 and AEM Cloud
 
-AECU includes the [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console) package. Please do not install
+AECU includes the [Groovy Console](https://github.com/orbinson/aem-groovy-console) package. Please do not install
 Groovy Console manually. The API is not stable and using the included version makes sure AECU and Groovy Console
 are compatible.
 
 ### AEM 6.5
 
-You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/orbinson/aem-groovy-console).
 
 ```xml
         <dependency>
@@ -94,7 +94,7 @@ You can download the package from [Maven Central](https://repo1.maven.org/maven2
 
 ### AEM Cloud
 
-You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete.cloud/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+You can download the package from [Maven Central](https://repo1.maven.org/maven2/de/valtech/aecu/aecu.complete.cloud/) or our [releases section](https://github.com/valtech/aem-easy-content-upgrade/releases). The aecu.complete package will install the AECU software and [Groovy Console](https://github.com/orbinson/aem-groovy-console).
 
 ```xml
         <dependency>
@@ -169,7 +169,7 @@ All migration scripts need to be located in:
 AEM as a Cloud Service requires the scripts to be executed automatically in /apps to avoid issues with the startup hook. Manual scripts can still be located in /conf.
 
 In this folder you can create an unlimited number of folders and files. E.g. organize your files by project or deployment.
-The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/OlsonDigital/aem-groovy-console).
+The content of the scripts is plain Groovy code that can be run via [Groovy Console](https://github.com/orbinson/aem-groovy-console).
 
 If your package containing the scripts is bundled in another package please make sure that this is done using "subPackages" in pom.xml.
 
