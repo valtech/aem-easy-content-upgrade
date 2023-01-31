@@ -47,3 +47,4 @@ BSD:
 
 asciitable, ascii-utf-themes, skb-interfaces, char-translation: Apache-2.0
 antlr-runtime, antlr4, stringtemplate:                          BSD
+groovy-console:                                                 Apache-2.0

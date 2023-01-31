@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.1.0</version>
+        <version>6.2.0</version>
     </parent>
 
     <artifactId>aecu.complete.cloud</artifactId>
@@ -24,8 +24,6 @@
                 <configuration>
                     <allowIndexDefinitions>true</allowIndexDefinitions>
                     <embeddedTarget>/apps/valtech/aecu-complete/install/</embeddedTarget>
-                    <verbose>true</verbose>
-                    <failOnError>true</failOnError>
                     <group>Valtech</group>
                     <packageType>container</packageType>
                     <skipSubPackageValidation>true</skipSubPackageValidation>
@@ -51,25 +49,14 @@
                             <target>/apps/valtech/aecu-complete/install/27</target>
                         </embedded>
                         <embedded>
-                            <groupId>com.icfolson.aem.groovy.console</groupId>
-                            <artifactId>aem-groovy-console</artifactId>
-                            <type>jar</type>
-                        </embedded>
-                        <embedded>
-                            <groupId>org.codehaus.groovy</groupId>
-                            <artifactId>groovy-all</artifactId>
-                        </embedded>
-                        <embedded>
-                            <groupId>com.icfolson.aem.groovy.extension</groupId>
-                            <artifactId>aem-groovy-extension-bundle</artifactId>
+                            <groupId>be.orbinson.aem</groupId>
+                            <artifactId>aem-groovy-console-all</artifactId>
+                            <type>zip</type>
+                            <filter>true</filter>
                         </embedded>
                         <embedded>
                             <groupId>de.valtech.aecu</groupId>
                             <artifactId>aecu.ui.apps</artifactId>
-                        </embedded>
-                        <embedded>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.ui.apps.groovyconsole</artifactId>
                         </embedded>
                         <embedded>
                             <groupId>de.valtech.aecu</groupId>
@@ -92,31 +79,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.icfolson.aem.groovy.console</groupId>
-            <artifactId>aem-groovy-console</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.icfolson.aem.groovy.console</groupId>
-            <artifactId>aem-groovy-console</artifactId>
+            <groupId>be.orbinson.aem</groupId>
+            <artifactId>aem-groovy-console-all</artifactId>
             <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.icfolson.aem.groovy.extension</groupId>
-            <artifactId>aem-groovy-extension-bundle</artifactId>
         </dependency>
         <dependency>
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.ui.apps</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>de.valtech.aecu</groupId>
-            <artifactId>aecu.ui.apps.groovyconsole</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -148,4 +117,67 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+    
+        <profile>
+            <id>autoInstallPackageCloud</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.day.jcr.vault</groupId>
+                            <artifactId>content-package-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>install-package</id>
+                                    <goals>
+                                        <goal>install</goal>
+                                    </goals>
+                                    <configuration>
+                                        <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>autoInstallPackagePublishCloud</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.day.jcr.vault</groupId>
+                            <artifactId>content-package-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>install-package-publish</id>
+                                    <goals>
+                                        <goal>install</goal>
+                                    </goals>
+                                    <configuration>
+                                        <targetURL>http://${aem.publish.host}:${aem.publish.port}/crx/packmgr/service.jsp
+                                        </targetURL>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        
+    </profiles>
+    
+
 </project>

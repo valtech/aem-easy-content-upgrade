@@ -13,7 +13,11 @@ You need AEM 6.3 with service pack 2 or AEM 6.4.
 To build and deploy run this in the base (aem-easy-content-upgrade) or ui.apps/examples folder:
 
 ```bash
+# AEM 6.5
 mvn clean install -PautoInstallPackage
+
+# AEM Cloud
+mvn clean install -PautoInstallPackageCloud
 ```
 
 In case you want to deploy core only you can use this command in core folder:
@@ -25,7 +29,11 @@ mvn clean install -PautoInstallBundle
 To build and deploy on publish instance run this in the base (aem-easy-content-upgrade) or ui.apps/examples folder:
 
 ```bash
+# AEM 6.5
 mvn clean install -PautoInstallPackagePublish
+
+# AEM Cloud
+mvn clean install -PautoInstallPackagePublishCloud
 ```
 
 
