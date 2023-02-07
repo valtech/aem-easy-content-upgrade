@@ -343,6 +343,7 @@ Filters the resources by property values.
 * filterByNotPropertyRegex: filters by a single property not matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 * filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 * filterByNoPropertyRegex: filters by no property matching a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
+* filterByRootPaths: filters resources that do not meet the given list of root paths. 
 
 ```java
 filterByHasProperty(String name)
@@ -357,6 +358,7 @@ filterByPropertyRegex(String name, String regex)
 filterByNotPropertyRegex(String name, String regex)
 filterByAnyPropertyRegex(String regex)
 filterByNoPropertyRegex(String regex)
+filterByRootPaths(List<String> rootPaths)
 ```
 
 Example:
@@ -367,6 +369,7 @@ conditionMap["sling:resourceType"] = "weretail/components/structure/page"
 
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByRootPaths(Arrays.asList("/content/we-retail/ca/en", "/content/we-retail/be/nl"))
         .filterByHasProperty("myProperty")
         .filterByProperty("sling:resourceType", "wcm/foundation/components/responsivegrid")
         .filterByProperties(conditionMap)

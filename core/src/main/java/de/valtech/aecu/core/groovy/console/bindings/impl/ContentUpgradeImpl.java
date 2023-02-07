@@ -51,6 +51,7 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyRegex;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByRootPaths;
 import de.valtech.aecu.api.groovy.console.bindings.filters.NOTFilter;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
@@ -181,7 +182,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Escapes an argument for SQL2 queries.
-     * 
+     *
      * @param input input value
      * @return escaped output
      */
@@ -313,6 +314,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
+    public ContentUpgrade filterByRootPaths(List<String> rootPaths) {
+        addFilter(new FilterByRootPaths(rootPaths));
+        return this;
+    }
+
+    @Override
     public ContentUpgrade filterWith(@Nonnull FilterBy filter) {
         addFilter(filter);
         return this;
@@ -343,7 +350,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     /**
      * Adds a new NOTFilter based on the given filter.
-     * 
+     *
      * @param filter filter to negate
      */
     private void addNotFilter(@Nonnull FilterBy filter) {
