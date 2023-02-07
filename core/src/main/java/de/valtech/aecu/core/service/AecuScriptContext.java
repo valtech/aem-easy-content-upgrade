@@ -13,7 +13,7 @@ import be.orbinson.aem.groovy.console.api.context.ScriptContext;
 
 /**
  * Script context to run Groovy Console scripts.
- * 
+ *
  * @author Roland Gruber
  */
 public class AecuScriptContext implements ScriptContext {
@@ -22,22 +22,29 @@ public class AecuScriptContext implements ScriptContext {
 
     private String script;
     private ResourceResolver resolver;
+    private String data;
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     /**
      * Constructor
-     * 
+     *
      * @param script   script content
      * @param resolver resolver
      */
-    public AecuScriptContext(String script, ResourceResolver resolver) {
+    public AecuScriptContext(String script, ResourceResolver resolver, String data) {
         this.script = script;
         this.resolver = resolver;
+        this.data = data;
     }
+
+    public AecuScriptContext(String script, ResourceResolver resolver) {
+        this(script, resolver, null);
+    }
+
 
     @Override
     public String getData() {
-        return null;
+        return this.data;
     }
 
     @Override

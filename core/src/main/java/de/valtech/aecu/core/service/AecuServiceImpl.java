@@ -172,6 +172,11 @@ public class AecuServiceImpl implements AecuService {
 
     @Override
     public ExecutionResult execute(String path) throws AecuException {
+        return execute(path, null);
+    }
+
+    @Override
+    public ExecutionResult execute(String path, String data) throws AecuException {
         try (ResourceResolver resolver = resolverService.getContentMigratorResourceResolver()) {
             Resource resource = resolver.getResource(path);
             if (resource == null) {
@@ -180,7 +185,7 @@ public class AecuServiceImpl implements AecuService {
             if (!isValidScriptName(resource.getName())) {
                 throw new AecuException("Invalid script name");
             }
-            return executeScript(resolver, path);
+            return executeScript(resolver, path, data);
         } catch (LoginException e) {
             throw new AecuException(ERR_NO_RESOLVER, e);
         }
@@ -194,18 +199,18 @@ public class AecuServiceImpl implements AecuService {
      * @return result execution result
      * @throws AecuException error running script
      */
-    private ExecutionResult executeScript(ResourceResolver resolver, String path) throws AecuException {
+    private ExecutionResult executeScript(ResourceResolver resolver, String path, String data) throws AecuException {
         LOG.info("Executing script {}", path);
         String prechecksScript = getPrechecksScript(resolver, path);
         if (prechecksScript != null) {
-            ExecutionResult prechecksResult = executeScript(resolver, prechecksScript);
+            ExecutionResult prechecksResult = executeScript(resolver, prechecksScript, data);
             if (prechecksResult.getState() == ExecutionState.FAILED) {
                 LOG.info("Skipping {} as prechecks script failed", path);
                 return new ExecutionResult(ExecutionState.SKIPPED, prechecksResult.getTime(), prechecksResult.getResult(),
                         prechecksResult.getOutput(), null, path);
             }
         }
-        ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver);
+        ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver, data);
         RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
@@ -216,7 +221,7 @@ public class AecuServiceImpl implements AecuService {
         String result = response.getResult();
         ExecutionResult fallbackResult = null;
         if (!success && (getFallbackScript(resolver, path) != null)) {
-            fallbackResult = executeScript(resolver, getFallbackScript(resolver, path));
+            fallbackResult = executeScript(resolver, getFallbackScript(resolver, path), data);
         }
         ExecutionState state = success ? ExecutionState.SUCCESS : ExecutionState.FAILED;
         return new ExecutionResult(state, response.getRunningTime(), result,
@@ -225,7 +230,7 @@ public class AecuServiceImpl implements AecuService {
 
     /**
      * Read script.
-     * 
+     *
      * @param path     path
      * @param resolver resource resolver
      * @return script content
@@ -348,7 +353,17 @@ public class AecuServiceImpl implements AecuService {
     }
 
     @Override
+    public HistoryEntry executeAllScripts(String data) throws AecuException {
+        return executeWithInstallHookHistory("/apps", data);
+    }
+
+    @Override
     public HistoryEntry executeWithInstallHookHistory(String path) throws AecuException {
+        return executeWithInstallHookHistory(path, null);
+    }
+
+    @Override
+    public HistoryEntry executeWithInstallHookHistory(String path, String data) throws AecuException {
         HistoryEntry history = createHistoryEntry();
         List<String> files = getFiles(path);
         try (ResourceResolver resolver = resolverService.getAdminResourceResolver()) {
@@ -361,7 +376,7 @@ public class AecuServiceImpl implements AecuService {
                 }
                 ExecutionResult singleResult;
                 if (!stopExecution) {
-                    singleResult = execute(file);
+                    singleResult = execute(file, data);
                 } else {
                     singleResult = new ExecutionResult(ExecutionState.SKIPPED, null, null, null, null, file);
                 }
@@ -381,7 +396,7 @@ public class AecuServiceImpl implements AecuService {
 
     /**
      * Creates a hook history entry.
-     * 
+     *
      * @param session session
      * @param path    script path
      * @return history
