@@ -76,8 +76,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
         </dependency>
         <dependency>
             <groupId>be.orbinson.aem</groupId>
