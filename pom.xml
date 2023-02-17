@@ -535,7 +535,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-api</artifactId>
-                <version>19.0.0</version>
+                <version>19.0.1</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -548,7 +548,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-all</artifactId>
-                <version>19.0.0</version>
+                <version>19.0.1</version>
                 <type>zip</type>
                 <!-- exclude dependencies -->
                 <exclusions>
