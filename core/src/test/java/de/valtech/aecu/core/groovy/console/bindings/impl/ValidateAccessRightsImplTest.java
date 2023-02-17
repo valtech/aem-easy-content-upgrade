@@ -1,6 +1,7 @@
 package de.valtech.aecu.core.groovy.console.bindings.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,6 +26,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,7 +40,8 @@ import be.orbinson.aem.groovy.console.api.context.ScriptContext;
 
 /**
  * Tests ValidateAccessRightsImpl
- * 
+ * Few tests are marked with DisabledOnOs(windows) as they fail because of different linebreak-handling.
+ * Windows Users are encouraged to use WSL.
  * @author Roland Gruber
  */
 @ExtendWith(MockitoExtension.class)
@@ -124,6 +127,7 @@ public class ValidateAccessRightsImplTest {
     }
 
     @Test
+    @DisabledOnOs(WINDOWS)
     public void validate() {
         validateRights.forPaths(new String[] {TESTPATH});
         validateRights.forGroups(new String[] {TESTGROUP});
@@ -136,6 +140,7 @@ public class ValidateAccessRightsImplTest {
     }
 
     @Test
+    @DisabledOnOs(WINDOWS)
     public void validate_failedCheck() {
         validateRights.forPaths(new String[] {TESTPATH});
         validateRights.forGroups(new String[] {TESTGROUP});
@@ -151,6 +156,7 @@ public class ValidateAccessRightsImplTest {
     }
 
     @Test
+    @DisabledOnOs(WINDOWS)
     public void simulate() {
         assertNotNull(validateRights.cannotRead());
         validateRights.simulate();
