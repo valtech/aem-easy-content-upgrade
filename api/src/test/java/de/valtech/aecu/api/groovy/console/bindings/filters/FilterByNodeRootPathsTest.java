@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class FilterByRootPathsTest {
+class FilterByNodeRootPathsTest {
 
     private static final String TEST_PATH = "/content/my-site/nl/my-page";
 
@@ -31,13 +31,13 @@ class FilterByRootPathsTest {
 
     @Test
     void test_whenRootPathsMatches_filterAccepts() {
-        boolean accept = new FilterByRootPaths(Arrays.asList("/content/my-site")).filter(resource, new StringBuilder());
+        boolean accept = new FilterByNodeRootPaths(Arrays.asList("/content/my-site")).filter(resource, new StringBuilder());
         assertTrue(accept);
     }
 
     @Test
     void test_whenRootPathsDontMatch_filterDenies() {
-        boolean accept = new FilterByRootPaths(Arrays.asList("/content/my-other-site")).filter(resource, new StringBuilder());
+        boolean accept = new FilterByNodeRootPaths(Arrays.asList("/content/my-other-site")).filter(resource, new StringBuilder());
         assertFalse(accept);
     }
 

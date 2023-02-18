@@ -343,7 +343,6 @@ Filters the resources by property values.
 * filterByNotPropertyRegex: filters by a single property not matching a regular expression for the value. This is intended for single value properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 * filterByAnyPropertyRegex: filters by any property that matches a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
 * filterByNoPropertyRegex: filters by no property matching a given regular expression for the value. This reads all properties as single-valued String properties. Hint: use "(?s)" at the beginning of the regex to search multiline content.
-* filterByRootPaths: filters resources that do not meet the given list of root paths. 
 
 ```java
 filterByHasProperty(String name)
@@ -358,7 +357,6 @@ filterByPropertyRegex(String name, String regex)
 filterByNotPropertyRegex(String name, String regex)
 filterByAnyPropertyRegex(String regex)
 filterByNoPropertyRegex(String regex)
-filterByRootPaths(List<String> rootPaths)
 ```
 
 Example:
@@ -407,12 +405,15 @@ Nodes can also be filtered by their path using a regular expression.
 
 * filterByPathRegex(String regex): process nodes whose path matches the given regular expression
 * filterByNotPathRegex(String regex): process nodes whose path does not match the given regular expression
+* filterByNodeRootPaths: filters resources that do not meet the given list of root paths.
+
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByPathRegex(".*/jcr:content/.*")
         .filterByNotPathRegex(".*/jcr:content/.*")
+        .filterByNodeRootPaths(Arrays.asList("/content/we-retail/ca/en", "/content/we-retail/be/nl"))
         .doSetProperty("name", "value")
         .run()
 ```
@@ -1048,6 +1049,22 @@ Prints the history of the specified last runs. The entries are sorted by date an
 Parameters:
  * Start index: starts with 0 (= latest history entry)
  * Count: number of entries to print
+
+## ExecuteAllScripts
+
+This will execute all script defined underneath /apps. Additionally you can add a json string to pass to the script context.
+
+Parameters:
+* Data: Json object string 
+
+Example json:
+``` json
+{
+    "rootPaths": [
+        "/content/we-retail"
+    ]
+}
+```
 
 ## GetFiles
 

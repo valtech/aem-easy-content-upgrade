@@ -51,7 +51,7 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyRegex;
-import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByRootPaths;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeRootPaths;
 import de.valtech.aecu.api.groovy.console.bindings.filters.NOTFilter;
 import de.valtech.aecu.api.service.AecuException;
 import de.valtech.aecu.core.groovy.console.bindings.actions.Action;
@@ -314,8 +314,8 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade filterByRootPaths(List<String> rootPaths) {
-        addFilter(new FilterByRootPaths(rootPaths));
+    public ContentUpgrade filterByNodeRootPaths(List<String> rootPaths) {
+        addFilter(new FilterByNodeRootPaths(rootPaths));
         return this;
     }
 

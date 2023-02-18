@@ -275,7 +275,7 @@ public interface ContentUpgrade {
      * @param rootPaths List of rootPaths to be matched
      * @return upgrade object
      */
-    ContentUpgrade filterByRootPaths(List<String> rootPaths);
+    ContentUpgrade filterByNodeRootPaths(List<String> rootPaths);
 
     /**
      * Filters by matching the given filter.

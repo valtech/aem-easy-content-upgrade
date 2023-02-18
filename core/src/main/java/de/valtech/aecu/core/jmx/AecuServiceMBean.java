@@ -86,4 +86,14 @@ public interface AecuServiceMBean {
     @Description("Returns the last history entries")
     String getHistory(@Name("Start index") int start, @Name("Count") int count) throws AecuException;
 
+    /**
+     * Returns history entries.
+     *
+     * @param data json data used in the script context
+     * @return history entries
+     * @throws AecuException error reading history
+     */
+    @Description("Executes all groovyscripts under /apps. Additionally you can pass data to the script context")
+    String executeAllScripts(@Name("data") String data) throws AecuException;
+
 }
