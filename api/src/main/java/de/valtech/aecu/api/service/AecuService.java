@@ -150,15 +150,6 @@ public interface AecuService {
     /**
      * Executes the script(s) at the given position and taking install hook history into account.
      *
-     * @param data json string of script
-     * @return execution result
-     * @throws AecuException error during execution
-     */
-    HistoryEntry executeAllScripts(String data) throws AecuException;
-
-    /**
-     * Executes the script(s) at the given position and taking install hook history into account.
-     *
      * @param path path of script/folder
      * @return execution result
      * @throws AecuException error during execution

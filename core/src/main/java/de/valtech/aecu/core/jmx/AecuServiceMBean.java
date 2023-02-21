@@ -89,11 +89,12 @@ public interface AecuServiceMBean {
     /**
      * Returns history entries.
      *
+     * @param path path of script/folder
      * @param data json data used in the script context
      * @return history entries
      * @throws AecuException error reading history
      */
-    @Description("Executes all groovyscripts under /apps. Additionally you can pass data to the script context")
-    String executeAllScripts(@Name("data") String data) throws AecuException;
+    @Description("Executes a single file or all files of a folder structure. Additionally you can pass json data for the script context")
+    String execute(@Name("Path") String path, @Name("Data") String data) throws AecuException;
 
 }

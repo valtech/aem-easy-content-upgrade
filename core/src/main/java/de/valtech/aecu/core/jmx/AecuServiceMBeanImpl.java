@@ -95,8 +95,8 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
     }
 
     @Override
-    public String executeAllScripts(String data) throws AecuException {
-        HistoryEntry historyEntry = aecuService.executeAllScripts(data);
+    public String execute(String path, String data) throws AecuException {
+        HistoryEntry historyEntry = aecuService.executeWithInstallHookHistory(path, data);
         return historyEntry.toString();
     }
 

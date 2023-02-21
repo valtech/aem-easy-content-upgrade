@@ -353,11 +353,6 @@ public class AecuServiceImpl implements AecuService {
     }
 
     @Override
-    public HistoryEntry executeAllScripts(String data) throws AecuException {
-        return executeWithInstallHookHistory("/apps", data);
-    }
-
-    @Override
     public HistoryEntry executeWithInstallHookHistory(String path) throws AecuException {
         return executeWithInstallHookHistory(path, null);
     }

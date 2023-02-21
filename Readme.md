@@ -367,7 +367,6 @@ conditionMap["sling:resourceType"] = "weretail/components/structure/page"
 
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
-        .filterByRootPaths(Arrays.asList("/content/we-retail/ca/en", "/content/we-retail/be/nl"))
         .filterByHasProperty("myProperty")
         .filterByProperty("sling:resourceType", "wcm/foundation/components/responsivegrid")
         .filterByProperties(conditionMap)
@@ -1050,12 +1049,13 @@ Parameters:
  * Start index: starts with 0 (= latest history entry)
  * Count: number of entries to print
 
-## ExecuteAllScripts
+## Execute with data
 
-This will execute all script defined underneath /apps. Additionally you can add a json string to pass to the script context.
+Executes a single file or all files of a folder structure. Additionally, you can pass json data for the script context.
 
 Parameters:
-* Data: Json object string 
+* Path: path of script/folder
+* Data: Json object string
 
 Example json:
 ``` json
