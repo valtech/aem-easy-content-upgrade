@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.3.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>aecu.complete</artifactId>
@@ -15,7 +15,7 @@
 
     <build>
         <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
-        
+
         <plugins>
 
             <plugin>
@@ -117,9 +117,9 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    
+
     <profiles>
-    
+
         <profile>
             <id>autoInstallPackage</id>
             <activation>
@@ -176,7 +176,7 @@
                 </pluginManagement>
             </build>
         </profile>
-        
+
     </profiles>
-    
+
 </project>

@@ -101,6 +101,16 @@ public interface AecuService {
     ExecutionResult execute(String path) throws AecuException;
 
     /**
+     * Executes the script at the given position.
+     *
+     * @param path path of script
+     * @param data json object of script
+     * @return execution result
+     * @throws AecuException error during execution
+     */
+    ExecutionResult execute(String path, String data) throws AecuException;
+
+    /**
      * Starts a new history entry.
      *
      * @return history entry
@@ -145,5 +155,16 @@ public interface AecuService {
      * @throws AecuException error during execution
      */
     HistoryEntry executeWithInstallHookHistory(String path) throws AecuException;
+
+    /**
+     * Executes the script(s) at the given position and taking install hook history into account.
+     *
+     * @param path path of script/folder
+     * @param data data json string of script
+     * @return execution result
+     * @throws AecuException error during execution
+     */
+    HistoryEntry executeWithInstallHookHistory(String path, String data) throws AecuException;
+
 
 }
