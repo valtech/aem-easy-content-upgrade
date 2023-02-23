@@ -30,7 +30,7 @@
                     <instructions>
                         <Import-Package>
                             javax.annotation;version=0.0.0,
-                            be.orbinson.aem.groovy.console.*;version="[15.1,19)",
+                            be.orbinson.aem.groovy.console.*;version="[19,20)",
                             *
                         </Import-Package>
                     </instructions>
