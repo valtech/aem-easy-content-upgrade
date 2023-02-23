@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.2.0</version>
+        <version>6.3.0</version>
     </parent>
 
     <artifactId>aecu.core</artifactId>
@@ -43,7 +43,7 @@
                         <Import-Package>
                             !antlr.*,
                             javax.annotation;version=0.0.0,
-                            be.orbinson.aem.groovy.console.*;version="[15.1,19)",
+                            be.orbinson.aem.groovy.console.*;version="[19,20)",
                             *
                         </Import-Package>
                     </instructions>
@@ -89,8 +89,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
         </dependency>
         <dependency>
             <groupId>be.orbinson.aem</groupId>

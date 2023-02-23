@@ -404,12 +404,15 @@ Nodes can also be filtered by their path using a regular expression.
 
 * filterByPathRegex(String regex): process nodes whose path matches the given regular expression
 * filterByNotPathRegex(String regex): process nodes whose path does not match the given regular expression
+* filterByNodeRootPaths: filters resources that do not meet the given list of root paths.
+
 
 ```java
 aecu.contentUpgradeBuilder()
         .forChildResourcesOf("/content/we-retail/ca/en")
         .filterByPathRegex(".*/jcr:content/.*")
         .filterByNotPathRegex(".*/jcr:content/.*")
+        .filterByNodeRootPaths(Arrays.asList("/content/we-retail/ca/en", "/content/we-retail/be/nl"))
         .doSetProperty("name", "value")
         .run()
 ```
@@ -1045,6 +1048,23 @@ Prints the history of the specified last runs. The entries are sorted by date an
 Parameters:
  * Start index: starts with 0 (= latest history entry)
  * Count: number of entries to print
+
+## Execute with data
+
+Executes a single file or all files of a folder structure. Additionally, you can pass json data for the script context.
+
+Parameters:
+* Path: path of script/folder
+* Data: Json object string
+
+Example json:
+``` json
+{
+    "rootPaths": [
+        "/content/we-retail"
+    ]
+}
+```
 
 ## GetFiles
 

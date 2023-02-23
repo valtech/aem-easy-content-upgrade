@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.2.0</version>
+        <version>6.3.0</version>
     </parent>
 
     <artifactId>aecu.oak.index</artifactId>
@@ -14,7 +14,7 @@
     <description>OAK index content package for AECU</description>
 
     <build>
-        
+
         <plugins>
             <plugin>
                 <groupId>org.apache.jackrabbit</groupId>
@@ -50,7 +50,7 @@
     </build>
 
     <profiles>
-    
+
         <profile>
             <id>autoInstallPackage</id>
             <activation>
@@ -107,7 +107,7 @@
                 </pluginManagement>
             </build>
         </profile>
-        
+
         <profile>
             <id>autoInstallPackageCloud</id>
             <activation>
@@ -164,7 +164,7 @@
                 </pluginManagement>
             </build>
         </profile>
-        
+
     </profiles>
-    
+
 </project>

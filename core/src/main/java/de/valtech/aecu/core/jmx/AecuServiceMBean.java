@@ -86,4 +86,15 @@ public interface AecuServiceMBean {
     @Description("Returns the last history entries")
     String getHistory(@Name("Start index") int start, @Name("Count") int count) throws AecuException;
 
+    /**
+     * Returns history entries.
+     *
+     * @param path path of script/folder
+     * @param data json data used in the script context
+     * @return history entries
+     * @throws AecuException error reading history
+     */
+    @Description("Executes a single file or all files of a folder structure. Additionally you can pass json data for the script context")
+    String execute(@Name("Path") String path, @Name("Data") String data) throws AecuException;
+
 }

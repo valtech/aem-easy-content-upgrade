@@ -4,9 +4,9 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.2.0</version>
+        <version>6.3.0</version>
     </parent>
-    
+
     <artifactId>aecu.api</artifactId>
     <packaging>bundle</packaging>
     <name>AECU - API</name>
@@ -74,7 +74,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-            </plugin>            
+            </plugin>
         </plugins>
     </build>
 
@@ -116,8 +116,8 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

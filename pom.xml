@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>6.2.0</version>
+    <version>6.3.0</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -117,7 +117,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
@@ -527,15 +527,15 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>2.4.15</version>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>4.0.9</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-api</artifactId>
-                <version>18.0.3</version>
+                <version>19.0.3</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -548,7 +548,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-all</artifactId>
-                <version>18.0.3</version>
+                <version>19.0.3</version>
                 <type>zip</type>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -702,11 +702,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 

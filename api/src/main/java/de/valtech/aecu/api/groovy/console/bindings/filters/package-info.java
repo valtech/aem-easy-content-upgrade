@@ -19,10 +19,10 @@
 
 /**
  * Filters are used in AECU Groovy Console binding to filter matching nodes.
- * 
+ *
  * @author Roxana Muresan
  */
-@Version("3.1.0")
+@Version("3.2.0")
 package de.valtech.aecu.api.groovy.console.bindings.filters;
 
 import org.osgi.annotation.versioning.Version;

@@ -45,7 +45,7 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
 
     /**
      * Constructor
-     * 
+     *
      * @throws NotCompliantMBeanException error setting up mbean
      */
     public AecuServiceMBeanImpl() throws NotCompliantMBeanException {
@@ -92,6 +92,12 @@ public class AecuServiceMBeanImpl extends AnnotatedStandardMBean implements Aecu
             output.append(entry.toString() + "\n\n");
         }
         return output.toString();
+    }
+
+    @Override
+    public String execute(String path, String data) throws AecuException {
+        HistoryEntry historyEntry = aecuService.executeWithInstallHookHistory(path, data);
+        return historyEntry.toString();
     }
 
 }

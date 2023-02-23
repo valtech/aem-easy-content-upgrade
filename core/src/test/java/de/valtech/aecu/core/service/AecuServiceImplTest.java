@@ -383,7 +383,7 @@ public class AecuServiceImplTest {
     public void executeWithInstallHookHistory() throws AecuException, LoginException {
         ExecutionResult result = mock(ExecutionResult.class);
         when(result.getState()).thenReturn(ExecutionState.SUCCESS);
-        doReturn(result).when(service).execute(DIR + "/" + FILE1);
+        doReturn(result).when(service).execute(DIR + "/" + FILE1, null);
         when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
         when(resolver.adaptTo(Session.class)).thenReturn(session);
         doReturn(Arrays.asList(DIR + "/" + FILE1)).when(service).getFiles(DIR);
@@ -397,7 +397,7 @@ public class AecuServiceImplTest {
         verify(resolverService, times(1)).getAdminResourceResolver();
         verify(service, times(1)).getFiles(DIR);
         verify(service, times(1)).createHistoryEntry();
-        verify(service, times(1)).execute(DIR + "/" + FILE1);
+        verify(service, times(1)).execute(DIR + "/" + FILE1, null);
         verify(service, times(1)).finishHistoryEntry(Mockito.any());
     }
 
