@@ -1,4 +1,4 @@
-2023-0-23 6.2.1
+2023-02-23 6.2.1
   - Upgrade of Orbinson Groovy Console to version 19.0.3 (#205, #208)
   - New filter method: filterByNodeRootPaths() (#204)
   - AecuService: added new execute(String path, String data) method which accepts a JSON data string to be used within scipts (#204)
