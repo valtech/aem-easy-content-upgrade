@@ -512,6 +512,21 @@ aecu.contentUpgradeBuilder()
         .run()
 ```
 
+#### Update Mixins
+
+* doAddMixin(String mixinName): adds a mixin to a node if the mixin is valid
+* doRemoveMixin(String mixinName): removes a mixin from a node if the mixin is present
+
+```java
+aecu.contentUpgradeBuilder()
+        .forChildResourcesOf("/content/we-retail/ca/en")
+        .filterByNodeName("jcr:content")
+        .doAddMixin("mix:versionable")
+        .doAddMixin("mix:mymixin")
+        .doRemoveMixin("mix:lockable")
+        .run()
+```
+
 #### Copy and Move Properties
 
 This will copy or move a property to a subnode. You can also change the property name.
