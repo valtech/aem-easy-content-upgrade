@@ -18,16 +18,19 @@
  */
 package de.valtech.aecu.startuphook;
 
+import de.valtech.aecu.api.service.AecuException;
+import de.valtech.aecu.api.service.AecuService;
+import de.valtech.aecu.api.service.HistoryEntry;
+import de.valtech.aecu.api.service.HistoryEntry.STATE;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
 import javax.jcr.Session;
-
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -38,19 +41,13 @@ import org.osgi.service.component.runtime.dto.SatisfiedReferenceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.orbinson.aem.groovy.console.api.BindingExtensionProvider;
-
-import de.valtech.aecu.api.service.AecuException;
-import de.valtech.aecu.api.service.AecuService;
-import de.valtech.aecu.api.service.HistoryEntry;
-import de.valtech.aecu.api.service.HistoryEntry.STATE;
-
 /**
  * Service that executes the AECU migration if the node store type is composite (AEM Cloud).
  */
 @Component(service = AecuCloudStartupService.class, immediate = true, name = "AECU cloud startup hook")
 public class AecuCloudStartupService {
 
+    private static final String GROOVY_CONSOLE_BUNDLE_SYMBOLIC_NAME = "aem-groovy-console-bundle";
     private static final String STAR_IMPORT_EXTENSION_PROVIDER = "StarImportExtensionProvider";
     private static final String BINDING_EXTENSION_PROVIDER = "BindingExtensionProvider";
     private static final String DEFAULT_EXTENSION_SERVICE =
@@ -70,8 +67,11 @@ public class AecuCloudStartupService {
     @Reference
     private ServiceComponentRuntime serviceComponentRuntime;
 
+    private BundleContext bundleContext;
+
     @Activate
-    public void activate() {
+    public void activate(final BundleContext bundleContext) {
+        this.bundleContext = bundleContext;
         Runnable runnable = this::checkAndRunMigration;
         Thread thread = new Thread(runnable);
         thread.start();
@@ -101,7 +101,7 @@ public class AecuCloudStartupService {
     /**
      * Checks if an AECU migration is already in progress. If AECU history tells migration is in
      * progress then wait max. for MIGRATION_TIMEOUT.
-     * 
+     *
      * @return migration in progress
      */
     protected boolean isMigrationInProgress() {
@@ -121,7 +121,7 @@ public class AecuCloudStartupService {
 
     /**
      * Waits till Groovy Console took up our services.
-     * 
+     *
      * @return services are ok
      * @throws InterruptedException sleep failed
      */
@@ -140,7 +140,9 @@ public class AecuCloudStartupService {
      * Checks if our services are already injected.
      */
     private boolean servicesAreOk() {
-        Bundle bundle = FrameworkUtil.getBundle(BindingExtensionProvider.class);
+        Bundle bundle = Arrays.stream(bundleContext.getBundles())
+                              .filter(b -> GROOVY_CONSOLE_BUNDLE_SYMBOLIC_NAME.equals(b.getSymbolicName()))
+                              .findFirst().orElse(null);
         ComponentDescriptionDTO componentDescription =
                 serviceComponentRuntime.getComponentDescriptionDTO(bundle, DEFAULT_EXTENSION_SERVICE);
         if ((componentDescription == null) || !serviceComponentRuntime.isComponentEnabled(componentDescription)) {
@@ -176,7 +178,7 @@ public class AecuCloudStartupService {
 
     /**
      * Returns the resource resolver to be used
-     * 
+     *
      * @return the resource resolver
      */
     private ResourceResolver getResourceResolver() {
