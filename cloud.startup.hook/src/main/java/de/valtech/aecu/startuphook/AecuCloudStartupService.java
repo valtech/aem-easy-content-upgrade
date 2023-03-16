@@ -143,6 +143,9 @@ public class AecuCloudStartupService {
         Bundle bundle = Arrays.stream(bundleContext.getBundles())
                               .filter(b -> GROOVY_CONSOLE_BUNDLE_SYMBOLIC_NAME.equals(b.getSymbolicName()))
                               .findFirst().orElse(null);
+        if (bundle == null) {
+            return false;
+        }
         ComponentDescriptionDTO componentDescription =
                 serviceComponentRuntime.getComponentDescriptionDTO(bundle, DEFAULT_EXTENSION_SERVICE);
         if ((componentDescription == null) || !serviceComponentRuntime.isComponentEnabled(componentDescription)) {
