@@ -74,6 +74,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.JoinPrope
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.AddMixin;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ChangePrimaryType;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CreateResource;
@@ -81,6 +82,7 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomActio
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RemoveMixin;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReorderNode;
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
@@ -639,6 +641,18 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade doCheckPageRendering(String textPresent, String textNotPresent) {
         actions.add(new RenderPageAction(context, HttpServletResponse.SC_OK, textPresent, textNotPresent));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doAddMixin(String mixinName) {
+        actions.add(new AddMixin(mixinName));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade doRemoveMixin(String mixinName) {
+        actions.add(new RemoveMixin(mixinName));
         return this;
     }
 

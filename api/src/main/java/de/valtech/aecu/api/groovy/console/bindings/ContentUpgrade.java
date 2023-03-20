@@ -704,6 +704,23 @@ public interface ContentUpgrade {
      */
     ContentUpgrade doCheckPageRendering(String textPresent, String textNotPresent);
 
+
+    /**
+     * Adds a mixin
+     *
+     * @param mixinName     valid mixin name
+     * @return upgrade object
+     */
+    ContentUpgrade doAddMixin(String mixinName);
+
+    /**
+     * Removes a mixin
+     *
+     * @param mixinName     valid mixin name present on the node
+     * @return upgrade object
+     */
+    ContentUpgrade doRemoveMixin(String mixinName);
+
     /**
      * Print path
      *
