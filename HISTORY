@@ -1,3 +1,7 @@
+2023-03-20 6.3.0
+  - Resource Action: New actions to add / remove mixins (#209)
+  - AEMaaCS doesn't start AECU Migration, due to wrong check in AecuCloudStartupService (#210)
+
 2023-02-23 6.2.1
   - Upgrade of Orbinson Groovy Console to version 19.0.3 (#205, #208)
   - New filter method: filterByNodeRootPaths() (#204)
