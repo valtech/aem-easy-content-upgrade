@@ -325,7 +325,7 @@ aecu.contentUpgradeBuilder()
 <a name="binding_filter"></a>
 
 ### Filter Options
-These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
+These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run (they are combined with `AND` logic, i.e. all filters must match)
 
 #### Filter by Properties
 
