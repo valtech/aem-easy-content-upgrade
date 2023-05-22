@@ -233,6 +233,10 @@ You can add the install hook by adding de.valtech.aecu.core.installhook.AecuInst
 </plugin>
 ```
 
+The Groovy scripts must be covered by the filter, i.e. must be imported into the repository during installation.
+
+By default each Groovy script is only executed once (if it does not end with suffix `.always.groovy`). It will be re-executed though in case any of the Groovy scripts have been modified (through the package installation) or in case the previous execution was not successful.
+
 <a name="manualExecution"></a>
 
 ## Manual Execution
