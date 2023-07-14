@@ -25,7 +25,6 @@ import org.apache.sling.api.resource.ValueMap;
 
 import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
 
-import java.util.Arrays;
 
 /**
  * Filters resources by a given property. The filter only matches if the attribute exists and has
