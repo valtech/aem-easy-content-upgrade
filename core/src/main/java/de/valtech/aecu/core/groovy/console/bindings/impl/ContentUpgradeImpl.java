@@ -50,6 +50,7 @@ import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeNameRegex
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPathRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperties;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByProperty;
+import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyIsMultiple;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByPropertyRegex;
 import de.valtech.aecu.api.groovy.console.bindings.filters.FilterByNodeRootPaths;
 import de.valtech.aecu.api.groovy.console.bindings.filters.NOTFilter;
@@ -216,6 +217,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     @Override
     public ContentUpgrade filterByNotProperty(String name, Object value) {
         addNotFilter(new FilterByProperty(name, value));
+        return this;
+    }
+
+    @Override
+    public ContentUpgrade filterByPropertyIsMultiple(@Nonnull String name, Object value) {
+        addFilter(new FilterByPropertyIsMultiple(name, value));
         return this;
     }
 

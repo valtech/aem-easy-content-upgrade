@@ -134,6 +134,15 @@ public interface ContentUpgrade {
     ContentUpgrade filterByNotProperty(String name, Object value);
 
     /**
+     * Filters by matching a single property.
+     *
+     * @param name  property name
+     * @param value property value
+     * @return upgrade object
+     */
+    ContentUpgrade filterByPropertyIsMultiple(String name, Object value);
+
+    /**
      * Filters by matching a single property using a regular expression for the value. This is
      * intended for single value properties.
      *

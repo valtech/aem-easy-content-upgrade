@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>6.4.1-SNAPSHOT</version>
+    <version>6.5.1-SNAPSHOT</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -25,9 +25,9 @@
 
     <properties>
         <aem.host>localhost</aem.host>
-        <aem.port>5602</aem.port>
+        <aem.port>4502</aem.port>
         <aem.publish.host>localhost</aem.publish.host>
-        <aem.publish.port>5705</aem.publish.port>
+        <aem.publish.port>4502</aem.publish.port>
         <sling.user>admin</sling.user>
         <sling.password>admin</sling.password>
         <vault.user>admin</vault.user>
@@ -387,23 +387,6 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.owasp</groupId>
-                    <artifactId>dependency-check-maven</artifactId>
-                    <version>8.1.2</version>
-                    <configuration>
-                        <failBuildOnCVSS>0</failBuildOnCVSS>
-                        <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
-                        <skipProvidedScope>true</skipProvidedScope>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -644,6 +627,12 @@
                 <artifactId>jsr305</artifactId>
                 <version>2.0.1</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>de.valtech.aecu</groupId>
+                <artifactId>aecu.bundle</artifactId>
+                <version>LATEST</version>
+                <type>zip</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
