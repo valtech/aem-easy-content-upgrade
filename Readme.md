@@ -58,16 +58,21 @@ AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3)<br/>Cloud | included     | 6.x, 5.x |
+| 6.5 (>=6.5.13)<br/>Cloud  | included | 6.x, 5.x   |
+| 6.5 (>=6.5.3 && < 6.5.13) | included | 6.0.1, 5.x |
+
 
 ## Older AEM versions
 For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
-| AEM Version   | Groovy Console | AECU      |
-| ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3) | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
-| 6.4           | 14.x, 13.x               | 3.x, 2.x          |
-| 6.3           | 12.x                     | 1.x               |
+| AEM Version               | Groovy Console           | AECU              |
+| -------------             | --------------           | ---------         |
+| 6.5 (>=6.5.3)             | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
+| 6.4                       | 14.x, 13.x               | 3.x, 2.x          |
+| 6.3                       | 12.x                     | 1.x               |
+
+### AEM 6.5 and Java 11
+For AEM 6.5 and Java 11 make sure to edit the sling.properties file and add `org.osgi.framework.bootdelegation=sun.*,com.sun.*,jdk.internal.reflect,jdk.internal.reflect.*` to avoid a NoClassDefFoundError, see [FELIX-6184](https://issues.apache.org/jira/browse/FELIX-6184) & [Adobe Documantation](https://experienceleague.adobe.com/docs/experience-manager-65/deploying/deploying/troubleshooting.html?lang=en#the-website-does-not-load-or-fails-intermittently-with-java11) for details.
 
 <a name="installation"></a>
 
