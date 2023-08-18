@@ -30,7 +30,7 @@ import de.valtech.aecu.api.groovy.console.bindings.GStringConverter;
  * Filters resources by a given property. The filter only matches if the attribute exists and has
  * the exact given value and the property is an array or a list.
  *
- * @author Roland Gruber
+ * @author Michiel Spiritus
  */
 public class FilterByPropertyIsMultiple implements FilterBy {
 
