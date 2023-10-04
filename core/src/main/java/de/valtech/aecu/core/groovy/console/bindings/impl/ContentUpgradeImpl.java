@@ -691,8 +691,8 @@ public class ContentUpgradeImpl implements ContentUpgrade {
     }
 
     @Override
-    public ContentUpgrade doCreateLabel(@Nonnull  Map<String, String>[] map, String[] i18nPaths) {
-        actions.add(new CreateLabel(map, i18nPaths));
+    public ContentUpgrade doCreateLabel(String language, String key, String value) {
+        actions.add(new CreateLabel(language, key, value));
         return this;
     }
 
