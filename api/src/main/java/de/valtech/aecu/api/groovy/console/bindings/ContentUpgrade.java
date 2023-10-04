@@ -768,5 +768,7 @@ public interface ContentUpgrade {
      */
     void run(boolean dryRun) throws PersistenceException, AecuException;
 
+    ContentUpgrade doCreateLabel(Map<String, String>[] map, String[] i18nPaths);
+
 }
 

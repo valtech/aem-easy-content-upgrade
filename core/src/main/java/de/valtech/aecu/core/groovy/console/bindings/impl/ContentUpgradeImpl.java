@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.jcr.query.Query;
 import javax.servlet.http.HttpServletResponse;
 
+import de.valtech.aecu.core.groovy.console.bindings.actions.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
@@ -74,20 +75,6 @@ import de.valtech.aecu.core.groovy.console.bindings.actions.properties.JoinPrope
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.MovePropertyToRelativePath;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.RenameProperty;
 import de.valtech.aecu.core.groovy.console.bindings.actions.properties.SetProperty;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.AddMixin;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ChangePrimaryType;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CopyResourceToRelativePath;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CreateResource;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.CustomAction;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.DeleteResource;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToPathRegex;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.MoveResourceToRelativePath;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RemoveMixin;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.RenameResource;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReorderNode;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValues;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplaceResourcePropertyValuesRegex;
-import de.valtech.aecu.core.groovy.console.bindings.actions.resource.ReplicateResourceAction;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForChildResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForDescendantResourcesOf;
 import de.valtech.aecu.core.groovy.console.bindings.traversers.ForQuery;
@@ -701,6 +688,12 @@ public class ContentUpgradeImpl implements ContentUpgrade {
         }
         output.append("\n\n");
         scriptContext.getPrintStream().append(output);
+    }
+
+    @Override
+    public ContentUpgrade doCreateLabel(@Nonnull  Map<String, String>[] map, String[] i18nPaths) {
+        actions.add(new CreateLabel(map, i18nPaths));
+        return this;
     }
 
 }
