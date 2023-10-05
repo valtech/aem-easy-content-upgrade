@@ -770,6 +770,13 @@ public interface ContentUpgrade {
      */
     void run(boolean dryRun) throws PersistenceException, AecuException;
 
+    /**
+     * Creates a label in the i18n node under the corresponding language node.
+     *
+     * @param language
+     * @param key
+     * @param value
+     */
     ContentUpgrade doCreateLabel(String language, String key, String value);
 
 }
