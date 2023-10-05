@@ -39,14 +39,13 @@ public class CreateLabel implements Action {
                     } else {
                         Node labelNode;
                         try {
-                            labelNode = node.addNode(key, "nt:unstructured");
+                            labelNode = node.addNode(key, "sling:MessageEntry");
                         } catch (RepositoryException e) {
                             throw new RuntimeException(e);
                         }
                         String MIXIN_SLING_MESSAGE = "sling:Message";
                         labelNode.addMixin(MIXIN_SLING_MESSAGE);
                         labelNode.setProperty(PROPERTY_SLING_MESSAGE, value);
-                        labelNode.setProperty("sling:MessageEntry", key);
                     }
                 } catch (RepositoryException e) {
                     throw new RuntimeException(e);
