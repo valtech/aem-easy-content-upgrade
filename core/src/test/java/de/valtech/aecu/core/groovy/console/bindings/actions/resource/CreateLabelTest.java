@@ -26,7 +26,6 @@ class CreateLabelTest {
     @Mock
     private Resource resource;
 
-
     @Mock
     private ResourceResolver resourceResolver;
 
@@ -55,7 +54,6 @@ class CreateLabelTest {
 
     @Test
     void testDoAction() throws Exception {
-
         CreateLabel createLabel = new CreateLabel("en", "greeting", "Hello");
 
         String result = createLabel.doAction(resource);

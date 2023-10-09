@@ -30,6 +30,7 @@ import javax.jcr.query.Query;
 import javax.servlet.http.HttpServletResponse;
 
 import de.valtech.aecu.core.groovy.console.bindings.actions.resource.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
@@ -148,7 +149,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade forResourcesByPropertyQuery(@Nonnull String path, Map<String, String> properties,
-            @Nonnull String nodeType) {
+                                                      @Nonnull String nodeType) {
         final StringBuilder sbQuery = new StringBuilder();
         sbQuery.append(
                 "SELECT * FROM [" + escapeForSql2(nodeType) + "] AS s WHERE ISDESCENDANTNODE(s,'" + escapeForSql2(path) + "') ");
@@ -408,14 +409,14 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doCopyPropertyToRelativePath(@Nonnull String name, String newName,
-            @Nonnull String relativeResourcePath) {
+                                                       @Nonnull String relativeResourcePath) {
         actions.add(new CopyPropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
 
     @Override
     public ContentUpgrade doMovePropertyToRelativePath(@Nonnull String name, String newName,
-            @Nonnull String relativeResourcePath) {
+                                                       @Nonnull String relativeResourcePath) {
         actions.add(new MovePropertyToRelativePath(name, newName, context.getResolver(), relativeResourcePath));
         return this;
     }
@@ -434,7 +435,7 @@ public class ContentUpgradeImpl implements ContentUpgrade {
 
     @Override
     public ContentUpgrade doReplaceValuesOfMultiValueProperty(@Nonnull String name, @Nonnull String[] oldValues,
-            @Nonnull String[] newValues) {
+                                                              @Nonnull String[] newValues) {
         actions.add(new ReplaceMultiValues(name, oldValues, newValues));
         return this;
     }
