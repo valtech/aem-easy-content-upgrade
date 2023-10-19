@@ -138,7 +138,7 @@ public interface ContentUpgrade {
      * intended for single value properties.
      *
      * @param name  property name
-     * @param regex regular expression to match value
+     * @param value attribute value
      * @return upgrade object
      */
     ContentUpgrade filterByPropertyIsMultiple(String name, Object value);
