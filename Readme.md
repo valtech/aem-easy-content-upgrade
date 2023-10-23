@@ -472,6 +472,26 @@ aecu.contentUpgradeBuilder()
         .run()        
 ```
 
+#### Filter by custom filter
+
+To filter by complex conditions that are not covered by existing filters you can use `filterWith()` that takes your own `FilterBy` implementation as shown in the example below:
+
+```java
+aecu.contentUpgradeBuilder()
+        .forDescendantResourcesOf("/content/we-retail/ca/en", false)
+        .filterWith(new FilterBy(){
+            public boolean filter(Resource resource, StringBuilder output) {
+                ValueMap properties = resource.getValueMap();
+                Calendar lastModified = properties.get("cq:lastModified", Calendar.class);
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.YEAR, -5);
+                return (lastModified.getTime().before(cal.getTime()));
+            }
+        })
+        .doSetProperty("old", true) // mark pages that weren't modified in the past 5 years
+        .run()   
+```
+
 <a name="binding_execute"></a>
 
 ### Execute Options
