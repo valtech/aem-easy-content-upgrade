@@ -481,11 +481,11 @@ aecu.contentUpgradeBuilder()
         .forDescendantResourcesOf("/content/we-retail/ca/en", false)
         .filterWith(new FilterBy(){
             public boolean filter(Resource resource, StringBuilder output) {
-                ValueMap properties = resource.getValueMap();
-                Calendar lastModified = properties.get("cq:lastModified", Calendar.class);
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.YEAR, -5);
-                return (lastModified.getTime().before(cal.getTime()));
+                ValueMap properties = resource.valueMap
+                Calendar lastModified = properties.get("cq:lastModified", Calendar.class)
+                Calendar cal = Calendar.instance
+                cal.add(Calendar.YEAR, -5)
+                return lastModified.time.before(cal.time)
             }
         })
         .doSetProperty("old", true) // mark pages that weren't modified in the past 5 years
