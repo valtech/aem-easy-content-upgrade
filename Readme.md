@@ -472,9 +472,9 @@ aecu.contentUpgradeBuilder()
         .run()        
 ```
 
-#### Filter by custom filter
+#### Filter with custom FilterBy implementation
 
-To filter by complex conditions that are not covered by existing filters you can use `filterWith()` that takes your own `FilterBy` implementation as shown in the example below:
+To filter by complex conditions that are not covered by existing `filterBy...()` presets you can use `filterWith()` that takes a custom `FilterBy` implementation as shown in the example below:
 
 ```java
 aecu.contentUpgradeBuilder()
