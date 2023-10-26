@@ -343,6 +343,7 @@ Filters the resources by property values.
 * filterByHasProperty: matches all nodes that have the given property. The value of the property is not relevant.
 * filterByNotHasProperty: matches all nodes that do not have the given property. The value of the property is not relevant.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
+* filterByPropertyIsMultiple: matches all nodes where a given property is a multi-value property (such as an array or list) and contains a specific value or values. The filter does not match if the attribute does not exist, or if it exists but is not a multi-value property or does not contain the specified value or values.
 * filterByNotProperty: matches all nodes that do not have the given attribute value. Filter matches if attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
 * filterByNotProperties: use this to filter by a list of property values (e.g. sling:resourceType) is not matching. If any property in the map does not match the filter matches. Filter matches if attribute does not exist.
