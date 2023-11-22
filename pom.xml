@@ -13,9 +13,7 @@
         <module>api</module>
         <module>core</module>
         <module>cloud.startup.hook</module>
-        <module>ui.apps.structure</module>
         <module>ui.apps</module>
-        <module>ui.content</module>
         <module>oak.index</module>
         <module>complete</module>
         <module>complete-cloud</module>
