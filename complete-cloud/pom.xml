@@ -58,10 +58,6 @@
                             <groupId>de.valtech.aecu</groupId>
                             <artifactId>aecu.ui.apps</artifactId>
                         </embedded>
-                        <embedded>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.ui.content</artifactId>
-                        </embedded>
                     </embeddeds>
                 </configuration>
             </plugin>
@@ -86,12 +82,6 @@
         <dependency>
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.ui.apps</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>de.valtech.aecu</groupId>
-            <artifactId>aecu.ui.content</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
