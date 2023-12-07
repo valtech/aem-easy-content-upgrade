@@ -58,16 +58,21 @@ AECU requires Java 8 and AEM 6.5 or AEM Cloud. For older AEM versions see below.
 
 | AEM Version   | Groovy Console | AECU      |
 | ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3)<br/>Cloud | included     | 6.x, 5.x |
+| 6.5 (>=6.5.13)<br/>Cloud  | included | 6.x, 5.x   |
+| 6.5 (>=6.5.3 && < 6.5.13) | included | 6.0.1, 5.x |
+
 
 ## Older AEM versions
 For AEM 6.3/6.4 please see here what versions are compatible. Groovy Console can be installed manually if [bundle install](#bundleInstall) is not used.
 
-| AEM Version   | Groovy Console | AECU      |
-| ------------- | -------------- | --------- |
-| 6.5 (>=6.5.3) | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
-| 6.4           | 14.x, 13.x               | 3.x, 2.x          |
-| 6.3           | 12.x                     | 1.x               |
+| AEM Version               | Groovy Console           | AECU              |
+| -------------             | --------------           | ---------         |
+| 6.5 (>=6.5.3)             | 16.x <br/>14.x, 13.x     | 4.x<br/> 3.x, 2.x |
+| 6.4                       | 14.x, 13.x               | 3.x, 2.x          |
+| 6.3                       | 12.x                     | 1.x               |
+
+### AEM 6.5 and Java 11
+For AEM 6.5 and Java 11 make sure to edit the sling.properties file and add `org.osgi.framework.bootdelegation=sun.*,com.sun.*,jdk.internal.reflect,jdk.internal.reflect.*` to avoid a NoClassDefFoundError, see [FELIX-6184](https://issues.apache.org/jira/browse/FELIX-6184) & [Adobe Documantation](https://experienceleague.adobe.com/docs/experience-manager-65/deploying/deploying/troubleshooting.html?lang=en#the-website-does-not-load-or-fails-intermittently-with-java11) for details.
 
 <a name="installation"></a>
 
@@ -233,6 +238,10 @@ You can add the install hook by adding de.valtech.aecu.core.installhook.AecuInst
 </plugin>
 ```
 
+The Groovy scripts must be covered by the filter, i.e. must be imported into the repository during installation.
+
+By default each Groovy script is only executed once (if it does not end with suffix `.always.groovy`). It will be re-executed though in case any of the Groovy scripts have been modified (through the package installation) or in case the previous execution was not successful.
+
 <a name="manualExecution"></a>
 
 ## Manual Execution
@@ -325,7 +334,7 @@ aecu.contentUpgradeBuilder()
 <a name="binding_filter"></a>
 
 ### Filter Options
-These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run.
+These methods can be used to filter the nodes that were collected above. Multiple filters can be applied for one run (they are combined with `AND` logic, i.e. all filters must match)
 
 #### Filter by Properties
 
@@ -334,6 +343,7 @@ Filters the resources by property values.
 * filterByHasProperty: matches all nodes that have the given property. The value of the property is not relevant.
 * filterByNotHasProperty: matches all nodes that do not have the given property. The value of the property is not relevant.
 * filterByProperty: matches all nodes that have the given attribute value. Filter does not match if attribute is not present. By using a value of "null" you can search if an attribute is not present.
+* filterByPropertyIsMultiple: matches all nodes where a given property is a multi-value property (such as an array or list) and contains a specific value or values. The filter does not match if the attribute does not exist, or if it exists but is not a multi-value property or does not contain the specified value or values.
 * filterByNotProperty: matches all nodes that do not have the given attribute value. Filter matches if attribute is not present.
 * filterByProperties: use this to filter by a list of property values (e.g. sling:resourceType). All properties in the map are required to to match. Filter does not match if attribute does not exist.
 * filterByNotProperties: use this to filter by a list of property values (e.g. sling:resourceType) is not matching. If any property in the map does not match the filter matches. Filter matches if attribute does not exist.
@@ -461,6 +471,26 @@ aecu.contentUpgradeBuilder()
         .filterWith(new NOTFilter(new FilterByPathRegex(".*jcr:content.*")))
         .doSetProperty("name", "value")
         .run()        
+```
+
+#### Filter with custom FilterBy implementation
+
+To filter by complex conditions that are not covered by existing `filterBy...()` presets you can use `filterWith()` that takes a custom `FilterBy` implementation as shown in the example below:
+
+```java
+aecu.contentUpgradeBuilder()
+        .forDescendantResourcesOf("/content/we-retail/ca/en", false)
+        .filterWith(new FilterBy(){
+            public boolean filter(Resource resource, StringBuilder output) {
+                ValueMap properties = resource.valueMap
+                Calendar lastModified = properties.get("cq:lastModified", Calendar.class)
+                Calendar cal = Calendar.instance
+                cal.add(Calendar.YEAR, -5)
+                return lastModified.time.before(cal.time)
+            }
+        })
+        .doSetProperty("old", true) // mark pages that weren't modified in the past 5 years
+        .run()   
 ```
 
 <a name="binding_execute"></a>

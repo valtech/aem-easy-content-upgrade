@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.4.0</version>
+        <version>6.5.0</version>
     </parent>
 
     <artifactId>aecu.ui.apps</artifactId>
@@ -29,7 +29,7 @@
                     <validatorsSettings>
                         <jackrabbit-filter>
                             <options>
-                                <validRoots>/apps,/apps/valtech,/apps/cq/core/content/nav/tools,/apps/settings/granite/operations/hc</validRoots>
+                                <validRoots>/apps,/apps/valtech,/apps/cq/core/content/nav/tools,/apps/settings/granite/operations/hc,/apps/settings/granite/operations/maintenance/granite_weekly</validRoots>
                             </options>
                         </jackrabbit-filter>
                     </validatorsSettings>

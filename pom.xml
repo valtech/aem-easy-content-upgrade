@@ -4,7 +4,7 @@
     <groupId>de.valtech.aecu</groupId>
     <artifactId>aecu</artifactId>
     <packaging>pom</packaging>
-    <version>6.4.0</version>
+    <version>6.5.0</version>
     <name>AECU</name>
     <description>AEM Easy Content Upgrade</description>
     <url>https://github.com/valtech/aem-easy-content-upgrade</url>
@@ -13,9 +13,7 @@
         <module>api</module>
         <module>core</module>
         <module>cloud.startup.hook</module>
-        <module>ui.apps.structure</module>
         <module>ui.apps</module>
-        <module>ui.content</module>
         <module>oak.index</module>
         <module>complete</module>
         <module>complete-cloud</module>
@@ -25,9 +23,9 @@
 
     <properties>
         <aem.host>localhost</aem.host>
-        <aem.port>5602</aem.port>
+        <aem.port>4502</aem.port>
         <aem.publish.host>localhost</aem.publish.host>
-        <aem.publish.port>5705</aem.publish.port>
+        <aem.publish.port>4503</aem.publish.port>
         <sling.user>admin</sling.user>
         <sling.password>admin</sling.password>
         <vault.user>admin</vault.user>
@@ -535,7 +533,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-api</artifactId>
-                <version>19.0.3</version>
+                <version>19.0.4</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>

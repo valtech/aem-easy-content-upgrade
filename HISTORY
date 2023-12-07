@@ -1,3 +1,10 @@
+2023-12-07 6.5.0
+ - Move of aecu.ui.content to /apps/settings to avoid overwrite of the configured weekly operations window (#225)
+ - New filter method: filterByPropertyIsMultiple() (#
+ - Documentation update for filter concatenation semantics with regards of AND/OR (#212)
+ - Documentation update for re-execute logic of groovy scripts installed through InstallHook
+ - Documentation update for filterWith
+
 2023-03-20 6.4.0
   - Resource Action: New actions to add / remove mixins (#209)
   - AEMaaCS doesn't start AECU Migration, due to wrong check in AecuCloudStartupService (#210)

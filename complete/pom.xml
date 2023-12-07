@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.valtech.aecu</groupId>
         <artifactId>aecu</artifactId>
-        <version>6.4.0</version>
+        <version>6.5.0</version>
     </parent>
 
     <artifactId>aecu.complete</artifactId>
@@ -42,11 +42,6 @@
                         <subPackage>
                             <groupId>de.valtech.aecu</groupId>
                             <artifactId>aecu.ui.apps</artifactId>
-                            <filter>true</filter>
-                        </subPackage>
-                        <subPackage>
-                            <groupId>de.valtech.aecu</groupId>
-                            <artifactId>aecu.ui.content</artifactId>
                             <filter>true</filter>
                         </subPackage>
                         <subPackage>
@@ -91,12 +86,6 @@
         <dependency>
             <groupId>de.valtech.aecu</groupId>
             <artifactId>aecu.ui.apps</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>de.valtech.aecu</groupId>
-            <artifactId>aecu.ui.content</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
