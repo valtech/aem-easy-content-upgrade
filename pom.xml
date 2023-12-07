@@ -23,9 +23,9 @@
 
     <properties>
         <aem.host>localhost</aem.host>
-        <aem.port>5602</aem.port>
+        <aem.port>4502</aem.port>
         <aem.publish.host>localhost</aem.publish.host>
-        <aem.publish.port>5705</aem.publish.port>
+        <aem.publish.port>4503</aem.publish.port>
         <sling.user>admin</sling.user>
         <sling.password>admin</sling.password>
         <vault.user>admin</vault.user>
@@ -533,7 +533,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-api</artifactId>
-                <version>19.0.3</version>
+                <version>19.0.4</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
