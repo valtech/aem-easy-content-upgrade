@@ -163,6 +163,10 @@ Then delete "aem-groovy-console" packages in package manager.
 
 <a name="structure"></a>
 
+## Upgrade from version lower than 5.0.0 (On Premise)
+
+The index was moved from /var/aecu to /oak:index for cloud compatibility reasons, please remove the /var/aecu/oak:index/aecuHistory to avoid duplicate index definitions
+
 # File and Folder Structure
 
 All migration scripts need to be located in:
