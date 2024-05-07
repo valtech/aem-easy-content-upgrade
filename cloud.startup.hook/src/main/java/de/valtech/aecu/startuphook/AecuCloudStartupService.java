@@ -29,6 +29,7 @@ import java.util.List;
 import javax.jcr.Session;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.event.jobs.JobManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -66,6 +67,9 @@ public class AecuCloudStartupService {
     private ServiceResourceResolverService resourceResolverService;
     @Reference
     private ServiceComponentRuntime serviceComponentRuntime;
+
+    @Reference
+    private JobManager jobManager;
 
     private BundleContext bundleContext;
 
@@ -170,13 +174,7 @@ public class AecuCloudStartupService {
      * Starts the AECU migration
      */
     void startAecuMigration() {
-        try {
-            LOGGER.info("AECU migration started");
-            aecuService.executeWithInstallHookHistory(AecuService.AECU_APPS_PATH_PREFIX);
-            LOGGER.info("AECU migration finished");
-        } catch (AecuException ae) {
-            LOGGER.error("Error while executing AECU migration", ae);
-        }
+        jobManager.addJob(AecuStartupJobConsumer.JOB_TOPIC, null);
     }
 
     /**
