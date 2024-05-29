@@ -18,6 +18,9 @@
  */
 package de.valtech.aecu.core.history;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -50,6 +53,12 @@ import de.valtech.aecu.api.service.HistoryEntry.RESULT;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.service.HistoryEntryImpl;
 
+import javax.jcr.Binary;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.ValueFactory;
+
 /**
  * Reads and writes history entries.
  *
@@ -69,6 +78,7 @@ public class HistoryUtil {
 
     public static final String ATTR_PATH = "path";
     protected static final String ATTR_RUN_OUTPUT = "runOutput";
+    protected static final String ATTR_RUN_OUTPUT_FULL = "runOutputFull";
     protected static final String ATTR_RUN_STATE = "runState";
     protected static final String ATTR_RUN_RESULT = "runResult";
     protected static final String ATTR_RUN_TIME = "runTime";
@@ -77,6 +87,9 @@ public class HistoryUtil {
     protected static final String ATTR_START = "start";
     protected static final String ATTR_END = "end";
     private static final String NAME_INDEX = "oak:index";
+    // This size is limited by the LuceneDocumentMaker to be able to read the property and create the new index
+    // The limit is 102400 but just to be in the safe side, is set to a bit lower number
+    private static final int MAXIMUM_PROPERTY_SIZE = 100000;
 
     private Random random = new Random();
 
@@ -358,7 +371,23 @@ public class HistoryUtil {
         values.put(ATTR_RUN_STATE, result.getState().name());
         values.put(ATTR_PATH, result.getPath());
         if (StringUtils.isNotBlank(result.getOutput())) {
-            values.put(ATTR_RUN_OUTPUT, result.getOutput());
+            if (result.getOutput().getBytes(StandardCharsets.UTF_8).length < MAXIMUM_PROPERTY_SIZE) {
+                values.put(ATTR_RUN_OUTPUT, result.getOutput());
+            } else {
+                values.put(ATTR_RUN_OUTPUT, "Output data too big, full data is stored as a binary in runOutputFull");
+                LOG.info("Script result is bigger than 100 000 bytes. Full data can be found as a binary in property runOutputFull for path {}",  path );
+                try {
+                    Node node = entry.adaptTo(Node.class);
+                    Session session = node.getSession();
+                    ValueFactory factory = session.getValueFactory();
+                    InputStream is = new ByteArrayInputStream(result.getOutput().getBytes());
+                    Binary binary = factory.createBinary(is);
+                    node.setProperty(ATTR_RUN_OUTPUT_FULL, binary);
+                    session.save();
+                } catch (RepositoryException e) {
+                    LOG.error("Not able to save the output of the script as binary on the History node [{}]", entry.getPath());
+                }
+            }
         }
         if (StringUtils.isNotBlank(result.getResult())) {
             values.put(ATTR_RUN_RESULT, result.getResult());
