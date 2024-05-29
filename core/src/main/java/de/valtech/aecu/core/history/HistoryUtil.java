@@ -54,9 +54,9 @@ import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.service.HistoryEntryImpl;
 
 import javax.jcr.Binary;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
 /**
@@ -374,11 +374,13 @@ public class HistoryUtil {
                 values.put(ATTR_RUN_OUTPUT, result.getOutput());
             } else {
                 try {
-                    ValueFactory factory = resolver.adaptTo(Session.class).getValueFactory();
+                    Node node = entry.adaptTo(Node.class);
+                    Session session = node.getSession();
+                    ValueFactory factory = session.getValueFactory();
                     InputStream is = new ByteArrayInputStream(result.getOutput().getBytes());
                     Binary binary = factory.createBinary(is);
-                    Value value = factory.createValue(binary);
-                    values.put(ATTR_RUN_OUTPUT, value);
+                    node.setProperty(ATTR_RUN_OUTPUT, binary);
+                    session.save();
                 } catch (RepositoryException e) {
                     LOG.error("Not able to save the output of the script as binary on the History node [{}]", entry.getPath());
                 }
