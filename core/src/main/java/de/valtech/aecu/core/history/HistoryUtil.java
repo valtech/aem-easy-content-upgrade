@@ -18,6 +18,9 @@
  */
 package de.valtech.aecu.core.history;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -50,6 +53,12 @@ import de.valtech.aecu.api.service.HistoryEntry.RESULT;
 import de.valtech.aecu.api.service.HistoryEntry.STATE;
 import de.valtech.aecu.core.service.HistoryEntryImpl;
 
+import javax.jcr.Binary;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
+
 /**
  * Reads and writes history entries.
  *
@@ -77,6 +86,9 @@ public class HistoryUtil {
     protected static final String ATTR_START = "start";
     protected static final String ATTR_END = "end";
     private static final String NAME_INDEX = "oak:index";
+    // This size is limited by the LuceneDocumentMaker to be able to read the property and create the new index
+    // The limit is 102400 but just to be in the safe size, is set to a bit lower number
+    private static final int MAXIMUN_PROPERTY_SIZE = 100000;
 
     private Random random = new Random();
 
@@ -358,7 +370,19 @@ public class HistoryUtil {
         values.put(ATTR_RUN_STATE, result.getState().name());
         values.put(ATTR_PATH, result.getPath());
         if (StringUtils.isNotBlank(result.getOutput())) {
-            values.put(ATTR_RUN_OUTPUT, result.getOutput());
+            if (result.getOutput().getBytes(StandardCharsets.UTF_8).length < MAXIMUN_PROPERTY_SIZE) {
+                values.put(ATTR_RUN_OUTPUT, result.getOutput());
+            } else {
+                try {
+                    ValueFactory factory = resolver.adaptTo(Session.class).getValueFactory();
+                    InputStream is = new ByteArrayInputStream(result.getOutput().getBytes());
+                    Binary binary = factory.createBinary(is);
+                    Value value = factory.createValue(binary);
+                    values.put(ATTR_RUN_OUTPUT, value);
+                } catch (RepositoryException e) {
+                    LOG.error("Not able to save the output of the script as binary on the History node [{}]", entry.getPath());
+                }
+            }
         }
         if (StringUtils.isNotBlank(result.getResult())) {
             values.put(ATTR_RUN_RESULT, result.getResult());
