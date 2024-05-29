@@ -78,6 +78,7 @@ public class HistoryUtil {
 
     public static final String ATTR_PATH = "path";
     protected static final String ATTR_RUN_OUTPUT = "runOutput";
+    protected static final String ATTR_RUN_OUTPUT_FULL = "runOutputFull";
     protected static final String ATTR_RUN_STATE = "runState";
     protected static final String ATTR_RUN_RESULT = "runResult";
     protected static final String ATTR_RUN_TIME = "runTime";
@@ -88,7 +89,7 @@ public class HistoryUtil {
     private static final String NAME_INDEX = "oak:index";
     // This size is limited by the LuceneDocumentMaker to be able to read the property and create the new index
     // The limit is 102400 but just to be in the safe side, is set to a bit lower number
-    private static final int MAXIMUN_PROPERTY_SIZE = 100000;
+    private static final int MAXIMUM_PROPERTY_SIZE = 100000;
 
     private Random random = new Random();
 
@@ -370,16 +371,18 @@ public class HistoryUtil {
         values.put(ATTR_RUN_STATE, result.getState().name());
         values.put(ATTR_PATH, result.getPath());
         if (StringUtils.isNotBlank(result.getOutput())) {
-            if (result.getOutput().getBytes(StandardCharsets.UTF_8).length < MAXIMUN_PROPERTY_SIZE) {
+            if (result.getOutput().getBytes(StandardCharsets.UTF_8).length < MAXIMUM_PROPERTY_SIZE) {
                 values.put(ATTR_RUN_OUTPUT, result.getOutput());
             } else {
+                values.put(ATTR_RUN_OUTPUT, "Output data too big, full data is stored as a binary in runOutputFull");
+                LOG.info("Script result is bigger than 100 000 bytes. Full data can be found as a binary in property runOutputFull for path {}",  path );
                 try {
                     Node node = entry.adaptTo(Node.class);
                     Session session = node.getSession();
                     ValueFactory factory = session.getValueFactory();
                     InputStream is = new ByteArrayInputStream(result.getOutput().getBytes());
                     Binary binary = factory.createBinary(is);
-                    node.setProperty(ATTR_RUN_OUTPUT, binary);
+                    node.setProperty(ATTR_RUN_OUTPUT_FULL, binary);
                     session.save();
                 } catch (RepositoryException e) {
                     LOG.error("Not able to save the output of the script as binary on the History node [{}]", entry.getPath());
