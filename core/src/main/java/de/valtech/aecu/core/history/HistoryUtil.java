@@ -87,7 +87,7 @@ public class HistoryUtil {
     protected static final String ATTR_END = "end";
     private static final String NAME_INDEX = "oak:index";
     // This size is limited by the LuceneDocumentMaker to be able to read the property and create the new index
-    // The limit is 102400 but just to be in the safe size, is set to a bit lower number
+    // The limit is 102400 but just to be in the safe side, is set to a bit lower number
     private static final int MAXIMUN_PROPERTY_SIZE = 100000;
 
     private Random random = new Random();
