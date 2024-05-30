@@ -4,7 +4,6 @@
         async="async"
         compatVersion="{Long}2"
         evaluatePathRestrictions="{Boolean}true"
-        reindex="{Boolean}false"
         reindexCount="{Long}0"
         type="lucene"
         includedPaths="[/var/aecu]"

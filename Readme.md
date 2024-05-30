@@ -25,7 +25,8 @@ Table of contents
 4. [Execution of Migration Scripts](#execution)
     1. [Startup Hook](#startupHook)
     2. [Install Hook](#installHook)
-    2. [Manual Execution](#manualExecution)
+    3. [Manual Execution](#manualExecution)
+    4. [Execution Details](#executionDetails)
 5. [History of Past Runs](#history)
 6. [Extension to Groovy Console](#groovy)
     1. [Content Upgrades](#content_upgrades)
@@ -163,6 +164,10 @@ Then delete "aem-groovy-console" packages in package manager.
 
 <a name="structure"></a>
 
+## Upgrade from version lower than 5.0.0 (On Premise)
+
+The index was moved from /var/aecu to /oak:index for cloud compatibility reasons, please remove the /var/aecu/oak:index/aecuHistory to avoid duplicate index definitions
+
 # File and Folder Structure
 
 All migration scripts need to be located in:
@@ -258,6 +263,17 @@ Execution is done in two simple steps:
 Once execution is done you will see if the script(s) succeeded. Click on the history link to see the details.
 
 <img src="docs/images/run.png">
+
+<a name="executionDetails"></a>
+
+## Execution Details and Output
+When executing, `de.valtech.aecu.core.service.AecuServiceImpl` will emit a log statement to inform script is currently being executed, and when execution is done, a second log statement including the result (success, failure, skipped if prechecks failed) is emitted.
+To capture these logs, configure a logger on `de.valtech.aecu` with level `INFO` to append/emit logs as you desire.
+These logs are helpful if you are executing scripts via hook.
+
+Additionally, as stated above, manual execution provides the UI to indicate which script is currently running. Please note however that if you leave the page while execution is in progress, you will not be able to go back to it to see the execution details again.
+
+In both cases, you can see more details on the execution in the history. See below for more information.
 
 <a name="history"></a>
 

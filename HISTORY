@@ -1,6 +1,12 @@
+2024-30-05 6.5.1
+ - Store result output data in binary property in case data is too big for string property (#233)
+ - Remove reindex=true property in index definition as it is not allowed (#230)
+ - Documentation updates on logging
+ - Documentation update on upgrade for index move
+
 2023-12-07 6.5.0
  - Move of aecu.ui.content to /apps/settings to avoid overwrite of the configured weekly operations window (#225)
- - New filter method: filterByPropertyIsMultiple() (#
+ - New filter method: filterByPropertyIsMultiple()
  - Documentation update for filter concatenation semantics with regards of AND/OR (#212)
  - Documentation update for re-execute logic of groovy scripts installed through InstallHook
  - Documentation update for filterWith
