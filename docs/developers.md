@@ -1,12 +1,12 @@
 # AEM Server Setup
 
-By default AEM is expected to listen on localhost on port 5702. This setting can be overridden by adding parameters:
+By default AEM is expected to listen on localhost on port 4502. This setting can be overridden by adding parameters:
 * -Daem.port=5702
 * -Daem.host=localhost
 * -Daem.publish.port=5703
 * -Daem.publish.host=localhost
 
-You need AEM 6.3 with service pack 2 or AEM 6.4.
+You need AEM 6.5 with Servicepack 13 or AEM Cloud SDK.
 
 # Build and Deploy
 
