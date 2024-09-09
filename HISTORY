@@ -1,3 +1,6 @@
+2024-09-09 6.5.2
+- Fix repoinit script for weekly maintenance jobs (#235)
+
 2024-30-05 6.5.1
  - Store result output data in binary property in case data is too big for string property (#233)
  - Remove reindex=true property in index definition as it is not allowed (#230)
