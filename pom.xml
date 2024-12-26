@@ -527,13 +527,13 @@
             <dependency>
                 <groupId>org.apache.groovy</groupId>
                 <artifactId>groovy</artifactId>
-                <version>4.0.9</version>
+                <version>4.0.22</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-api</artifactId>
-                <version>19.0.4</version>
+                <version>19.0.8</version>
                 <scope>provided</scope>
                 <!-- exclude dependencies -->
                 <exclusions>
@@ -546,7 +546,7 @@
             <dependency>
                 <groupId>be.orbinson.aem</groupId>
                 <artifactId>aem-groovy-console-all</artifactId>
-                <version>19.0.3</version>
+                <version>19.0.8</version>
                 <type>zip</type>
                 <!-- exclude dependencies -->
                 <exclusions>
