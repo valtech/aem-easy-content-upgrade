@@ -91,6 +91,9 @@ public class AecuCloudStartupService {
                     throw new IllegalStateException("Groovy extension services seem to be not bound");
                 }
                 Thread.sleep(1000L * WAIT_PERIOD * 2);
+                if (resourceResolver.getResource(AecuService.AECU_APPS_PATH_PREFIX) == null) {
+                    LOGGER.info("AECU apps script path not found, not starting migration.");
+                }
                 startAecuMigration();
             } catch (InterruptedException e) {
                 LOGGER.error("Interrupted", e);
