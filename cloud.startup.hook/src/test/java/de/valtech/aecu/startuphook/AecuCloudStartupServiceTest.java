@@ -36,6 +36,7 @@ import java.util.List;
 
 import javax.jcr.Session;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.event.jobs.JobManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,6 +71,10 @@ public class AecuCloudStartupServiceTest {
     private Session session;
 
     @Mock
+    private Resource resource;
+
+
+    @Mock
     private HistoryEntry historyEntry;
 
     @Mock
@@ -83,6 +88,7 @@ public class AecuCloudStartupServiceTest {
     public void setUp() throws Exception {
         when(resolverService.getAdminResourceResolver()).thenReturn(resolver);
         when(resolver.adaptTo(Session.class)).thenReturn(session);
+        when(resolver.getResource(AecuService.AECU_APPS_PATH_PREFIX)).thenReturn(resource);
         when(jobManager.addJob(anyString(), any())).thenReturn(null);
         doReturn(true).when(session).hasPermission(anyString(), anyString());
         doReturn(true).when(startupService).waitForServices();

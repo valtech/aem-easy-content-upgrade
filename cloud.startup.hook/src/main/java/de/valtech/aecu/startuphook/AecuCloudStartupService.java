@@ -97,6 +97,7 @@ public class AecuCloudStartupService {
                 Thread.sleep(1000L * WAIT_PERIOD * 2);
                 if (resourceResolver.getResource(AecuService.AECU_APPS_PATH_PREFIX) == null) {
                     LOGGER.info("AECU apps script path not found, not starting migration.");
+                    return;
                 }
                 startAecuMigration();
             } catch (InterruptedException e) {
