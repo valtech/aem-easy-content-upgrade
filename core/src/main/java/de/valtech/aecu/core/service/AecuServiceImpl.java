@@ -114,7 +114,7 @@ public class AecuServiceImpl implements AecuService {
         }
         Resource resource = resolver.getResource(path);
         if (resource == null) {
-            throw new AecuException("Path is invalid");
+            throw new AecuException("Path " + path + " is invalid");
         }
         List<String> candidates = new ArrayList<>();
         if (isFolder(resource) && matchesRunmodes(resource.getName())) {
@@ -180,10 +180,10 @@ public class AecuServiceImpl implements AecuService {
         try (ResourceResolver resolver = resolverService.getContentMigratorResourceResolver()) {
             Resource resource = resolver.getResource(path);
             if (resource == null) {
-                throw new AecuException("Path is invalid");
+                throw new AecuException("Path " + path + " invalid");
             }
             if (!isValidScriptName(resource.getName())) {
-                throw new AecuException("Invalid script name");
+                throw new AecuException("Invalid script name " + resource.getName());
             }
             return executeScript(resolver, path, data);
         } catch (LoginException e) {
