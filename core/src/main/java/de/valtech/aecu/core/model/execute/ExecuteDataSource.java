@@ -68,8 +68,7 @@ public class ExecuteDataSource {
         String path = request.getParameter("searchPath");
         List<Resource> entries = new ArrayList<>();
 
-        if (path != null && StringUtils.isNotEmpty(path) && (path.startsWith(AecuService.AECU_CONF_PATH_PREFIX)
-                || path.startsWith(AecuService.AECU_VAR_PATH_PREFIX) || path.startsWith(AecuService.AECU_APPS_PATH_PREFIX))) {
+        if (path != null && StringUtils.isNotEmpty(path) ) {
             List<String> allowedScripts = aecuService.getFiles(path);
             ResourceResolver resourceResolver = request.getResourceResolver();
             for (String scriptPath : allowedScripts) {
