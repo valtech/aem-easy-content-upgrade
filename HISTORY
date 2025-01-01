@@ -1,3 +1,9 @@
+2022-01-01 6.6.0
+- upgrade groovyconsole to v 19.0.8 for java 21 support (#240)
+- Change AECU cloud startup hook to use sling job for processing scripts to avoid multiple executions (#228)
+- improve logging and don't start aecu migration in case script path is not around (#228)
+- remove limitation in ExecuteDataSource to only execute in paths for the installhooks (#237)
+
 2024-09-09 6.5.2
 - Fix repoinit script for weekly maintenance jobs (#235)
 
