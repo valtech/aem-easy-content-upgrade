@@ -3,12 +3,12 @@ package de.valtech.aecu.core.service;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
 import be.orbinson.aem.groovy.console.api.context.ScriptContext;
 
 /**
@@ -56,7 +56,7 @@ public class AecuScriptContext implements ScriptContext {
     @Override
     public PrintStream getPrintStream() {
         try {
-            return new PrintStream(out, true, Charsets.UTF_8.name());
+            return new PrintStream(out, true, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             LOG.error("Unable to create print stream", e);
         }
