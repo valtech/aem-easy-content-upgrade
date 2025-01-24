@@ -48,7 +48,7 @@ public class ChangePrimaryTypeTest {
 
     private static final String PATH = "path";
 
-    private static final String newPrimaryType = "nt:unstructured";
+    private static final String NEW_PRIMARY_TYPE = "nt:unstructured";
 
     @Mock
     private Resource resource;
@@ -64,17 +64,17 @@ public class ChangePrimaryTypeTest {
 
     @Test
     public void test_doAction_setPrimaryType() throws PersistenceException, RepositoryException {
-        ChangePrimaryType changePrimaryType = new ChangePrimaryType(newPrimaryType);
+        ChangePrimaryType changePrimaryType = new ChangePrimaryType(NEW_PRIMARY_TYPE);
         String result = changePrimaryType.doAction(resource);
-        verify(node, times(1)).setPrimaryType(newPrimaryType);
-        assertEquals("Updated jcr:primaryType to " + newPrimaryType + " for resource " + PATH, result);
+        verify(node, times(1)).setPrimaryType(NEW_PRIMARY_TYPE);
+        assertEquals("Updated jcr:primaryType to " + NEW_PRIMARY_TYPE + " for resource " + PATH, result);
     }
 
     @Test
     public void test_doAction_nodeIsNull() throws PersistenceException, RepositoryException {
         when(resource.adaptTo(Node.class)).thenReturn(null);
-        ChangePrimaryType changePrimaryType = new ChangePrimaryType(newPrimaryType);
+        ChangePrimaryType changePrimaryType = new ChangePrimaryType(NEW_PRIMARY_TYPE);
         changePrimaryType.doAction(resource);
-        verify(node, never()).setPrimaryType(newPrimaryType);
+        verify(node, never()).setPrimaryType(NEW_PRIMARY_TYPE);
     }
 }
