@@ -1,4 +1,7 @@
-2022-01-01 6.6.0
+2025-02-20 6.6.1
+- don't include Google Guava for AEM 6.5.2025 (#243)
+
+2025-01-01 6.6.0
 - upgrade groovyconsole to v 19.0.8 for java 21 support (#240)
 - Change AECU cloud startup hook to use sling job for processing scripts to avoid multiple executions (#228)
 - improve logging and don't start aecu migration in case script path is not around (#228)
@@ -7,13 +10,13 @@
 2024-09-09 6.5.2
 - Fix repoinit script for weekly maintenance jobs (#235)
 
-2024-30-05 6.5.1
+2024-05-30 6.5.1
  - Store result output data in binary property in case data is too big for string property (#233)
  - Remove reindex=true property in index definition as it is not allowed (#230)
  - Documentation updates on logging
  - Documentation update on upgrade for index move
 
-2023-12-07 6.5.0
+2023-07-12 6.5.0
  - Move of aecu.ui.content to /apps/settings to avoid overwrite of the configured weekly operations window (#225)
  - New filter method: filterByPropertyIsMultiple()
  - Documentation update for filter concatenation semantics with regards of AND/OR (#212)
