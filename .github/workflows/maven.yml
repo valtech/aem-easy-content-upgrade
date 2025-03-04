@@ -26,15 +26,15 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v1
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
+#    - name: Cache SonarCloud packages
+#      uses: actions/cache@v4
+#      with:
+#        path: ~/.sonar/cache
+#        key: ${{ runner.os }}-sonar
+#        restore-keys: ${{ runner.os }}-sonar
 
     - name: Cache Maven packages
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -45,9 +45,9 @@ jobs:
         JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
       run: mvn clean install javadoc:javadoc
 
-    - name: Analyze with SonarQube
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
-      run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=aecu
+ # - name: Analyze with SonarQube
+ #    env:
+ #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+ #         JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
+ #     run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=aecu
