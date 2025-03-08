@@ -388,7 +388,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>8.1.2</version>
+                    <version>12.1.0</version>
                     <configuration>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
@@ -590,7 +590,7 @@
             <dependency>
                 <groupId>org.antlr</groupId>
                 <artifactId>stringtemplate</artifactId>
-                <version>3.2.1</version>
+                <version>4.0.2</version>
             </dependency>
 
             <dependency>
