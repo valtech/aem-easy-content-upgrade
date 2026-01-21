@@ -23,10 +23,16 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.jcr.Session;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -210,7 +216,9 @@ public class AecuServiceImpl implements AecuService {
                         prechecksResult.getOutput(), null, path);
             }
         }
-        ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver, data);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("aecuScriptPath", path);
+        ScriptContext scriptContext = new AecuScriptContext(loadScript(path, resolver), resolver, updateData(data, properties));
         RunScriptResponse response = groovyConsoleService.runScript(scriptContext);
         boolean success = StringUtils.isBlank(response.getExceptionStackTrace());
         if (success) {
@@ -226,6 +234,22 @@ public class AecuServiceImpl implements AecuService {
         ExecutionState state = success ? ExecutionState.SUCCESS : ExecutionState.FAILED;
         return new ExecutionResult(state, response.getRunningTime(), result,
                 response.getOutput() + response.getExceptionStackTrace(), fallbackResult, path);
+    }
+
+    /**
+     * Add properties to data
+     *
+     * @param data data
+     * @param properties properties
+     * @return updated data
+     */
+    private String updateData(String data, Map<String, String> properties) {
+        Gson gson = new Gson();
+        JsonObject dataJsonObject = data != null ? JsonParser.parseString(data).getAsJsonObject() : new JsonObject();
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            dataJsonObject.addProperty(entry.getKey(), entry.getValue());
+        }
+        return gson.toJson(dataJsonObject);
     }
 
     /**
