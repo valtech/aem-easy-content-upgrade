@@ -1076,7 +1076,7 @@ The following service users are installed by AECU:
 | ------------- | -------------- | --------- |
 | aecu-admin | /: jcr:all | Validation of access rights, JMX executeWithHistory() to store script history |
 | aecu-content-migrator | /: jcr:read <br /> /apps: jcr:all <br /> /conf: jcr:all <br /> /content: jcr:all <br /> /etc: jcr:all <br /> /home: jcr:all <br /> /var: jcr:all | Content changes using aecu binding  |
-| aecu-service | /: jcr:read <br /> /var/aecu: jcr:all | AECU execution history |
+| aecu-service | /: jcr:read <br /> /var/aecu: jcr:all <br> /var/aecu-installhook: jcr:all | AECU execution history |
 
 
 

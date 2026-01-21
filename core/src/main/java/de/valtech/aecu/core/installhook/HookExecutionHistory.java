@@ -19,6 +19,8 @@
 package de.valtech.aecu.core.installhook;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -27,8 +29,11 @@ import javax.jcr.Session;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.jackrabbit.value.DateValue;
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +109,54 @@ public class HookExecutionHistory {
         Resource base = resolver.getResource(HISTORY_BASE_PATH);
         if (base == null) {
             throw new AecuException(HISTORY_BASE_PATH + " does not exist or is not accessible.");
+        }
+    }
+
+    /**
+     * Purges the history by keeping only entries within the set number of days.
+     *
+     * @param resolver   resource resolver
+     * @param daysToKeep number of days to keep
+     * @throws PersistenceException error deleting node
+     */
+    public static void purgeHistory(ResourceResolver resolver, int daysToKeep) throws PersistenceException {
+        Resource baseHookHistory = resolver.getResource(HookExecutionHistory.HISTORY_BASE_PATH);
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
+        LOG.debug("Starting purge AECU hook history with limit {}", calendar.getTime());
+        deleteRecursive(baseHookHistory.listChildren(), calendar);
+    }
+
+    /**
+     * Deletes the resources that are too old.
+     *
+     * @param resources resources
+     * @param calendar  time limit
+     * @throws PersistenceException error deleting node
+     */
+    private static void deleteRecursive(Iterator<Resource> resources, Calendar calendar) throws PersistenceException {
+        ResourceUtil.BatchResourceRemover remover = ResourceUtil.getBatchResourceRemover(1000);
+        while (resources.hasNext()) {
+            Resource resource = resources.next();
+            ValueMap properties = resource.getValueMap();
+            if (!resource.getValueMap().get("jcr:primaryType", String.class).equals(JcrConstants.NT_UNSTRUCTURED)) {
+                // Check to avoid deleting system nodes like rep:policy
+                continue;
+            }
+            if (!resource.listChildren().hasNext() && !properties.containsKey(PN_EXECUTED)) {
+                LOG.debug("Purge node with empty children: {}", resource.getPath());
+                remover.delete(resource);
+            } else if (properties.containsKey(PN_EXECUTED)) {
+                Calendar executedDate = properties.get(PN_EXECUTED, Calendar.class);
+                if (calendar.toInstant().isBefore(executedDate.toInstant())) {
+                    LOG.debug("Skipping hook purge of too young node: {}", resource.getPath());
+                } else {
+                    LOG.debug("Purge node older than time defined: {}", resource.getPath());
+                    remover.delete(resource);
+                }
+            } else {
+                deleteRecursive(resource.listChildren(), calendar);
+            }
         }
     }
 
