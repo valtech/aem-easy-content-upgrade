@@ -75,6 +75,7 @@ public class AecuCloudStartupService {
 
     @Activate
     public void activate(final BundleContext bundleContext) {
+        LOGGER.debug("AECU cloud startup hook activated");
         this.bundleContext = bundleContext;
         Runnable runnable = this::checkAndRunMigration;
         Thread thread = new Thread(runnable);
@@ -85,24 +86,30 @@ public class AecuCloudStartupService {
      * Checks if the components are ready and starts the migration process.
      */
     protected void checkAndRunMigration() {
+        LOGGER.debug("Check to run migration");
         ResourceResolver resourceResolver = getResourceResolver();
         Session session = resourceResolver.adaptTo(Session.class);
-        boolean isCompositeNodeStore = RuntimeHelper.isCompositeNodeStore(session);
-        if (isCompositeNodeStore && !isMigrationInProgress()) {
-            try {
-                if (!waitForServices()) {
-                    LOGGER.error("Groovy extension services seem to be not bound");
-                    throw new IllegalStateException("Groovy extension services seem to be not bound");
-                }
-                Thread.sleep(1000L * WAIT_PERIOD * 2);
-                if (resourceResolver.getResource(AecuService.AECU_APPS_PATH_PREFIX) == null) {
-                    LOGGER.info("AECU apps script path not found, not starting migration.");
-                    return;
-                }
-                startAecuMigration();
-            } catch (InterruptedException e) {
-                LOGGER.error("Interrupted", e);
+        if (!RuntimeHelper.isCompositeNodeStore(session)) {
+            LOGGER.debug("No Composite Node Store detected");
+            return;
+        }
+        if (isMigrationInProgress()) {
+            LOGGER.info("Migration is already in progress");
+            return;
+        }
+        try {
+            if (!waitForServices()) {
+                LOGGER.error("Groovy extension services seem to be not bound");
+                throw new IllegalStateException("Groovy extension services seem to be not bound");
             }
+            Thread.sleep(1000L * WAIT_PERIOD * 2);
+            if (resourceResolver.getResource(AecuService.AECU_APPS_PATH_PREFIX) == null) {
+                LOGGER.info("AECU apps script path not found, not starting migration.");
+                return;
+            }
+            startAecuMigration();
+        } catch (InterruptedException e) {
+            LOGGER.error("Interrupted", e);
         }
     }
 
@@ -178,6 +185,7 @@ public class AecuCloudStartupService {
      * Starts the AECU migration
      */
     void startAecuMigration() {
+        LOGGER.info("Add AECU Startup Job");
         jobManager.addJob(AecuStartupJobConsumer.JOB_TOPIC, null);
     }
 
